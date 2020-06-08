@@ -48,6 +48,9 @@ ui <- dashboardPage(
                         infoBoxOutput("organizationalInfo"),
                         infoBoxOutput("amountAwardedInfo")
                     )
+            ),
+            tabItem(tabName = "Trends",
+                
             )
         )
     )
