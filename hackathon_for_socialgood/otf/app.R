@@ -20,7 +20,6 @@ ui <- dashboardPage(
     dashboardSidebar(
         sidebarMenu(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
-            menuItem("Background", tabName = "Background", icon = icon("th")),
             menuItem("Summary", tabName = "Summary", icon = icon("dashboard")),
             menuItem("Trends", tabName = "Trends", icon = icon("th")),
             menuItem("Cohort Analysis", tabName = "CohortAnalysis", icon = icon("dashboard")),
@@ -33,9 +32,8 @@ ui <- dashboardPage(
         tabItems(
             tabItem(tabName = "Introduction",includeMarkdown("intro.md")
             ),
-            tabItem(tabName = "Background",includeMarkdown("background.md")
-                    ),
-            tabItem(tabName = "Summary",)
+            tabItem(tabName = "Summary",
+                    )
             )
     )
 )
