@@ -1,8 +1,8 @@
-### Hackathon for Social Good
+### Hackathon for Good
 
 ### What is this app?
 
-The app provides insights into grant amounts, age funding, type of projects as well as text analysis.The data was obtained from the Ontario Trillium Fund.
+The app provides insights into grant amounts, age funding, type of projects as well as text analysis.  The data was obtained from the Ontario Trillium Fund.  
 
 
 ### What is Ontario Trillium Fund?
