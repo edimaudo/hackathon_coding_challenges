@@ -14,6 +14,13 @@ for (package in packages) {
 #load data
 df <- read.csv("otf.csv")
 
+
+yearInfo <- length(unique(df$year))
+grantInfo <- length(unique(df$grant_program))
+organizationInfo <- length(unique(df$organization_name))
+amountAwardedInfo <- sum(df$amount_awarded)
+ageGroupInfo <- length(unique(df$age_group))
+
 #app
 ui <- dashboardPage(
     dashboardHeader(title = "Ontario Trillium Fund analysis"),
@@ -24,20 +31,59 @@ ui <- dashboardPage(
             menuItem("Trends", tabName = "Trends", icon = icon("th")),
             menuItem("Cohort Analysis", tabName = "CohortAnalysis", icon = icon("dashboard")),
             menuItem("Text Analysis", tabName = "TextAnalysis", icon = icon("th")),
-            menuItem("Text Classification", tabName = "TextClassification", icon = icon("dashboard")),
+            menuItem("Text Classification", tabName = "TextClassification", icon = icon("dashboard"))
             
         )
     ),
     dashboardBody(
         tabItems(
-            tabItem(tabName = "Introduction",includeMarkdown("intro.md")
-            ),
+            tabItem(tabName = "Introduction",includeMarkdown("intro.md")),
             tabItem(tabName = "Summary",
+                    
+                    fluidRow(
+                        infoBoxOutput("yearInfo"),
+                        infoBoxOutput("grantInfo")
+                    ),
+                    fluidRow(
+                        infoBoxOutput("organizationalInfo"),
+                        infoBoxOutput("amountAwardedInfo")
                     )
             )
+        )
     )
 )
 
-server <- function(input, output) { }
+
+server <- function(input, output) {
+    
+    output$yearInfo <- renderInfoBox({
+        infoBox(
+            "# of Years", paste0(yearInfo), icon = icon("list"),
+            color = "blue"
+        )
+    })
+    
+    output$grantInfo <- renderInfoBox({
+        infoBox(
+            "Type of Grants", paste0(grantInfo), icon = icon("list"),
+            color = "blue", fill = TRUE
+        )
+    })
+    
+    output$organizationalInfo <- renderInfoBox({
+        infoBox(
+            "# of Organizations", paste0(organizationInfo), icon = icon("list"),
+            color = "blue"
+        )
+    })
+    
+    output$amountAwardedInfo <- renderInfoBox({
+        infoBox(
+            "$ value of grants awarded", paste0(amountAwardedInfo, " CAD"), icon = icon("list"),
+            color = "blue", fill = TRUE
+        )
+    })
+
+}
 
 shinyApp(ui, server)
