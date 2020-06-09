@@ -19,7 +19,8 @@ yearInfo <- length(unique(df$year))
 grantInfo <- length(unique(df$grant_program))
 organizationInfo <- length(unique(df$organization_name))
 amountAwardedInfo <- sum(df$amount_awarded)
-ageGroupInfo <- length(unique(df$age_group))
+ageGroupInfo <- length(unique(df$age_group2))
+budgetInfo <- length(unique(df$budget_fund))
 
 #app
 ui <- dashboardPage(
@@ -47,6 +48,13 @@ ui <- dashboardPage(
                     fluidRow(
                         infoBoxOutput("organizationalInfo"),
                         infoBoxOutput("amountAwardedInfo")
+                    ), 
+                    fluidRow(
+                        infoBoxOutput("areaInfo"),
+                        infoBoxOutput("budgetInfo")
+                    ), 
+                    fluidRow(
+                        infoBoxOutput("ageInfo")
                     )
             ),
             tabItem(tabName = "Trends",
@@ -86,6 +94,33 @@ server <- function(input, output) {
             color = "blue", fill = TRUE
         )
     })
+    
+    #types of budGet for summary page
+    output$budgetInfo <- renderInfoBox({
+        infoBox(
+            "Types of budget", paste0(budgetInfo), icon = icon("list"),
+            color = "blue"
+        )
+    })    
+    
+    # of cities for summary page
+    output$areaInfo <- renderInfoBox({
+        infoBox(
+            "# of places covered by grants", paste0(amountAwardedInfo), icon = icon("list"),
+            color = "blue", fill = TRUE
+        )
+    })
+    
+    output$ageInfo <- renderInfoBox({
+        infoBox(
+            "# of age categories", paste0(ageInfo), icon = icon("list"),
+            color = "blue", fill = TRUE
+        )
+    })
+    
+    #cohort analysis by project
+    
+    #visualizations
 
 }
 
