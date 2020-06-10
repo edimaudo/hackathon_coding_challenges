@@ -72,6 +72,7 @@ ui <- dashboardPage(
                             ),
                             fluidRow(
                                 h2("Program areas and Amount Awarded",style="text-align: center;"),
+                                plotOutput("budgetAwarded")
                             )
                         )
                     )
@@ -151,6 +152,26 @@ server <- function(input, output) {
                   axis.title = element_text(size = 15),
                   axis.text = element_text(size = 10),
                   axis.text.x = element_text(angle = 45, hjust = 1))
+    })
+    
+    #budget fund
+    output$budgetAwarded <- renderPlot({
+        data<-df[df$year >= input$Years[[1]] & df$year <= input$Years[[2]],]
+        
+        yearAwardedBudget <- data %>%
+            group_by(year,budget_fund) %>%
+            summarize(total_awarded = sum(amount_awarded))
+        
+        ggplot(data=yearAwardedBudget, aes(x=as.factor(year), y=total_awarded, fill=budget_fund)) +
+            geom_bar(stat="identity", width = 0.5) + theme_classic() +
+            labs(x = "Years", y = "Amount awarded (CAD)", fill  = "Budget funds") +
+            scale_y_continuous(labels = comma) +
+            scale_x_discrete() +
+            theme(legend.text = element_text(size = 10),
+                  legend.title = element_text(size = 10),
+                  axis.title = element_text(size = 15),
+                  axis.text = element_text(size = 10),
+                  axis.text.x = element_text(angle = 45, hjust = 1))       
     })
         
       
