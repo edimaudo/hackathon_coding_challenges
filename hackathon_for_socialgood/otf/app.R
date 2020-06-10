@@ -2,7 +2,7 @@
 
 #packages 
 packages <- c('ggplot2', 'corrplot','tidyverse','shiny',
-              'countrycode','shinydashboard','highcharter',"gridExtra")
+              'countrycode','shinydashboard','highcharter',"gridExtra","scales")
 #load packages
 for (package in packages) {
     if (!require(package, character.only=T, quietly=T)) {
@@ -24,6 +24,9 @@ budgetInfo <- length(unique(df$budget_fund))
 cityInfo <- length(unique(df$city2))
 
 yearSliderInput <- sort(as.vector(unique(df$year)))
+yearData = as.array(yearSliderInput)
+
+
 
 #app
 ui <- dashboardPage(
@@ -59,10 +62,17 @@ ui <- dashboardPage(
             tabItem(tabName = "Trends",
                     sidebarLayout(
                         sidebarPanel(
-                            sliderInput("bins", "Number of bins:", min = 1, max = 50, value = 30)
+                            sliderInput("Years", "Years:", min = 1999, max = 2019, 
+                                        value = yearSliderInput, step=1, ticks = FALSE, sep="")
                         ),
                         mainPanel(
-                            ##plotOutput("distPlot"),
+                            fluidRow(
+                             h2("Grants and Amount Awarded",style="text-align: center;"),
+                             plotOutput("grantAwarded")
+                            ),
+                            fluidRow(
+                                h2("Program areas and Amount Awarded",style="text-align: center;"),
+                            )
                         )
                     )
                     )
@@ -122,6 +132,30 @@ server <- function(input, output) {
     })
     
     #visualizations
+    output$grantAwarded <- renderPlot({
+        
+        data<-df[df$year >= input$Years[[1]] & df$year <= input$Years[[2]],]
+        
+        yearAwardedGrantProgram <- data %>%
+            #filter(year %in% input$Years) %>%
+            group_by(year,grant_program2) %>%
+            summarize(total_awarded = sum(amount_awarded))
+        
+        ggplot(data=yearAwardedGrantProgram, aes(x=as.factor(year), y=total_awarded, fill=grant_program2)) +
+            geom_bar(stat="identity", width = 0.5) + theme_classic() +
+            labs(x = "Years", y = "Amount awarded (CAD)", fill  = "Grant Programs") +
+            scale_y_continuous(labels = comma) +
+            scale_x_discrete() +
+            theme(legend.text = element_text(size = 10),
+                  legend.title = element_text(size = 10),
+                  axis.title = element_text(size = 15),
+                  axis.text = element_text(size = 10),
+                  axis.text.x = element_text(angle = 45, hjust = 1))
+    })
+        
+      
+            
+    
 
 }
 
