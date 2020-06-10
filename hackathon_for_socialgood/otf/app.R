@@ -59,7 +59,10 @@ ui <- dashboardPage(
             tabItem(tabName = "Trends",
                     sidebarLayout(
                         sidebarPanel(
-                            sliderInput("yearInfo","Years: ",min=1999,max=2019,value=2014)
+                            sliderInput("bins", "Number of bins:", min = 1, max = 50, value = 30)
+                        ),
+                        mainPanel(
+                            ##plotOutput("distPlot"),
                         )
                     )
                     )
@@ -106,7 +109,7 @@ server <- function(input, output) {
     output$budgetInfo <- renderInfoBox({
         infoBox(
             "Types of budget", paste0(budgetInfo), icon = icon("list"),
-            color = "blue"
+            color = "blue",fill = TRUE
         )
     })    
     
@@ -114,7 +117,7 @@ server <- function(input, output) {
     output$areaInfo <- renderInfoBox({
         infoBox(
             "# of places covered by grants", paste0(cityInfo), icon = icon("list"),
-            color = "blue", fill = TRUE
+            color = "blue"
         )
     })
     
