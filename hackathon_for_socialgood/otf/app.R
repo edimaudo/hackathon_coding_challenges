@@ -16,7 +16,7 @@ df <- read.csv("otf.csv")
 
 
 yearInfo <- length(unique(df$year))
-grantInfo <- length(unique(df$grant_program))
+grantInfo <- length(unique(df$grant_program2))
 organizationInfo <- length(unique(df$organization_name))
 amountAwardedInfo <- sum(df$amount_awarded)
 ageGroupInfo <- length(unique(df$age_group2))
@@ -30,7 +30,6 @@ ui <- dashboardPage(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
             menuItem("Summary", tabName = "Summary", icon = icon("dashboard")),
             menuItem("Trends", tabName = "Trends", icon = icon("th")),
-            menuItem("Cohort Analysis", tabName = "CohortAnalysis", icon = icon("dashboard")),
             menuItem("Text Analysis", tabName = "TextAnalysis", icon = icon("th")),
             menuItem("Text Classification", tabName = "TextClassification", icon = icon("dashboard"))
             
@@ -52,9 +51,6 @@ ui <- dashboardPage(
                     fluidRow(
                         infoBoxOutput("areaInfo"),
                         infoBoxOutput("budgetInfo")
-                    ), 
-                    fluidRow(
-                        infoBoxOutput("ageInfo")
                     )
             ),
             tabItem(tabName = "Trends",
@@ -67,6 +63,7 @@ ui <- dashboardPage(
 
 server <- function(input, output) {
     
+    # of years
     output$yearInfo <- renderInfoBox({
         infoBox(
             "# of Years", paste0(yearInfo), icon = icon("list"),
@@ -74,6 +71,7 @@ server <- function(input, output) {
         )
     })
     
+    # grant information
     output$grantInfo <- renderInfoBox({
         infoBox(
             "Type of Grants", paste0(grantInfo), icon = icon("list"),
@@ -81,6 +79,7 @@ server <- function(input, output) {
         )
     })
     
+    # of organizations
     output$organizationalInfo <- renderInfoBox({
         infoBox(
             "# of Organizations", paste0(organizationInfo), icon = icon("list"),
@@ -88,6 +87,7 @@ server <- function(input, output) {
         )
     })
     
+    # dollar amount
     output$amountAwardedInfo <- renderInfoBox({
         infoBox(
             "$ value of grants awarded", paste0(amountAwardedInfo, " CAD"), icon = icon("list"),
@@ -95,7 +95,7 @@ server <- function(input, output) {
         )
     })
     
-    #types of budGet for summary page
+    #types of budget
     output$budgetInfo <- renderInfoBox({
         infoBox(
             "Types of budget", paste0(budgetInfo), icon = icon("list"),
@@ -111,12 +111,7 @@ server <- function(input, output) {
         )
     })
     
-    output$ageInfo <- renderInfoBox({
-        infoBox(
-            "# of age categories", paste0(ageInfo), icon = icon("list"),
-            color = "blue", fill = TRUE
-        )
-    })
+
     
     #cohort analysis by project
     
