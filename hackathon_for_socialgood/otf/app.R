@@ -25,7 +25,8 @@ cityInfo <- length(unique(df$city2))
 
 yearSliderInput <- sort(as.vector(unique(df$year)))
 yearData = as.array(yearSliderInput)
-
+futureYears = c(2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,
+                2028,2029,2030)
 
 
 #app
@@ -37,7 +38,7 @@ ui <- dashboardPage(
             menuItem("Summary", tabName = "Summary", icon = icon("dashboard")),
             menuItem("Trends", tabName = "Trends", icon = icon("th")),
             menuItem("Text Analysis", tabName = "TextAnalysis", icon = icon("th")),
-            menuItem("Text Classification", tabName = "TextClassification", icon = icon("dashboard"))
+            menuItem("Amount Regression", tabName = "AmountRegression", icon = icon("dashboard"))
             
         )
     ),
@@ -71,12 +72,31 @@ ui <- dashboardPage(
                              plotOutput("grantAwarded")
                             ),
                             fluidRow(
-                                h2("Program areas and Amount Awarded",style="text-align: center;"),
+                                h2("Budget areas and Amount Awarded",style="text-align: center;"),
                                 plotOutput("budgetAwarded")
+                            ), 
+                            fluidRow(
+                                h2("Program areas and Amount Awarded",style="text-align: center;"),
+                                plotOutput("programAwarded")
                             )
                         )
                     )
+            ), 
+            tabItem(tabName = "AmountRegression",
+                    sidebarLayout(
+                        sidebarPanel (
+                            selectInput("yearInput", label = "Year",choices = futureYears),
+                            selectInput("planInput","Planned date", choices=c()),
+                            selectInput("budgetFundInput","Budget Fund", choices=c()),
+                            selectInput("coappInput","Co applications", choices=c()),
+                            selectInput("grantInput","Grant Programs", choices=c()),
+                            selectInput("cityInput","City", choices=c())
+                        ), 
+                        mainPanel(
+                            
+                        )
                     )
+            )
         )
     )
 )
@@ -143,7 +163,7 @@ server <- function(input, output) {
             summarize(total_awarded = sum(amount_awarded))
         
         ggplot(data=yearAwardedGrantProgram, aes(x=as.factor(year), y=total_awarded, fill=grant_program2)) +
-            geom_bar(stat="identity", width = 0.5) + theme_classic() +
+            geom_bar(stat="identity", width = 0.4) + theme_classic() +
             labs(x = "Years", y = "Amount awarded (CAD)", fill  = "Grant Programs") +
             scale_y_continuous(labels = comma) +
             scale_x_discrete() +
@@ -163,7 +183,7 @@ server <- function(input, output) {
             summarize(total_awarded = sum(amount_awarded))
         
         ggplot(data=yearAwardedBudget, aes(x=as.factor(year), y=total_awarded, fill=budget_fund)) +
-            geom_bar(stat="identity", width = 0.5) + theme_classic() +
+            geom_bar(stat="identity", width = 0.4) + theme_classic() +
             labs(x = "Years", y = "Amount awarded (CAD)", fill  = "Budget funds") +
             scale_y_continuous(labels = comma) +
             scale_x_discrete() +
@@ -173,7 +193,26 @@ server <- function(input, output) {
                   axis.text = element_text(size = 10),
                   axis.text.x = element_text(angle = 45, hjust = 1))       
     })
+    
+    #programs
+    output$programAwarded <- renderPlot({
+        data<-df[df$year >= input$Years[[1]] & df$year <= input$Years[[2]],]
         
+        yearAwardedProgram <- data %>%
+            group_by(year,program_area) %>%
+            summarize(total_awarded = sum(amount_awarded))
+        
+        ggplot(data=yearAwardedProgram, aes(x=as.factor(year), y=total_awarded, fill=program_area)) +
+            geom_bar(stat="identity", width = 0.4) + theme_classic() +
+            labs(x = "Years", y = "Amount awarded (CAD)", fill  = "Program Areas") +
+            scale_y_continuous(labels = comma) +
+            scale_x_discrete() +
+            theme(legend.text = element_text(size = 10),
+                  legend.title = element_text(size = 10),
+                  axis.title = element_text(size = 15),
+                  axis.text = element_text(size = 10),
+                  axis.text.x = element_text(angle = 45, hjust = 1))       
+    })       
       
             
     
