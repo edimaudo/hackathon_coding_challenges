@@ -21,6 +21,9 @@ organizationInfo <- length(unique(df$organization_name))
 amountAwardedInfo <- sum(df$amount_awarded)
 ageGroupInfo <- length(unique(df$age_group2))
 budgetInfo <- length(unique(df$budget_fund))
+cityInfo <- length(unique(df$city2))
+
+yearSliderInput <- sort(as.vector(unique(df$year)))
 
 #app
 ui <- dashboardPage(
@@ -37,9 +40,9 @@ ui <- dashboardPage(
     ),
     dashboardBody(
         tabItems(
-            tabItem(tabName = "Introduction",includeMarkdown("intro.md")),
+            tabItem(tabName = "Introduction",
+                    includeMarkdown("intro.md")),
             tabItem(tabName = "Summary",
-                    
                     fluidRow(
                         infoBoxOutput("yearInfo"),
                         infoBoxOutput("grantInfo")
@@ -54,8 +57,12 @@ ui <- dashboardPage(
                     )
             ),
             tabItem(tabName = "Trends",
-                
-            )
+                    sidebarLayout(
+                        sidebarPanel(
+                            sliderInput("yearInfo","Years: ",min=1999,max=2019,value=2014)
+                        )
+                    )
+                    )
         )
     )
 )
@@ -106,14 +113,10 @@ server <- function(input, output) {
     # of cities for summary page
     output$areaInfo <- renderInfoBox({
         infoBox(
-            "# of places covered by grants", paste0(amountAwardedInfo), icon = icon("list"),
+            "# of places covered by grants", paste0(cityInfo), icon = icon("list"),
             color = "blue", fill = TRUE
         )
     })
-    
-
-    
-    #cohort analysis by project
     
     #visualizations
 
