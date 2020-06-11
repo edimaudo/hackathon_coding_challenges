@@ -153,6 +153,7 @@ server <- function(input, output) {
     })
     
     #visualizations
+    #grants
     output$grantAwarded <- renderPlot({
         
         data<-df[df$year >= input$Years[[1]] & df$year <= input$Years[[2]],]
