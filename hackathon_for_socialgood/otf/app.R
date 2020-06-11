@@ -37,7 +37,7 @@ ui <- dashboardPage(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
             menuItem("Summary", tabName = "Summary", icon = icon("dashboard")),
             menuItem("Trends", tabName = "Trends", icon = icon("th")),
-            menuItem("Text Analysis", tabName = "TextAnalysis", icon = icon("th")),
+            menuItem("Description Analysis", tabName = "TextAnalysis", icon = icon("th")),
             menuItem("Amount Regression", tabName = "AmountRegression", icon = icon("dashboard"))
             
         )
