@@ -1,8 +1,8 @@
-
+rm(list = ls())
 
 #packages 
-packages <- c('ggplot2', 'corrplot','tidyverse','shiny',
-              'countrycode','shinydashboard','highcharter',"gridExtra","scales")
+packages <- c('ggplot2', 'corrplot','tidyverse','shiny','shinydashboard',
+              'SnowballC','wordcloud')
 #load packages
 for (package in packages) {
     if (!require(package, character.only=T, quietly=T)) {
@@ -25,8 +25,12 @@ cityInfo <- length(unique(df$city2))
 
 yearSliderInput <- sort(as.vector(unique(df$year)))
 yearData = as.array(yearSliderInput)
-futureYears = c(2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,
-                2028,2029,2030)
+
+grantSliderInput <- sort(as.vector(unique(df$grant_program2)))
+grantData = as.array(grantSliderInput)
+
+programSliderInput <- sort(as.vector(unique(df$program_area)))
+programData = as.array(programSliderInput)
 
 
 #app
@@ -37,15 +41,13 @@ ui <- dashboardPage(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
             menuItem("Summary", tabName = "Summary", icon = icon("dashboard")),
             menuItem("Trends", tabName = "Trends", icon = icon("th")),
-            menuItem("Description Analysis", tabName = "TextAnalysis", icon = icon("th")),
-            menuItem("Amount Regression", tabName = "AmountRegression", icon = icon("dashboard"))
+            menuItem("Description Analysis", tabName = "TextAnalysis", icon = icon("th"))
             
         )
     ),
     dashboardBody(
         tabItems(
-            tabItem(tabName = "Introduction",
-                    includeMarkdown("intro.md")),
+            tabItem(tabName = "Introduction",includeMarkdown("intro.md"),hr()),
             tabItem(tabName = "Summary",
                     fluidRow(
                         infoBoxOutput("yearInfo"),
@@ -82,21 +84,22 @@ ui <- dashboardPage(
                         )
                     )
             ), 
-            tabItem(tabName = "AmountRegression",
+            tabItem(tabName = "TextAnalysis",
                     sidebarLayout(
-                        sidebarPanel (
-                            selectInput("yearInput", label = "Year",choices = futureYears),
-                            selectInput("planInput","Planned date", choices=c()),
-                            selectInput("budgetFundInput","Budget Fund", choices=c()),
-                            selectInput("coappInput","Co applications", choices=c()),
-                            selectInput("grantInput","Grant Programs", choices=c()),
-                            selectInput("cityInput","City", choices=c())
-                        ), 
+                        sidebarPanel(
+                            selectInput("yearInput", "Year:",choices=yearData),
+                            br(),
+                            submitButton("Submit")
+                        ),
                         mainPanel(
-                            
+                            fluidRow(
+                                plotOutput("generateWordCloud")
+                            )
                         )
                     )
+
             )
+
         )
     )
 )
@@ -159,9 +162,8 @@ server <- function(input, output) {
         data<-df[df$year >= input$Years[[1]] & df$year <= input$Years[[2]],]
         
         yearAwardedGrantProgram <- data %>%
-            #filter(year %in% input$Years) %>%
-            group_by(year,grant_program2) %>%
-            summarize(total_awarded = sum(amount_awarded))
+            dplyr::group_by(year,grant_program2) %>%
+            dplyr::summarize(total_awarded = sum(amount_awarded))
         
         ggplot(data=yearAwardedGrantProgram, aes(x=as.factor(year), y=total_awarded, fill=grant_program2)) +
             geom_bar(stat="identity", width = 0.4) + theme_classic() +
@@ -180,8 +182,9 @@ server <- function(input, output) {
         data<-df[df$year >= input$Years[[1]] & df$year <= input$Years[[2]],]
         
         yearAwardedBudget <- data %>%
-            group_by(year,budget_fund) %>%
-            summarize(total_awarded = sum(amount_awarded))
+            dplyr::group_by(year,budget_fund) %>%
+            dplyr::summarize(total_awarded = sum(amount_awarded))
+                
         
         ggplot(data=yearAwardedBudget, aes(x=as.factor(year), y=total_awarded, fill=budget_fund)) +
             geom_bar(stat="identity", width = 0.4) + theme_classic() +
@@ -200,8 +203,8 @@ server <- function(input, output) {
         data<-df[df$year >= input$Years[[1]] & df$year <= input$Years[[2]],]
         
         yearAwardedProgram <- data %>%
-            group_by(year,program_area) %>%
-            summarize(total_awarded = sum(amount_awarded))
+            dplyr::group_by(year,program_area) %>%
+            dplyr::summarize(total_awarded = sum(amount_awarded))
         
         ggplot(data=yearAwardedProgram, aes(x=as.factor(year), y=total_awarded, fill=program_area)) +
             geom_bar(stat="identity", width = 0.4) + theme_classic() +
@@ -213,7 +216,46 @@ server <- function(input, output) {
                   axis.title = element_text(size = 15),
                   axis.text = element_text(size = 10),
                   axis.text.x = element_text(angle = 45, hjust = 1))       
-    })       
+    }) 
+    
+    output$generateWordCloud <- renderPlot({
+        wordcloudData <- df %>%
+            dplyr::filter(year == input$yearInput) %>%
+            dplyr::select(english_description)
+        
+        docs <- Corpus(VectorSource(wordcloudData$english_description))
+        
+        toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+        docs <- tm_map(docs, toSpace, "/")
+        docs <- tm_map(docs, toSpace, "@")
+        docs <- tm_map(docs, toSpace, "\\|")
+        
+        # Convert the text to lower case
+        docs <- tm_map(docs, content_transformer(tolower))
+        # Remove numbers
+        docs <- tm_map(docs, removeNumbers)
+        # Remove english common stopwords
+        docs <- tm_map(docs, removeWords, stopwords("english"))
+        # Remove your own stop word
+        # specify your stopwords as a character vector
+        docs <- tm_map(docs, removeWords, c("blabla1", "blabla2")) 
+        # Remove punctuations
+        docs <- tm_map(docs, removePunctuation)
+        # Eliminate extra white spaces
+        docs <- tm_map(docs, stripWhitespace)
+        
+        dtm <- TermDocumentMatrix(docs)
+        m <- as.matrix(dtm)
+        v <- sort(rowSums(m),decreasing=TRUE)
+        d <- data.frame(word = names(v),freq=v)
+        head(d, 10)
+        
+        set.seed(1234)
+        wordcloud(words = d$word, freq = d$freq, min.freq = 1,
+                  max.words=50, random.order=FALSE, rot.per=0.35, 
+                  colors=brewer.pal(8, "Dark2"))
+        
+    })
       
             
     
