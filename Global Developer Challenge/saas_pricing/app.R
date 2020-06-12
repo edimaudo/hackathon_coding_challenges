@@ -23,8 +23,10 @@ ui <- dashboardPage(
             tabItem(tabName = "priceGenerator",
                     sidebarLayout(
                         sidebarPanel(
-                            sliderInput("Years", "Years:", min = 1999, max = 2019, 
-                                        value = yearSliderInput, step=1, ticks = FALSE, sep="")
+                            sliderInput("How many hours per week", "week:", min = 1, max = 60, value = 1, step=1, ticks = FALSE, sep=""),
+                            sliderInput("What are your fixed costs (per month", "cost:", min = 1, max = 10000, value = 50, step=50, ticks = FALSE, sep=""),
+                            sliderInput("What are your variable costs per 1000 users", "varcost:", min = 50, max = 10000, value = 50, step=50, ticks = FALSE, sep=""),
+                            
                         ),
                         mainPanel(
                             fluidRow(
