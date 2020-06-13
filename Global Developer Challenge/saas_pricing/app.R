@@ -1,8 +1,4 @@
-#add readme
 #add business logic
-#add layout for output
-#add image
-
 
 #packages 
 packages <- c('ggplot2', 'corrplot','tidyverse','shiny','shinydashboard')
@@ -25,28 +21,35 @@ ui <- dashboardPage(
     ),
     dashboardBody(
         tabItems(
-            tabItem(tabName = "Introduction",includeMarkdown("readme.md"),hr()), #includeMarkdown("intro.md")
+            tabItem(tabName = "Introduction",includeMarkdown("readme.md"),hr()),
             tabItem(tabName = "priceGenerator",
                     sidebarLayout(
                         sidebarPanel(
-                            sliderInput("week","How many hours per week?" ,min = 0, max = 60, value = 1, step=1, ticks = TRUE, sep=""),
-                            sliderInput("cost","What are your fixed costs (per month)?", min = 0, max = 1000, value = 100, step=10, ticks = TRUE, sep=""),
-                            sliderInput("varCost","What are your variable costs per 1000 users?", min = 0, max = 1000, value = 50, step=50, ticks = TRUE, sep=""),
-                            sliderInput("userPay:","What percent of users will pay?", min = 0, max = 100, value = 10, step=1, ticks = TRUE, sep=""),
-                            sliderInput("salary","How much do you make in your current job?", min = 20000, max = 100000, value = 50000, step=5000, ticks = TRUE, sep=""),
-                            sliderInput("margin","What margins do you want?", min = 0, max = 100, value = 50, step=10, ticks = TRUE, sep=""),
-                            sliderInput("user","How many users will you have?", min = 0, max = 1000, value = 100, step=10, ticks = TRUE, sep=""),
+                            sliderInput("week","How many hours per week?" ,min = 0, max = 60, 
+                                        value = 1, step=1, ticks = TRUE, sep=""),
+                            sliderInput("cost","What are your fixed costs (per month)?", min = 0, max = 1000, 
+                                        value = 100, step=10, ticks = TRUE, sep=""),
+                            sliderInput("varCost","What are your variable costs per 1000 users?", min = 0, max = 1000, 
+                                        value = 50, step=50, ticks = TRUE, sep=""),
+                            sliderInput("userPay:","What percent of users will pay?", min = 0, max = 100, 
+                                        value = 10, step=1, ticks = TRUE, sep=""),
+                            sliderInput("salary","How much do you make in your current job?", min = 20000, max = 100000, 
+                                        value = 50000, step=5000, ticks = TRUE, sep=""),
+                            sliderInput("margin","What margins do you want?", min = 0, max = 100, 
+                                        value = 50, step=10, ticks = TRUE, sep=""),
+                            sliderInput("user","How many users will you have?", min = 0, max = 1000, 
+                                        value = 100, step=10, ticks = TRUE, sep=""),
                         ),
                         mainPanel(
                             h2("Side Project SaaS Price Generator",style="text-align: center;"),
                             fluidRow(
-                                valueBoxOutput(""),
+                                valueBoxOutput("monthlyPriceOutput"),
                             ),
                             h4("Explanation",style="text-align: center;"),
                             fluidRow(
-                                infoBoxOutput(""),
-                                infoBoxOutput(""),
-                                infoBoxOutput("")
+                                infoBoxOutput("rateOutput"),
+                                infoBoxOutput("projectCostOuput"),
+                                infoBoxOutput("userCostOutput")
                             )
                         )
         
@@ -58,7 +61,34 @@ ui <- dashboardPage(
 
 # Define server logic 
 server <- function(input, output) {
-
+    output$monthlyPriceOutput <- renderValueBox({
+        infoBox(
+            "You should charge your users: ", paste0(""), icon = icon("list"),
+            color = "blue"
+        )
+    })
+    
+    
+    output$rateOutput <- renderInfoBox({
+        infoBox(
+            "Your rate per month is: ", paste0(""), icon = icon("list"),
+            color = "blue", fill = TRUE
+        )
+    })
+    
+    output$projectCostOutput <- renderInfoBox({
+        infoBox(
+            "Your project cost per month is: ", paste0(""), icon = icon("list"),
+            color = "blue", fill = TRUE
+        )
+    })
+    
+    output$userCostOutput <- renderInfoBox({
+        infoBox(
+            "User cost per month is: ", paste0(""), icon = icon("list"),
+            color = "blue", fill = TRUE
+        )
+    })
 
 }
 
