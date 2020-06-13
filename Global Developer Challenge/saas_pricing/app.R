@@ -45,10 +45,14 @@ ui <- dashboardPage(
                             fluidRow(
                                 valueBoxOutput("monthlyPriceOutput"),
                             ),
-                            h4("Explanation",style="text-align: center;"),
+                            h3("Explanation",style="text-align: center;"),
                             fluidRow(
-                                infoBoxOutput("rateOutput"),
-                                infoBoxOutput("projectCostOuput"),
+                                infoBoxOutput("rateOutput")
+                            ),
+                            fluidRow(
+                                infoBoxOutput("projectCostOuput") 
+                            ),
+                            fluidRow(
                                 infoBoxOutput("userCostOutput")
                             )
                         )
@@ -71,21 +75,21 @@ server <- function(input, output) {
     
     output$rateOutput <- renderInfoBox({
         infoBox(
-            "Your rate per month is: ", paste0(""), icon = icon("list"),
+            "Your rate per month is: ", paste0("1"), icon = icon("list"),
             color = "blue", fill = TRUE
         )
     })
     
-    output$projectCostOutput <- renderInfoBox({
+    output$projectCostOuput <- renderInfoBox({
         infoBox(
-            "Your project cost per month is: ", paste0(""), icon = icon("list"),
+            "Your project cost per month is: ", paste0("1"), icon = icon("list"),
             color = "blue", fill = TRUE
         )
     })
     
     output$userCostOutput <- renderInfoBox({
         infoBox(
-            "User cost per month is: ", paste0(""), icon = icon("list"),
+            "User cost per month is: ", paste0("1"), icon = icon("list"),
             color = "blue", fill = TRUE
         )
     })
