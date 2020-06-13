@@ -1,3 +1,9 @@
+#add readme
+#add business logic
+#add layout for output
+#add image
+
+
 #packages 
 packages <- c('ggplot2', 'corrplot','tidyverse','shiny','shinydashboard')
 #load packages
@@ -10,7 +16,7 @@ for (package in packages) {
 
 # Define UI for application
 ui <- dashboardPage(
-    dashboardHeader(title = "SaaS Price Generator"),
+    dashboardHeader(title = "Side Project SaaS Price Generator"),
     dashboardSidebar(
         sidebarMenu(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
@@ -19,19 +25,28 @@ ui <- dashboardPage(
     ),
     dashboardBody(
         tabItems(
-            tabItem(tabName = "Introduction",hr()), #includeMarkdown("intro.md")
+            tabItem(tabName = "Introduction",includeMarkdown("readme.md"),hr()), #includeMarkdown("intro.md")
             tabItem(tabName = "priceGenerator",
                     sidebarLayout(
                         sidebarPanel(
-                            sliderInput("How many hours per week", "week:", min = 1, max = 60, value = 1, step=1, ticks = FALSE, sep=""),
-                            sliderInput("What are your fixed costs (per month", "cost:", min = 1, max = 10000, value = 50, step=50, ticks = FALSE, sep=""),
-                            sliderInput("What are your variable costs per 1000 users", "varcost:", min = 50, max = 10000, value = 50, step=50, ticks = FALSE, sep=""),
-                            
+                            sliderInput("week","How many hours per week?" ,min = 0, max = 60, value = 1, step=1, ticks = TRUE, sep=""),
+                            sliderInput("cost","What are your fixed costs (per month)?", min = 0, max = 1000, value = 100, step=10, ticks = TRUE, sep=""),
+                            sliderInput("varCost","What are your variable costs per 1000 users?", min = 0, max = 1000, value = 50, step=50, ticks = TRUE, sep=""),
+                            sliderInput("userPay:","What percent of users will pay?", min = 0, max = 100, value = 10, step=1, ticks = TRUE, sep=""),
+                            sliderInput("salary","How much do you make in your current job?", min = 20000, max = 100000, value = 50000, step=5000, ticks = TRUE, sep=""),
+                            sliderInput("margin","What margins do you want?", min = 0, max = 100, value = 50, step=10, ticks = TRUE, sep=""),
+                            sliderInput("user","How many users will you have?", min = 0, max = 1000, value = 100, step=10, ticks = TRUE, sep=""),
                         ),
                         mainPanel(
+                            h2("Side Project SaaS Price Generator",style="text-align: center;"),
                             fluidRow(
-                                h2("Price Generator",style="text-align: center;"),
-                                
+                                valueBoxOutput(""),
+                            ),
+                            h4("Explanation",style="text-align: center;"),
+                            fluidRow(
+                                infoBoxOutput(""),
+                                infoBoxOutput(""),
+                                infoBoxOutput("")
                             )
                         )
         
