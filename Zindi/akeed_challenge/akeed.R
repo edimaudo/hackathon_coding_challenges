@@ -19,20 +19,42 @@ train_customers <- read.csv("train_customers.csv")
 train_locations <- read.csv("train_locations.csv")
 sample_submission <- read.csv("SampleSubmission.csv")
 
-#data summary
+#look at orders
 glimpse(orders)
 summary(orders)
 
+#look at vendors
 glimpse(vendors)
 summary(vendors)
 
 #rename columns
-colnames(train_locations) <- c("customer_id","location_number",
+col_locations <- c("customer_id","location_number",
                                "location_type","latitude","longitude")
 
-colnames(train_customers) <- c("customer_id","gender","dob","status",
+col_customers<- c("customer_id","gender","dob","status",
                                "verified","language","created_at","updated_at")
+
+colnames(train_locations) <- col_locations
+colnames(train_customers) <- col_customers
+colnames(test_locations) <- col_locations
+colnames(test_customers) <- col_customers
+
+#clean up train and test customers
+#drop gender	dob	status	verified	language
+
+#remove duplicate train and test customers
+
+#merge train and test customers with train and test locations
+
+#merge with vendor
+train_customers <- train_customers[,c()]
+train_customers <- train_customers %>%
+  distinct()
 
 #combine data
 train_info <- train_customers %>%
-  inner_join(train_locations,)
+  right_join(train_locations,by = "customer_id")
+
+#combine data
+test_info <- test_customers %>%
+  right_join(test_locations,by = "customer_id")
