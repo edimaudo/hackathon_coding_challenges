@@ -46,18 +46,28 @@ test_customers <- test_customers %>%
   distinct()
 
 #merge train and test customers with train and test locations
+train_data <- train_customers %>%
+  left_join(train_locations, by="customer_id")
 
+test_data <- test_customers %>%
+  left_join(test_locations, by="customer_id")
 
 #merge with vendor train and test combined data
+vendors$fake <- 1
+test_data$fake <- 1
+train_data$fake <- 1
 
-# train_customers <- train_customers[,c()]
-# train_customers <- train_customers %>%
-#   distinct()
+my_cross_join <- full_join(tbl_1, tbl_2, by = "fake") %>%
+  select(-fake)
 
-# #combine data
-# train_info <- train_customers %>%
-#   right_join(train_locations,by = "customer_id")
-# 
-# #combine data
-# test_info <- test_customers %>%
-#   right_join(test_locations,by = "customer_id")
+train_vendor_data <-  full_join(train_data, vendors, by = "fake") %>%
+  select(-fake)
+
+test_vendor_data <-  full_join(test_data, vendors, by = "fake") %>%
+  select(-fake)
+  
+
+# - review recommendation aglorithms - reading
+# - review how you would achieve it - reading
+# - combine data using r code
+# - move data to python if R is too slow
