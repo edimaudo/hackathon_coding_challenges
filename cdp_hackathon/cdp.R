@@ -21,8 +21,6 @@ CorporateCC_mb2_2015_2017 <- read.csv("2015-2017_CorporateCC_mb2.csv")
 #data summary
 summary(Cities_Data_mb2_2017_2019)
 summary(CorporateCC_mb2_2018_2019)
-summary(CorporateCC_mb2_2015_2017)
-
 
 
 
