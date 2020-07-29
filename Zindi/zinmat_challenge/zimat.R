@@ -21,3 +21,7 @@ sample_submission <- read.csv("SampleSubmission.csv")
 products <- c('P5DA', 'RIBP', '8NN1',
               '7POT', '66FJ', 'GYSR', 'SOP4', 'RVSZ', 'PYUQ', 'LJR9', 'N2MW', 'AHXO',
               'BSTQ', 'FM3X', 'K6QO', 'QBOL', 'JWFN', 'JZ9D', 'J9JW', 'GHYX', 'ECY3')
+
+train <- na.omit(train)
+test <- na.omit(test)
+
