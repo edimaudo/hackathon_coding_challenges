@@ -1,3 +1,6 @@
+#clear environment
+rm(list = ls())
+
 #packages 
 packages <- c('ggplot2', 'corrplot','tidyverse','ggfortify','shiny','readxl','DT',
               'caret','mlbench','mice','scales','recommenderlab','proxy','reshape2',
