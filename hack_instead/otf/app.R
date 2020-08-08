@@ -2,7 +2,7 @@
 rm(list = ls())
 #packages 
 packages <- c('ggplot2', 'corrplot','tidyverse','shiny','shinydashboard',
-              'SnowballC','wordcloud','dplyr','tidytext')
+              'SnowballC','wordcloud','dplyr','tidytext','readxl')
 #load packages
 for (package in packages) {
     if (!require(package, character.only=T, quietly=T)) {
@@ -11,43 +11,48 @@ for (package in packages) {
     }
 }
 
-# #load data
-# df <- read.csv("otf.csv")
+#load data
+df <- read_excel("otf.xlsx")
+
+#generate  data lists
+yearInfo <- length(unique(df$year_update))
+grantInfo <- length(unique(df$grant_program))
+organizationInfo <- length(unique(df$organization_name))
+amountAwardedInfo <- sum(df$amount_awarded)
+ageGroupInfo <- length(unique(df$age_group_update))
+budgetInfo <- length(unique(df$budget_fund_update))
+cityInfo <- length(unique(df$receipient_org_city_update))
 # 
+yearSliderInput <- sort(as.vector(unique(df$year_update)))
+yearData = as.array(yearSliderInput)
 # 
-# yearInfo <- length(unique(df$year))
-# grantInfo <- length(unique(df$grant_program2))
-# organizationInfo <- length(unique(df$organization_name))
-# amountAwardedInfo <- sum(df$amount_awarded)
-# ageGroupInfo <- length(unique(df$age_group2))
-# budgetInfo <- length(unique(df$budget_fund))
-# cityInfo <- length(unique(df$city2))
+grantSliderInput <- sort(as.vector(unique(df$grant_program)))
+grantData = as.array(grantSliderInput)
 # 
-# yearSliderInput <- sort(as.vector(unique(df$year)))
-# yearData = as.array(yearSliderInput)
-# 
-# grantSliderInput <- sort(as.vector(unique(df$grant_program2)))
-# grantData = as.array(grantSliderInput)
-# 
-# programSliderInput <- sort(as.vector(unique(df$program_area)))
-# programData = as.array(programSliderInput)
+programSliderInput <- sort(as.vector(unique(df$program_area)))
+programData = as.array(programSliderInput)
 
 
 #app
 ui <- dashboardPage(
-    dashboardHeader(title = "Ontario Trillium Fund analysis"),
+    dashboardHeader(title = "Ontario Trillium Foundation"),
+    #add image if 
     dashboardSidebar(
         sidebarMenu(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
             menuItem("Summary", tabName = "Summary", icon = icon("dashboard")),
-            menuItem("Trends", tabName = "Trends", icon = icon("th")),
-            menuItem("Description Analysis", tabName = "TextAnalysis", icon = icon("th"))
+            ##trends - general overview - year, area, city - dropdown 
+            menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")),
+            #menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")), sentiment analysis
+            menuItem("Word", tabName = "WordCloud", icon = icon("th"))
+            ##OTF search tool - https://otf.ca/our-impact/grants-search-tool
+            ##Grant estimation tool - simple tool to predict grant amount based on certain information
             
         )
     ),
     dashboardBody(
         tabItems(
-            tabItem(tabName = "Introduction",includeMarkdown("intro.md"),hr()),
+            tabItem(tabName = "Introduction",includeMarkdown("readme.md"),hr()),
             tabItem(tabName = "Summary",
                     fluidRow(
                         infoBoxOutput("yearInfo"),
@@ -84,7 +89,7 @@ ui <- dashboardPage(
                         )
                     )
             ), 
-            tabItem(tabName = "TextAnalysis",
+            tabItem(tabName = "WordCloud",
                     sidebarLayout(
                         sidebarPanel(
                             selectInput("yearInput", "Year:",choices=yearData),
@@ -118,7 +123,7 @@ server <- function(input, output) {
     # grant information
     output$grantInfo <- renderInfoBox({
         infoBox(
-            "Type of Grants", paste0(grantInfo), icon = icon("list"),
+            "Grant Types", paste0(grantInfo), icon = icon("list"),
             color = "blue", fill = TRUE
         )
     })
@@ -134,7 +139,7 @@ server <- function(input, output) {
     # dollar amount
     output$amountAwardedInfo <- renderInfoBox({
         infoBox(
-            "$ value of grants awarded", paste0(amountAwardedInfo, " CAD"), icon = icon("list"),
+            "Grants awarded", paste0(amountAwardedInfo, " CAD"), icon = icon("list"),
             color = "blue", fill = TRUE
         )
     })
@@ -142,7 +147,7 @@ server <- function(input, output) {
     #types of budget
     output$budgetInfo <- renderInfoBox({
         infoBox(
-            "Types of budget", paste0(budgetInfo), icon = icon("list"),
+            "Budget Types", paste0(budgetInfo), icon = icon("list"),
             color = "blue",fill = TRUE
         )
     })    
@@ -150,7 +155,7 @@ server <- function(input, output) {
     # of cities for summary page
     output$areaInfo <- renderInfoBox({
         infoBox(
-            "# of places covered by grants", paste0(cityInfo), icon = icon("list"),
+            "# of Grant areas", paste0(cityInfo), icon = icon("list"),
             color = "blue"
         )
     })
