@@ -46,7 +46,6 @@ ui <- dashboardPage(
             menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")),
             menuItem("Text Mining", tabName = "TextMining", icon = icon("th")), #text minings
             menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th")),
-            ##OTF search tool - https://otf.ca/our-impact/grants-search-tool
             menuItem("OTF Search tool", tabName = "OTFSearch", icon = icon("th")),
             ##Grant estimation tool - simple tool to predict grant amount based on certain information
             menuItem("OTF Grant Estimator", tabName = "OTFGrantEstimator", icon = icon("th"))
