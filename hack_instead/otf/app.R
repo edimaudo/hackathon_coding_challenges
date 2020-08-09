@@ -2,7 +2,8 @@
 rm(list = ls())
 #packages 
 packages <- c('ggplot2', 'corrplot','tidyverse','shiny','shinydashboard',
-              'SnowballC','wordcloud','dplyr','tidytext','readxl')
+              'SnowballC','wordcloud','dplyr','tidytext','readxl',
+              'scales','tm')
 #load packages
 for (package in packages) {
     if (!require(package, character.only=T, quietly=T)) {
@@ -15,10 +16,10 @@ for (package in packages) {
 df <- read_excel("otf.xlsx")
 
 #generate  data lists
-yearInfo <- length(unique(df$year_update))
+yearInfo <- length(unique(df$year_update))-1
 grantInfo <- length(unique(df$grant_program))
 organizationInfo <- length(unique(df$organization_name))
-amountAwardedInfo <- sum(df$amount_awarded)
+amountAwardedInfo <- formatC(sum(df$amount_awarded), format="f", big.mark=",", digits=1) 
 ageGroupInfo <- length(unique(df$age_group_update))
 budgetInfo <- length(unique(df$budget_fund_update))
 cityInfo <- length(unique(df$receipient_org_city_update))
@@ -41,10 +42,9 @@ ui <- dashboardPage(
         sidebarMenu(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
             menuItem("Summary", tabName = "Summary", icon = icon("dashboard")),
-            ##trends - general overview - year, area, city - dropdown 
             menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")),
-            #menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")), sentiment analysis
-            menuItem("Word", tabName = "WordCloud", icon = icon("th"))
+            #menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")), text minings
+            menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th"))
             ##OTF search tool - https://otf.ca/our-impact/grants-search-tool
             ##Grant estimation tool - simple tool to predict grant amount based on certain information
             
@@ -70,8 +70,8 @@ ui <- dashboardPage(
             tabItem(tabName = "Trends",
                     sidebarLayout(
                         sidebarPanel(
-                            sliderInput("Years", "Years:", min = 1999, max = 2019, 
-                                        value = yearSliderInput, step=1, ticks = FALSE, sep="")
+                            sliderInput("Years", "Years", min = 1999, max = 2019, 
+                                        value = yearSliderInput, step=1, ticks = TRUE, sep="")
                         ),
                         mainPanel(
                             fluidRow(
@@ -98,6 +98,7 @@ ui <- dashboardPage(
                         ),
                         mainPanel(
                             fluidRow(
+                                h2("English Descrption Word cloud",style="text-align: center;"),
                                 plotOutput("generateWordCloud")
                             )
                         )
@@ -164,13 +165,13 @@ server <- function(input, output) {
     #grants
     output$grantAwarded <- renderPlot({
         
-        data<-df[df$year >= input$Years[[1]] & df$year <= input$Years[[2]],]
+        data<-df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
         
         yearAwardedGrantProgram <- data %>%
-            dplyr::group_by(year,grant_program2) %>%
+            dplyr::group_by(year_update,grant_program) %>%
             dplyr::summarize(total_awarded = sum(amount_awarded))
         
-        ggplot(data=yearAwardedGrantProgram, aes(x=as.factor(year), y=total_awarded, fill=grant_program2)) +
+        ggplot(data=yearAwardedGrantProgram, aes(x=as.factor(year_update), y=total_awarded, fill=grant_program)) +
             geom_bar(stat="identity", width = 0.4) + theme_classic() +
             labs(x = "Years", y = "Amount awarded (CAD)", fill  = "Grant Programs") +
             scale_y_continuous(labels = comma) +
@@ -184,14 +185,14 @@ server <- function(input, output) {
     
     #budget fund
     output$budgetAwarded <- renderPlot({
-        data<-df[df$year >= input$Years[[1]] & df$year <= input$Years[[2]],]
+        data<-df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
         
         yearAwardedBudget <- data %>%
-            dplyr::group_by(year,budget_fund) %>%
+            dplyr::group_by(year_update,budget_fund) %>%
             dplyr::summarize(total_awarded = sum(amount_awarded))
         
         
-        ggplot(data=yearAwardedBudget, aes(x=as.factor(year), y=total_awarded, fill=budget_fund)) +
+        ggplot(data=yearAwardedBudget, aes(x=as.factor(year_update), y=total_awarded, fill=budget_fund)) +
             geom_bar(stat="identity", width = 0.4) + theme_classic() +
             labs(x = "Years", y = "Amount awarded (CAD)", fill  = "Budget funds") +
             scale_y_continuous(labels = comma) +
@@ -205,13 +206,14 @@ server <- function(input, output) {
     
     #programs
     output$programAwarded <- renderPlot({
-        data<-df[df$year >= input$Years[[1]] & df$year <= input$Years[[2]],]
+        data<-df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
         
         yearAwardedProgram <- data %>%
-            dplyr::group_by(year,program_area) %>%
-            dplyr::summarize(total_awarded = sum(amount_awarded))
+            dplyr::group_by(year_update,program_area) %>%
+            dplyr::summarize(total_awarded = sum(amount_awarded)) %>%
+            dplyr::select(year_update, program_area, total_awarded)
         
-        ggplot(data=yearAwardedProgram, aes(x=as.factor(year), y=total_awarded, fill=program_area)) +
+        ggplot(data=yearAwardedProgram, aes(x=as.factor(year_update), y=total_awarded, fill=program_area)) +
             geom_bar(stat="identity", width = 0.4) + theme_classic() +
             labs(x = "Years", y = "Amount awarded (CAD)", fill  = "Program Areas") +
             scale_y_continuous(labels = comma) +
@@ -225,7 +227,7 @@ server <- function(input, output) {
     
     output$generateWordCloud <- renderPlot({
         wordcloudData <- df %>%
-            dplyr::filter(year == input$yearInput) %>%
+            dplyr::filter(year_update == input$yearInput) %>%
             dplyr::select(english_description)
         
         docs <- Corpus(VectorSource(wordcloudData$english_description))
