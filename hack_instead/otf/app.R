@@ -15,7 +15,6 @@ for (package in packages) {
 #load data
 df <- read_excel("otf.xlsx")
 
-#generate  data lists
 df$year_update <- as.integer(df$year_update)
 yearInfo <- length(unique(df$year_update))
 grantInfo <- length(unique(df$grant_program))
@@ -24,21 +23,17 @@ amountAwardedInfo <- formatC(sum(df$amount_awarded), format="f", big.mark=",", d
 ageGroupInfo <- length(unique(df$age_group_update))
 budgetInfo <- length(unique(df$budget_fund_update))
 cityInfo <- length(unique(df$receipient_org_city_update))
-# 
 yearSliderInput <- sort(as.vector(unique(as.integer(df$year_update))))
 yearData = as.array(yearSliderInput)
-# 
 grantSliderInput <- sort(as.vector(unique(df$grant_program)))
 grantData = as.array(grantSliderInput)
-# 
 programSliderInput <- sort(as.vector(unique(df$program_area)))
 programData = as.array(programSliderInput)
-
 
 #app
 ui <- dashboardPage(
     dashboardHeader(title = "Ontario Trillium Foundation"),
-    #add image if 
+    #add image
     dashboardSidebar(
         sidebarMenu(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
@@ -47,7 +42,6 @@ ui <- dashboardPage(
             menuItem("Text Mining", tabName = "TextMining", icon = icon("th")), #text minings
             menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th")),
             menuItem("OTF Search tool", tabName = "OTFSearch", icon = icon("th")),
-            ##Grant estimation tool - simple tool to predict grant amount based on certain information
             menuItem("OTF Grant Estimator", tabName = "OTFGrantEstimator", icon = icon("th"))
         )
     ),
@@ -101,8 +95,7 @@ ui <- dashboardPage(
                         ),
                         mainPanel(
                             fluidRow(
-                                h2("English Descrption Word cloud",style="text-align: center;"),
-                                plotOutput("generateWordCloud")
+                                h2("Text mining insights",style="text-align: center;"),
                             )
                         )
                     )
@@ -140,6 +133,7 @@ ui <- dashboardPage(
                     )
                     
             ),
+            ##Grant estimation tool - simple tool to predict grant amount based on certain information
             tabItem(tabName = "OTFGrantEstimator",
                     sidebarLayout(
                         sidebarPanel(
