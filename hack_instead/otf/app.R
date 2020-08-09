@@ -42,7 +42,7 @@ ui <- dashboardPage(
     dashboardSidebar(
         sidebarMenu(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
-            menuItem("Summary", tabName = "Summary", icon = icon("dashboard")),
+            menuItem("Summary", tabName = "Summary", icon = icon("th")),
             menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")),
             menuItem("Text Mining", tabName = "TextMining", icon = icon("th")), #text minings
             menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th")),
@@ -80,9 +80,6 @@ ui <- dashboardPage(
                             #                    selected = yearSliderInput),
                             br(),
                             submitButton("Submit")
-                            
-                            #sliderInput("Years", "Years", min = 1999, max = 2019, 
-                            #    value = yearSliderInput, step=1, ticks = TRUE, sep="")
                         ),
                         mainPanel(
                             fluidRow(
