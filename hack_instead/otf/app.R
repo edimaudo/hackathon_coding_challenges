@@ -25,7 +25,7 @@ ageGroupInfo <- length(unique(df$age_group_update))
 budgetInfo <- length(unique(df$budget_fund_update))
 cityInfo <- length(unique(df$receipient_org_city_update))
 # 
-yearSliderInput <- sort(as.vector(unique(df$year_update)))
+yearSliderInput <- sort(as.vector(unique(as.integer(df$year_update))))
 yearData = as.array(yearSliderInput)
 # 
 grantSliderInput <- sort(as.vector(unique(df$grant_program)))
@@ -43,13 +43,13 @@ ui <- dashboardPage(
         sidebarMenu(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
             menuItem("Summary", tabName = "Summary", icon = icon("dashboard")),
-            
             menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")),
-            #menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")), text minings
-            menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th"))
+            menuItem("Text Mining", tabName = "TextMining", icon = icon("th")), #text minings
+            menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th")),
             ##OTF search tool - https://otf.ca/our-impact/grants-search-tool
+            menuItem("OTF Search tool", tabName = "OTFSearch", icon = icon("th")),
             ##Grant estimation tool - simple tool to predict grant amount based on certain information
-            
+            menuItem("OTF Grant Estimator", tabName = "OTFGrantEstimator", icon = icon("th"))
         )
     ),
     dashboardBody(
@@ -72,10 +72,14 @@ ui <- dashboardPage(
             tabItem(tabName = "Trends",
                     sidebarLayout(
                         sidebarPanel(
-                            checkboxGroupInput("Years",
-                                               label = "Years",
-                                               choices = yearSliderInput,
-                                               selected = yearSliderInput)
+                            sliderInput("Years", "Years:", min = 1999, max = 2019, 
+                                        value = yearSliderInput, step=1, ticks = TRUE, sep=""),
+                            # checkboxGroupInput("Years",
+                            #                    label = "Years",
+                            #                    choices = yearSliderInput,
+                            #                    selected = yearSliderInput),
+                            br(),
+                            submitButton("Submit")
                             
                             #sliderInput("Years", "Years", min = 1999, max = 2019, 
                             #    value = yearSliderInput, step=1, ticks = TRUE, sep="")
@@ -95,7 +99,23 @@ ui <- dashboardPage(
                             )
                         )
                     )
-            ), 
+            ),
+            tabItem(tabName = "TextMining",
+                    sidebarLayout(
+                        sidebarPanel(
+                            selectInput("yearInput", "Year:",choices=yearData),
+                            br(),
+                            submitButton("Submit")
+                        ),
+                        mainPanel(
+                            fluidRow(
+                                h2("English Descrption Word cloud",style="text-align: center;"),
+                                plotOutput("generateWordCloud")
+                            )
+                        )
+                    )
+                    
+            ),
             tabItem(tabName = "WordCloud",
                     sidebarLayout(
                         sidebarPanel(
@@ -111,7 +131,40 @@ ui <- dashboardPage(
                         )
                     )
                     
+            ),
+            tabItem(tabName = "OTFSearch",
+                    sidebarLayout(
+                        sidebarPanel(
+                            selectInput("yearInput", "Year:",choices=yearData),
+                            br(),
+                            submitButton("Submit")
+                        ),
+                        mainPanel(
+                            fluidRow(
+                                h2("English Descrption Word cloud",style="text-align: center;"),
+                                plotOutput("generateWordCloud")
+                            )
+                        )
+                    )
+                    
+            ),
+            tabItem(tabName = "OTFGrantEstimator",
+                    sidebarLayout(
+                        sidebarPanel(
+                            selectInput("yearInput", "Year:",choices=yearData),
+                            br(),
+                            submitButton("Submit")
+                        ),
+                        mainPanel(
+                            fluidRow(
+                                h2("English Descrption Word cloud",style="text-align: center;"),
+                                plotOutput("generateWordCloud")
+                            )
+                        )
+                    )
+                    
             )
+            
             
         )
     )
@@ -175,12 +228,13 @@ server <- function(input, output, session) {
     #grants
     output$grantAwarded <- renderPlot({
         
-        
-        #data <- df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
+        #data <- df %>%
+        #    dplyr::filter(year_update %in% input$Years)
+        data <- df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
         #data <- df[which(df$year_update<=input$Years[[2]] & df$year_update>=input$Years[[1]]),]
         
-        yearAwardedGrantProgram <- df %>% 
-            dplyr::filter(year_update %in% input$Years)%>%
+        yearAwardedGrantProgram <- data %>% 
+            #dplyr::filter(year_update %in% input$Years)%>%
             dplyr::group_by(year_update,grant_program) %>%
             dplyr::summarise(total_awarded = sum(amount_awarded))
             
@@ -202,8 +256,8 @@ server <- function(input, output, session) {
     output$budgetAwarded <- renderPlot({
         data<-df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
         
-        yearAwardedBudget <- df %>%
-            dplyr::filter(year_update %in% input$Years)%>%
+        yearAwardedBudget <- data %>%
+            #dplyr::filter(year_update %in% input$Years)%>%
             dplyr::group_by(year_update,budget_fund_update) %>%
             dplyr::summarise(total_awarded = sum(amount_awarded))
         
@@ -224,8 +278,8 @@ server <- function(input, output, session) {
     output$programAwarded <- renderPlot({
         data<-df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
         
-        yearAwardedProgram <- df %>%
-            dplyr::filter(year_update %in% input$Years)%>%
+        yearAwardedProgram <- data %>%
+            #dplyr::filter(year_update %in% input$Years)%>%
             dplyr::group_by(year_update,program_area) %>%
             dplyr::summarise(total_awarded = sum(amount_awarded))
         
@@ -240,6 +294,12 @@ server <- function(input, output, session) {
                   axis.text = element_text(size = 10),
                   axis.text.x = element_text(angle = 45, hjust = 1))       
     }) 
+    
+    #population served update
+    
+    #age group served update
+    
+    #year vs amount
     
     output$generateWordCloud <- renderPlot({
         wordcloudData <- df %>%
@@ -279,6 +339,10 @@ server <- function(input, output, session) {
                   colors=brewer.pal(8, "Dark2"))
         
     })
+    
+    #word cloud by geographical area served
+    
+    #word cloud of organization
     
     
     
