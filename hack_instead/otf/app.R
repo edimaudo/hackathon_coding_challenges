@@ -73,10 +73,6 @@ ui <- dashboardPage(
                         sidebarPanel(
                             sliderInput("Years", "Years:", min = 1999, max = 2019, 
                                         value = yearSliderInput, step=1, ticks = TRUE, sep=""),
-                            # checkboxGroupInput("Years",
-                            #                    label = "Years",
-                            #                    choices = yearSliderInput,
-                            #                    selected = yearSliderInput),
                             br(),
                             submitButton("Submit")
                         ),
