@@ -71,7 +71,7 @@ ui <- dashboardPage(
                     sidebarLayout(
                         sidebarPanel(
                             sliderInput("Years", "Years", min = 1999, max = 2019, 
-                                        value = yearSliderInput, step=1, ticks = TRUE, sep="")
+                                value = yearSliderInput, step=1, ticks = TRUE, sep="")
                         ),
                         mainPanel(
                             fluidRow(
@@ -111,7 +111,7 @@ ui <- dashboardPage(
 )
 
 
-server <- function(input, output) {
+server <- function(input, output, session) {
     
     # of years
     output$yearInfo <- renderInfoBox({
@@ -162,16 +162,23 @@ server <- function(input, output) {
     })
     
     #visualizations
+    
+
+    
     #grants
     output$grantAwarded <- renderPlot({
         
-        data<-df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
+    
+
+        data <- df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
+        #data <- df[which(df$year_update<=input$Years[[2]] & df$year_update>=input$Years[[1]]),]
         
         yearAwardedGrantProgram <- data %>%
             dplyr::group_by(year_update,grant_program) %>%
             dplyr::summarize(total_awarded = sum(amount_awarded))
         
-        ggplot(data=yearAwardedGrantProgram, aes(x=as.factor(year_update), y=total_awarded, fill=grant_program)) +
+        ggplot(data=yearAwardedGrantProgram, aes(x=as.factor(year_update), 
+                                                 y=total_awarded, fill=grant_program)) +
             geom_bar(stat="identity", width = 0.4) + theme_classic() +
             labs(x = "Years", y = "Amount awarded (CAD)", fill  = "Grant Programs") +
             scale_y_continuous(labels = comma) +
