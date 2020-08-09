@@ -204,11 +204,11 @@ server <- function(input, output, session) {
         
         yearAwardedBudget <- df %>%
             dplyr::filter(year_update %in% input$Years)%>%
-            dplyr::group_by(year_update,budget_fund) %>%
+            dplyr::group_by(year_update,budget_fund_update) %>%
             dplyr::summarise(total_awarded = sum(amount_awarded))
         
         
-        ggplot(data=yearAwardedBudget, aes(x=as.factor(year_update), y=total_awarded, fill=budget_fund)) +
+        ggplot(data=yearAwardedBudget, aes(x=as.factor(year_update), y=total_awarded, fill=budget_fund_update)) +
             geom_bar(stat="identity", width = 0.4) + theme_classic() +
             labs(x = "Years", y = "Amount awarded (CAD)", fill  = "Budget funds") +
             scale_y_continuous(labels = comma) +
