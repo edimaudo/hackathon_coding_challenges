@@ -16,7 +16,8 @@ for (package in packages) {
 df <- read_excel("otf.xlsx")
 
 #generate  data lists
-yearInfo <- length(unique(df$year_update))-1
+df$year_update <- as.integer(df$year_update)
+yearInfo <- length(unique(df$year_update))
 grantInfo <- length(unique(df$grant_program))
 organizationInfo <- length(unique(df$organization_name))
 amountAwardedInfo <- formatC(sum(df$amount_awarded), format="f", big.mark=",", digits=1) 
@@ -42,6 +43,7 @@ ui <- dashboardPage(
         sidebarMenu(
             menuItem("Introduction", tabName = "Introduction", icon = icon("dashboard")),
             menuItem("Summary", tabName = "Summary", icon = icon("dashboard")),
+            
             menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")),
             #menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")), text minings
             menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th"))
@@ -70,8 +72,13 @@ ui <- dashboardPage(
             tabItem(tabName = "Trends",
                     sidebarLayout(
                         sidebarPanel(
-                            sliderInput("Years", "Years", min = 1999, max = 2019, 
-                                value = yearSliderInput, step=1, ticks = TRUE, sep="")
+                            checkboxGroupInput("Years",
+                                               label = "Years",
+                                               choices = yearSliderInput,
+                                               selected = yearSliderInput)
+                            
+                            #sliderInput("Years", "Years", min = 1999, max = 2019, 
+                            #    value = yearSliderInput, step=1, ticks = TRUE, sep="")
                         ),
                         mainPanel(
                             fluidRow(
@@ -168,14 +175,15 @@ server <- function(input, output, session) {
     #grants
     output$grantAwarded <- renderPlot({
         
-    
-
-        data <- df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
+        
+        #data <- df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
         #data <- df[which(df$year_update<=input$Years[[2]] & df$year_update>=input$Years[[1]]),]
         
-        yearAwardedGrantProgram <- data %>%
+        yearAwardedGrantProgram <- df %>% 
+            dplyr::filter(year_update %in% input$Years)%>%
             dplyr::group_by(year_update,grant_program) %>%
-            dplyr::summarize(total_awarded = sum(amount_awarded))
+            dplyr::summarise(total_awarded = sum(amount_awarded))
+            
         
         ggplot(data=yearAwardedGrantProgram, aes(x=as.factor(year_update), 
                                                  y=total_awarded, fill=grant_program)) +
@@ -194,9 +202,10 @@ server <- function(input, output, session) {
     output$budgetAwarded <- renderPlot({
         data<-df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
         
-        yearAwardedBudget <- data %>%
+        yearAwardedBudget <- df %>%
+            dplyr::filter(year_update %in% input$Years)%>%
             dplyr::group_by(year_update,budget_fund) %>%
-            dplyr::summarize(total_awarded = sum(amount_awarded))
+            dplyr::summarise(total_awarded = sum(amount_awarded))
         
         
         ggplot(data=yearAwardedBudget, aes(x=as.factor(year_update), y=total_awarded, fill=budget_fund)) +
@@ -215,10 +224,10 @@ server <- function(input, output, session) {
     output$programAwarded <- renderPlot({
         data<-df[df$year_update >= input$Years[[1]] & df$year_update <= input$Years[[2]],]
         
-        yearAwardedProgram <- data %>%
+        yearAwardedProgram <- df %>%
+            dplyr::filter(year_update %in% input$Years)%>%
             dplyr::group_by(year_update,program_area) %>%
-            dplyr::summarize(total_awarded = sum(amount_awarded)) %>%
-            dplyr::select(year_update, program_area, total_awarded)
+            dplyr::summarise(total_awarded = sum(amount_awarded))
         
         ggplot(data=yearAwardedProgram, aes(x=as.factor(year_update), y=total_awarded, fill=program_area)) +
             geom_bar(stat="identity", width = 0.4) + theme_classic() +
