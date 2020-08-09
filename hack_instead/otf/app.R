@@ -2,7 +2,7 @@
 rm(list = ls())
 #packages 
 packages <- c('ggplot2', 'corrplot','tidyverse','shiny','shinydashboard',
-              'SnowballC','wordcloud','dplyr','tidytext','readxl',
+              'SnowballC','wordcloud','dplyr','tidytext','readxl','DT',
               'scales','tm')
 #load packages
 for (package in packages) {
@@ -15,7 +15,7 @@ for (package in packages) {
 #load data
 df <- read_excel("otf.xlsx")
 
-df$year_update <- as.integer(df$year_update)
+#df$year_update <- as.integer(df$year_update)
 yearInfo <- length(unique(df$year_update))
 grantInfo <- length(unique(df$grant_program))
 organizationInfo <- length(unique(df$organization_name))
@@ -29,6 +29,10 @@ grantSliderInput <- sort(as.vector(unique(df$grant_program)))
 grantData = as.array(grantSliderInput)
 programSliderInput <- sort(as.vector(unique(df$program_area)))
 programData = as.array(programSliderInput)
+ageGroupInfo1 <- sort(as.vector(unique(df$age_group_update)))
+populationServedInfo <- sort(as.vector(unique(df$population_served_update)))
+geoAreaInfo <- sort(as.vector(unique(df$geographical_area_served_update)))
+budgetFundInfo <- sort(as.vector(unique(df$budget_fund_update)))
 
 #app
 ui <- dashboardPage(
@@ -120,31 +124,40 @@ ui <- dashboardPage(
             tabItem(tabName = "OTFSearch",
                     sidebarLayout(
                         sidebarPanel(
-                            selectInput("yearInput", "Year:",choices=yearData),
+                            selectInput("yearInput", "Year",choices=yearData),
+                            selectInput("budgetFundInput", "Stream",choices=budgetFundInfo),#sbudget fund
+                            selectInput("areaInput", "Area",choices=geoAreaInfo),#geographical area served
+                            selectInput("populationInput", "Population Served",choices=populationServedInfo),#population
+                            selectInput("ageInput", "Age Group",choices=ageGroupInfo1),#age group
+                            selectInput("programInput", "Program Area",choices=programSliderInput),#program area
                             br(),
                             submitButton("Submit")
                         ),
                         mainPanel(
                             fluidRow(
-                                h2("English Descrption Word cloud",style="text-align: center;"),
-                                plotOutput("generateWordCloud")
+                                h2("Grant Information",style="text-align: center;"),
+                                DT::dataTableOutput("searchOTF")
                             )
                         )
                     )
                     
             ),
-            ##Grant estimation tool - simple tool to predict grant amount based on certain information
             tabItem(tabName = "OTFGrantEstimator",
                     sidebarLayout(
                         sidebarPanel(
-                            selectInput("yearInput", "Year:",choices=yearData),
+                            selectInput("yearInput", "Year",choices=yearData),
+                            selectInput("budgetFundInput", "Stream",choices=budgetFundInfo),#sbudget fund
+                            selectInput("areaInput", "Area",choices=geoAreaInfo),#geographical area served
+                            selectInput("populationInput", "Population Served",choices=populationServedInfo),#population
+                            selectInput("ageInput", "Age Group",choices=ageGroupInfo1),#age group
+                            selectInput("programInput", "Program Area",choices=programSliderInput),#program area
                             br(),
                             submitButton("Submit")
                         ),
                         mainPanel(
                             fluidRow(
-                                h2("English Descrption Word cloud",style="text-align: center;"),
-                                plotOutput("generateWordCloud")
+                                h2("Estimated Grant in CAD",style="text-align: center;"),
+                                DT::dataTableOutput("estimator")
                             )
                         )
                     )
@@ -325,6 +338,10 @@ server <- function(input, output, session) {
                   colors=brewer.pal(8, "Dark2"))
         
     })
+    
+    output$searchOTF <- DT::renderDataTable(DT::datatable({
+        
+    })) 
     
     #word cloud by geographical area served
     
