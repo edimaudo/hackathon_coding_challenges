@@ -69,8 +69,4 @@ train_vendor_data <-  full_join(train_data, vendors, by = "fake") %>%
 test_vendor_data <-  full_join(test_data, vendors, by = "fake") %>%
   select(-fake)
   
-
-# - review recommendation aglorithms - reading
-# - review how you would achieve it - reading
-# - combine data using r code
-# - move data to python if R is too slow
+#recommendation
