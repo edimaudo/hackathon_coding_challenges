@@ -15,7 +15,8 @@ packages <-
         'readxl',
         'DT',
         'scales',
-        'tm'
+        'tm',
+        'xgboost'
     )
 #load packages
 for (package in packages) {
@@ -282,7 +283,6 @@ server <- function(input, output, session) {
         #data <- df[which(df$year_update<=input$Years[[2]] & df$year_update>=input$Years[[1]]),]
         
         yearAwardedGrantProgram <- data %>%
-            #dplyr::filter(year_update %in% input$Years)%>%
             dplyr::group_by(year_update, grant_program) %>%
             dplyr::summarise(total_awarded = sum(amount_awarded))
         
@@ -315,7 +315,6 @@ server <- function(input, output, session) {
                    df$year_update <= input$Years[[2]], ]
         
         yearAwardedBudget <- data %>%
-            #dplyr::filter(year_update %in% input$Years)%>%
             dplyr::group_by(year_update, budget_fund_update) %>%
             dplyr::summarise(total_awarded = sum(amount_awarded))
         
@@ -348,7 +347,6 @@ server <- function(input, output, session) {
                    df$year_update <= input$Years[[2]], ]
         
         yearAwardedProgram <- data %>%
-            #dplyr::filter(year_update %in% input$Years)%>%
             dplyr::group_by(year_update, program_area) %>%
             dplyr::summarise(total_awarded = sum(amount_awarded))
         
@@ -431,20 +429,20 @@ server <- function(input, output, session) {
     
     #word cloud of organization - today
     
-    #search - today/sat
+    #search - today/Sat
     output$searchOTF <- DT::renderDataTable(DT::datatable({
         
     }))
     
-
+    #text mining fri/sat/sun
     
-    # sat/sun
+    #prediction model sat/sun/mon
     output$estimatorOTF <- DT::renderDataTable(DT::datatable({
         
     }))
     
     
-    #text mining sat/sun/mon
+    
     
 }
 
