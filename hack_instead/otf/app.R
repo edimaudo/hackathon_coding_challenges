@@ -28,7 +28,7 @@ for (package in packages) {
 #load data
 df <- read_excel("otf.xlsx")
 
-#df$year_update <- as.integer(df$year_update)
+df$year_update <- as.integer(df$year_update)
 yearInfo <- length(unique(df$year_update))
 grantInfo <- length(unique(df$grant_program))
 organizationInfo <- length(unique(df$organization_name))
@@ -70,7 +70,6 @@ ui <- dashboardPage(
             menuItem("Summary", tabName = "Summary", icon = icon("th")),
             menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")),
             menuItem("Text Mining", tabName = "TextMining", icon = icon("th")),
-            #text minings
             menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th")),
             menuItem("OTF Search tool", tabName = "OTFSearch", icon = icon("th")),
             menuItem(
@@ -374,11 +373,11 @@ server <- function(input, output, session) {
             )
     })
     
-    #population served update
+    #population served update - today
     
-    #age group served update
+    #age group served update - today
     
-    #year vs amount
+    #year vs amount - today
     
     output$generateWordCloud <- renderPlot({
         wordcloudData <- df %>%
@@ -415,36 +414,37 @@ server <- function(input, output, session) {
         d <- data.frame(word = names(v), freq = v)
         head(d, 10)
         
-        set.seed(1234)
+        #set.seed(1234)
         wordcloud(
             words = d$word,
             freq = d$freq,
             min.freq = 1,
-            max.words = 50,
+            max.words = 100,
             random.order = FALSE,
             rot.per = 0.35,
             colors = brewer.pal(8, "Dark2")
         )
         
     })
+
+    #word cloud by geographical area served - today
     
+    #word cloud of organization - today
+    
+    #search - today/sat
     output$searchOTF <- DT::renderDataTable(DT::datatable({
         
     }))
     
-    #word cloud by geographical area served
+
     
-    #word cloud of organization
-    
-    #https://medium.com/ampersand-academy/how-to-create-regression-model-using-catboost-package-in-r-programming-6cce3805a5e1
-    #https://www.kaggle.com/slickwilly/simple-catboost-in-r
+    # sat/sun
     output$estimatorOTF <- DT::renderDataTable(DT::datatable({
         
     }))
     
-    #text mining
-    #https://juliasilge.com/blog/animal-crossing/
-    #https://juliasilge.com/blog/tidy-text-classification/
+    
+    #text mining sat/sun/mon
     
 }
 
