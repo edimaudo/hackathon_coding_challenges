@@ -76,10 +76,7 @@ ui <- dashboardPage(
             menuItem("Text Mining", tabName = "TextMining", icon = icon("th")),
             menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th")),
             menuItem("OTF Search tool", tabName = "OTFSearch", icon = icon("th")),
-            menuItem(
-                "OTF Grant Estimator",
-                tabName = "OTFGrantEstimator",
-                icon = icon("th")
+            menuItem("OTF Grant Estimator",tabName = "OTFGrantEstimator",icon = icon("th")
             )
         )
     ),
@@ -162,29 +159,30 @@ ui <- dashboardPage(
                             br(),
                             submitButton("Submit")
                         ),
-                        mainPanel(fluidRow(
+                        mainPanel(
+                            fluidRow(
                             h2("English Descrption Word cloud", style = "text-align: center;"),
                             plotOutput("generateWordCloud")
-                        ))
-                    )),
+                            ),
+                            fluidRow(
+                                h2("Organization Word cloud", style = "text-align: center;"),
+                                plotOutput("generateWordCloudorg")
+                            )
+                        )
+                    )),   
             tabItem(tabName = "OTFSearch",
                     sidebarLayout(
                         sidebarPanel(
                             selectInput("yearInput", "Year", choices = yearData),
                             selectInput("budgetFundInput", "Stream", choices =
                                             budgetFundInfo),
-                            #sbudget fund
                             selectInput("areaInput", "Area", choices = geoAreaInfo),
-                            #geographical area served
                             selectInput("populationInput", "Population Served", choices =
                                             populationServedInfo),
-                            #population
                             selectInput("ageInput", "Age Group", choices =
                                             ageGroupInfo1),
-                            #age group
                             selectInput("programInput", "Program Area", choices =
                                             programSliderInput),
-                            #program area
                             br(),
                             submitButton("Submit")
                         ),
@@ -199,18 +197,13 @@ ui <- dashboardPage(
                             selectInput("yearInput", "Year", choices = yearData),
                             selectInput("budgetFundInput", "Stream", choices =
                                             budgetFundInfo),
-                            #sbudget fund
                             selectInput("areaInput", "Area", choices = geoAreaInfo),
-                            #geographical area served
                             selectInput("populationInput", "Population Served", choices =
                                             populationServedInfo),
-                            #population
                             selectInput("ageInput", "Age Group", choices =
                                             ageGroupInfo1),
-                            #age group
                             selectInput("programInput", "Program Area", choices =
                                             programSliderInput),
-                            #program area
                             br(),
                             submitButton("Submit")
                         ),
@@ -219,8 +212,6 @@ ui <- dashboardPage(
                             DT::dataTableOutput("estimatorOTF")
                         ))
                     ))
-            
-            
         )
     )
 )
@@ -512,7 +503,7 @@ server <- function(input, output, session) {
         d <- data.frame(word = names(v), freq = v)
         head(d, 10)
         
-        #set.seed(1234)
+        set.seed(1234)
         wordcloud(
             words = d$word,
             freq = d$freq,
@@ -525,18 +516,74 @@ server <- function(input, output, session) {
         
     })
 
-    #word cloud by geographical area served - today
+    #word cloud by Org name
+    output$generateWordCloudorg <- renderPlot({
+        wordcloudData <- df %>%
+            dplyr::filter(year_update == input$yearInput) %>%
+            dplyr::select(organization_name)
+        
+        docs <-
+            Corpus(VectorSource(wordcloudData$organization_name))
+        
+        toSpace <-
+            content_transformer(function (x , pattern)
+                gsub(pattern, " ", x))
+        docs <- tm_map(docs, toSpace, "/")
+        docs <- tm_map(docs, toSpace, "@")
+        docs <- tm_map(docs, toSpace, "\\|")
+        
+        # Convert the text to lower case
+        docs <- tm_map(docs, content_transformer(tolower))
+        # Remove numbers
+        docs <- tm_map(docs, removeNumbers)
+        # Remove english common stopwords
+        docs <- tm_map(docs, removeWords, stopwords("english"))
+        # Remove your own stop word
+        # specify your stopwords as a character vector
+        docs <- tm_map(docs, removeWords, c("blabla1", "blabla2"))
+        # Remove punctuations
+        docs <- tm_map(docs, removePunctuation)
+        # Eliminate extra white spaces
+        docs <- tm_map(docs, stripWhitespace)
+        
+        dtm <- TermDocumentMatrix(docs)
+        m <- as.matrix(dtm)
+        v <- sort(rowSums(m), decreasing = TRUE)
+        d <- data.frame(word = names(v), freq = v)
+        head(d, 10)
+        
+        set.seed(1234)
+        wordcloud(
+            words = d$word,
+            freq = d$freq,
+            min.freq = 1,
+            max.words = 100,
+            random.order = FALSE,
+            rot.per = 0.35,
+            colors = brewer.pal(8, "Dark2")
+        )
+        
+    })
     
-    #word cloud of organization - today
     
     #search - Sat
     output$searchOTF <- DT::renderDataTable(DT::datatable({
         
+        data <- df %>%
+            filter(year_update == input$yearInput) %>%
+            filter(budget_fund_update == input$budgetFundInput) %>%
+            filter(geographical_area_served_update == input$areaInput) %>%
+            filter(population_served_update == input$populationInput) %>%
+            filter(age_group_update == input$ageInput) %>%
+            filter(program_area == input$programInput)
+            select(organization_name, amount_awarded, program_area, recipient_org_city, age_group, 
+                   geographical_area_served_update, budget_fund, population_served)
     }))
     
-    #text mining Sat
+    #text mining Sun
+
     
-    #prediction model un/mon
+    #prediction model Mon/Tues
     output$estimatorOTF <- DT::renderDataTable(DT::datatable({
         
     }))
