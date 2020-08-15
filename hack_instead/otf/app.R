@@ -129,7 +129,16 @@ ui <- dashboardPage(
                             fluidRow(
                                 h2("Population Served and Amount Awarded", style = "text-align: center;"),
                                 plotOutput("populationServed")
+                            ),
+                            fluidRow(
+                                h2("Age Served and Amount Awarded", style = "text-align: center;"),
+                                plotOutput("ageServed")
+                            ),
+                            fluidRow(
+                                h2("Amount Awarded", style = "text-align: center;"),
+                                plotOutput("yearAmount")
                             )
+                            
                             
                             
                             
@@ -408,8 +417,65 @@ server <- function(input, output, session) {
     
     
     #age group served update
+    output$ageServed <- renderPlot({
+        data <-
+            df[df$year_update >= input$Years[[1]] &
+                   df$year_update <= input$Years[[2]], ]
+        
+        yearAgeServed <- data %>%
+            dplyr::group_by(year_update, age_group_update) %>%
+            dplyr::summarise(total_awarded = sum(amount_awarded))
+        
+        ggplot(data = yearAgeServed,
+               aes(
+                   x = as.factor(year_update),
+                   y = total_awarded,
+                   fill = age_group_update
+               )) +
+            geom_bar(stat = "identity", width = 0.4) + theme_classic() +
+            labs(x = "Years",
+                 y = "Amount awarded (CAD)",
+                 fill  = "Age Served") +
+            scale_y_continuous(labels = comma) +
+            scale_x_discrete() +
+            theme(
+                legend.text = element_text(size = 10),
+                legend.title = element_text(size = 10),
+                axis.title = element_text(size = 15),
+                axis.text = element_text(size = 10),
+                axis.text.x = element_text(angle = 45, hjust = 1)
+            )
+    })
     
-    #year vs amount - today
+    #year vs amount
+    output$yearAmount <- renderPlot({
+        data <-
+            df[df$year_update >= input$Years[[1]] &
+                   df$year_update <= input$Years[[2]], ]
+        
+        yearAmt <- data %>%
+            dplyr::group_by(year_update) %>%
+            dplyr::summarise(total_awarded = sum(amount_awarded))
+        
+        ggplot(data = yearAmt,
+               aes(
+                   x = as.factor(year_update),
+                   y = total_awarded,
+               )) +
+            geom_bar(stat = "identity", width = 0.4) + theme_classic() +
+            labs(x = "Years",
+                 y = "Amount awarded (CAD)") +
+            scale_y_continuous(labels = comma) +
+            scale_x_discrete() +
+            theme(
+                legend.text = element_text(size = 10),
+                legend.title = element_text(size = 10),
+                axis.title = element_text(size = 15),
+                axis.text = element_text(size = 10),
+                axis.text.x = element_text(angle = 45, hjust = 1)
+            )
+    })
+    
     
     output$generateWordCloud <- renderPlot({
         wordcloudData <- df %>%
