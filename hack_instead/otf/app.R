@@ -16,7 +16,10 @@ packages <-
         'DT',
         'scales',
         'tm',
-        'xgboost'
+        'xgboost',
+        'caret',
+        'dummies',
+        'mlbench'
     )
 #load packages
 for (package in packages) {
@@ -38,7 +41,7 @@ amountAwardedInfo <-
         sum(df$amount_awarded),
         format = "f",
         big.mark = ",",
-        digits = 1
+        digits = 0
     )
 ageGroupInfo <- length(unique(df$age_group_update))
 budgetInfo <- length(unique(df$budget_fund_update))
@@ -122,7 +125,14 @@ ui <- dashboardPage(
                             fluidRow(
                                 h2("Program areas and Amount Awarded", style = "text-align: center;"),
                                 plotOutput("programAwarded")
+                            ),
+                            fluidRow(
+                                h2("Population Served and Amount Awarded", style = "text-align: center;"),
+                                plotOutput("populationServed")
                             )
+                            
+                            
+                            
                         )
                     )),
             tabItem(tabName = "TextMining",
@@ -270,17 +280,11 @@ server <- function(input, output, session) {
     })
     
     #visualizations
-    
-    
-    
     #grants
     output$grantAwarded <- renderPlot({
-        #data <- df %>%
-        #    dplyr::filter(year_update %in% input$Years)
         data <-
             df[df$year_update >= input$Years[[1]] &
                    df$year_update <= input$Years[[2]], ]
-        #data <- df[which(df$year_update<=input$Years[[2]] & df$year_update>=input$Years[[1]]),]
         
         yearAwardedGrantProgram <- data %>%
             dplyr::group_by(year_update, grant_program) %>%
@@ -371,9 +375,39 @@ server <- function(input, output, session) {
             )
     })
     
-    #population served update - today
+    #population served update
+    output$populationServed <- renderPlot({
+        data <-
+            df[df$year_update >= input$Years[[1]] &
+                   df$year_update <= input$Years[[2]], ]
+        
+        yearPopulationServed <- data %>%
+            dplyr::group_by(year_update, population_served_update) %>%
+            dplyr::summarise(total_awarded = sum(amount_awarded))
+        
+        ggplot(data = yearPopulationServed,
+               aes(
+                   x = as.factor(year_update),
+                   y = total_awarded,
+                   fill = population_served_update
+               )) +
+            geom_bar(stat = "identity", width = 0.4) + theme_classic() +
+            labs(x = "Years",
+                 y = "Amount awarded (CAD)",
+                 fill  = "Population Served") +
+            scale_y_continuous(labels = comma) +
+            scale_x_discrete() +
+            theme(
+                legend.text = element_text(size = 10),
+                legend.title = element_text(size = 10),
+                axis.title = element_text(size = 15),
+                axis.text = element_text(size = 10),
+                axis.text.x = element_text(angle = 45, hjust = 1)
+            )
+    })
     
-    #age group served update - today
+    
+    #age group served update
     
     #year vs amount - today
     
@@ -429,14 +463,14 @@ server <- function(input, output, session) {
     
     #word cloud of organization - today
     
-    #search - today/Sat
+    #search - Sat
     output$searchOTF <- DT::renderDataTable(DT::datatable({
         
     }))
     
-    #text mining fri/sat/sun
+    #text mining Sat
     
-    #prediction model sat/sun/mon
+    #prediction model un/mon
     output$estimatorOTF <- DT::renderDataTable(DT::datatable({
         
     }))
