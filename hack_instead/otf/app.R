@@ -177,12 +177,12 @@ ui <- dashboardPage(
                             selectInput("budgetFundInput", "Stream", choices =
                                             budgetFundInfo),
                             selectInput("areaInput", "Area", choices = geoAreaInfo),
-                            selectInput("populationInput", "Population Served", choices =
-                                            populationServedInfo),
-                            selectInput("ageInput", "Age Group", choices =
-                                            ageGroupInfo1),
-                            selectInput("programInput", "Program Area", choices =
-                                            programSliderInput),
+                            # selectInput("populationInput", "Population Served", choices =
+                            #                 populationServedInfo),
+                            # selectInput("ageInput", "Age Group", choices =
+                            #                 ageGroupInfo1),
+                            # selectInput("programInput", "Program Area", choices =
+                            #                 programSliderInput),
                             br(),
                             submitButton("Submit")
                         ),
@@ -573,9 +573,6 @@ server <- function(input, output, session) {
             filter(year_update == input$yearInput) %>%
             filter(budget_fund_update == input$budgetFundInput) %>%
             filter(geographical_area_served_update == input$areaInput) %>%
-            filter(population_served_update == input$populationInput) %>%
-            filter(age_group_update == input$ageInput) %>%
-            filter(program_area == input$programInput)
             select(organization_name, amount_awarded, program_area, recipient_org_city, age_group, 
                    geographical_area_served_update, budget_fund, population_served)
     }))
