@@ -3,23 +3,10 @@ rm(list = ls())
 #packages
 packages <-
     c(
-        'ggplot2',
-        'corrplot',
-        'tidyverse',
-        'shiny',
-        'shinydashboard',
-        'SnowballC',
-        'wordcloud',
-        'dplyr',
-        'tidytext',
-        'readxl',
-        'DT',
-        'scales',
-        'tm',
-        'xgboost',
-        'caret',
-        'dummies',
-        'mlbench'
+        'ggplot2','shiny','shinydashboard',
+        'SnowballC','wordcloud','dplyr','tidyverse',
+        'tidytext','readxl','DT',
+        'scales','tm','xgboost','caret','dummies','mlbench'
     )
 #load packages
 for (package in packages) {
@@ -73,7 +60,6 @@ ui <- dashboardPage(
             ),
             menuItem("Summary", tabName = "Summary", icon = icon("th")),
             menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")),
-            menuItem("Text Mining", tabName = "TextMining", icon = icon("th")),
             menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th")),
             menuItem("OTF Search tool", tabName = "OTFSearch", icon = icon("th")),
             menuItem("OTF Grant Estimator",tabName = "OTFGrantEstimator",icon = icon("th")
@@ -150,6 +136,7 @@ ui <- dashboardPage(
                         ),
                         mainPanel(fluidRow(
                             h2("Text mining insights", style = "text-align: center;"),
+                            plotOutput("generateProgramSentiment")
                         ))
                     )),
             tabItem(tabName = "WordCloud",
@@ -566,7 +553,7 @@ server <- function(input, output, session) {
     })
     
     
-    #search - Sat
+    #search
     output$searchOTF <- DT::renderDataTable(DT::datatable({
         
         data <- df %>%
@@ -578,9 +565,10 @@ server <- function(input, output, session) {
     }))
     
     #text mining Sun
+    
 
     
-    #prediction model Mon/Tues
+    #prediction model Sun/Mon/Tues
     output$estimatorOTF <- DT::renderDataTable(DT::datatable({
         
     }))
