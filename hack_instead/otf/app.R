@@ -6,7 +6,8 @@ packages <-
         'ggplot2','shiny','shinydashboard',
         'SnowballC','wordcloud','dplyr','tidyverse',
         'tidytext','readxl','DT','data.table','Matrix',
-        'scales','tm','xgboost','caret','dummies','mlbench'
+        'scales','tm','xgboost','caret','dummies','mlbench',
+        'vtreat','tidyr'
     )
 #load packages
 for (package in packages) {
