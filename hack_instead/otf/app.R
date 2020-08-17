@@ -70,7 +70,8 @@ ui <- dashboardPage(
     ),
     dashboardBody(
         tabItems(
-            tabItem(tabName = "Introduction", includeMarkdown("readme.md"), hr()),
+            tabItem(tabName = "Introduction", 
+                    includeMarkdown("readme.md"), hr()),
             tabItem(
                 tabName = "Summary",
                 fluidRow(infoBoxOutput("yearInfo"),
@@ -100,23 +101,28 @@ ui <- dashboardPage(
                         ),
                         mainPanel(
                             fluidRow(
-                                h2("Grants and Amount Awarded", style = "text-align: center;"),
+                                h2("Grants and Amount Awarded", 
+                                   style = "text-align: center;"),
                                 plotOutput("grantAwarded")
                             ),
                             fluidRow(
-                                h2("Budget areas and Amount Awarded", style = "text-align: center;"),
+                                h2("Budget areas and Amount Awarded", 
+                                   style = "text-align: center;"),
                                 plotOutput("budgetAwarded")
                             ),
                             fluidRow(
-                                h2("Program areas and Amount Awarded", style = "text-align: center;"),
+                                h2("Program areas and Amount Awarded", 
+                                   style = "text-align: center;"),
                                 plotOutput("programAwarded")
                             ),
                             fluidRow(
-                                h2("Population Served and Amount Awarded", style = "text-align: center;"),
+                                h2("Population Served and Amount Awarded", 
+                                   style = "text-align: center;"),
                                 plotOutput("populationServed")
                             ),
                             fluidRow(
-                                h2("Age Served and Amount Awarded", style = "text-align: center;"),
+                                h2("Age Served and Amount Awarded", 
+                                   style = "text-align: center;"),
                                 plotOutput("ageServed")
                             ),
                             fluidRow(
@@ -183,16 +189,8 @@ ui <- dashboardPage(
             tabItem(tabName = "OTFGrantEstimator",
                     sidebarLayout(
                         sidebarPanel(
-                            selectInput("yearInput", "Year", choices = yearData),
-                            selectInput("budgetFundInput", "Stream", choices =
-                                            budgetFundInfo),
-                            selectInput("areaInput", "Area", choices = geoAreaInfo),
-                            selectInput("populationInput", "Population Served", choices =
-                                            populationServedInfo),
-                            selectInput("ageInput", "Age Group", choices =
-                                            ageGroupInfo1),
-                            selectInput("programInput", "Program Area", choices =
-                                            programSliderInput),
+                            selectInput("organizationInput", "Organization", 
+                                        choices = organizationInfo1),
                             br(),
                             submitButton("Submit")
                         ),
@@ -562,7 +560,8 @@ server <- function(input, output, session) {
             filter(year_update == input$yearInput) %>%
             filter(budget_fund_update == input$budgetFundInput) %>%
             filter(geographical_area_served_update == input$areaInput) %>%
-            select(organization_name, amount_awarded, program_area, recipient_org_city, age_group, 
+            select(organization_name, amount_awarded, program_area, 
+                   recipient_org_city, age_group, 
                    geographical_area_served_update, budget_fund, population_served)
     }))
     
