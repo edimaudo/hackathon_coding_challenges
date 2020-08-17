@@ -5,7 +5,7 @@ packages <-
     c(
         'ggplot2','shiny','shinydashboard',
         'SnowballC','wordcloud','dplyr','tidyverse',
-        'tidytext','readxl','DT',
+        'tidytext','readxl','DT','data.table','Matrix',
         'scales','tm','xgboost','caret','dummies','mlbench'
     )
 #load packages
@@ -46,6 +46,8 @@ populationServedInfo <-
 geoAreaInfo <-
     sort(as.vector(unique(df$geographical_area_served_update)))
 budgetFundInfo <- sort(as.vector(unique(df$budget_fund_update)))
+
+organizationInfo1 <- sort(unique(df$organization_name))
 
 #app
 ui <- dashboardPage(
@@ -563,10 +565,6 @@ server <- function(input, output, session) {
             select(organization_name, amount_awarded, program_area, recipient_org_city, age_group, 
                    geographical_area_served_update, budget_fund, population_served)
     }))
-    
-    #text mining Sun
-    
-
     
     #prediction model Sun/Mon/Tues
     output$estimatorOTF <- DT::renderDataTable(DT::datatable({
