@@ -15,3 +15,51 @@ The motor torque increases in inverse proportion to the decreased temperature.
 A steady-state of a motor can be achieved faster at lower temperatures.
 Phase currents increase with increased magnet temperature.
 Dataset
+
+### Data Dictionary
+Variable    |    Description
+
+Ambient     |	Ambient temperature – measured by a thermal sensor
+
+coolant	    |	Coolant temperature measured at outflow.
+
+u_d		    |    Voltage d-component
+
+u_q 	    |    Voltage q-component
+
+motor_speed |    Motor speed
+
+torque      | Torque induced by current.
+
+i_d         | Current d-component
+
+i_q         | Current q-component
+
+pm          | Permanent Magnet surface temperature (the rotor temperature) – measured with an infrared thermography unit
+
+stator_yoke | Stator yoke temperature – measured by a thermal sensor.
+
+stator_tooth| Stator tooth temperature – measured by a thermal sensor.
+
+stator_winding | Stator winding temperature – measured by a thermal sensor.
+
+profile_id  | Each measurement session with a unique ID.
+
+
+### Outcomes
+Create a compelling notebook of your analysis and prediction that allows your manager to better understand your approach. Attach a video screencast explaining the above.
+Submit your prediction results of your test dataset with four below variables (in csv file) and be sure to name them “predicted_temperatures“.
+Unique IDs of these sessions are not presented in the Test dataset as they are within Training dataset, so be careful. Don’t switch the rows within the test data frame and use all the measurements in the established order.
+
+Variable                   Description
+
+pm_predicted             | Predicted rotor temperature
+
+stator_yoke_predicted    | Predicted stator yoke temperature
+
+stator_tooth_predicted   | Predicted stator tooth temperature
+
+stator_winding_predicted | Predicted stator winding temperature
+
+Calculate the overall Root Mean Square Error (RMSE) by adding the RMSE of each of the examined variables with the help of the solution dataset, and name them: RMSE_pm, RMSE_stator_yoke, RMSE_stator_tooth, RMSE_stator_winding. 
+Projects must be posted as a Github repository with your code, results of test dataset and RMSE. No pre-existing projects will be accepted. Submissions must be original work of you and your team. 
