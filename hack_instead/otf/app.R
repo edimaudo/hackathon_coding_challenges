@@ -65,7 +65,8 @@ ui <- dashboardPage(
             menuItem("Yearly Trends", tabName = "Trends", icon = icon("th")),
             menuItem("Word Cloud", tabName = "WordCloud", icon = icon("th")),
             menuItem("OTF Search tool", tabName = "OTFSearch", icon = icon("th")),
-            menuItem("OTF Grant Estimator",tabName = "OTFGrantEstimator",icon = icon("th")
+            menuItem("OTF Grant Estimator",
+                     tabName = "OTFGrantEstimator",icon = icon("th")
             )
         )
     ),
@@ -157,11 +158,13 @@ ui <- dashboardPage(
                         ),
                         mainPanel(
                             fluidRow(
-                            h2("English Descrption Word cloud", style = "text-align: center;"),
+                            h2("English Descrption Word cloud", 
+                               style = "text-align: center;"),
                             plotOutput("generateWordCloud")
                             ),
                             fluidRow(
-                                h2("Organization Word cloud", style = "text-align: center;"),
+                                h2("Organization Word cloud", 
+                                   style = "text-align: center;"),
                                 plotOutput("generateWordCloudorg")
                             )
                         )
@@ -173,7 +176,8 @@ ui <- dashboardPage(
                             selectInput("budgetFundInput", "Stream", choices =
                                             budgetFundInfo),
                             selectInput("areaInput", "Area", choices = geoAreaInfo),
-                            # selectInput("populationInput", "Population Served", choices =
+                            # selectInput("populationInput", 
+                            #"Population Served", choices =
                             #                 populationServedInfo),
                             # selectInput("ageInput", "Age Group", choices =
                             #                 ageGroupInfo1),
@@ -196,7 +200,8 @@ ui <- dashboardPage(
                             submitButton("Submit")
                         ),
                         mainPanel(fluidRow(
-                            h2("Estimated Grant in CAD", style = "text-align: center;"),
+                            h2("Estimated Grant in CAD", 
+                               style = "text-align: center;"),
                             DT::dataTableOutput("estimatorOTF")
                         ))
                     ))
