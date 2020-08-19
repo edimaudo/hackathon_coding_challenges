@@ -655,9 +655,57 @@ server <- function(input, output, session) {
                    geographical_area_served_update, receipient_org_city_update,
                    population_served_update, age_group_update, year_update, amount_awarded)
         
-        CatchupPause(150)
-        output <- generate_prediction(df2)
-        CatchupPause(150)
+        #CatchupPause(150)
+        #output <- generate_prediction(df2)
+        set.seed(123)
+        split <- initial_split(df, prop = .7)
+        train <- training(split)
+        test  <- testing(split)
+        
+        # variable names
+        features <- setdiff(names(train), c('year_update',"amount_awarded"))
+        
+        # Create the treatment plan from the training data
+        treatplan <- vtreat::designTreatmentsZ(train, features, verbose = FALSE)
+        
+        # Get the "clean" variable names from the scoreFrame
+        new_vars <- treatplan %>%
+            magrittr::use_series(scoreFrame) %>%        
+            dplyr::filter(code %in% c("clean", "lev")) %>% 
+            magrittr::use_series(varName) 
+        
+        # Prepare the training data
+        features_train <- vtreat::prepare(treatplan, train, varRestriction = new_vars) %>% 
+            as.matrix()
+        response_train <- train$amount_awarded
+        
+        # Prepare the test data
+        features_test <- vtreat::prepare(treatplan, test, 
+                                         varRestriction = new_vars) %>% as.matrix()
+        response_test <- test$amount_awarded
+        
+        # parameter list
+        params <- list(
+            eta = 0.01,
+            max_depth = 5,
+            min_child_weight = 5,
+            subsample = 0.65,
+            colsample_bytree = 1
+        )
+        
+        # train final model
+        xgb.fit.final <- xgboost(
+            params = params,
+            data = features_train,
+            label = response_train,
+            nrounds = 100,
+            objective = "reg:linear",
+            verbose = 0,
+            early_stopping_rounds = 10 
+        )
+        pred <- predict(xgb.fit.final, features_test)
+        output <- mean(pred)
+        CatchupPause(300)
         output <- data.frame(output)
         DT::datatable(output)
     }
