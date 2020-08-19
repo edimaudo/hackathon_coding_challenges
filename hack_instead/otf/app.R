@@ -3,11 +3,28 @@ rm(list = ls())
 #packages
 packages <-
     c(
-        'ggplot2','shiny','shinydashboard',
-        'SnowballC','wordcloud','dplyr','tidyverse',
-        'tidytext','readxl','DT','data.table','Matrix',
-        'scales','tm','xgboost','caret','dummies','mlbench',
-        'vtreat','tidyr'
+        'ggplot2',
+        'corrplot',
+        'tidyverse',
+        'shiny',
+        'shinydashboard',
+        'SnowballC',
+        'wordcloud',
+        'dplyr',
+        'tidytext',
+        'readxl',
+        'DT',
+        'scales',
+        'tm',
+        'xgboost',
+        'caret',
+        'dummies',
+        'mlbench',
+        'tidyr',
+        'Matrix',
+        'data.table',
+        'vtreat', 
+        'rsample'
     )
 #load packages
 for (package in packages) {
@@ -15,6 +32,12 @@ for (package in packages) {
         install.packages(package)
         library(package, character.only = T)
     }
+}
+
+CatchupPause <- function(Secs){
+    Sys.sleep(Secs) #pause to let connection work
+    #closeAllConnections()
+    #gc()
 }
 
 #load data
@@ -48,7 +71,62 @@ geoAreaInfo <-
     sort(as.vector(unique(df$geographical_area_served_update)))
 budgetFundInfo <- sort(as.vector(unique(df$budget_fund_update)))
 
+df$organization_name <- as.character(df$organization_name)
 organizationInfo1 <- sort(unique(df$organization_name))
+
+
+generate_prediction <- function(df){
+    #data prep
+    set.seed(123)
+    split <- initial_split(df, prop = .7)
+    train <- training(split)
+    test  <- testing(split)
+    
+    # variable names
+    features <- setdiff(names(train), c('year_update',"amount_awarded"))
+    
+    # Create the treatment plan from the training data
+    treatplan <- vtreat::designTreatmentsZ(train, features, verbose = FALSE)
+    
+    # Get the "clean" variable names from the scoreFrame
+    new_vars <- treatplan %>%
+        magrittr::use_series(scoreFrame) %>%        
+        dplyr::filter(code %in% c("clean", "lev")) %>% 
+        magrittr::use_series(varName) 
+    
+    # Prepare the training data
+    features_train <- vtreat::prepare(treatplan, train, varRestriction = new_vars) %>% 
+        as.matrix()
+    response_train <- train$amount_awarded
+    
+    # Prepare the test data
+    features_test <- vtreat::prepare(treatplan, test, 
+                                     varRestriction = new_vars) %>% as.matrix()
+    response_test <- test$amount_awarded
+    
+    # parameter list
+    params <- list(
+        eta = 0.01,
+        max_depth = 5,
+        min_child_weight = 5,
+        subsample = 0.65,
+        colsample_bytree = 1
+    )
+    
+    # train final model
+    xgb.fit.final <- xgboost(
+        params = params,
+        data = features_train,
+        label = response_train,
+        nrounds = 100,
+        objective = "reg:linear",
+        verbose = 0,
+        early_stopping_rounds = 10 
+    )
+    pred <- predict(xgb.fit.final, features_test)
+    
+    return (mean(pred))
+}
 
 #app
 ui <- dashboardPage(
@@ -131,10 +209,6 @@ ui <- dashboardPage(
                                 h2("Amount Awarded", style = "text-align: center;"),
                                 plotOutput("yearAmount")
                             )
-                            
-                            
-                            
-                            
                         )
                     )),
             tabItem(tabName = "TextMining",
@@ -571,48 +645,23 @@ server <- function(input, output, session) {
                    geographical_area_served_update, budget_fund, population_served)
     }))
     
-    #prediction model Sun/Mon/Tues
-    output$estimatorOTF <- DT::renderDataTable(DT::datatable({
+    #prediction model
+    output$estimatorOTF <- DT::renderDataTable({
         df1 <- df %>%
-            filter(organization_name == input$organizationInput) %>%
+            filter(organization_name == input$organizationInput) 
+        
+        df2 <- df1 %>%
             select(program_area, budget_fund_update, 
                    geographical_area_served_update, receipient_org_city_update,
                    population_served_update, age_group_update, year_update, amount_awarded)
         
-        #data prep
-        set.seed(123)
-        split <- initial_split(df1, prop = .7)
-        train <- training(split)
-        test  <- testing(split)
-        
-        # variable names
-        features <- setdiff(names(train), c('year_update',"amount_awarded"))
-                            
-        # Create the treatment plan from the training data
-        treatplan <- vtreat::designTreatmentsZ(train, features, verbose = FALSE)
-                            
-        # Get the "clean" variable names from the scoreFrame
-        new_vars <- treatplan %>%
-        magrittr::use_series(scoreFrame) %>%        
-        dplyr::filter(code %in% c("clean", "lev")) %>% 
-        magrittr::use_series(varName) 
-                            
-        # Prepare the training data
-        features_train <- vtreat::prepare(treatplan, train, varRestriction = new_vars) %>% 
-        as.matrix()
-        response_train <- train$amount_awarded
-                            
-        # Prepare the test data
-        features_test <- vtreat::prepare(treatplan, test, 
-        varRestriction = new_vars) %>% as.matrix()
-        response_test <- test$amount_awarded
-        
-        # reproducibility
-        set.seed(123)
-            
-        
-        
-    }))
+        CatchupPause(150)
+        output <- generate_prediction(df2)
+        CatchupPause(150)
+        output <- data.frame(output)
+        DT::datatable(output)
+    }
+    )
     
     
     
