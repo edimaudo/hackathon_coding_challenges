@@ -573,6 +573,44 @@ server <- function(input, output, session) {
     
     #prediction model Sun/Mon/Tues
     output$estimatorOTF <- DT::renderDataTable(DT::datatable({
+        df1 <- df %>%
+            filter(organization_name == input$organizationInput) %>%
+            select(program_area, budget_fund_update, 
+                   geographical_area_served_update, receipient_org_city_update,
+                   population_served_update, age_group_update, year_update, amount_awarded)
+        
+        #data prep
+        set.seed(123)
+        split <- initial_split(df1, prop = .7)
+        train <- training(split)
+        test  <- testing(split)
+        
+        # variable names
+        features <- setdiff(names(train), c('year_update',"amount_awarded"))
+                            
+        # Create the treatment plan from the training data
+        treatplan <- vtreat::designTreatmentsZ(train, features, verbose = FALSE)
+                            
+        # Get the "clean" variable names from the scoreFrame
+        new_vars <- treatplan %>%
+        magrittr::use_series(scoreFrame) %>%        
+        dplyr::filter(code %in% c("clean", "lev")) %>% 
+        magrittr::use_series(varName) 
+                            
+        # Prepare the training data
+        features_train <- vtreat::prepare(treatplan, train, varRestriction = new_vars) %>% 
+        as.matrix()
+        response_train <- train$amount_awarded
+                            
+        # Prepare the test data
+        features_test <- vtreat::prepare(treatplan, test, 
+        varRestriction = new_vars) %>% as.matrix()
+        response_test <- test$amount_awarded
+        
+        # reproducibility
+        set.seed(123)
+            
+        
         
     }))
     
