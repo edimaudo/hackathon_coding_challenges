@@ -1,10 +1,9 @@
 #clear environment
 rm(list=ls())
 
-packages <- c('ggplot2','corrplot',
+packages <- c('ggplot2','corrplot','tidyr',
     'tidyverse','dplyr','scales','catboost',
-    'xgboost','caret','dummies','mlbench','tidyr',
-    'Matrix','data.table','vtreat', 'rsample')
+    'xgboost','caret','dummies','mlbench','Matrix','data.table')
 
 #load packages
 for (package in packages) {
@@ -18,6 +17,7 @@ for (package in packages) {
 train <- read_csv("train.csv")
 test <- read_csv("test.csv")
 test_solutions <- read_csv("test_solutions.csv")
+test <- cbind(test, test_solutions)
 
 #check for missing data
 missing_data_train <- apply(train, 2, function(x) any(is.na(x))) 
@@ -26,9 +26,9 @@ print(missing_data_train) #no missing data
 missing_data_test <- apply(test, 2, function(x) any(is.na(x))) 
 print(missing_data_test) #no missing data
 
-#------
+#================
 #EDA
-#------
+#================
 summary(train)
 summary(test)
 
@@ -36,36 +36,99 @@ summary(test)
 corinfo <- train
 corrplot(cor(corinfo), method="number")
 
-#Modeling
-
 #normalized data
 normalize <- function(x) {
   return ((x - min(x)) / (max(x) - min(x)))
 }
 
-#Approach 1
+#================
+#Approach catboost using normalized data
+#================
+#generate targets
+Target_train_pm <- train$pm
+Target_train_stator_tooth <- train$stator_tooth
+Target_train_stator_yoke <- train$stator_yoke
+Target_train_stator_winding <- train$stator_winding
+
+Target_test_pm <- test$pm
+Target_test_stator_tooth <- test$stator_tooth
+Target_test_stator_yoke <- test$stator_yoke
+Target_test_stator_winding <- test$stator_winding
+
+#train information normalizing
+df_train<- train[,c(1:8)]
+df_train_cts <- as.data.frame(lapply(df_train, normalize))
+
+#test information normalized
+df_test<- test[,c(1:8)]
+df_test_cts <- as.data.frame(lapply(df_test, normalize))
+
+
+
+params <- list(iterations=500,
+               learning_rate=0.01,
+               depth=10,
+               loss_function='RMSE',
+               eval_metric='RMSE',
+               random_seed = 55,
+               od_type='Iter',
+               metric_period = 50,
+               od_wait=20,
+               use_best_model=TRUE)
+
+#build pm model
+train_pool <- catboost.load_pool(data = df_train, label = Target_train_pm)
+test_pool <- catboost.load_pool(data = df_test, label = Target_test_pm)
+model <- catboost.train(train_pool,test_pool ,params = params)
+y_pred=catboost.predict(model,test_pool)
+postResample(y_pred,test$pm)
+
+#build stator tooth model
+train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_tooth)
+test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_tooth)
+model <- catboost.train(train_pool,test_pool ,params = params)
+y_pred=catboost.predict(model,test_pool)
+postResample(y_pred,test$stator_tooth)
+
+#build stator yoke model
+train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_yoke)
+test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_yoke)
+model <- catboost.train(train_pool,test_pool ,params = params)
+y_pred=catboost.predict(model,test_pool)
+postResample(y_pred,test$stator_yoke)
+
+#build startor winding model
+train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_winding)
+test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_winding)
+model <- catboost.train(train_pool,test_pool ,params = params)
+y_pred=catboost.predict(model,test_pool)
+postResample(y_pred,test$stator_winding)
+
+
+#parameter tuning
+
+
+
+#================
+#Approach 
+#================
 #generate targets
 Target_pm <- train$pm
 Target_stator_tooth <- train$stator_tooth
 Target_stator_yoke <- train$stator_yoke
 Target_stator_winding <- train$stator_winding
 
-#train information normalizing
-df_train_cts <- train[,c(1:8)]
-df_cts <- as.data.frame(lapply(df_train_cts, normalize))
-
-#combine data frame
-df_train_pm <- cbind(df_cts,Target_pm)
-df_train_stator_tooth <- cbind(df_cts,Target_stator_tooth)
-df_train_stator_yoke <- cbind(df_cts,Target_stator_yoke)
-df_train_stator_winding <- cbind(df_cts,Target_stator_winding)
-
 #train control
 control <- trainControl( method = "repeatedcv",   number = 5,   repeats = 5)
 
+#train information normalizing
+df_train<- train[,c(1:8)]
+df_train_cts <- as.data.frame(lapply(df_train, normalize))
+
 #test information normalized
-df_test_cts <- test[,c(1:8)]
-df_test_cts <- as.data.frame(lapply(df_test_cts, normalize))
+df_test<- test[,c(1:8)]
+df_test_cts <- as.data.frame(lapply(df_test, normalize))
+
 
 #build pm model
 #linear regression
@@ -98,38 +161,13 @@ dotplot(results)
 
 #build stator winding model
 
+#================
+#Approach 
+#================
 
-#Approach 2 - catboost using normalized data
-#build pm model
-train_pool <- catboost.load_pool(data = df_train_pm, label = Target_pm)
-
-params <- list(iterations=500,
-               learning_rate=0.01,
-               depth=10,
-               loss_function='RMSE',
-               eval_metric='RMSE',
-               random_seed = 55,
-               od_type='Iter',
-               metric_period = 50,
-               od_wait=20,
-               use_best_model=TRUE)
-
-model <- catboost.train(learn_pool = train_pool,params = params)
-# Fit model
-model.fit(train_data, train_labels)
-# Get predictions
-preds = model.predict(df_test_cts)
-#predict
-test_pool <- catboost.load_pool(data = df_test_cts)
-
-y_pred=catboost.predict(model,test_pool)
-#calculate error metrics
-postResample(y_pred,validation$medv)
-#output
-
-#Approach 3
-
-#Approach 4
+#================
+#Approach 
+#================
 
 #names(getModelInfo())
 
