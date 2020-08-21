@@ -4,7 +4,8 @@ rm(list=ls())
 packages <- c('ggplot2','corrplot',
     'tidyverse','dplyr','scales','catboost',
     'xgboost','caret','dummies','mlbench','tidyr',
-    'Matrix','data.table','vtreat', 'rsample','psych','GGally')
+    'Matrix','data.table','vtreat', 'rsample')
+
 #load packages
 for (package in packages) {
   if (!require(package, character.only = T, quietly = T)) {
@@ -49,8 +50,7 @@ Target_stator_tooth <- train$stator_tooth
 Target_stator_yoke <- train$stator_yoke
 Target_stator_winding <- train$stator_winding
 
-
-#cts variables
+#train information normalizing
 df_train_cts <- train[,c(1:8)]
 df_cts <- as.data.frame(lapply(df_train_cts, normalize))
 
@@ -63,9 +63,13 @@ df_train_stator_winding <- cbind(df_cts,Target_stator_winding)
 #train control
 control <- trainControl( method = "repeatedcv",   number = 5,   repeats = 5)
 
+#test information normalized
+df_test_cts <- test[,c(1:8)]
+df_test_cts <- as.data.frame(lapply(df_test_cts, normalize))
+
 #build pm model
 #linear regression
-fit.nnet <- train(Target_pm~., data=df_train_pm, method="lm", trControl=control)
+fit.lin <- train(Target_pm~., data=df_train_pm, method="lm", trControl=control)
 # #random forest
 fit.rf <- train(Target_pm~., data=df_train_pm, method="rf", trControl=control)
 # #Stochastic Gradient Boosting (Generalized Boosted Modeling)
@@ -75,6 +79,19 @@ fit.svm <- train(Target_pm~., data=df_train_pm, method="svmRadial", trControl=co
 # #nnet
 fit.nnet <- train(Target_pm~., data=df_train_pm, method="nnet", trControl=control)
 
+#------------------
+#compare models
+#------------------
+results <- resamples(list(linear = fit.lin,randomforest = fit.rf, 
+                          gradboost = fit.gbm, 
+                          svm = fit.svm, nnet = fit.nnet))
+#result output 
+summary(results)
+#boxplot comparison
+bwplot(results)
+# Dot-plot comparison
+dotplot(results)
+
 #build stator tooth model
 
 #build stator yoke model
@@ -82,7 +99,37 @@ fit.nnet <- train(Target_pm~., data=df_train_pm, method="nnet", trControl=contro
 #build stator winding model
 
 
-#Approach 2
+#Approach 2 - catboost using normalized data
+#build pm model
+train_pool <- catboost.load_pool(data = df_train_pm, label = Target_pm)
+
+params <- list(iterations=500,
+               learning_rate=0.01,
+               depth=10,
+               loss_function='RMSE',
+               eval_metric='RMSE',
+               random_seed = 55,
+               od_type='Iter',
+               metric_period = 50,
+               od_wait=20,
+               use_best_model=TRUE)
+
+model <- catboost.train(learn_pool = train_pool,params = params)
+# Fit model
+model.fit(train_data, train_labels)
+# Get predictions
+preds = model.predict(df_test_cts)
+#predict
+test_pool <- catboost.load_pool(data = df_test_cts)
+
+y_pred=catboost.predict(model,test_pool)
+#calculate error metrics
+postResample(y_pred,validation$medv)
+#output
+
+#Approach 3
+
+#Approach 4
 
 #names(getModelInfo())
 
@@ -107,23 +154,4 @@ fit.nnet <- train(Target_pm~., data=df_train_pm, method="nnet", trControl=contro
 # #cross fold validation
 # control <- trainControl(method="repeatedcv", number=10, repeats=5)
 # 
-# 
-# #random forest
-# fit.rf <- train(Target~., data=train, method="rf", trControl=control)
-# #Stochastic Gradient Boosting (Generalized Boosted Modeling)
-# fit.gbm <- train(Target~., data=train, method="gbm", trControl=control)
-# #svm
-# fit.svm <- train(Target~., data=train, method="svmRadial", trControl=control)
-# #nnet
-# fit.nnet <- train(Target~., data=train, method="nnet", trControl=control)
-# 
-# #------------------
-# #compare models
-# #------------------
-# results <- resamples(list(randomforest = fit.rf, gradboost = fit.gbm, svm = fit.svm, nnet = fit.nnet))
-# 
-# summary(results)
-# # boxplot comparison
-# bwplot(results)
-# # Dot-plot comparison
-# dotplot(results)
+
