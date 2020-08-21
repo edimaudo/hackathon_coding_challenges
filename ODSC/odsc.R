@@ -36,13 +36,10 @@ summary(test)
 corinfo <- train
 corrplot(cor(corinfo), method="number")
 
-#normalized data
-normalize <- function(x) {
-  return ((x - min(x)) / (max(x) - min(x)))
-}
+#visualization 
 
 #================
-#Approach catboost using normalized data
+#Approach catboost
 #================
 #generate targets
 Target_train_pm <- train$pm
@@ -55,6 +52,11 @@ Target_test_stator_tooth <- test$stator_tooth
 Target_test_stator_yoke <- test$stator_yoke
 Target_test_stator_winding <- test$stator_winding
 
+
+#normalized data
+normalize <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}
 #train information normalizing
 df_train<- train[,c(1:8)]
 df_train_cts <- as.data.frame(lapply(df_train, normalize))
@@ -82,6 +84,8 @@ test_pool <- catboost.load_pool(data = df_test, label = Target_test_pm)
 model <- catboost.train(train_pool,test_pool ,params = params)
 y_pred=catboost.predict(model,test_pool)
 postResample(y_pred,test$pm)
+#RMSE  Rsquared       MAE 
+#0.9063749 0.2017552 0.7408931 
 
 #build stator tooth model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_tooth)
@@ -89,6 +93,8 @@ test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_tooth
 model <- catboost.train(train_pool,test_pool ,params = params)
 y_pred=catboost.predict(model,test_pool)
 postResample(y_pred,test$stator_tooth)
+#RMSE  Rsquared       MAE 
+#0.5394807 0.6309856 0.4263911 
 
 #build stator yoke model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_yoke)
@@ -96,6 +102,8 @@ test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_yoke)
 model <- catboost.train(train_pool,test_pool ,params = params)
 y_pred=catboost.predict(model,test_pool)
 postResample(y_pred,test$stator_yoke)
+#RMSE  Rsquared       MAE 
+#0.3834321 0.7865398 0.3039089 
 
 #build startor winding model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_winding)
@@ -103,93 +111,65 @@ test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_windi
 model <- catboost.train(train_pool,test_pool ,params = params)
 y_pred=catboost.predict(model,test_pool)
 postResample(y_pred,test$stator_winding)
+#RMSE  Rsquared       MAE 
+#0.5833205 0.6576071 0.4572006 
+#feature importance
+catboost.get_feature_importance(model)
 
 
 #parameter tuning
 
 
 
-#================
-#Approach 
-#================
-#generate targets
-Target_pm <- train$pm
-Target_stator_tooth <- train$stator_tooth
-Target_stator_yoke <- train$stator_yoke
-Target_stator_winding <- train$stator_winding
-
-#train control
-control <- trainControl( method = "repeatedcv",   number = 5,   repeats = 5)
-
-#train information normalizing
-df_train<- train[,c(1:8)]
-df_train_cts <- as.data.frame(lapply(df_train, normalize))
-
-#test information normalized
-df_test<- test[,c(1:8)]
-df_test_cts <- as.data.frame(lapply(df_test, normalize))
-
-
-#build pm model
-#linear regression
-fit.lin <- train(Target_pm~., data=df_train_pm, method="lm", trControl=control)
-# #random forest
-fit.rf <- train(Target_pm~., data=df_train_pm, method="rf", trControl=control)
-# #Stochastic Gradient Boosting (Generalized Boosted Modeling)
-fit.gbm <- train(Target_pm~., data=df_train_pm, method="gbm", trControl=control)
-# #svm
-fit.svm <- train(Target_pm~., data=df_train_pm, method="svmRadial", trControl=control)
-# #nnet
-fit.nnet <- train(Target_pm~., data=df_train_pm, method="nnet", trControl=control)
-
-#------------------
-#compare models
-#------------------
-results <- resamples(list(linear = fit.lin,randomforest = fit.rf, 
-                          gradboost = fit.gbm, 
-                          svm = fit.svm, nnet = fit.nnet))
-#result output 
-summary(results)
-#boxplot comparison
-bwplot(results)
-# Dot-plot comparison
-dotplot(results)
-
-#build stator tooth model
-
-#build stator yoke model
-
-#build stator winding model
-
-#================
-#Approach 
-#================
-
-#================
-#Approach 
-#================
-
-#names(getModelInfo())
-
-
-#fitControl <- trainControl(method = "repeatedcv",   number = 10,   repeats = 5)
-
-#tune grid
-#modelLookup(model='gbm')
-
-#variable importance
-#varImp(object=model_gbm)
-
-# #remove highly correlated columns
-# # # calculate correlation matrix
-# correlationMatrix <- cor(df_new[,1:length(df_new)-1])
-# # # summarize the correlation matrix
-# # print(correlationMatrix)
-# # # find attributes that are highly corrected (ideally >0.75)
-# highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.75)
-# # # print indexes of highly correlated attributes
-# print(highlyCorrelated)
-# #cross fold validation
-# control <- trainControl(method="repeatedcv", number=10, repeats=5)
+# #================
+# #Approach 
+# #================
+# #generate targets
+# Target_pm <- train$pm
+# Target_stator_tooth <- train$stator_tooth
+# Target_stator_yoke <- train$stator_yoke
+# Target_stator_winding <- train$stator_winding
 # 
+# #train control
+# control <- trainControl( method = "repeatedcv",   number = 5,   repeats = 5)
+# 
+# #train information normalizing
+# df_train<- train[,c(1:8)]
+# df_train_cts <- as.data.frame(lapply(df_train, normalize))
+# 
+# #test information normalized
+# df_test<- test[,c(1:8)]
+# df_test_cts <- as.data.frame(lapply(df_test, normalize))
+# 
+# 
+# #build pm model
+# #linear regression
+# fit.lin <- train(Target_pm~., data=df_train_pm, method="lm", trControl=control)
+# # #random forest
+# fit.rf <- train(Target_pm~., data=df_train_pm, method="rf", trControl=control)
+# # #Stochastic Gradient Boosting (Generalized Boosted Modeling)
+# fit.gbm <- train(Target_pm~., data=df_train_pm, method="gbm", trControl=control)
+# # #svm
+# fit.svm <- train(Target_pm~., data=df_train_pm, method="svmRadial", trControl=control)
+# # #nnet
+# fit.nnet <- train(Target_pm~., data=df_train_pm, method="nnet", trControl=control)
+# 
+# #------------------
+# #compare models
+# #------------------
+# results <- resamples(list(linear = fit.lin,randomforest = fit.rf, 
+#                           gradboost = fit.gbm, 
+#                           svm = fit.svm, nnet = fit.nnet))
+# #result output 
+# summary(results)
+# #boxplot comparison
+# bwplot(results)
+# # Dot-plot comparison
+# dotplot(results)
+# 
+# #build stator tooth model
+# 
+# #build stator yoke model
+# 
+# #build stator winding model
 
