@@ -36,8 +36,6 @@ summary(test)
 corinfo <- train
 corrplot(cor(corinfo), method="number")
 
-#visualization 
-
 #================
 #Approach catboost
 #================
@@ -59,11 +57,11 @@ normalize <- function(x) {
 }
 #train information normalizing
 df_train<- train[,c(1:8)]
-df_train_cts <- as.data.frame(lapply(df_train, normalize))
+df_train <- as.data.frame(lapply(df_train, normalize))
 
 #test information normalized
 df_test<- test[,c(1:8)]
-df_test_cts <- as.data.frame(lapply(df_test, normalize))
+df_test <- as.data.frame(lapply(df_test, normalize))
 
 
 
@@ -81,38 +79,38 @@ params <- list(iterations=500,
 #build pm model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_pm)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_pm)
-model <- catboost.train(train_pool,test_pool ,params = params)
-y_pred=catboost.predict(model,test_pool)
-postResample(y_pred,test$pm)
+model_pm <- catboost.train(train_pool,test_pool ,params = params)
+y_pred_pm=catboost.predict(model_pm,test_pool)
+postResample(y_pred_pm,test$pm)
 #RMSE  Rsquared       MAE 
-#0.9063749 0.2017552 0.7408931 
+#0.9103235 0.1514294 0.7445611 
 
 #build stator tooth model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_tooth)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_tooth)
-model <- catboost.train(train_pool,test_pool ,params = params)
-y_pred=catboost.predict(model,test_pool)
-postResample(y_pred,test$stator_tooth)
+model_stator_tooth <- catboost.train(train_pool,test_pool ,params = params)
+y_pred_model_stator_tooth=catboost.predict(model_stator_tooth,test_pool)
+postResample(y_pred_model_stator_tooth,test$stator_tooth)
 #RMSE  Rsquared       MAE 
-#0.5394807 0.6309856 0.4263911 
+#0.5536960 0.5877786 0.4480499 
 
 #build stator yoke model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_yoke)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_yoke)
-model <- catboost.train(train_pool,test_pool ,params = params)
-y_pred=catboost.predict(model,test_pool)
-postResample(y_pred,test$stator_yoke)
+model_stator_yoke <- catboost.train(train_pool,test_pool ,params = params)
+y_pred_stator_yoke=catboost.predict(model_stator_yoke,test_pool)
+postResample(y_pred_stator_yoke,test$stator_yoke)
 #RMSE  Rsquared       MAE 
-#0.3834321 0.7865398 0.3039089 
+#0.3921159 0.7623605 0.3150374 
 
 #build startor winding model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_winding)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_winding)
-model <- catboost.train(train_pool,test_pool ,params = params)
-y_pred=catboost.predict(model,test_pool)
-postResample(y_pred,test$stator_winding)
+model_stator_winding <- catboost.train(train_pool,test_pool ,params = params)
+y_pred_stator_winding=catboost.predict(model_stator_winding,test_pool)
+postResample(y_pred_stator_winding,test$stator_winding)
 #RMSE  Rsquared       MAE 
-#0.5833205 0.6576071 0.4572006 
+#0.6032356 0.6117927 0.4836608 
 #feature importance
 catboost.get_feature_importance(model)
 
