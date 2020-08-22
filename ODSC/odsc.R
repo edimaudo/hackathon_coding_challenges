@@ -485,11 +485,13 @@ ggplot(data = train,aes(x = i_q,y = stator_winding)) +
     axis.title = element_text(size = 15),
     axis.text = element_text(size = 10))
 
+# most of the graphs don't generate any special insights.  
+# correlation is definitely a better tool
+
 # --------------------------------------------------------
 # Prediction 
 # --------------------------------------------------------
 # Approach -  Going to use catboost library
-
 # =======================================================
 #generate targets
 # =======================================================
@@ -541,7 +543,7 @@ postResample(y_pred_pm,test$pm)
 #0.9103235 0.1514294 0.7445611 
 
 cat("\nFeature importances", "\n")
-catboost.get_feature_importance(model, train_pool)
+catboost.get_feature_importance(model_pm, train_pool)
 
 #build stator tooth model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_tooth)
