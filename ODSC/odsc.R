@@ -42,7 +42,10 @@ test <- cbind(test, test_solutions)
 # --------------------------------------------------------
 # Data exploration & findings 
 # --------------------------------------------------------
+
+# =======================================================
 # check for missing data
+# =======================================================
 missing_data_train <- apply(train, 2, function(x) any(is.na(x))) 
 print(missing_data_train)
 
@@ -51,8 +54,9 @@ print(missing_data_test)
 # notes
 # train and test data have no missing data
 
-
+# =======================================================
 # data overview
+# =======================================================
 summary(train)
 # ambient            coolant              u_d                u_q             motor_speed      
 # Min.   :-8.57395   Min.   :-1.42935   Min.   :-1.65537   Min.   :-1.861463   Min.   :-1.23902  
@@ -81,8 +85,9 @@ summary(train)
 # all variables are a mixed of positive and negative numbers 
 # with the exception of profile id
 
-
+# =======================================================
 # correlation
+# =======================================================
 corinfo <- train
 corrplot(cor(corinfo), method="number")
 # notes
@@ -90,43 +95,404 @@ corrplot(cor(corinfo), method="number")
 # stator_yoke and stator_tooth, stator_yoke and stator_winding
 # stator_tooth and stator_winding, coolant and stator_yoke
 
+# --------------------------------------------------------
+# data visualizations
+# --------------------------------------------------------
 
-#data visualizations
+# =======================================================
+# pm visualization
+# =======================================================
 
-#pm
-ggplot(data = yearAwardedProgram,
-       aes(
-         x = as.factor(year_update),
-         y = total_awarded,
-         fill = program_area
-       )) +
-  geom_bar(stat = "identity", width = 0.4) + theme_classic() +
-  labs(x = "Years",
-       y = "Amount awarded (CAD)",
-       fill  = "Program Areas") +
+# ambient and pm
+ggplot(data = train,aes(x = ambient,y = pm)) +
+  geom_point() + theme_classic() +
+  labs(x = "ambient",
+       y = "pm") +
   scale_y_continuous(labels = comma) +
-  scale_x_discrete() +
   theme(
     legend.text = element_text(size = 10),
     legend.title = element_text(size = 10),
     axis.title = element_text(size = 15),
-    axis.text = element_text(size = 10),
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  )
+    axis.text = element_text(size = 10))
+# notes
+# clustered between - 3 and 3
 
-#stator tooth
+# coolant and pm
+ggplot(data = train,aes(x = coolant,y = pm)) +
+  geom_point() + theme_classic() +
+  labs(x = "coolant",y = "pm") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+# notes
+# values seem random
 
-#stator yoke
+# u_d and pm
+ggplot(data = train,aes(x = u_d,y = pm)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_d",y = "pm") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+# notes
+# values are clustered from o to 2 for u_d, some outliers between 2 and 3 for pm
 
-#stator winding
+# u_q and pm
+ggplot(data = train,aes(x = u_q,y = pm)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_q",y = "pm") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+# notes
+#
+
+#motor_speed and pm
+ggplot(data = train,aes(x = motor_speed,y = pm)) +
+  geom_point() + theme_classic() +
+  labs(x = "Motor speed",y = "pm") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# torque and pm
+ggplot(data = train,aes(x = torque,y = pm)) +
+  geom_point() + theme_classic() +
+  labs(x = "torque",y = "pm") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# i_d and pm
+ggplot(data = train,aes(x = i_d,y = pm)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_d",y = "pm") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# i_q and pm
+ggplot(data = train,aes(x = i_q,y = pm)) +
+  geom_point() + theme_classic() +
+  labs(x = "i_q",y = "pm") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# =======================================================
+# stator tooth visualization
+# =======================================================
+# ambient and stator_tooth
+ggplot(data = train,aes(x = ambient,y = stator_tooth)) +
+  geom_point() + theme_classic() +
+  labs(x = "ambient",
+       y = "stator_tooth") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+
+# coolant and stator_tooth
+ggplot(data = train,aes(x = coolant,y = stator_tooth)) +
+  geom_point() + theme_classic() +
+  labs(x = "coolant",y = "stator_tooth") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+
+# u_d and stator_tooth
+ggplot(data = train,aes(x = u_d,y = stator_tooth)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_d",y = "stator_tooth") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+
+# u_q and stator_tooth
+ggplot(data = train,aes(x = u_q,y = stator_tooth)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_q",y = "stator_tooth") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+
+#motor_speed and stator_tooth
+ggplot(data = train,aes(x = motor_speed,y = stator_tooth)) +
+  geom_point() + theme_classic() +
+  labs(x = "Motor speed",y = "stator_tooth") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# torque and stator_tooth
+ggplot(data = train,aes(x = torque,y = stator_tooth)) +
+  geom_point() + theme_classic() +
+  labs(x = "torque",y = "stator_tooth") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# i_d and stator_tooth
+ggplot(data = train,aes(x = i_d,y = stator_tooth)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_d",y = "stator_tooth") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# i_q and stator_tooth
+ggplot(data = train,aes(x = i_q,y = stator_tooth)) +
+  geom_point() + theme_classic() +
+  labs(x = "i_q",y = "stator_tooth") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# =======================================================
+# stator yoke visualization
+# =======================================================
+# ambient and stator_yoke
+ggplot(data = train,aes(x = ambient,y = stator_yoke)) +
+  geom_point() + theme_classic() +
+  labs(x = "ambient",
+       y = "stator_yoke") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# coolant and stator_yoke
+ggplot(data = train,aes(x = coolant,y = stator_yoke)) +
+  geom_point() + theme_classic() +
+  labs(x = "coolant",y = "stator_yoke") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# u_d and stator_yoke
+ggplot(data = train,aes(x = u_d,y = stator_yoke)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_d",y = "stator_yoke") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# u_q and stator_yoke
+ggplot(data = train,aes(x = u_q,y = stator_yoke)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_q",y = "stator_yoke") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+
+#motor_speed and stator_yoke
+ggplot(data = train,aes(x = motor_speed,y = stator_yoke)) +
+  geom_point() + theme_classic() +
+  labs(x = "Motor speed",y = "stator_yoke") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# torque and stator_yoke
+ggplot(data = train,aes(x = torque,y = stator_yoke)) +
+  geom_point() + theme_classic() +
+  labs(x = "torque",y = "stator_yoke") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# i_d and stator_yoke
+ggplot(data = train,aes(x = i_d,y = stator_yoke)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_d",y = "stator_yoke") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# i_q and stator_yoke
+ggplot(data = train,aes(x = i_q,y = stator_yoke)) +
+  geom_point() + theme_classic() +
+  labs(x = "i_q",y = "stator_yoke") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# =======================================================
+# stator winding visualization
+# =======================================================
+# ambient and stator_winding
+ggplot(data = train,aes(x = ambient,y = stator_winding)) +
+  geom_point() + theme_classic() +
+  labs(x = "ambient",
+       y = "stator_winding") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+
+# coolant and stator_winding
+ggplot(data = train,aes(x = coolant,y = stator_winding)) +
+  geom_point() + theme_classic() +
+  labs(x = "coolant",y = "stator_winding") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+
+# u_d and stator_winding
+ggplot(data = train,aes(x = u_d,y = stator_winding)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_d",y = "stator_winding") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+
+# u_q and stator_winding
+ggplot(data = train,aes(x = u_q,y = stator_winding)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_q",y = "stator_winding") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+
+#motor_speed and stator_winding
+ggplot(data = train,aes(x = motor_speed,y = stator_winding)) +
+  geom_point() + theme_classic() +
+  labs(x = "Motor speed",y = "stator_winding") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# torque and stator_winding
+ggplot(data = train,aes(x = torque,y = stator_winding)) +
+  geom_point() + theme_classic() +
+  labs(x = "torque",y = "stator_winding") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# i_d and stator_winding
+ggplot(data = train,aes(x = i_d,y = stator_winding)) +
+  geom_point() + theme_classic() +
+  labs(x = "u_d",y = "stator_winding") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
+
+# i_q and stator_winding
+ggplot(data = train,aes(x = i_q,y = stator_winding)) +
+  geom_point() + theme_classic() +
+  labs(x = "i_q",y = "stator_winding") +
+  scale_y_continuous(labels = comma) +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10))
 
 # --------------------------------------------------------
 # Prediction 
 # --------------------------------------------------------
+# Approach -  Going to use catboost library
 
-#Approach -  Going to use catboost library
-
+# =======================================================
 #generate targets
+# =======================================================
 Target_train_pm <- train$pm
 Target_train_stator_tooth <- train$stator_tooth
 Target_train_stator_yoke <- train$stator_yoke
@@ -212,10 +578,9 @@ postResample(y_pred_stator_winding,test$stator_winding)
 cat("\nFeature importances", "\n")
 catboost.get_feature_importance(model, train_pool)
 
-# --------------------------------------------------------
+# =======================================================
 # parameter tuning
-# --------------------------------------------------------
-#parameter tuning
+# =======================================================
 #pm
 
 #stator tooth
@@ -226,9 +591,9 @@ catboost.get_feature_importance(model, train_pool)
 
 #stator winding
 
-# --------------------------------------------------------
+# =======================================================
 # output
-# --------------------------------------------------------
+# =======================================================
 #pm
 
 #stator tooth
