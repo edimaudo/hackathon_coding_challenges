@@ -116,6 +116,20 @@ catboost.get_feature_importance(model)
 
 
 #parameter tuning
+fit_control <- trainControl(method = "cv",
+                            number = 5,
+                            classProbs = FALSE)
 
+grid <- expand.grid(depth = c(4, 6, 8,10,12,14),
+                    learning_rate = 0.01,
+                    iterations = 500,
+                    l2_leaf_reg = 1e-3,
+                    rsm = 0.95,
+                    border_count = 64)
+
+report <- train(df_train, Target_train_pm,
+                method = catboost.caret,
+                logging_level = 'Verbose', preProc = NULL,
+                tuneGrid = grid, trControl = fit_control)
 
 
