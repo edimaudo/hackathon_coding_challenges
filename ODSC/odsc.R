@@ -9,9 +9,11 @@
 #  3. Findings and explanations
 #  4. Predictions and performance of the model 
 
+
 # --------------------------------------------------------
 # Packages
 # --------------------------------------------------------
+
 rm(list=ls()) #clear environment
 
 packages <- c('ggplot2','corrplot','tidyr',
@@ -26,39 +28,91 @@ for (package in packages) {
   }
 }
 
+
 # --------------------------------------------------------
 # load data 
 # --------------------------------------------------------
+# set working directory to file location
 train <- read_csv("train.csv")
 test <- read_csv("test.csv")
 test_solutions <- read_csv("test_solutions.csv")
 test <- cbind(test, test_solutions)
 
+
 # --------------------------------------------------------
 # Data exploration & findings 
 # --------------------------------------------------------
-#check for missing data
+# check for missing data
 missing_data_train <- apply(train, 2, function(x) any(is.na(x))) 
 print(missing_data_train)
 
 missing_data_test <- apply(test, 2, function(x) any(is.na(x))) 
 print(missing_data_test)
+# notes
+# train and test data have no missing data
 
-#train and test data have no missing data
 
-#data overview
+# data overview
 summary(train)
-#blurb about the information
+# ambient            coolant              u_d                u_q             motor_speed      
+# Min.   :-8.57395   Min.   :-1.42935   Min.   :-1.65537   Min.   :-1.861463   Min.   :-1.23902  
+# 1st Qu.:-0.34534   1st Qu.:-1.04014   1st Qu.:-0.78720   1st Qu.:-0.916409   1st Qu.:-0.95189  
+# Median : 0.33962   Median :-0.13911   Median : 0.29274   Median :-0.085806   Median :-0.14025  
+# Mean   : 0.08285   Mean   : 0.02715   Mean   : 0.05259   Mean   : 0.003834   Mean   :-0.01086  
+# 3rd Qu.: 0.68825   3rd Qu.: 0.71704   3rd Qu.: 0.40460   3rd Qu.: 0.844942   3rd Qu.: 0.84481  
+# Max.   : 2.96712   Max.   : 2.64903   Max.   : 2.27473   Max.   : 1.793498   Max.   : 2.02416  
+# torque              i_d                i_q                pm              stator_yoke      
+# Min.   :-3.34595   Min.   :-3.24587   Min.   :-3.3416   Min.   :-2.6286480   Min.   :-1.83469  
+# 1st Qu.:-0.36510   1st Qu.:-0.75026   1st Qu.:-0.3621   1st Qu.:-0.6561854   1st Qu.:-0.73675  
+# Median :-0.23741   Median : 0.25470   Median :-0.2457   Median : 0.0831559   Median :-0.05231  
+# Mean   :-0.04155   Mean   : 0.02656   Mean   :-0.0409   Mean   :-0.0004415   Mean   : 0.01269  
+# 3rd Qu.: 0.47295   3rd Qu.: 1.01398   3rd Qu.: 0.4869   3rd Qu.: 0.6841788   3rd Qu.: 0.72864  
+# Max.   : 3.01697   Max.   : 1.06094   Max.   : 2.9142   Max.   : 2.9174562   Max.   : 2.44916  
 
-#correlation
+# stator_tooth        stator_winding        profile_id   
+# Min.   :-2.0661428   Min.   :-2.019973   Min.   : 4.00  
+# 1st Qu.:-0.7619508   1st Qu.:-0.723910   1st Qu.:30.00  
+# Median : 0.0123391   Median : 0.009469   Median :56.00  
+# Mean   : 0.0007527   Mean   :-0.008259   Mean   :50.61  
+# 3rd Qu.: 0.7780851   3rd Qu.: 0.707115   3rd Qu.:68.00  
+# Max.   : 2.3021693   Max.   : 2.653781   Max.   :81.00  
+
+# notes
+# all variables are a mixed of positive and negative numbers 
+# with the exception of profile id
+
+
+# correlation
 corinfo <- train
 corrplot(cor(corinfo), method="number")
+# notes
+# strong correlations between u_d and torque, u_d and i_q,
+# stator_yoke and stator_tooth, stator_yoke and stator_winding
+# stator_tooth and stator_winding, coolant and stator_yoke
 
-#blurb about correlation
 
 #data visualizations
 
 #pm
+ggplot(data = yearAwardedProgram,
+       aes(
+         x = as.factor(year_update),
+         y = total_awarded,
+         fill = program_area
+       )) +
+  geom_bar(stat = "identity", width = 0.4) + theme_classic() +
+  labs(x = "Years",
+       y = "Amount awarded (CAD)",
+       fill  = "Program Areas") +
+  scale_y_continuous(labels = comma) +
+  scale_x_discrete() +
+  theme(
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 
 #stator tooth
 
