@@ -566,6 +566,20 @@ ggplot(data = train,aes(x = i_q,y = stator_winding)) +
 # =======================================================
 #generate targets
 # =======================================================
+
+
+#normalized data
+normalize <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}
+#train information normalizing
+train <- as.data.frame(lapply(train, normalize))
+df_train<- train[,c(1:8)]
+
+#test information normalized
+test <- as.data.frame(lapply(test, normalize))
+df_test<- test[,c(1:8)]
+
 Target_train_pm <- train$pm
 Target_train_stator_tooth <- train$stator_tooth
 Target_train_stator_yoke <- train$stator_yoke
@@ -575,18 +589,6 @@ Target_test_pm <- test$pm
 Target_test_stator_tooth <- test$stator_tooth
 Target_test_stator_yoke <- test$stator_yoke
 Target_test_stator_winding <- test$stator_winding
-
-#normalized data
-normalize <- function(x) {
-  return ((x - min(x)) / (max(x) - min(x)))
-}
-#train information normalizing
-df_train<- train[,c(1:8)]
-df_train <- as.data.frame(lapply(df_train, normalize))
-
-#test information normalized
-df_test<- test[,c(1:8)]
-df_test <- as.data.frame(lapply(df_test, normalize))
 
 # --------------------------------------------------------
 # initial models
@@ -603,93 +605,105 @@ params <- list(iterations=500,
                od_wait=20,
                use_best_model=TRUE)
 
-#build pm model
+# build pm model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_pm)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_pm)
 model_pm <- catboost.train(train_pool,test_pool ,params = params)
 y_pred_pm=catboost.predict(model_pm,test_pool)
 cat("\n Metrics ", "\n")
 postResample(y_pred_pm,test$pm)
-#RMSE  Rsquared       MAE 
-#0.9103235 0.1514294 0.7445611 
+# RMSE  Rsquared       MAE 
+# 0.2195003 0.1401214 0.1878723 
 cat("\nFeature importances", "\n")
 catboost.get_feature_importance(model_pm, train_pool)
-# ambient     27.6343322
-# coolant     27.7570219
-# u_d          9.3242962
-# u_q         12.0743270
-# motor_speed 12.5978186
-# torque       4.5722120
-# i_d          0.4863714
-# i_q          5.5536206
+# ambient     25.581220
+# coolant     25.761846
+# u_d         10.770079
+# u_q         13.593460
+# motor_speed  9.416166
+# torque       5.707020
+# i_d          4.763703
+# i_q          4.406507
 
-#build stator tooth model
+# build stator tooth model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_tooth)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_tooth)
 model_stator_tooth <- catboost.train(train_pool,test_pool ,params = params)
 y_pred_model_stator_tooth=catboost.predict(model_stator_tooth,test_pool)
 cat("\n Metrics ", "\n")
 postResample(y_pred_model_stator_tooth,test$stator_tooth)
-#RMSE  Rsquared       MAE 
-#0.5536960 0.5877786 0.4480499 
+# RMSE  Rsquared       MAE 
+# 0.1564777 0.5747189 0.1273713 
 cat("\nFeature importances", "\n")
 catboost.get_feature_importance(model_stator_tooth, train_pool)
-# ambient     11.583474
-# coolant     39.840560
-# u_d          9.217656
-# u_q         13.496396
-# motor_speed  1.898006
-# torque       2.096492
-# i_d         20.059949
-# i_q          1.807468
+# ambient     11.607639
+# coolant     45.835811
+# u_d          7.349999
+# u_q         10.562692
+# motor_speed  3.507859
+# torque       2.853806
+# i_d         16.326350
+# i_q          1.955844
 
-#build stator yoke model
+# build stator yoke model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_yoke)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_yoke)
 model_stator_yoke <- catboost.train(train_pool,test_pool ,params = params)
 y_pred_stator_yoke=catboost.predict(model_stator_yoke,test_pool)
 cat("\n Metrics ", "\n")
 postResample(y_pred_stator_yoke,test$stator_yoke)
-#RMSE  Rsquared       MAE 
-#0.3921159 0.7623605 0.3150374 
+# RMSE   Rsquared        MAE 
+# 0.11103872 0.75938597 0.09005218  
 cat("\nFeature importances", "\n")
 catboost.get_feature_importance(model_stator_yoke, train_pool)
-# ambient      9.3559598
-# coolant     57.3062071
-# u_d          6.4527169
-# u_q          8.1868775
-# motor_speed  1.2422517
-# torque       0.7930903
-# i_d         15.7775800
-# i_q          0.8853167
+# ambient      9.394013
+# coolant     59.749107
+# u_d          5.465676
+# u_q          7.139743
+# motor_speed  2.930231
+# torque       1.804211
+# i_d         11.801944
+# i_q          1.715075
 
-#build startor winding model
+# build startor winding model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_winding)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_winding)
 model_stator_winding <- catboost.train(train_pool,test_pool ,params = params)
 y_pred_stator_winding=catboost.predict(model_stator_winding,test_pool)
 cat("\n Metrics ", "\n")
 postResample(y_pred_stator_winding,test$stator_winding)
-#RMSE  Rsquared       MAE 
-#0.6032356 0.6117927 0.4836608 
+# RMSE  Rsquared       MAE 
+# 0.1597373 0.5974142 0.1291624  
 #feature importance
 cat("\nFeature importances", "\n")
 catboost.get_feature_importance(model_stator_winding, train_pool)
-# ambient     11.437392
-# coolant     32.496352
-# u_d          8.221389
-# u_q         16.881759
-# motor_speed  1.520885
-# torque       2.970581
-# i_d         23.792802
-# i_q          2.678840
+# ambient     11.111690
+# coolant     37.201628
+# u_d          7.111262
+# u_q         13.813695
+# motor_speed  2.670178
+# torque       3.309407
+# i_d         22.073466
+# i_q          2.708673
+
 # =======================================================
-# features 
+# using selected features 
 # =======================================================
-df_train<- train[,c(1:8)]
-df_train <- as.data.frame(lapply(df_train, normalize))
-df_test<- test[,c(1:8)]
-df_test <- as.data.frame(lapply(df_test, normalize))
+# pm features data ambient ,coolant,u_d,u_q,motor_speed
+df_train_pm<- train[,c(1:5)]
+df_test_pm <- test[,c(1:5)]
+
+# stator tooth data
+df_train_stator_tooth<- train[,c(1,2,4,7)]
+df_test_stator_tooth <- test[,c(1,2,4,7)]
+
+# stator yoke data
+df_train_stator_yoke<- train[,c(1,2,7)]
+df_test_stator_yoke <- test[,c(1,2,7)]
+
+# stator winding data
+df_train_stator_winding <- train[,c(1,2,4,7)]
+df_test_stator_winding <- test[,c(1,2,4,7)]
 
 # =======================================================
 # parameter tuning
