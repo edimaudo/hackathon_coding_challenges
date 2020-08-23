@@ -108,6 +108,69 @@ print(highlyCorrelated)
 # --------------------------------------------------------
 
 # =======================================================
+# historgram visualization
+# =======================================================
+# ambient
+ggplot(train, aes(x=ambient))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#highest clusters seem to be betwen 0 and 2
+
+# coolant
+ggplot(train, aes(x=coolant))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#centered around -1
+
+# u_d
+ggplot(train, aes(x=u_d))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#centered around 0 and 0.5
+
+# u_q
+ggplot(train, aes(x=u_q))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#centered around -1.5 and -1
+
+# motor_speed
+ggplot(train, aes(x=motor_speed))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#centered after -1.5 and 1
+
+# torque
+ggplot(train, aes(x=torque))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#centered around -0.5 and 0
+
+# i_d
+ggplot(train, aes(x=i_d))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#centered around 1
+
+# i_q
+ggplot(train, aes(x=i_q))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#centered around -0.2 and 0
+
+# pm
+ggplot(train, aes(x=pm))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#centered around 0 and 1.  Looks normally distrbuted
+
+# stator tooth
+ggplot(train, aes(x=stator_tooth))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#centered between -0.5 and 0.5.  Looks normally distributed
+
+# stator yoke
+ggplot(train, aes(x=stator_yoke))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#centered around -0.5
+
+# stator winding
+ggplot(train, aes(x=stator_winding))+
+  geom_histogram(color="darkblue", fill="lightblue") + theme_classic()
+#looks normally distributed.  centered around 0
+
+# =======================================================
 # pm visualization
 # =======================================================
 
@@ -621,9 +684,32 @@ catboost.get_feature_importance(model_stator_winding, train_pool)
 # i_d         23.792802
 # i_q          2.678840
 # =======================================================
+# features 
+# =======================================================
+df_train<- train[,c(1:8)]
+df_train <- as.data.frame(lapply(df_train, normalize))
+df_test<- test[,c(1:8)]
+df_test <- as.data.frame(lapply(df_test, normalize))
+
+# =======================================================
 # parameter tuning
 # =======================================================
 #pm
+fit_control <- trainControl(method = "cv",
+                            number = 5,
+                            classProbs = FALSE)
+
+grid <- expand.grid(depth = c(10,12,14),
+                    learning_rate = c(0.03,0.04,0.05),
+                    iterations = 500,
+                    l2_leaf_reg = 1e-3,
+                    rsm = 0.95,
+                    border_count = 64)
+
+report <- train(df_train, Target_train_pm,
+                method = catboost.caret,
+                logging_level = 'Verbose', preProc = NULL,
+                tuneGrid = grid, trControl = fit_control)
 
 #stator tooth
 
@@ -655,7 +741,7 @@ catboost.get_feature_importance(model_stator_winding, train_pool)
 #                             classProbs = FALSE)
 # 
 # grid <- expand.grid(depth = c(10,12,14),
-#                     learning_rate = 0.01,
+#                     learning_rate = (0.01,0.1,1),
 #                     iterations = 1000,
 #                     l2_leaf_reg = 1e-3,
 #                     rsm = 0.95,
