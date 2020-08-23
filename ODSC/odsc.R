@@ -692,18 +692,64 @@ catboost.get_feature_importance(model_stator_winding, train_pool)
 # pm features data ambient ,coolant,u_d,u_q,motor_speed
 df_train_pm<- train[,c(1:5)]
 df_test_pm <- test[,c(1:5)]
+train_pool <- catboost.load_pool(data = df_train_pm, label = Target_train_pm)
+test_pool <- catboost.load_pool(data = df_test_pm, label = Target_test_pm)
+model_pm <- catboost.train(train_pool,test_pool ,params = params)
+y_pred_pm=catboost.predict(model_pm,test_pool)
+cat("\n Metrics ", "\n")
+postResample(y_pred_pm,test$pm)
+# RMSE  Rsquared       MAE 
+# 0.2179503 0.1374880 0.1853962 
+cat("\nFeature importances", "\n")
+catboost.get_feature_importance(model_pm, train_pool)
 
 # stator tooth data
 df_train_stator_tooth<- train[,c(1,2,4,7)]
 df_test_stator_tooth <- test[,c(1,2,4,7)]
+# build stator tooth model
+train_pool <- catboost.load_pool(data = df_train_stator_tooth, label = Target_train_stator_tooth)
+test_pool <- catboost.load_pool(data = df_test_stator_tooth, label = Target_test_stator_tooth)
+model_stator_tooth <- catboost.train(train_pool,test_pool ,params = params)
+y_pred_model_stator_tooth=catboost.predict(model_stator_tooth,test_pool)
+cat("\n Metrics ", "\n")
+postResample(y_pred_model_stator_tooth,test$stator_tooth)
+# RMSE  Rsquared       MAE 
+# 0.1610478 0.5429575 0.1309435 
+cat("\nFeature importances", "\n")
+catboost.get_feature_importance(model_stator_tooth, train_pool)
 
 # stator yoke data
 df_train_stator_yoke<- train[,c(1,2,7)]
 df_test_stator_yoke <- test[,c(1,2,7)]
+# build stator yoke model
+train_pool <- catboost.load_pool(data = df_train_stator_yoke, label = Target_train_stator_yoke)
+test_pool <- catboost.load_pool(data = df_test_stator_yoke, label = Target_test_stator_yoke)
+model_stator_yoke <- catboost.train(train_pool,test_pool ,params = params)
+y_pred_stator_yoke=catboost.predict(model_stator_yoke,test_pool)
+cat("\n Metrics ", "\n")
+postResample(y_pred_stator_yoke,test$stator_yoke)
+# RMSE   Rsquared        MAE 
+# 0.11924872 0.71862510 0.09565694 
+cat("\nFeature importances", "\n")
+catboost.get_feature_importance(model_stator_yoke, train_pool)
 
 # stator winding data
 df_train_stator_winding <- train[,c(1,2,4,7)]
 df_test_stator_winding <- test[,c(1,2,4,7)]
+# build startor winding model
+train_pool <- catboost.load_pool(data = df_train_stator_winding, label = Target_train_stator_winding)
+test_pool <- catboost.load_pool(data = df_test_stator_winding, label = Target_test_stator_winding)
+model_stator_winding <- catboost.train(train_pool,test_pool ,params = params)
+y_pred_stator_winding=catboost.predict(model_stator_winding,test_pool)
+cat("\n Metrics ", "\n")
+postResample(y_pred_stator_winding,test$stator_winding)
+# RMSE  Rsquared       MAE 
+# 0.1655514 0.5518565 0.1349436  
+#feature importance
+cat("\nFeature importances", "\n")
+catboost.get_feature_importance(model_stator_winding, train_pool)
+
+
 
 # =======================================================
 # parameter tuning
