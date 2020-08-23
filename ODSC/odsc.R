@@ -94,7 +94,15 @@ corrplot(cor(corinfo), method="number")
 # strong correlations between u_d and torque, u_d and i_q,
 # stator_yoke and stator_tooth, stator_yoke and stator_winding
 # stator_tooth and stator_winding, coolant and stator_yoke
-
+#remove highly correlated columns
+# # calculate correlation matrix
+correlationMatrix <- cor(df_train[,1:length(df_train)])
+# # summarize the correlation matrix
+# print(correlationMatrix)
+# # find attributes that are highly corrected (ideally >0.75)
+highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.8)
+# # print indexes of highly correlated attributes
+print(highlyCorrelated)
 # --------------------------------------------------------
 # data visualizations
 # --------------------------------------------------------
@@ -537,49 +545,81 @@ train_pool <- catboost.load_pool(data = df_train, label = Target_train_pm)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_pm)
 model_pm <- catboost.train(train_pool,test_pool ,params = params)
 y_pred_pm=catboost.predict(model_pm,test_pool)
+cat("\n Metrics ", "\n")
 postResample(y_pred_pm,test$pm)
-
 #RMSE  Rsquared       MAE 
 #0.9103235 0.1514294 0.7445611 
-
 cat("\nFeature importances", "\n")
 catboost.get_feature_importance(model_pm, train_pool)
+# ambient     27.6343322
+# coolant     27.7570219
+# u_d          9.3242962
+# u_q         12.0743270
+# motor_speed 12.5978186
+# torque       4.5722120
+# i_d          0.4863714
+# i_q          5.5536206
 
 #build stator tooth model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_tooth)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_tooth)
 model_stator_tooth <- catboost.train(train_pool,test_pool ,params = params)
 y_pred_model_stator_tooth=catboost.predict(model_stator_tooth,test_pool)
+cat("\n Metrics ", "\n")
 postResample(y_pred_model_stator_tooth,test$stator_tooth)
 #RMSE  Rsquared       MAE 
 #0.5536960 0.5877786 0.4480499 
-
 cat("\nFeature importances", "\n")
-catboost.get_feature_importance(model, train_pool)
+catboost.get_feature_importance(model_stator_tooth, train_pool)
+# ambient     11.583474
+# coolant     39.840560
+# u_d          9.217656
+# u_q         13.496396
+# motor_speed  1.898006
+# torque       2.096492
+# i_d         20.059949
+# i_q          1.807468
 
 #build stator yoke model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_yoke)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_yoke)
 model_stator_yoke <- catboost.train(train_pool,test_pool ,params = params)
 y_pred_stator_yoke=catboost.predict(model_stator_yoke,test_pool)
+cat("\n Metrics ", "\n")
 postResample(y_pred_stator_yoke,test$stator_yoke)
 #RMSE  Rsquared       MAE 
 #0.3921159 0.7623605 0.3150374 
 cat("\nFeature importances", "\n")
-catboost.get_feature_importance(model, train_pool)
+catboost.get_feature_importance(model_stator_yoke, train_pool)
+# ambient      9.3559598
+# coolant     57.3062071
+# u_d          6.4527169
+# u_q          8.1868775
+# motor_speed  1.2422517
+# torque       0.7930903
+# i_d         15.7775800
+# i_q          0.8853167
 
 #build startor winding model
 train_pool <- catboost.load_pool(data = df_train, label = Target_train_stator_winding)
 test_pool <- catboost.load_pool(data = df_test, label = Target_test_stator_winding)
 model_stator_winding <- catboost.train(train_pool,test_pool ,params = params)
 y_pred_stator_winding=catboost.predict(model_stator_winding,test_pool)
+cat("\n Metrics ", "\n")
 postResample(y_pred_stator_winding,test$stator_winding)
 #RMSE  Rsquared       MAE 
 #0.6032356 0.6117927 0.4836608 
 #feature importance
 cat("\nFeature importances", "\n")
-catboost.get_feature_importance(model, train_pool)
-
+catboost.get_feature_importance(model_stator_winding, train_pool)
+# ambient     11.437392
+# coolant     32.496352
+# u_d          8.221389
+# u_q         16.881759
+# motor_speed  1.520885
+# torque       2.970581
+# i_d         23.792802
+# i_q          2.678840
 # =======================================================
 # parameter tuning
 # =======================================================
