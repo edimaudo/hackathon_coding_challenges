@@ -866,7 +866,7 @@ postResample(y_pred_pm,Target_test_pm)
 train_pool <- catboost.load_pool(data = df_train_stator_tooth, label = Target_train_stator_tooth)
 test_pool <- catboost.load_pool(data = df_test_stator_tooth, label = Target_test_stator_tooth)
 model_stator_tooth <- catboost.train(train_pool,test_pool ,params = params)
-y_pred_model_stator_tooth=catboost.predict(model_stator_tooth,test_pool)
+y_pred_stator_tooth=catboost.predict(model_stator_tooth,test_pool)
 cat("\n Metrics ", "\n")
 postResample(y_pred_model_stator_tooth,Target_train_stator_tooth)
 
@@ -884,13 +884,42 @@ test_pool <- catboost.load_pool(data = df_test_stator_winding, label = Target_te
 model_stator_winding <- catboost.train(train_pool,test_pool ,params = params)
 y_pred_stator_winding=catboost.predict(model_stator_winding,test_pool)
 cat("\n Metrics ", "\n")
-postResample(y_pred_stator_winding,Target_train_stator_winding)
+postResample(y_pred_stator_winding,Target_test_stator_winding)
 
 # =======================================================
 # outputs
 # =======================================================
-output_cols <- ('pm','stator_tooth','stator_yoke','stator_winding')
-rmse_col <- c("RMSE")
+output_cols <- c('pm','stator_tooth','stator_yoke','stator_winding')
+rmse_col <- c('RMSE_pm', 'RMSE_stator_yoke', 'RMSE_stator_tooth', 'RMSE_stator_winding')
 
-#combined
+#predictions
+y_pred_combined <- cbind(y_pred_pm,y_pred_stator_tooth,y_pred_stator_yoke,y_pred_stator_winding)
+y_pred_combined <- as.data.frame(y_pred_combined)
+colnames(y_pred_combined) <- output_cols
+write.csv(y_pred_combined, "predictions.csv")
+
+#rmse
+rmse <- function(error)
+{
+  sqrt(mean(error^2))
+}
+error_pm <- Target_test_pm -  y_pred_pm
+error_stator_tooth <- Target_train_stator_tooth - y_pred_model_stator_tooth
+error_stator_yoke <- Target_test_stator_yoke -  y_pred_stator_yoke
+error_stator_winding <- Target_test_stator_winding - y_pred_stator_winding
+
+rmse_pm <- rmse(error_pm)
+rmse_stator_tooth <- rmse(error_stator_tooth)
+rmse_stator_yoke <- rmse(error_stator_yoke)
+rmse_stator_winding <- rmse(error_stator_winding)
+
+rmse_total <- cbind(rmse_pm, rmse_stator_tooth, rmse_stator_yoke, rmse_stator_winding)
+rmse_total <- as.data.frame(rmse_total)
+colnames(rmse_total) <- rmse_col
+
+rmse_final <- rmse_total$RMSE_pm + rmse_total$RMSE_stator_yoke + rmse_total$RMSE_stator_tooth +
+  rmse_total$RMSE_stator_winding
+
+
+
 
