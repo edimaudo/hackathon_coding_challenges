@@ -39,25 +39,23 @@ ratingmat = as(ratingmat, "binaryRatingMatrix")
 #We take 10 nearest neighbours
 rec_mod = Recommender(ratingmat, method = "UBCF", param=list(method="Cosine",nn=10)) 
 
-#Obtain top 5 recommendations for 1st user entry in dataset
-Top_5_pred = predict(rec_mod, ratingmat[1], n=5)
-
-Top_5_List = as(Top_5_pred, "list")
-Top_5_List
-
-
-#training 
+# #Obtain top 5 recommendations for 1st user entry in dataset
+# Top_5_pred = predict(rec_mod, ratingmat[1], n=5)
+# 
+# Top_5_List = as(Top_5_pred, "list")
+# Top_5_List
 
 
-#test
+# build model
 
 
+# update model
 
-#prediction
 
-#evaluate model
+# output
+submission_cols <- c("ID.X.PCODE","Label")
 
-#combine data into submission 
+
 
 
 
