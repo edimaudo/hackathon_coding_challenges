@@ -67,19 +67,44 @@ items_to_recommend <- as.integer(length(products))
 eval_recommender = Recommender(data = ratingmat_train,
                                method = "UBCF", parameter = NULL)
 eval_prediction = predict(object = eval_recommender,
-                          newdata = ratingmat_test,
+                          newdata = ratingmat_test[1:50],
                           n = items_to_recommend)
 eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
-                                       data = ratingmat_test[1],byUser = TRUE)
+                                       data = ratingmat_test[1:50], given=items_to_recommend)
 
-calc
 head(eval_accuracy)
 
 #IBCF
+eval_recommender = Recommender(data = ratingmat_train,
+                               method = "IBCF", parameter = NULL)
+eval_prediction = predict(object = eval_recommender,
+                          newdata = ratingmat_test[1:50],
+                          n = items_to_recommend)
+eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
+                                       data = ratingmat_test[1:50], given=items_to_recommend)
 
+head(eval_accuracy)
 
-#UBCF - cosine
-rec_mod_ubcf_cosine = Recommender(ratingmat, method = "UBCF", param=list(method="Cosine",nn=10)) 
+#multiple models
+models_to_evaluate = list(IBCF_cos = list(name = "IBCF", param = list(method = "cosine")),
+                          IBCF_cor = list(name = "IBCF", param = list(method = "pearson")),
+                          UBCF_cos = list(name = "UBCF", param = list(method = "cosine")),
+                          UBCF_cor = list(name = "UBCF", param = list(method = "pearson")),
+                          random = list(name = "RANDOM", param=NULL),
+                          popular = list(name = "POPULAR", param=NULL),
+                          UBCF = list(name = "UBCF", param=NULL),
+                          IBCF = list(name = "IBCF", param=NULL)
+                          )
+
+n_recommendations = c(1, 3, 5, 10, 15, 20,21)
+scheme <- evaluationScheme(ratingmat_train, method = "cross-validation", k=5,given = -1)
+results <- evaluate(scheme,method = models_to_evaluate,n=n_recommendations)
+
+plot(results, y = "ROC", annotate = 1, legend="topright")
+title("ROC Curve")
+# Draw precision / recall curve
+plot(results, y = "prec/rec", annotate=1)
+title("Precision-Recall")
 
 # =======================================================
 # Select best recommendation model
@@ -98,6 +123,17 @@ submission_cols <- c("ID.X.PCODE","Label")
 # Top_5_pred = predict(rec_mod, ratingmat[1], n=5)
 # Top_5_List = as(Top_5_pred, "list")
 # Top_5_List
+
+# ratings <- read.csv('csv/rating_final.csv')
+# binaryMatrix <- as(ratings,"binaryRatingMatrix")
+# scheme <- evaluationScheme(binaryMatrix, method = "cross-validation", k=5, train = 0.7, given = -1)
+# methods <- list(
+#   popular = list(name = "POPULAR", param = NULL), 
+#   `user-based CF` = list(name = "UBCF", param = list(method = "cosine", nn = 3)),
+#   `item-based CF` = list(name = "IBCF", param = list(method = "cosine", k = 3)),
+#   AR = list(name="AR", param = list(supp=0.05,conf=0.5))
+# )
+# results <- evaluate(scheme, methods, type="topNList", n = c(1,2,5), progress = FALSE)
 
 
 
