@@ -96,12 +96,14 @@ models_to_evaluate = list(IBCF_cos = list(name = "IBCF", param = list(method = "
                           IBCF = list(name = "IBCF", param=NULL)
                           )
 
-n_recommendations = c(1, 3, 5, 10, 15, 20,21)
+n_recommendations = c(21)
 scheme <- evaluationScheme(ratingmat_train, method = "cross-validation", k=5,given = -1)
 results <- evaluate(scheme,method = models_to_evaluate,n=n_recommendations)
 
+#Draw ROC curve
 plot(results, y = "ROC", annotate = 1, legend="topright")
 title("ROC Curve")
+
 # Draw precision / recall curve
 plot(results, y = "prec/rec", annotate=1)
 title("Precision-Recall")
@@ -109,6 +111,28 @@ title("Precision-Recall")
 # =======================================================
 # Select best recommendation model
 # =======================================================
+beginvalue = 1
+endvalue = 1000
+
+for (i in 1:10){
+  
+  eval_prediction <- predict(object = eval_recommender,
+                            newdata = ratingmat_test[beginvalue:endvalue],
+                            n = items_to_recommend)
+  eval_accuracy <- calcPredictionAccuracy(x = eval_prediction,
+                                         data = ratingmat_test[beginvalue:endvalue]
+                                         , given=items_to_recommend)
+  beginvalue <- beginvalue + 1000
+  endvalue <- endvalue + 1000
+  
+}
+
+
+
+
+
+
+
 
 # =======================================================
 # output
