@@ -60,19 +60,24 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 # =======================================================
 # build recommendation models
 # =======================================================
-items_to_recommend <- length(products)
-#UBCF
-rec_mod_ubcf = Recommender(ratingmat, method = "UBCF")
-eval_recommender = Recommender(data = ratingmat,
+items_to_recommend <- as.integer(length(products))
+
+# UBCF
+#rec_mod_ubcf = Recommender(ratingmat, method = "UBCF")
+eval_recommender = Recommender(data = ratingmat_train,
                                method = "UBCF", parameter = NULL)
 eval_prediction = predict(object = eval_recommender,
-                          newdata = getData(eval_sets, "known"),
-                          n = items_to_recommend,
-                          type = "ratings")
+                          newdata = ratingmat_test,
+                          n = items_to_recommend)
 eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
-                                       data = getData(eval_sets, "unknown"),
-                                       byUser = TRUE)
+                                       data = ratingmat_test[1],byUser = TRUE)
+
+calc
 head(eval_accuracy)
+
+#IBCF
+
+
 #UBCF - cosine
 rec_mod_ubcf_cosine = Recommender(ratingmat, method = "UBCF", param=list(method="Cosine",nn=10)) 
 
