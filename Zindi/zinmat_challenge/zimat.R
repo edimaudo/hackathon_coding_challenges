@@ -197,14 +197,25 @@ eval_accuracy
 
 output <- as(eval_prediction,"list")
 
+products <- c('P5DA', 'RIBP', '8NN1',
+              '7POT', 'X66FJ', 'GYSR', 'SOP4', 'RVSZ', 'PYUQ', 'LJR9', 'N2MW', 'AHXO',
+              'BSTQ', 'FM3X', 'K6QO', 'QBOL', 'JWFN', 'JZ9D', 'J9JW', 'GHYX', 'ECY3')
+ID_info <- test_df$ID
 
+submission_data <- data.frame(matrix(ncol = 2, nrow = 0))
+submission_cols <- c("ID.X.PCODE","Label")
+colnames(submission_data) <- submission_cols
 
-
+for(i in 1:length(output)){
+  id <- ID_info[i,1]
+  output_holder <- output[i]
+  
+}
 
 # =======================================================
 # output
 # =======================================================
-submission_cols <- c("ID.X.PCODE","Label")
+
 
 
 #Create Recommender Model. The parameters are UBCF and Cosine similarity. 
