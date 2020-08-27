@@ -46,7 +46,7 @@ train_df <- train %>%
   select(ID,P5DA, RIBP, X8NN1,X7POT, X66FJ, GYSR, SOP4, RVSZ, PYUQ, LJR9, N2MW, AHXO,
         BSTQ, FM3X, K6QO, QBOL, JWFN, JZ9D, J9JW, GHYX, ECY3)
 
-test_df <- train %>%
+test_df <- test  %>%
   select(ID,P5DA, RIBP, X8NN1,X7POT, X66FJ, GYSR, SOP4, RVSZ, PYUQ, LJR9, N2MW, AHXO,
          BSTQ, FM3X, K6QO, QBOL, JWFN, JZ9D, J9JW, GHYX, ECY3)
 
@@ -177,6 +177,12 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 # title("Precision-Recall")
 
 ######
+
+
+
+# =======================================================
+# Select best recommendation model
+# =======================================================
 #IBCF cosine
 #IBCF_cos = list(name = "IBCF", param = list(method = "cosine"))
 eval_recommender = Recommender(data = ratingmat_train,
@@ -189,27 +195,7 @@ eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
 eval_accuracy
 
 
-# =======================================================
-# Select best recommendation model
-# =======================================================
-beginvalue = 1
-endvalue = 1000
-
-for (i in 1:10){
-  
-  eval_prediction <- predict(object = eval_recommender,
-                            newdata = ratingmat_test[beginvalue:endvalue],
-                            n = items_to_recommend)
-  eval_accuracy <- calcPredictionAccuracy(x = eval_prediction,
-                                         data = ratingmat_test[beginvalue:endvalue]
-                                         , given=items_to_recommend)
-  beginvalue <- beginvalue + 1000
-  endvalue <- endvalue + 1000
-  
-}
-
-
-
+output <- as(eval_prediction,"list")
 
 
 
