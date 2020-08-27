@@ -60,53 +60,134 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 # =======================================================
 # build recommendation models
 # =======================================================
-items_to_recommend <- as.integer(length(products))
+ items_to_recommend <- as.integer(length(products))
+# 
+# # UBCF
+# #rec_mod_ubcf = Recommender(ratingmat, method = "UBCF")
+# eval_recommender = Recommender(data = ratingmat_train,
+#                                method = "UBCF", parameter = NULL)
+# eval_prediction = predict(object = eval_recommender,
+#                           newdata = ratingmat_test[1:50],
+#                           n = items_to_recommend)
+# eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
+#                                        data = ratingmat_test[1:50], given=items_to_recommend)
+# 
+# head(eval_accuracy)
+# 
+# #IBCF
+# eval_recommender = Recommender(data = ratingmat_train,
+#                                method = "IBCF", parameter = NULL)
+# eval_prediction = predict(object = eval_recommender,
+#                           newdata = ratingmat_test[1:50],
+#                           n = items_to_recommend)
+# eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
+#                                        data = ratingmat_test[1:50], given=items_to_recommend)
+# 
+# head(eval_accuracy)
+# 
+# #multiple models
+# models_to_evaluate = list(#random = list(name = "RANDOM", param=NULL),
+#                           #popular = list(name = "POPULAR", param=NULL),
+#                           UBCF = list(name = "UBCF", param=NULL),
+#                           IBCF = list(name = "IBCF", param=NULL)
+#                           )
+# 
+# n_recommendations = c(5,10,15,20)
+# scheme <- evaluationScheme(ratingmat_train, method = "cross-validation", k=5,given = -1)
+# results <- evaluate(scheme,method = models_to_evaluate,n=n_recommendations)
+# 
+# #Draw ROC curve
+# plot(results, y = "ROC", annotate = c(1,2), legend="topleft")
+# title("ROC Curve")
+# 
+# # Draw precision / recall curve
+# plot(results, y = "prec/rec", annotate=1)
+# title("Precision-Recall")
+# 
+# 
+# models_to_evaluate = list(IBCF_cos = list(name = "IBCF", param = list(method = "cosine")),
+#                           #IBCF_cor = list(name = "IBCF", param = list(method = "pearson")),
+#                           UBCF_cos = list(name = "UBCF", param = list(method = "cosine"))#,
+#                           #UBCF_cor = list(name = "UBCF", param = list(method = "pearson")
+#                           )
+# n_recommendations = c(5,10,15,20)
+# scheme <- evaluationScheme(ratingmat_train, method = "cross-validation", k=5,given = -1)
+# results <- evaluate(scheme,method = models_to_evaluate,n=n_recommendations)
+# 
+# #Draw ROC curve
+# plot(results, y = "ROC", annotate = c(1,2), legend="topleft")
+# title("ROC Curve")
+# 
+# # Draw precision / recall curve
+# plot(results, y = "prec/rec", annotate=c(1,2) )
+# title("Precision-Recall")
+# 
+# ##
+# models_to_evaluate = list(IBCF_cos = list(name = "IBCF", param = list(method = "cosine")),
+#                           IBCF_cor = list(name = "IBCF", param = list(method = "pearson"))
+#                           #UBCF_cos = list(name = "UBCF", param = list(method = "cosine"))#,
+#                           #UBCF_cor = list(name = "UBCF", param = list(method = "pearson")
+# )
+# n_recommendations = c(5,10,15,20)
+# scheme <- evaluationScheme(ratingmat_train, method = "cross-validation", k=5,given = -1)
+# results <- evaluate(scheme,method = models_to_evaluate,n=n_recommendations)
+# 
+# #Draw ROC curve
+# plot(results, y = "ROC", annotate = c(1,2), legend="topleft")
+# title("ROC Curve")
+# 
+# # Draw precision / recall curve
+# plot(results, y = "prec/rec", annotate=c(1,2) )
+# title("Precision-Recall")
+# 
+# 
+# models_to_evaluate = list(IBCF_cos = list(name = "IBCF", param = list(method = "cosine")),
+#                           IBCF = list(name = "IBCF", param = NULL)
+#                           #UBCF_cos = list(name = "UBCF", param = list(method = "cosine"))#,
+#                           #UBCF_cor = list(name = "UBCF", param = list(method = "pearson")
+# )
+# n_recommendations = c(5,10,15,20)
+# scheme <- evaluationScheme(ratingmat_train, method = "cross-validation", k=5,given = -1)
+# results <- evaluate(scheme,method = models_to_evaluate,n=n_recommendations)
+# 
+# #Draw ROC curve
+# plot(results, y = "ROC", annotate = c(1,2), legend="topleft")
+# title("ROC Curve")
+# 
+# # Draw precision / recall curve
+# plot(results, y = "prec/rec", annotate=c(1,2) )
+# title("Precision-Recall")
+# 
+# 
+# models_to_evaluate = list(IBCF = list(name = "IBCF", param = NULL),
+#                           IBCF_cor = list(name = "IBCF", param = list(method = "pearson"))
+#                           #UBCF_cos = list(name = "UBCF", param = list(method = "cosine"))#,
+#                           #UBCF_cor = list(name = "UBCF", param = list(method = "pearson")
+# )
+# n_recommendations = c(5,10,15,20)
+# scheme <- evaluationScheme(ratingmat_train, method = "cross-validation", k=5,given = -1)
+# results <- evaluate(scheme,method = models_to_evaluate,n=n_recommendations)
+# 
+# #Draw ROC curve
+# plot(results, y = "ROC", annotate = c(1,2), legend="topleft")
+# title("ROC Curve")
+# 
+# # Draw precision / recall curve
+# plot(results, y = "prec/rec", annotate=c(1,2) )
+# title("Precision-Recall")
 
-# UBCF
-#rec_mod_ubcf = Recommender(ratingmat, method = "UBCF")
+######
+#IBCF cosine
+#IBCF_cos = list(name = "IBCF", param = list(method = "cosine"))
 eval_recommender = Recommender(data = ratingmat_train,
-                               method = "UBCF", parameter = NULL)
+                               method = "IBCF", parameter = list(method = "pearson"))
 eval_prediction = predict(object = eval_recommender,
-                          newdata = ratingmat_test[1:50],
+                          newdata = ratingmat_test,
                           n = items_to_recommend)
 eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
-                                       data = ratingmat_test[1:50], given=items_to_recommend)
+                                       data = ratingmat_test, given=items_to_recommend)
+eval_accuracy
 
-head(eval_accuracy)
-
-#IBCF
-eval_recommender = Recommender(data = ratingmat_train,
-                               method = "IBCF", parameter = NULL)
-eval_prediction = predict(object = eval_recommender,
-                          newdata = ratingmat_test[1:50],
-                          n = items_to_recommend)
-eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
-                                       data = ratingmat_test[1:50], given=items_to_recommend)
-
-head(eval_accuracy)
-
-#multiple models
-models_to_evaluate = list(IBCF_cos = list(name = "IBCF", param = list(method = "cosine")),
-                          IBCF_cor = list(name = "IBCF", param = list(method = "pearson")),
-                          UBCF_cos = list(name = "UBCF", param = list(method = "cosine")),
-                          UBCF_cor = list(name = "UBCF", param = list(method = "pearson")),
-                          random = list(name = "RANDOM", param=NULL),
-                          popular = list(name = "POPULAR", param=NULL),
-                          UBCF = list(name = "UBCF", param=NULL),
-                          IBCF = list(name = "IBCF", param=NULL)
-                          )
-
-n_recommendations = c(21)
-scheme <- evaluationScheme(ratingmat_train, method = "cross-validation", k=5,given = -1)
-results <- evaluate(scheme,method = models_to_evaluate,n=n_recommendations)
-
-#Draw ROC curve
-plot(results, y = "ROC", annotate = 1, legend="topright")
-title("ROC Curve")
-
-# Draw precision / recall curve
-plot(results, y = "prec/rec", annotate=1)
-title("Precision-Recall")
 
 # =======================================================
 # Select best recommendation model
