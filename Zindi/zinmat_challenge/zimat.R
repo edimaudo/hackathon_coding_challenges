@@ -206,9 +206,16 @@ submission_data <- data.frame(matrix(ncol = 2, nrow = 0))
 submission_cols <- c("ID.X.PCODE","Label")
 colnames(submission_data) <- submission_cols
 
+generate_output <- function(id_info, id_output, product_info){
+  output <- data.frame(matrix(ncol = 2, nrow = 0))
+  
+}
+
 for(i in 1:length(output)){
   id <- ID_info[i,1]
   output_holder <- output[i]
+  
+  submission_data <- rbind(submission_data, generate_output(id,output_holder,products))
   
 }
 
