@@ -200,31 +200,28 @@ output <- as(eval_prediction,"list")
 
 ######################################
 
-generate_output <- function(id_info, id_output, product_info){
-  output <- data.frame(matrix(ncol = 2, nrow = 0))
-  submission_cols <- c("ID.X.PCODE","Label")
-  colnames(output) <- submission_cols
-  
-  for (i in 1:length(product_info)){
-    for (j in 1:length(id_output)){
-      id <- paste(id_info," X ", product_info[i])
-      if (product_info[i]==id_output[j]){
-        label <- 1
-      } else {
-        label <- 0
-      }
-        final_output <- c(id,label)
-        output <- rbind(output, final_output)
-    }
-  }
-  return (output)
-}
+# generate_output <- function(id_info, id_output, product_info){
+   output <- data.frame(matrix(ncol = 2, nrow = 0))
+   submission_cols <- c("ID.X.PCODE","Label")
+   colnames(output) <- submission_cols
+   
+   for (i in 1:length(products)){
+     for (j in 1:length()){
+       id <- paste(test_df$ID[1]," X ", products[i])
+       if (products[i]==id_output[j]){
+         label <- 1
+       } else {
+         label <- 0
+       }
+         final_output <- c(id,label)
+         output <- rbind(output, final_output)
+     }
+   }
+#   return (output)
+# }
 
 temp <- generate_output(test_df$ID[1],output[1],products)
 
-for (j in 1:length(output[1])){
-  print(j)
-}
 
 
 # =======================================================
