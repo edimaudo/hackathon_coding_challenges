@@ -208,9 +208,32 @@ colnames(submission_data) <- submission_cols
 
 generate_output <- function(id_info, id_output, product_info){
   output <- data.frame(matrix(ncol = 2, nrow = 0))
+  submission_cols <- c("ID.X.PCODE","Label")
+  colnames(output) <- submission_cols
   
+ # for (i in 1:length(product_info)){
+  label <- 0
+    for (j in 1:length(id_output)){
+      id <- paste(id_info," X ")#, product_info[i])
+      id <- as.character(id)
+  #    if (product_info[i]==id_output[j]){
+  #      label <- 1
+  #    } else {
+  #      label <- 0
+  #    }
+      final_output <- c(id,label)
+      output <- rbind(output, final_output)
+    }
+  #}
 }
 
+temp <- generate_output(ID_info[1,1],as.list(output[1]),products)
+
+
+
+# =======================================================
+# output
+# =======================================================
 for(i in 1:length(output)){
   id <- ID_info[i,1]
   output_holder <- output[i]
@@ -218,11 +241,6 @@ for(i in 1:length(output)){
   submission_data <- rbind(submission_data, generate_output(id,output_holder,products))
   
 }
-
-# =======================================================
-# output
-# =======================================================
-
 
 
 #Create Recommender Model. The parameters are UBCF and Cosine similarity. 
