@@ -60,7 +60,7 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 # =======================================================
 # build recommendation models
 # =======================================================
- items_to_recommend <- as.integer(length(products))
+# items_to_recommend <- as.integer(length(products))
 # 
 # # UBCF
 # #rec_mod_ubcf = Recommender(ratingmat, method = "UBCF")
@@ -185,6 +185,7 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 # =======================================================
 #IBCF cosine
 #IBCF_cos = list(name = "IBCF", param = list(method = "cosine"))
+items_to_recommend <- as.integer(length(products))
 eval_recommender = Recommender(data = ratingmat_train,
                                method = "IBCF", parameter = list(method = "pearson"))
 eval_prediction = predict(object = eval_recommender,
@@ -197,43 +198,42 @@ eval_accuracy
 
 output <- as(eval_prediction,"list")
 
-products <- c('P5DA', 'RIBP', '8NN1',
-              '7POT', 'X66FJ', 'GYSR', 'SOP4', 'RVSZ', 'PYUQ', 'LJR9', 'N2MW', 'AHXO',
-              'BSTQ', 'FM3X', 'K6QO', 'QBOL', 'JWFN', 'JZ9D', 'J9JW', 'GHYX', 'ECY3')
-ID_info <- test_df$ID
-
-submission_data <- data.frame(matrix(ncol = 2, nrow = 0))
-submission_cols <- c("ID.X.PCODE","Label")
-colnames(submission_data) <- submission_cols
+######################################
 
 generate_output <- function(id_info, id_output, product_info){
   output <- data.frame(matrix(ncol = 2, nrow = 0))
   submission_cols <- c("ID.X.PCODE","Label")
   colnames(output) <- submission_cols
   
- # for (i in 1:length(product_info)){
-  label <- 0
+  for (i in 1:length(product_info)){
     for (j in 1:length(id_output)){
-      id <- paste(id_info," X ")#, product_info[i])
-      id <- as.character(id)
-  #    if (product_info[i]==id_output[j]){
-  #      label <- 1
-  #    } else {
-  #      label <- 0
-  #    }
-      final_output <- c(id,label)
-      output <- rbind(output, final_output)
+      id <- paste(id_info," X ", product_info[i])
+      if (product_info[i]==id_output[j]){
+        label <- 1
+      } else {
+        label <- 0
+      }
+        final_output <- c(id,label)
+        output <- rbind(output, final_output)
     }
-  #}
+  }
+  return (output)
 }
 
-temp <- generate_output(ID_info[1,1],as.list(output[1]),products)
+temp <- generate_output(test_df$ID[1],output[1],products)
 
+for (j in 1:length(output[1])){
+  print(j)
+}
 
 
 # =======================================================
 # output
 # =======================================================
+submission_data <- data.frame(matrix(ncol = 2, nrow = 0))
+submission_cols <- c("ID.X.PCODE","Label")
+colnames(submission_data) <- submission_cols
+
 for(i in 1:length(output)){
   id <- ID_info[i,1]
   output_holder <- output[i]
