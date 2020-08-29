@@ -206,10 +206,10 @@ submission_cols <- c("ID.X.PCODE","Label")
 colnames(final_output) <- submission_cols
 
 for (i in 1:length(output)){
+  recommendations <- c(output[i][1])
   for (k in 1:length(recommendations)){
-    id <- paste(test_df$ID[i]," X ", products[j])
-    recommendations <- c(output[i][1])
     for (j in 1:length(products)){
+      id <- paste(test_df$ID[i]," X ", products[j])
       if (products[j] == recommendations[k]){
         label <- 1
       } else {
