@@ -200,37 +200,53 @@ eval_accuracy
 
 ######################################
 
-output <- as(eval_prediction,"list") 
-final_output <- data.frame(matrix(ncol = 2, nrow = 0))
-submission_cols <- c("ID.X.PCODE","Label")
-colnames(final_output) <- submission_cols
 
-for (i in 1:length(output)){
-  recommendations <- c(output[i][1])
-  for (k in 1:length(recommendations)){
-    for (j in 1:length(products)){
-      id <- paste(test_df$ID[i]," X ", products[j])
-      if (products[j] == recommendations[k]){
-        label <- 1
-      } else {
-        label <- 0
-      }
-      temp_output <- data.frame(id,label)
-      final_output <- rbind(final_output, temp_output)
-      final_output <- final_output %>%
-        unique()
-    }
-  }
+submissions_temp %>%
+  filter(ID == test_df$ID[1]) %>%
+  filter()
+
+submissions_temp <- tidyr::crossing(test_df$ID, products)
+submissions_temp$labels<-0
+submissions_temp$ID.X.PCODE <- paste(submissions_temp$`test_df$ID`," X ",submissions_temp$products)
+colnames(submissions_temp) <- c("ID","Products",'label','ID.X.PCODE')
+
+recommendations <-  as(eval_prediction, "list")
+
+for (i in 1:length(recomendations)){
+  submissions_temp %>%
+    filter(ID == test_df$ID[1]) %>%
+    filter(Products %in% products) %>%
+    mutate (label = 0)
+  
 }
-
-
 
 # =======================================================
 # output
 # =======================================================
 
-  
 
+# final_output <- data.frame(matrix(ncol = 2, nrow = 0))
+# submission_cols <- c("ID.X.PCODE","Label")
+# colnames(final_output) <- submission_cols
+# 
+#  for (i in 1:length(output)){
+# #   recommendations <- c(output[i][1])
+# #   for (k in 1:length(recommendations)){
+#      for (j in 1:length(products)){
+#        id <- paste(test_df$ID[i]," X ", products[j])
+#        label <- 0
+# #       if (products[j] == recommendations[k]){
+# #         label <- 1
+# #       } else {
+# #         label <- 0
+# #       }
+#        temp_output <- data.frame(id,label)
+#        final_output <- rbind(final_output, temp_output)
+#        final_output <- final_output %>%
+#          unique()
+#      }
+#    }
+# # }
 
 
 #Create Recommender Model. The parameters are UBCF and Cosine similarity. 
