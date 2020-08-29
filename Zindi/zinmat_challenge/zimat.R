@@ -196,48 +196,41 @@ eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
 eval_accuracy
 
 
-output <- as(eval_prediction,"list")
+
 
 ######################################
 
-# generate_output <- function(id_info, id_output, product_info){
-   output <- data.frame(matrix(ncol = 2, nrow = 0))
-   submission_cols <- c("ID.X.PCODE","Label")
-   colnames(output) <- submission_cols
-   
-   for (i in 1:length(products)){
-     for (j in 1:length()){
-       id <- paste(test_df$ID[1]," X ", products[i])
-       if (products[i]==id_output[j]){
-         label <- 1
-       } else {
-         label <- 0
-       }
-         final_output <- c(id,label)
-         output <- rbind(output, final_output)
-     }
-   }
-#   return (output)
-# }
+output <- as(eval_prediction,"list") 
+final_output <- data.frame(matrix(ncol = 2, nrow = 0))
+submission_cols <- c("ID.X.PCODE","Label")
+colnames(final_output) <- submission_cols
 
-temp <- generate_output(test_df$ID[1],output[1],products)
+for (i in 1:length(output)){
+  for (k in 1:length(recommendations)){
+    id <- paste(test_df$ID[i]," X ", products[j])
+    recommendations <- c(output[i][1])
+    for (j in 1:length(products)){
+      if (products[j] == recommendations[k]){
+        label <- 1
+      } else {
+        label <- 0
+      }
+      temp_output <- data.frame(id,label)
+      final_output <- rbind(final_output, temp_output)
+      final_output <- final_output %>%
+        unique()
+    }
+  }
+}
 
 
 
 # =======================================================
 # output
 # =======================================================
-submission_data <- data.frame(matrix(ncol = 2, nrow = 0))
-submission_cols <- c("ID.X.PCODE","Label")
-colnames(submission_data) <- submission_cols
 
-for(i in 1:length(output)){
-  id <- ID_info[i,1]
-  output_holder <- output[i]
   
-  submission_data <- rbind(submission_data, generate_output(id,output_holder,products))
-  
-}
+
 
 
 #Create Recommender Model. The parameters are UBCF and Cosine similarity. 
@@ -259,6 +252,19 @@ for(i in 1:length(output)){
 # )
 # results <- evaluate(scheme, methods, type="topNList", n = c(1,2,5), progress = FALSE)
 
-
+# 
+# for (j in 1:length(c(output[1]$`1`)))  {
+#   for (i in 1:length(products)){
+#     id <- paste(test_df$ID[1]," X ", products[i])
+#     recommendations <- c(output[1]$`1`)
+#     if (products[i]==recommendations[j]){
+#       label <- 1
+#     } else {
+#       label <- 0
+#     }
+#       temp_output <- data.frame(id,label)
+#       final_output <- rbind(final_output, temp_output)
+#   }
+# }
 
 
