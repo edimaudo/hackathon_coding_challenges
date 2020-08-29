@@ -58,7 +58,7 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 
 
 # =======================================================
-# build recommendation models
+# model experimentation
 # =======================================================
 # items_to_recommend <- as.integer(length(products))
 # 
@@ -176,7 +176,7 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 # plot(results, y = "prec/rec", annotate=c(1,2) )
 # title("Precision-Recall")
 
-######
+
 
 
 
@@ -195,36 +195,52 @@ eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
                                        data = ratingmat_test, given=items_to_recommend)
 eval_accuracy
 
-
-
-
-######################################
-
-
-submissions_temp %>%
-  filter(ID == test_df$ID[1]) %>%
-  filter()
-
-submissions_temp <- tidyr::crossing(test_df$ID, products)
-submissions_temp$labels<-0
-submissions_temp$ID.X.PCODE <- paste(submissions_temp$`test_df$ID`," X ",submissions_temp$products)
-colnames(submissions_temp) <- c("ID","Products",'label','ID.X.PCODE')
-
-recommendations <-  as(eval_prediction, "list")
-
-for (i in 1:length(recomendations)){
-  submissions_temp %>%
-    filter(ID == test_df$ID[1]) %>%
-    filter(Products %in% products) %>%
-    mutate (label = 0)
-  
-}
-
 # =======================================================
 # output
 # =======================================================
+submissions_temp <- tidyr::crossing(test_df$ID, products)
+submissions_temp$labels<-as.integer(0)
+submissions_temp$ID.X.PCODE <- paste(submissions_temp$`test_df$ID`," X ",
+                                     submissions_temp$products)
+colnames(submissions_temp) <- c("ID","Products",'label','ID.X.PCODE')
+
+rec <-  as(eval_prediction, "list")
+
+submission_temp2 <- data.frame(matrix(ncol = 4, nrow = 0))
+colnames(submission_temp2) <- c("ID","Products",'label','ID.X.PCODE')
+
+for (i in 1:length(rec)){
+    temp <- submissions_temp %>%
+    filter(ID == test_df$ID[i]) %>%
+    filter(Products %in% c(rec[i][[1]])) %>%
+    mutate (label = 1)
+    temp <- data.frame(temp)
+    submission_temp2 <- rbind(submission_temp2, temp)
+    
+}
+
+colnames(submission_temp2) <- c("ID","Products",'label1','ID.X.PCODE')
+
+submission_temp3 <- submissions_temp %>%
+  left_join(submission_temp2, by="ID.X.PCODE") %>%
+  select(ID.X.PCODE, label, label1)
+
+submission_temp3[is.na(submission_temp3)] <- 0
+
+final_submission <- submissions_temp %>%
+  select(ID.X.PCODE,label)
+write.csv(final_submission,"output.csv")
 
 
+
+
+
+
+
+# t2 <- submissions_temp %>%
+#   filter(ID == test_df$ID[1]) %>%
+#   filter(Products %in% c(recommendations[1][[1]])) %>%
+#   mutate(label = 1)
 # final_output <- data.frame(matrix(ncol = 2, nrow = 0))
 # submission_cols <- c("ID.X.PCODE","Label")
 # colnames(final_output) <- submission_cols
