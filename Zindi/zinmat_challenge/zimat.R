@@ -198,39 +198,39 @@ eval_accuracy
 # =======================================================
 # output
 # =======================================================
-submissions_temp <- tidyr::crossing(test_df$ID, products)
-submissions_temp$labels<-as.integer(0)
-submissions_temp$ID.X.PCODE <- paste(submissions_temp$`test_df$ID`," X ",
-                                     submissions_temp$products)
-colnames(submissions_temp) <- c("ID","Products",'label','ID.X.PCODE')
+
+submission_info1 <- sample_submission
+submission_info1$ID <- substr(submission_info1$ID.X.PCODE,1,7)
+submission_info1$Product <- substr(submission_info1$ID.X.PCODE,11,14)
 
 rec <-  as(eval_prediction, "list")
 
-submission_temp2 <- data.frame(matrix(ncol = 4, nrow = 0))
-colnames(submission_temp2) <- c("ID","Products",'label','ID.X.PCODE')
+submission_info2 <- data.frame(matrix(ncol = 4, nrow = 0))
+colnames(submission_info2) <- c("ID.X.PCODE","Label","ID","Product")
+ 
+ for (i in 1:length(rec)){
+     temp <- submission_info1 %>%
+     filter(ID == test_df$ID[i]) %>%
+     filter(Product %in% c(rec[i][[1]])) %>%
+     mutate (Label = 1)
+     temp <- data.frame(temp)
+     submission_info2 <- rbind(submission_info2, temp)
+ }
 
-for (i in 1:length(rec)){
-    temp <- submissions_temp %>%
-    filter(ID == test_df$ID[i]) %>%
-    filter(Products %in% c(rec[i][[1]])) %>%
-    mutate (label = 1)
-    temp <- data.frame(temp)
-    submission_temp2 <- rbind(submission_temp2, temp)
-    
-}
-
-colnames(submission_temp2) <- c("ID","Products",'label1','ID.X.PCODE')
-
-submission_temp3 <- submissions_temp %>%
-  left_join(submission_temp2, by="ID.X.PCODE") %>%
-  select(ID.X.PCODE, label, label1)
-
-submission_temp3[is.na(submission_temp3)] <- 0
-
-final_submission <- submissions_temp %>%
-  select(ID.X.PCODE,label)
-write.csv(final_submission,"output.csv")
-
+# 
+# colnames(submission_temp2) <- c("ID","Products",'label1','ID.X.PCODE')
+# 
+# submission_temp3 <- sample_submission%>%
+#   left_join(submission_temp2, by="ID.X.PCODE")
+# 
+# submission_temp3[is.na(submission_temp3)] <- 0
+# 
+# submission_temp4 <- submission_temp3 %>%
+#   select(ID.X.PCODE, label1)
+# colnames(submission_temp4) <- c('ID.X.PCODE','Label')
+# 
+# final_submission <- submission_temp4
+# write.csv(final_submission,"output.csv")
 
 
 
