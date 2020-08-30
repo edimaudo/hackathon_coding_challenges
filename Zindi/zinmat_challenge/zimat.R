@@ -186,8 +186,20 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 #IBCF cosine
 #IBCF_cos = list(name = "IBCF", param = list(method = "cosine"))
 
-#used ibcf pearson - not good 16.2 rating need to get it lower
-# ibcf cosine - not good 25 rating need to get it lower - parameter = list(method = "cosine")
+#used ibcf pearson - not good 16.2 rating need to get it lower for 21 rec
+# ibcf cosine - not good 25 rating need to get it lower for 21 rec
+
+#- parameter = list(method = "cosine")
+# ibcf
+# ubcf pearson
+# ubcf cosine
+# ubcf
+
+
+#ibcf pearson - 
+#ibcf cosine - 
+
+#- parameter = list(method = "cosine")
 # ibcf
 # ubcf pearson
 # ubcf cosine
@@ -195,7 +207,7 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 
 items_to_recommend <- 1#as.integer(length(products))
 eval_recommender = Recommender(data = ratingmat_train,
-                               method = "IBCF", parameter = NULL)
+                               method = "IBCF", parameter = list(method = "cosine"))
 eval_prediction = predict(object = eval_recommender,
                           newdata = ratingmat_test,
                           n = items_to_recommend)
@@ -236,9 +248,50 @@ submission_info3$Label <- as.integer(submission_info3$Label)
 
 final_submission <- submission_info3 %>%
   select(ID.X.PCODE,Label)
-write.csv(final_submission,"output_ibcf.csv",row.names = F)
+write.csv(final_submission,"output_ibcf_cos2.csv",row.names = F)
+
+#=============================
+eval_recommender = Recommender(data = ratingmat_train,
+                               method = "IBCF", parameter = list(method = "pearson"))
+eval_prediction = predict(object = eval_recommender,
+                          newdata = ratingmat_test,
+                          n = items_to_recommend)
+eval_accuracy = calcPredictionAccuracy(x = eval_prediction,
+                                       data = ratingmat_test, given=items_to_recommend)
+eval_accuracy
 
 
+
+submission_info1 <- sample_submission
+submission_info1$ID <- substr(submission_info1$ID.X.PCODE,1,7)
+submission_info1$Product <- substr(submission_info1$ID.X.PCODE,11,14)
+
+rec <-  as(eval_prediction, "list")
+
+submission_info2 <- data.frame(matrix(ncol = 4, nrow = 0))
+colnames(submission_info2) <- c("ID.X.PCODE","Label","ID","Product")
+
+for (i in 1:length(rec)){
+  temp <- submission_info1 %>%
+    filter(ID == test_df$ID[i]) %>%
+    filter(Product %in% c(rec[i][[1]])) %>%
+    mutate (Label = 1)
+  temp <- data.frame(temp)
+  submission_info2 <- rbind(submission_info2, temp)
+}
+
+
+
+submission_info3 <- submission_info1 %>%
+  left_join(submission_info2, by="ID.X.PCODE")
+
+submission_info3[is.na(submission_info3)] <- 0
+submission_info3$Label <- ifelse(submission_info3$Label.y==1, 1, 0)
+submission_info3$Label <- as.integer(submission_info3$Label)
+
+final_submission <- submission_info3 %>%
+  select(ID.X.PCODE,Label)
+write.csv(final_submission,"output_ibcf_pearson2.csv",row.names = F)
 
 
 
