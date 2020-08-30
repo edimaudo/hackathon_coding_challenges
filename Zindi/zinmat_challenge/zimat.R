@@ -185,9 +185,17 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 # =======================================================
 #IBCF cosine
 #IBCF_cos = list(name = "IBCF", param = list(method = "cosine"))
-items_to_recommend <- as.integer(length(products))
+
+#used ibcf pearson - not good 16.2 rating need to get it lower
+# ibcf cosine - not good 25 rating need to get it lower - parameter = list(method = "cosine")
+# ibcf
+# ubcf pearson
+# ubcf cosine
+# ubcf
+
+items_to_recommend <- 1#as.integer(length(products))
 eval_recommender = Recommender(data = ratingmat_train,
-                               method = "IBCF", parameter = list(method = "pearson"))
+                               method = "IBCF", parameter = NULL)
 eval_prediction = predict(object = eval_recommender,
                           newdata = ratingmat_test,
                           n = items_to_recommend)
@@ -217,20 +225,18 @@ colnames(submission_info2) <- c("ID.X.PCODE","Label","ID","Product")
      submission_info2 <- rbind(submission_info2, temp)
  }
 
-# 
-# colnames(submission_temp2) <- c("ID","Products",'label1','ID.X.PCODE')
-# 
-# submission_temp3 <- sample_submission%>%
-#   left_join(submission_temp2, by="ID.X.PCODE")
-# 
-# submission_temp3[is.na(submission_temp3)] <- 0
-# 
-# submission_temp4 <- submission_temp3 %>%
-#   select(ID.X.PCODE, label1)
-# colnames(submission_temp4) <- c('ID.X.PCODE','Label')
-# 
-# final_submission <- submission_temp4
-# write.csv(final_submission,"output.csv")
+
+ 
+submission_info3 <- submission_info1 %>%
+   left_join(submission_info2, by="ID.X.PCODE")
+ 
+submission_info3[is.na(submission_info3)] <- 0
+submission_info3$Label <- ifelse(submission_info3$Label.y==1, 1, 0)
+submission_info3$Label <- as.integer(submission_info3$Label)
+
+final_submission <- submission_info3 %>%
+  select(ID.X.PCODE,Label)
+write.csv(final_submission,"output_ibcf.csv",row.names = F)
 
 
 
@@ -275,7 +281,8 @@ colnames(submission_info2) <- c("ID.X.PCODE","Label","ID","Product")
 
 # ratings <- read.csv('csv/rating_final.csv')
 # binaryMatrix <- as(ratings,"binaryRatingMatrix")
-# scheme <- evaluationScheme(binaryMatrix, method = "cross-validation", k=5, train = 0.7, given = -1)
+# scheme <- evaluationScheme(binaryMatrix, method = "cross-validation", 
+#k=5, train = 0.7, given = -1)
 # methods <- list(
 #   popular = list(name = "POPULAR", param = NULL), 
 #   `user-based CF` = list(name = "UBCF", param = list(method = "cosine", nn = 3)),
