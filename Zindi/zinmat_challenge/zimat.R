@@ -189,25 +189,21 @@ ratingmat_test = as(ratingmat_test, "binaryRatingMatrix")
 #used ibcf pearson - not good 16.2 rating need to get it lower for 21 rec
 # ibcf cosine - not good 25 rating need to get it lower for 21 rec
 
-#- parameter = list(method = "cosine")
-# ibcf
-# ubcf pearson
-# ubcf cosine
+
+
+# ubcf pearson - done
+# ubcf cosine - done
+#ibcf pearson - done
+#ibcf cosine - done
+#ibcf
 # ubcf
+# random
+# popular
 
-
-#ibcf pearson - 
-#ibcf cosine - 
-
-#- parameter = list(method = "cosine")
-# ibcf
-# ubcf pearson
-# ubcf cosine
-# ubcf
 
 items_to_recommend <- 1#as.integer(length(products))
 eval_recommender = Recommender(data = ratingmat_train,
-                               method = "IBCF", parameter = list(method = "cosine"))
+                               method = "UBCF", parameter = list(method = "cosine",nn=10))
 eval_prediction = predict(object = eval_recommender,
                           newdata = ratingmat_test,
                           n = items_to_recommend)
@@ -248,11 +244,11 @@ submission_info3$Label <- as.integer(submission_info3$Label)
 
 final_submission <- submission_info3 %>%
   select(ID.X.PCODE,Label)
-write.csv(final_submission,"output_ibcf_cos2.csv",row.names = F)
+write.csv(final_submission,"output_ubcf_cosine.csv",row.names = F)
 
 #=============================
 eval_recommender = Recommender(data = ratingmat_train,
-                               method = "IBCF", parameter = list(method = "pearson"))
+                               method = "UBCF", parameter = list(method = "pearson"))
 eval_prediction = predict(object = eval_recommender,
                           newdata = ratingmat_test,
                           n = items_to_recommend)
@@ -291,11 +287,11 @@ submission_info3$Label <- as.integer(submission_info3$Label)
 
 final_submission <- submission_info3 %>%
   select(ID.X.PCODE,Label)
-write.csv(final_submission,"output_ibcf_pearson2.csv",row.names = F)
+write.csv(final_submission,"output_ubcf_pearson.csv",row.names = F)
 
 
 
-
+# =======================================================
 # t2 <- submissions_temp %>%
 #   filter(ID == test_df$ID[1]) %>%
 #   filter(Products %in% c(recommendations[1][[1]])) %>%
