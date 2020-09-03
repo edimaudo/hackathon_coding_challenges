@@ -109,21 +109,43 @@ plot(results, y = "prec/rec", annotate=c(1,2) )
 title("Precision-Recall")
  
 
-## =======================================================
-# Current recommendation model 
+# =======================================================
+# IBCF cos recommendation model 
 # =======================================================
 items_to_recommend <- 1
 eval_recommender = Recommender(data = ratingmat_train,
                                method = "IBCF", 
-                               param=list(method="Cosine",k=10, alpha = 0.9)) 
+                               param=list(method="Cosine",k=10000, alpha = 1)) 
 eval_prediction = predict(object = eval_recommender,
                           newdata = ratingmat_test,
                           n = items_to_recommend)
 
 rec <-  as(eval_prediction, "list")
+
+# =======================================================
+# Hybrid recommendation model
+# =======================================================
+items_to_recommend <- 1
+eval_hybrid_recommender <- HybridRecommender(
+  Recommender(ratingmat_train, method = "POPULAR"),
+  Recommender(ratingmat_train, method = "IBCF",param=list(method="Cosine",k=10000, alpha = 1)),
+  Recommender(ratingmat_train, method = "IBCF"),
+  weights = c(.1, .8, .1)
+)
+# eval_hybrid_prediction = predict(object = eval_hybrid_recommender,
+#                           newdata = ratingmat_test,
+#                           n = items_to_recommend)
+
+#)
+getModel(eval_hybrid_recommender)
+
+rec <- as(predict(eval_hybrid_recommender, ratingmat_test, type = "topNList", n = 1), "list")
+rec <- getList(predict(eval_hybrid_recommender, 1:1, data = ratingmat_test, type = "topNList", n = 1))
 # =======================================================
 # output
 # =======================================================
+
+
 submission_info1 <- sample_submission
 submission_info1$ID <- substr(submission_info1$ID.X.PCODE,1,7)
 submission_info1$Product <- substr(submission_info1$ID.X.PCODE,11,14)
@@ -151,7 +173,7 @@ submission_info3$Label <- as.integer(submission_info3$Label)
 
 final_submission <- submission_info3 %>%
   select(ID.X.PCODE,Label)
-write.csv(final_submission,"output_ibcf_cos_k_10_alpha_9.csv",row.names = F)
+write.csv(final_submission,"output_HYBRID.csv",row.names = F)
 
 
 
