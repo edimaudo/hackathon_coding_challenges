@@ -14,12 +14,16 @@
   # Provide the justification of your weights and indicators.
 
 # =======================================================
-
+# - create readme
+# - select problem area
+# - review dataset
+# - setup code
+# - select what you want to go over
 rm(list=ls()) #clear environment
 # =======================================================
 # load packages
 # =======================================================
-packages <- c('ggplot2', 'corrplot','tidyverse','dplyr','tidyr','tidytext'
+packages <- c('ggplot2', 'corrplot','tidyverse','dplyr','tidyr','tidytext',
               'caret','mlbench','mice','scales','proxy','reshape2',
               'caTools','dummies','scales','catboost', 'Matrix')
 
@@ -33,11 +37,37 @@ for (package in packages) {
 # =======================================================
 # load data
 # =======================================================
-df <- read_csv("1D4.csv")
-backup_df <- df
+corporate_data <- read_csv("2018-2019_CorporateCC_mb2.csv")
+city_data <- read_csv("Cities_Data_2017-2019_mb2.csv")
+
 # =======================================================
 # data setup
 # =======================================================
+print("corproate data summary")
+summary(corporate_data)
+
+print("city data summary")
+summary(city_data)
+
 # check for missing data
-missing_data_df <- apply(df, 2, function(x) any(is.na(x))) 
-print(missing_data_df)
+missing_data_corporate <- apply(corporate_data, 2, function(x) any(is.na(x))) 
+print("corporate data")
+print(missing_data_corporate)
+
+missing_data_city<- apply(city_data, 2, function(x) any(is.na(x))) 
+print("city data")
+print(missing_data_city)
+
+# city analysis
+# text mining
+# sentiment analysis
+# n-grams
+
+# corproation analysis
+# text mining
+# sentiment analysis
+# n-grams
+
+#shared sentiments between city and corporations
+
+#KPI models
