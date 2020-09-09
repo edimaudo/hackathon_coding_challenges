@@ -14,11 +14,33 @@
   # Provide the justification of your weights and indicators.
 
 # =======================================================
+# Judging crtieria
+# =======================================================
+# Use of CDP and external data
+# Does your team utilize the CDP data provided in combination with external data sources?
+# 
+# Outcome
+# Does your team have a clear understanding of the challenge? Do you address the challenge prompt?
+# 
+# Feasibility of idea
+# Can your solution viably be implemented and sustained in the real world?
+# 
+# Innovation
+# Are you thinking outside of the box? Does the solution implement trends and best practice from other innovative areas?
+# 
+# Technical explanation
+# Each challenge asks teams to explain their technical decisions (i.e. Justify weights, explain assumptions, etc). Are clear justifications or explanations provided?
+
+# =======================================================
 # - create readme
-# - select problem area
-# - review dataset
-# - setup code
+# - select problem area - done
+# - review dataset - done
+# - setup code - done
 # - select what you want to go over
+# - build city model
+
+
+# =======================================================
 rm(list=ls()) #clear environment
 # =======================================================
 # load packages
@@ -70,6 +92,7 @@ print(missing_data_city)
 # text mining
 # sentiment analysis
 # n-grams
+# insights
 
 # corproation analysis
 # text mining
