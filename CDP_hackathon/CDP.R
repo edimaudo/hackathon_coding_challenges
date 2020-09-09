@@ -40,6 +40,14 @@ for (package in packages) {
 corporate_data <- read_csv("2018-2019_CorporateCC_mb2.csv")
 city_data <- read_csv("Cities_Data_2017-2019_mb2.csv")
 
+#load other data
+2018_Cities_Adaptation_Actions.csv
+2018_A_list_Cities_with_Response_Links.csv
+2018_-_2019_Full_Cities_Dataset.csv
+2015-2019_CorporateWater_mb2.csv
+2019_A_list_Cities_with_Response_Links.csv
+2019_Cities_Adaptation_Actions.csv
+ready-for-100.csv
 # =======================================================
 # data setup
 # =======================================================
