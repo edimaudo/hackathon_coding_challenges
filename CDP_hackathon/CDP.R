@@ -26,10 +26,13 @@
 # Can your solution viably be implemented and sustained in the real world?
 # 
 # Innovation
-# Are you thinking outside of the box? Does the solution implement trends and best practice from other innovative areas?
+# Are you thinking outside of the box? 
+# Does the solution implement trends and best practice from other innovative areas?
 # 
 # Technical explanation
-# Each challenge asks teams to explain their technical decisions (i.e. Justify weights, explain assumptions, etc). Are clear justifications or explanations provided?
+# Each challenge asks teams to explain their technical decisions 
+# (i.e. Justify weights, explain assumptions, etc). 
+# Are clear justifications or explanations provided?
 
 # =======================================================
 # - create readme
@@ -61,15 +64,12 @@ for (package in packages) {
 # =======================================================
 corporate_data <- read_csv("2018-2019_CorporateCC_mb2.csv")
 city_data <- read_csv("Cities_Data_2017-2019_mb2.csv")
-
-#load other data
-2018_Cities_Adaptation_Actions.csv
-2018_A_list_Cities_with_Response_Links.csv
-2018_-_2019_Full_Cities_Dataset.csv
-2015-2019_CorporateWater_mb2.csv
-2019_A_list_Cities_with_Response_Links.csv
-2019_Cities_Adaptation_Actions.csv
-ready-for-100.csv
+city_adaptation_2018 <- read_csv("2018_Cities_Adaptation_Actions.csv")
+city_response_2018 <- read_csv("2018_A_list_Cities_with_Response_Links.csv")
+city_2018_2019 <- read_csv("2018_-_2019_Full_Cities_Dataset.csv")
+city_response_2019 <- read_csv("2019_A_list_Cities_with_Response_Links.csv")
+city_adaptation_2019 <- read_csv("2019_Cities_Adaptation_Actions.csv") 
+sustainability <- read_csv("ready-for-100.csv")
 # =======================================================
 # data setup
 # =======================================================
