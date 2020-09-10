@@ -85,13 +85,18 @@ print(missing_data_city)
 # city analysis
 # =======================================================
 
-# generate 2018 data
-city_2018 <- city_data %>%
-  filter(`Project Year` == 2018) %>%
+# generate 2018 and 2019 data
+city_2018_2019_df <- city_data %>%
+  filter(`Project Year` %in% c(2018,2019)) %>%
   select(`Project Year`, `Account Name`, `Account Number`, 
          `Question Name`, `Column Name`, `Response Answer`)
 
 # text mining
+tidy_city_data <- city_2018 %>%
+  unnest_tokens(word, `Response Answer`) %>%
+  group_by(word) %>%
+  filter(n() > 10) %>%
+  ungroup()
 
 # sentiment analysis
 
@@ -99,7 +104,10 @@ city_2018 <- city_data %>%
 
 # insights
 
+# =======================================================
 # corproation analysis
+# =======================================================
+
 # text mining
 # sentiment analysis
 # n-grams
