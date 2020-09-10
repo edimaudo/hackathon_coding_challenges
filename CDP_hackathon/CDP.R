@@ -35,15 +35,6 @@
 # Are clear justifications or explanations provided?
 
 # =======================================================
-# - create readme
-# - select problem area - done
-# - review dataset - done
-# - setup code - done
-# - select what you want to go over
-# - build city model
-
-
-# =======================================================
 rm(list=ls()) #clear environment
 # =======================================================
 # load packages
@@ -70,8 +61,9 @@ city_2018_2019 <- read_csv("2018_-_2019_Full_Cities_Dataset.csv")
 city_response_2019 <- read_csv("2019_A_list_Cities_with_Response_Links.csv")
 city_adaptation_2019 <- read_csv("2019_Cities_Adaptation_Actions.csv") 
 sustainability <- read_csv("ready-for-100.csv")
+
 # =======================================================
-# data setup
+# data exploration
 # =======================================================
 print("corproate data summary")
 summary(corporate_data)
@@ -88,10 +80,23 @@ missing_data_city<- apply(city_data, 2, function(x) any(is.na(x)))
 print("city data")
 print(missing_data_city)
 
+
+# =======================================================
 # city analysis
+# =======================================================
+
+# generate 2018 data
+city_2018 <- city_data %>%
+  filter(`Project Year` == 2018) %>%
+  select(`Project Year`, `Account Name`, `Account Number`, 
+         `Question Name`, `Column Name`, `Response Answer`)
+
 # text mining
+
 # sentiment analysis
+
 # n-grams
+
 # insights
 
 # corproation analysis
