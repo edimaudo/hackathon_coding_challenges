@@ -9,7 +9,8 @@
 # Utilize data science and text analytics techniques to improve readability of CDP cities and 
   # corporate data.
 # Visualize shared sentiment between cities and companies on specific 
-  # topics (such as clean energy, sustainable buildings, clean transport, waste and circular economy).
+  # topics (such as clean energy, sustainable buildings, clean transport, 
+  # waste and circular economy).
 # Create a KPI model that measures the propensity of cities to collaborate with companies. 
   # Provide the justification of your weights and indicators.
 
@@ -20,7 +21,8 @@
 # Does your team utilize the CDP data provided in combination with external data sources?
 # 
 # Outcome
-# Does your team have a clear understanding of the challenge? Do you address the challenge prompt?
+# Does your team have a clear understanding of the challenge? 
+# Do you address the challenge prompt?
 # 
 # Feasibility of idea
 # Can your solution viably be implemented and sustained in the real world?
@@ -134,9 +136,10 @@ freq_by_rank %>%
   scale_y_log10()
 
 
-# n-grams
-
-# insights
+# get city, sentiment topic, year
+# get corporation, sentiment topic, year
+# use external data - sustainiability, adaptation, response
+#match responses between city and corproation
 
 # =======================================================
 # corproation analysis
