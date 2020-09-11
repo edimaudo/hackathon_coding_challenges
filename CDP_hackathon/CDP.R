@@ -41,7 +41,7 @@ rm(list=ls()) #clear environment
 # =======================================================
 packages <- c('ggplot2', 'corrplot','tidyverse','dplyr','tidyr','tidytext',
               'caret','mlbench','mice','scales','proxy','reshape2',
-              'caTools','dummies','scales','catboost', 'Matrix')
+              'caTools','dummies','scales','catboost', 'Matrix','stringr')
 
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
@@ -82,7 +82,7 @@ print(missing_data_city)
 
 
 # =======================================================
-# city analysis
+# city text analysis
 # =======================================================
 
 # generate 2018 and 2019 data
@@ -91,14 +91,48 @@ city_2018_2019_df <- city_data %>%
   select(`Project Year`, `Account Name`, `Account Number`, 
          `Question Name`, `Column Name`, `Response Answer`)
 
-# text mining
-tidy_city_data <- city_2018 %>%
+
+tidy_city_data <- city_2018_2019_df %>%
+  unnest_tokens(word, `Response Answer`)
+
+#word count visualization
+tidy_city_data %>%
+  count(word, sort = TRUE) %>%
+  filter(n > 5000) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip()
+
+# term frequency
+tidy_city_data2  <- city_2018_2019_df %>%
   unnest_tokens(word, `Response Answer`) %>%
-  group_by(word) %>%
-  filter(n() > 10) %>%
+  count(`Account Name`, word, sort = TRUE) %>%
   ungroup()
 
-# sentiment analysis
+total_tidy_city_data2 <- tidy_city_data2 %>% 
+  group_by(`Account Name`) %>% 
+  summarize(total = sum(n))
+
+tidy_city_data2 <- left_join(tidy_city_data2, total_tidy_city_data2)
+
+ggplot(tidy_city_data2, aes(n/total, fill = `Account Name`)) +
+  geom_histogram(show.legend = FALSE) +
+  facet_wrap(~`Account Name`, ncol = 2, scales = "free_y")
+
+#zipf law
+freq_by_rank <- tidy_city_data2 %>% 
+  group_by(`Account Name`) %>% 
+  mutate(rank = row_number(), 
+         `term frequency` = n/total)
+
+freq_by_rank %>% 
+  ggplot(aes(rank, `term frequency`, color = `Account Name`)) + 
+  geom_line(size = 1.1, alpha = 0.8, show.legend = FALSE) + 
+  scale_x_log10() +
+  scale_y_log10()
+
 
 # n-grams
 
