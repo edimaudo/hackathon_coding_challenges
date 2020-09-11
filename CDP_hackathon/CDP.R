@@ -84,7 +84,7 @@ print(missing_data_city)
 
 
 # =======================================================
-# city text analysis
+# Experimentation
 # =======================================================
 
 # generate 2018 and 2019 data
@@ -135,20 +135,30 @@ freq_by_rank %>%
   scale_x_log10() +
   scale_y_log10()
 
+# Topic modeling
+
 
 # get city, sentiment topic, year
-# get corporation, sentiment topic, year
+
 # use external data - sustainiability, adaptation, response
+#TRY TOPIC MODELING - clean energy, sustainable buildings, clean transport, 
+# waste and circular economy
+#TRY ASSIGNING SENTIMENT TO WORDS
 #match responses between city and corproation
+
+# =======================================================
+# city text analysis
+# =======================================================
 
 # =======================================================
 # corproation analysis
 # =======================================================
 
-# text mining
-# sentiment analysis
-# n-grams
 
+# =======================================================
 #shared sentiments between city and corporations
+# =======================================================
 
+# =======================================================
 #KPI models
+# =======================================================
