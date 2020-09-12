@@ -43,7 +43,8 @@ rm(list=ls()) #clear environment
 # =======================================================
 packages <- c('ggplot2', 'corrplot','tidyverse','dplyr','tidyr','tidytext',
               'caret','mlbench','mice','scales','proxy','reshape2',
-              'caTools','dummies','scales','catboost', 'Matrix','stringr')
+              'caTools','dummies','scales','catboost', 'Matrix','stringr',
+              'topicmodels',"textmineR","ldatuning",'gmp','reshape2','purrr')
 
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
@@ -81,7 +82,6 @@ print(missing_data_corporate)
 missing_data_city<- apply(city_data, 2, function(x) any(is.na(x))) 
 print("city data")
 print(missing_data_city)
-
 
 # =======================================================
 # Experimentation
@@ -136,15 +136,37 @@ freq_by_rank %>%
   scale_y_log10()
 
 # Topic modeling
-
-
-# get city, sentiment topic, year
-
-# use external data - sustainiability, adaptation, response
-#TRY TOPIC MODELING - clean energy, sustainable buildings, clean transport, 
+#TRY TOPIC MODELING 
+# clean energy, sustainable buildings, clean transport, 
 # waste and circular economy
-#TRY ASSIGNING SENTIMENT TO WORDS
-#match responses between city and corproation
+
+
+
+# Eliminate words appearing less than 2 times or in more than half of the
+# documents
+vocabulary <- tf$term[ tf$term_freq > 1 & tf$doc_freq < nrow(dtm) / 2 ]
+
+dtm = dtm
+
+# Running LDA -----------------------------------------------------------
+k_list <- seq(1, 20, by = 1)
+model_dir <- paste0("models_", digest::digest(vocabulary, algo = "sha1"))
+if (!dir.exists(model_dir)) dir.create(model_dir)
+
+model_list <- TmParallelApply(X = k_list, FUN = function(k){
+  filename = file.path(model_dir, paste0(k, "_topics.rda"))
+  
+  if (!file.exists(filename)) {
+    m <- FitLdaModel(dtm = dtm, k = k, iterations = 500)
+    m$k <- k
+    m$coherence <- CalcProbCoherence(phi = m$phi, dtm = dtm, M = 5)
+    save(m, file = filename)
+  } else {
+    load(filename)
+  }
+  
+  m
+}
 
 # =======================================================
 # city text analysis
@@ -158,6 +180,8 @@ freq_by_rank %>%
 # =======================================================
 #shared sentiments between city and corporations
 # =======================================================
+#match responses between city and corproation
+# use external data - sustainiability, adaptation, response
 
 # =======================================================
 #KPI models
