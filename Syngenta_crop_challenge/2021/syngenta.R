@@ -58,6 +58,41 @@ print(missing_data_eval_planting_date_output)
 # =======================================================
 # EDA and visualization
 # =======================================================
+# train data 1
+
+#correlation
+cor_train_data1 <- cor(train_data1[,c(2,6,7,8)])
+corrplot(cor_train_data1, method="number") # special correlation
+
+# site visualization
+
+# site count
+ggplot(data=train_data1, aes(x=factor(site))) +
+  geom_bar() + theme_classic() + xlab("Site") 
+
+# site and required gdus
+ggplot(train_data1, aes(x=as.factor(site), y=required_gdus)) + 
+  geom_boxplot() + theme_classic()
+
+# site and scenario_1_harvest_quantity
+ggplot(train_data1, aes(x=as.factor(site), y=scenario_1_harvest_quantity)) + 
+  geom_boxplot() + theme_classic()
+
+#site and scenario_2_harvest_quantity
+ggplot(train_data1, aes(x=as.factor(site), y=scenario_2_harvest_quanitity)) + 
+  geom_boxplot() + theme_classic()
+
+#required GDUs
+ggplot(train_data1, aes(x=required_gdus, fill=site)) +
+  geom_area()
+
+
+
+
+
+# train data 2
+
+# combined train data 1 and 2
 
 # =======================================================
 # experimental modeling
