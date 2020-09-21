@@ -56,15 +56,18 @@ print(missing_data_eval_planting_date_output)
 # no missing data in all datasets
 
 # =======================================================
-# EDA and visualization
+# train data 1 visualization
 # =======================================================
-# train data 1
 
-#correlation
+# ------------------------------------
+# correlation
+# ------------------------------------
 cor_train_data1 <- cor(train_data1[,c(2,6,7,8)])
 corrplot(cor_train_data1, method="number") # special correlation
 
+# ------------------------------------
 # site visualization
+# ------------------------------------
 
 # site count
 ggplot(data=train_data1, aes(x=factor(site))) +
@@ -78,11 +81,13 @@ ggplot(train_data1, aes(x=as.factor(site), y=required_gdus)) +
 ggplot(train_data1, aes(x=as.factor(site), y=scenario_1_harvest_quantity)) + 
   geom_boxplot() + theme_classic()
 
-#site and scenario_2_harvest_quantity
+# site and scenario_2_harvest_quantity
 ggplot(train_data1, aes(x=as.factor(site), y=scenario_2_harvest_quanitity)) + 
   geom_boxplot() + theme_classic()
 
-#required GDUs
+# ------------------------------------
+# required GDUs visualization
+# ------------------------------------
 ggplot(train_data1, aes(x=required_gdus, fill=site)) +
   geom_area()
 
@@ -90,9 +95,35 @@ ggplot(train_data1, aes(x=required_gdus, fill=site)) +
 
 
 
-# train data 2
 
-# combined train data 1 and 2
+# ------------------------------------
+# scenario_1_harvest_quantity visualization
+# ------------------------------------
+
+
+# ------------------------------------
+# scenario_2_harvest_quanitity visualization
+# ------------------------------------
+
+# ------------------------------------
+# late_planting_date visualization
+# ------------------------------------
+
+
+
+# ------------------------------------
+# early_planting_date visualization
+# ------------------------------------
+
+
+# ------------------------------------
+# original_planting_date visualization
+# ------------------------------------
+
+# =======================================================
+# train data 2 visualization
+# =======================================================
+
 
 # =======================================================
 # experimental modeling
