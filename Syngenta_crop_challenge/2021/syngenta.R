@@ -8,7 +8,8 @@ rm(list=ls())
 # =======================================================
 packages <- c('ggplot2', 'corrplot','tidyverse','dplyr','tidyr',
               'caret','mlbench','mice','scales','proxy','reshape2',
-              'caTools','dummies','scales','catboost', 'Matrix','stringr','reshape2','purrr')
+              'caTools','dummies','scales','catboost', 'Matrix',
+              'stringr','reshape2','purrr','lubridate')
 
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
@@ -55,9 +56,16 @@ print(missing_data_eval_planting_date_output)
 
 # no missing data in all datasets
 
+
+
 # =======================================================
 # train data 1 visualization
 # =======================================================
+
+train_data1$original_planting_date <- mdy(train_data1$original_planting_date)
+train_data1$early_planting_date <- mdy(train_data1$early_planting_date)
+train_data1$late_planting_date <- mdy(train_data1$late_planting_date)
+train_data1$site <- as.factor(train_data1$site)
 
 # ------------------------------------
 # correlation
@@ -66,7 +74,7 @@ cor_train_data1 <- cor(train_data1[,c(2,6,7,8)])
 corrplot(cor_train_data1, method="number") # special correlation
 
 # ------------------------------------
-# site visualization
+# site, required gdu, scenario 1 and 2 visualization
 # ------------------------------------
 
 # site count
@@ -86,39 +94,67 @@ ggplot(train_data1, aes(x=as.factor(site), y=scenario_2_harvest_quanitity)) +
   geom_boxplot() + theme_classic()
 
 # ------------------------------------
-# required GDUs visualization
-# ------------------------------------
-ggplot(train_data1, aes(x=required_gdus, fill=site)) +
-  geom_area()
-
-
-
-
-
-
-# ------------------------------------
-# scenario_1_harvest_quantity visualization
+# required GDUs & scenario 1 and 2 visualization
 # ------------------------------------
 
+#scenario 1 harvest quantity
+ggplot(train_data1, aes(x=required_gdus, y=scenario_1_harvest_quantity, 
+                        shape=as.factor(site), color=as.factor(site))) +
+  geom_point() + theme_classic()
+
+# scenario 2 harvest quantity
+ggplot(train_data1, aes(x=required_gdus, y=scenario_2_harvest_quanitity, 
+                        shape=as.factor(site), color=as.factor(site))) +
+  geom_point() + theme_classic()
+
 
 # ------------------------------------
-# scenario_2_harvest_quanitity visualization
+# original_planting_date visualization
 # ------------------------------------
+orig_date_df2 <- train_data1 %>%
+  group_by(original_planting_date) %>%
+  summarise(required_gdu_total = sum(required_gdus),
+         scenario1_total = sum(scenario_1_harvest_quantity),
+         scenario2_total = sum(scenario_2_harvest_quanitity)) %>%
+  select(original_planting_date, required_gdu_total, scenario1_total, scenario2_total)
+
+ggplot(orig_date_df2, aes(x=original_planting_date)) + 
+  geom_line(aes(y = required_gdu_total), color = "darkred") + 
+  geom_line(aes(y = scenario1_total), color="steelblue") + 
+  geom_line(aes(y = scenario2_total), color="green")
+
 
 # ------------------------------------
 # late_planting_date visualization
 # ------------------------------------
+late_date_df <- train_data1 %>%
+  group_by(late_planting_date) %>%
+  summarise(required_gdu_total = sum(required_gdus),
+            scenario1_total = sum(scenario_1_harvest_quantity),
+            scenario2_total = sum(scenario_2_harvest_quanitity)) %>%
+  select(late_planting_date, required_gdu_total, scenario1_total, scenario2_total)
+
+ggplot(late_date_df, aes(x=late_planting_date)) + 
+  geom_line(aes(y = required_gdu_total), color = "red") + 
+  geom_line(aes(y = scenario1_total), color="blue") + 
+  geom_line(aes(y = scenario2_total), color="green")
 
 
 
 # ------------------------------------
 # early_planting_date visualization
 # ------------------------------------
+early_date_df <- train_data1 %>%
+  group_by(early_planting_date) %>%
+  summarise(required_gdu_total = sum(required_gdus),
+            scenario1_total = sum(scenario_1_harvest_quantity),
+            scenario2_total = sum(scenario_2_harvest_quanitity)) %>%
+  select(early_planting_date, required_gdu_total, scenario1_total, scenario2_total)
 
-
-# ------------------------------------
-# original_planting_date visualization
-# ------------------------------------
+ggplot(early_date_df, aes(x=early_planting_date)) + theme_classic() + 
+  geom_line(aes(y = required_gdu_total), color = "red") + 
+  geom_line(aes(y = scenario1_total), color="blue") + 
+  geom_line(aes(y = scenario2_total), color="darkgreen")
 
 # =======================================================
 # train data 2 visualization
