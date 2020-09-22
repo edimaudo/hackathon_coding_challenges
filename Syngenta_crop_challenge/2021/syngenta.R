@@ -56,8 +56,6 @@ print(missing_data_eval_planting_date_output)
 
 # no missing data in all datasets
 
-
-
 # =======================================================
 # train data 1 visualization
 # =======================================================
