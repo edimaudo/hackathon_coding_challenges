@@ -157,6 +157,13 @@ ggplot(early_date_df, aes(x=early_planting_date)) + theme_classic() +
 # =======================================================
 # train data 2 visualization
 # =======================================================
+train_data2$date <- ymd(train_data2$date)
+
+
+ggplot(train_data2, aes(x=date)) + theme_classic() + 
+  geom_line(aes(y = site_0), color = "red") + 
+  geom_line(aes(y = site_1), color="blue") 
+
 
 
 # =======================================================
