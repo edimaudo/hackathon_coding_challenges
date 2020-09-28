@@ -169,3 +169,15 @@ ggplot(train_data2, aes(x=date)) + theme_classic() +
 # =======================================================
 # experimental modeling
 # =======================================================
+ 
+
+# Objective: Minimize the difference between the weekly harvest quantity and the capacity for each harvesting week.
+# For each harvesting week and location:
+# Min: weeklyharvestTotal - locationCapacity
+# Capacity Constraint: For scenario 1, Site 0 has a capacity of 7000 ears and Site 1 has a capacity of 6000 ears.
+# For scenario 2, there is not a predefined capacity. The participant is asked to determine the lowest capacity required.
+ 
+# The two scenarios roughly emulate normal distributions: N(250,100) and N(350,150), respectively.
+
+# In summary, we desire an optimization model to schedule when planting should occur for a specific seed population 
+# so that when the ears are harvested, we are not over holding capacity.
