@@ -31,6 +31,11 @@ eval_planting_date_output <- read_csv("planting_date_output.csv")
 # =======================================================
 # data overview
 # =======================================================
+train_data1$original_planting_date <- mdy(train_data1$original_planting_date)
+train_data1$early_planting_date <- mdy(train_data1$early_planting_date)
+train_data1$late_planting_date <- mdy(train_data1$late_planting_date)
+train_data1$site <- as.factor(train_data1$site)
+
 
 #summary
 summary(train_data1)
@@ -55,15 +60,6 @@ print("planting date output")
 print(missing_data_eval_planting_date_output)
 
 # no missing data in all datasets
-
-# =======================================================
-# train data 1 visualization
-# =======================================================
-
-train_data1$original_planting_date <- mdy(train_data1$original_planting_date)
-train_data1$early_planting_date <- mdy(train_data1$early_planting_date)
-train_data1$late_planting_date <- mdy(train_data1$late_planting_date)
-train_data1$site <- as.factor(train_data1$site)
 
 # ------------------------------------
 # correlation
@@ -174,10 +170,30 @@ ggplot(train_data2, aes(x=date)) + theme_classic() +
 # Objective: Minimize the difference between the weekly harvest quantity and the capacity for each harvesting week.
 # For each harvesting week and location:
 # Min: weeklyharvestTotal - locationCapacity
-# Capacity Constraint: For scenario 1, Site 0 has a capacity of 7000 ears and Site 1 has a capacity of 6000 ears.
-# For scenario 2, there is not a predefined capacity. The participant is asked to determine the lowest capacity required.
+# Capacity Constraint: For scenario 1, Site 0 has a capacity of 7000 ears 
+# and Site 1 has a capacity of 6000 ears.
+# For scenario 2, there is not a predefined capacity. 
+#The participant is asked to determine the lowest capacity required.
  
 # The two scenarios roughly emulate normal distributions: N(250,100) and N(350,150), respectively.
 
 # In summary, we desire an optimization model to schedule when planting should occur for a specific seed population 
 # so that when the ears are harvested, we are not over holding capacity.
+
+# -----------------------------------------
+#scenario 1 - site 0, original planting date - Site 0 has a capacity of 7000 ears
+# -----------------------------------------
+#site, original planting date, required gdu, scenario 1 harvest
+
+scenario_1_orig <- train_data1 %>%
+  filter(site == 0) %>%
+  mutate(week_orig = week(original_planting_date)) %>%
+  group_by(week_orig) %>%
+  summarise(total_gdus = sum(required_gdus),
+            total_harvest_quantity = sum(scenario_1_harvest_quantity)) %>%
+  select(week_orig,total_gdus,total_harvest_quantity)
+  
+  
+scenario_1_orig <- scenario_1_orig %>%
+  group_by()
+  
