@@ -76,9 +76,10 @@ original_planting_date		Actual planting date of the population
 early_planting_date			Earliest the population could have been planted
 late_planting_date			Latest the population could have been planted
 required_gdus			    Number of growing degree units needed for harvest
-scenario_1_harvest_quantity	Harvest quantity (number of ears) for each population in scenario 1. The value in 								this column must be used as the harvest quantity, not just a percentage of this 							value.
+scenario_1_harvest_quantity	Harvest quantity (number of ears) for each population in scenario 1. 
+The value in this column must be used as the harvest quantity, not just a percentage of this value.
 scenario_2_harvest_quantity	Harvest quantity (number of ears) for each population in scenario 2. 
-							The value in this column must be used as the harvest quantity, not just a percentage of this value.
+The value in this column must be used as the harvest quantity, not just a percentage of this value.
 
 
 ## Dataset #2 Description
