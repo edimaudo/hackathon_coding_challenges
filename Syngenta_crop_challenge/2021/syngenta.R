@@ -183,11 +183,19 @@ ggplot(train_data2, aes(x=date)) + theme_classic() +
 # so that when the ears are harvested, we are not over holding capacity.
 
 # -----------------------------------------
-#scenario 1 - site 0, original planting date - Site 0 has a capacity of 7000 ears
+# scenario 1 - site 0, original planting date - 
+# Site 0 has a capacity of 7000 ears
+# N(250,100)
 # -----------------------------------------
 #site, original planting date, required gdu, scenario 1 harvest
 
 scenario_1 <- train_data1 %>%
   filter(site == 0) %>%
-  select(population, original_planting_date,required_gdus, scenario_1_harvest_quantity)
+  mutate(week_original_plant_date = week(original_planting_date)) %>%
+  select(population,required_gdus, scenario_1_harvest_quantity,week_original_plant_date)
   
+scenario_week_1 <- scenario_1 %>%
+  group_by(week_original_plant_date) %>%
+  summarise(weekly_amount = sum(scenario_1_harvest_quantity)) %>%
+  select(week_original_plant_date, weekly_amount)
+
