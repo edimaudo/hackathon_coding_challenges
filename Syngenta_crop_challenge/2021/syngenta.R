@@ -23,8 +23,6 @@ for (package in packages) {
 # =======================================================
 train_data1 <- read_csv("Dataset_1.csv")
 train_data2 <- read_csv("Dataset_2.csv")
-
-#evaluation
 eval_harvest_quantity_output <- read_csv("harvest_quantity_output.csv")
 eval_planting_date_output <- read_csv("planting_date_output.csv")
 
@@ -60,6 +58,10 @@ print("planting date output")
 print(missing_data_eval_planting_date_output)
 
 # no missing data in all datasets
+
+# =======================================================
+# data visualization
+# =======================================================
 
 # ------------------------------------
 # correlation
@@ -185,15 +187,7 @@ ggplot(train_data2, aes(x=date)) + theme_classic() +
 # -----------------------------------------
 #site, original planting date, required gdu, scenario 1 harvest
 
-scenario_1_orig <- train_data1 %>%
+scenario_1 <- train_data1 %>%
   filter(site == 0) %>%
-  mutate(week_orig = week(original_planting_date)) %>%
-  group_by(week_orig) %>%
-  summarise(total_gdus = sum(required_gdus),
-            total_harvest_quantity = sum(scenario_1_harvest_quantity)) %>%
-  select(week_orig,total_gdus,total_harvest_quantity)
-  
-  
-scenario_1_orig <- scenario_1_orig %>%
-  group_by()
+  select(population, original_planting_date,required_gdus, scenario_1_harvest_quantity)
   
