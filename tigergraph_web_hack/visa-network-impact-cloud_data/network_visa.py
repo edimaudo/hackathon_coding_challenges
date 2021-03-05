@@ -54,8 +54,11 @@ data_load_state.text('Loading data...done!')
 # Exploratory Analysis
 #=====================
 st.subheader('Number of pickups by hour')
-hist_values = np.histogram(data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
-st.bar_chart(hist_values)
+## Service Manager
+## Count of Services by Service manager - 
+
+fig = px.bar(SERVICE_MANAGER, x='SERVICE_OWNER',hover_name='SERVICE_OWNER',title='Services by Service Manager')
+st.plotly_chart(fig)
 
 
 
