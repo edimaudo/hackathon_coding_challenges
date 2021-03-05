@@ -20,17 +20,21 @@ st.title("IT Data Insights")
 # Load data
 #=====================
 @st.cache #for caching
+def load_data(filename):
+	output = pd.read_csv(filename)
+	return (output)
 
 # Create a text element and let the reader know the data is loading.
-data_load_state = st.text('Loading data...')
+load__data_state = st.text('Loading data...')
 
-warnings = pd.read_csv('warnings.csv')
-SWITCH = pd.read_csv('SWITCH.csv')
-SERVICE_MANAGER = pd.read_csv('SERVICE_MANAGER.csv')
-SERVER_APP = pd.read_csv('SERVER_APP.csv')
-LUN = pd.read_csv('LUN.csv')
-APP_SERVICE = pd.read_csv('APP_SERVICE.csv')
-APP_APP = pd.read_csv('APP_APP.csv')
+
+warnings = load_data('warnings.csv')
+SWITCH = load_data('SWITCH.csv')
+SERVICE_MANAGER = load_data('SERVICE_MANAGER.csv')
+SERVER_APP = load_data('SERVER_APP.csv')
+LUN = load_data('LUN.csv')
+APP_SERVICE = load_data('APP_SERVICE.csv')
+APP_APP = load_data('APP_APP.csv')
 
 #add column name to APP_APP
 #Apps can call on each other
@@ -48,16 +52,40 @@ LUN.columns = ['LUN_ID','LUN_NAME','LUN_TOTAL_CAPACITY','LUN_ESTIMATED_USED',
  'STORAGE_ARRAY_RAW_ALLOCATED','STORAGE_ARRAY_RAW_AVAILABLE']
 
 # Notify the reader that the data was successfully loaded.
-data_load_state.text('Loading data...done!')
+load__data_state.text('Loading data...done!')
 
 #=====================
 # Exploratory Analysis
 #=====================
-st.subheader('Number of pickups by hour')
-## Service Manager
-## Count of Services by Service manager - 
+st.header("Exploratory Analysis")
 
+st.subheader('Service Owners')
+
+## Count of Services by Service manager - 
 fig = px.bar(SERVICE_MANAGER, x='SERVICE_OWNER',hover_name='SERVICE_OWNER',title='Services by Service Manager')
+st.plotly_chart(fig)
+
+## Warning Breakdown
+## Count of warnid by event type 
+fig = px.bar(warnings, x='EVENT_TYPE',hover_name='EVENT_TYPE',title='Warning count by event type')
+st.plotly_chart(fig)
+
+## SERVER_APP - breakdown by hoZt_name	status	app_name
+fig = px.bar(SERVER_APP, x='STATUS',hover_name='STATUS',title='Status count')
+st.plotly_chart(fig)
+
+## APP_SERVICE - count of tier #by SERVICE NAME
+fig = px.bar(APP_SERVICE, x='TIER',hover_name='TIER',title='TIER Count')
+st.plotly_chart(fig)
+
+
+## combine service manager and app service using service name
+## service owner by tier - FOR INTERACTIVITY IN STREAMLIT
+
+SERVICE_MANAGER_APP = pd.merge(left=SERVICE_MANAGER, right=APP_SERVICE, left_on='SERVICE_NAME', 
+                               right_on='SERVICE_NAME')
+
+fig = px.bar(SERVICE_MANAGER_APP, x='SERVICE_OWNER',hover_name='TIER',title='Service Owner by Tier')
 st.plotly_chart(fig)
 
 
