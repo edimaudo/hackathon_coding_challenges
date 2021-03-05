@@ -19,7 +19,14 @@ st.title("IT Data Insights")
 #=====================
 # Load data
 #=====================
-
+@st.cache #for caching
+warnings = pd.read_csv('warnings.csv')
+SWITCH = pd.read_csv('SWITCH.csv')
+SERVICE_MANAGER = pd.read_csv('SERVICE_MANAGER.csv')
+SERVER_APP = pd.read_csv('SERVER_APP.csv')
+LUN = pd.read_csv('LUN.csv')
+APP_SERVICE = pd.read_csv('APP_SERVICE.csv')
+APP_APP = pd.read_csv('APP_APP.csv')
 
 #=====================
 # Exploratory Analysis
