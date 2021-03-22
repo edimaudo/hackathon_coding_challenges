@@ -36,8 +36,13 @@ Weighting	       Criteria	            Description
 
 
 ## Deliverables
-Prototype (at least one of the following):
+Prototype/Solution (at least one of the following):
 • .source files to a locally hosted website/web app, or hosted website/web apps (must include code repository)
+	• Create a README in the repository that should include the following:
+		I. About,
+		II. How it Works,
+		III. Tech stack used (i.e., Node, React, Auth(), Jest, etc.), and
+		IV. How to use it (including set up instructions and requirements, local development);
 • Functioning mockups via InVision, XD, Sketch or Figma (must include a .zip file of source files)
 
 A 5-minute video of a recorded presentation outlining their solution.
