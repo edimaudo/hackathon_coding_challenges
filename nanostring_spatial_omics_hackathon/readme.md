@@ -9,10 +9,15 @@
 
 ## Judging Criteria
 
+- Quality of the Idea (Includes creativity and originality of the idea.)
+
+- Implementation of the Idea (Includes how well the idea was executed by the creators.)
+
+- Potential Value to Scientists (Includes the extent to which the solution can help biologists and scientists navigate and learn from the available data.)
 
 ## Submission Deliverables
 
-###Project Requirements
+### Project Requirements
 
 (i) What to Create: Entrants must create a working open source software application that can help scientists interpret data and learn new things from a large kidney dataset assembled by NanoString’s GeoMx Digital Spatial Profiler (each a “Project”). 
 
