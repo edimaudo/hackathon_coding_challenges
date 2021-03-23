@@ -5,6 +5,13 @@
 In the Spatial Omics Hackathon, data enthusiasts will use data from the GeoMx platform with your favorite dev tools to build smarter solutions to develop insights into kidney disease.
 You might create a graphical representation of data through visual components such as maps, graphs, or other visual formats (e.g. tools that display trends or patterns). You could create data analysis solutions that collect, interpret, and present data (e.g. tools that identify relationships or detect anomalies). Put your Machine Learning skills to good use and build solutions that use pre-trained models or train a model using the specific dataset.
 
+## Inspiration
+Diabetic kidney disease is a type of kidney disease caused by diabetes.  Diabetes is the leading cause of kidney disease. About 1 out of 3 adults with diabetes has kidney disease. 
+
+Scientists are trying to better understand the changes that occur during kidney disease development.  GeoMx DSP enables a unique way for scientists to analyze these changes by providing gene expression in spatial context.  Each study generates large amounts of data associated with multiple images creating challenges for scientists to interpret and derive biological conclusions.
+
+
+
 ## Background
 NanoString’s GeoMx® DSP stands at the powerful intersection of tissue imaging technology and genomic sciences.  It enables investigators to finely dissect the fundamental features of any tissue and ask critical questions concerning tissue organization, cellular interactions, and disease pathology.  
 
