@@ -72,4 +72,20 @@ March 1, 2021 (10:00 am Eastern Time) â€“ May 3, 2021 (5:00 pm Eastern Time) (â€
 ## Dataset
 For this hackathon participants will have access to a kidney dataset profiling specific regions to better understand the changes that occur during kidney disease development.  This dataset consists of three normal tissue samples and four samples with diabetic kidney disease.  High resolution slide images and corresponding spatially resolved gene expression data for selected regions of interest (ROIs) on the slides will be available. 
 
-Gene expression within each ROI was profiled using the Human Whole Transcriptome Atlas (WTA) from NanoString which captures expression from 18,000+ human protein-coding genes on the GeoMx DSP by tagging unique gene sequences physically within the tissue and then releasing specifically within the ROI areas.
+ROI gene expression was detected using the Human Whole Transcriptome Atlas (WTA) from NanoString which is a panel used to collect data from 18,000+ human protein-coding genes on the GeoMx DSP. After WTA expression tags are collected from the ROIs, these data are sequenced on an Illumina sequencer and processed in the GeoMx DSP Data Analysis Suite to link gene identity with expression tag.  Gene expression data are provided as raw counts, processed counts post quality control, and normalized counts.
+
+
+## Application
+r shiny app
+
+- high level overview of data (tools that display trends or patterns))
+
+- Ability to look at kidney from different perspectives
+ - how tissue is organized
+ - cellualar interaction
+ - disease pathology
+ - tools that identify relationships or detect anomalies).
+
+- Ability to select different attribute and predict the type of kidney disease
+
+- Kidney problem recommender
