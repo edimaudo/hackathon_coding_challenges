@@ -60,3 +60,9 @@ vii. Public Distribution: The Entrant must make the application open source unde
 
 ## Timeline
 March 1, 2021 (10:00 am Eastern Time) – May 3, 2021 (5:00 pm Eastern Time) (“Submission Period”).
+
+
+## Dataset
+For this hackathon participants will have access to a kidney dataset profiling specific regions to better understand the changes that occur during kidney disease development.  This dataset consists of three normal tissue samples and four samples with diabetic kidney disease.  High resolution slide images and corresponding spatially resolved gene expression data for selected regions of interest (ROIs) on the slides will be available. 
+
+Gene expression within each ROI was profiled using the Human Whole Transcriptome Atlas (WTA) from NanoString which captures expression from 18,000+ human protein-coding genes on the GeoMx DSP by tagging unique gene sequences physically within the tissue and then releasing specifically within the ROI areas.
