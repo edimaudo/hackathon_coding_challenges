@@ -46,3 +46,38 @@ Prototype/Solution (at least one of the following):
 • Functioning mockups via InVision, XD, Sketch or Figma (must include a .zip file of source files)
 
 A 5-minute video of a recorded presentation outlining their solution.
+
+
+Emerging tech: IoT, AI, 5G, serverless computing, blockchain, robotics, biometrics, 3D printing, AR/VR, and drones
+https://www.weforum.org/agenda/2020/11/2020-top-10-emerging-technologies/
+Ideas
+
+Idea 1: WiseMe
+Theme: Indepdenence
+
+WiseMe is an app that helps people manage their lives better as they are about to retire and in retirement
+It gives them access to health resources and guides
+Financial tools and information to prevent fraud and prep for end of life
+Tools for mental health
+everages AI
+
+Idea 2: HealthR
+Theme: long term health
+It is an app that aggregates patient records and provides health recommendations based on the information
+
+Idea 3: Kibo
+Theme: Social connections
+It is a social network app that leverages NLP that helps family stay connects and provides some level of companionship for elderly people
+It also has a strong visual element by linking it to family photos and new family events
+Also provides quality news and information
+
+Idea 4: e-safe
+Theme: Safes Spaces
+Online log of unsafe places and services for elderly people
+
+
+Target
+old folks, society, parents, kids, healthchare, transportation, finance
+
+user personas
+
