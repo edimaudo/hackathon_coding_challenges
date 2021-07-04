@@ -17,7 +17,7 @@ Are you passionate about sports? Do you get excited about your favorite player i
 
 This challenge requires looking for solutions that leverage historical player performance data to improve performance on the field and improve the sport of Cricket in Australia and internationally. Challenge yourself and create a solution that meaningfully impacts the game of Cricket and improves the overall win rate and performance of Cricket teams on and off the field.
 
-#### Challenge themes
+#### Challenge 1 themes
 
 - BBL to International: Compare performance of the Australian team
 to that of international matches to gain insight. With this example
@@ -84,7 +84,7 @@ If you go this route, the best practice is to first run your idea by a mentor fo
 
 
 
-Judging Criteria
+## Judging Criteria
 Projects will be judged with the following criteria. As a reminder, projects must be submitted by September 2, 2021 - you will not be able to publish or edit your projects after this deadline.
 
 Technical Execution (25%) - How has the team effectively utilized the available technologies, and how advanced is the solution? How far does the team go to complete its intended architecture? Is the project demo-ready? MVP with limited features? Just a concept?
@@ -92,3 +92,8 @@ Technical Execution (25%) - How has the team effectively utilized the available 
 Challenge Fit (50%) - How relevant is the solution to the challenges provided by Cricket Australia? Has the project solved every area of the selected challenge, or only one sub-point or specific problem?
 
 Innovation (25%) - Is the project new and disruptive? Is the solution a unique solution to the challenges, or is it a reworked tool or solution already currently available.
+
+## Data set
+Attached below are the datasets that you may access and download to use for your projects! The datasets consist of ball by ball delivery details for all international matches that Australia has been a part of for the last two decades. These datasets have the level of detail that you may not have come across before. We are also providing ball by ball delivery details for all BBL and WBBL matches played in the last few years along with the venues where these matches have been played at. You may choose to use these datasets to come up with strategies that Cricket Australia may want to implement for the next Ashes or strategies that Sydney Sixers may want to implement to retain their BBL crown.
+
+There is also information about grounds, their locations and the type of pitches laid out in these grounds to put into context the conditions teams were playing in and the challenge they were up against. We are also providing you with Ticket sales data and TV broadcast data that can let you come up with ideas around fan engagement in person or on digital platforms.
