@@ -8,7 +8,7 @@ TechJam is a global collaboration platform to crowdsource technology led innovat
 
 TechJam: #InspiredByHCL is open for registrations from around the globe and will start on June 14, 2021 and continue until September 2, 2021. Projects can be submitted as early as July 22, 2021, and you will have 6 weeks to learn, dive into the datasets and take a swing at winning the $40,000 prize pool! Additionally, you will have an opportunity to win exclusive rewards and recognition from Cricket Australia and partner organizations. 
 
-Challenges
+## Challenges
 TechJam: #InspiredByHCL will focus on three challenge tracks and will provide data and insights that teams can leverage: Player and Team Performance, Fan Engagement and Community Engagement. Additionally, since there is a lot of scope for innovation, participants are also encouraged to submit ideas that have the potential to make an impact on the sport and can fall under the wild card submission category. 
 
 ### Challenge #1: Player Performance
@@ -19,49 +19,19 @@ This challenge requires looking for solutions that leverage historical player pe
 
 #### Challenge 1 themes
 
-- BBL to International: Compare performance of the Australian team
-to that of international matches to gain insight. With this example
-solution, the goal is to create a project that gives Cricket Australia
-the extra edge that they need to win all of their matches!
+- **BBL to International**: Compare performance of the Australian team to that of international matches to gain insight. With this example solution, the goal is to create a project that gives Cricket Australia the extra edge that they need to win all of their matches!
 
-- MoneyBall Approach: Determine key performance indicators that
-lead to winning, help teams recruit and select top performers and
-rank players based on performance in key areas. Instead of creating
-a simple ranking system that ranks players statistically, you’ll have
-access to multiple data sets that take a deep dive into individual
-aspects of the game that will provide a clearer understanding of the
-key performance indicators. 
+- **MoneyBall Approach**: Determine key performance indicators that lead to winning, help teams recruit and select top performers and rank players based on performance in key areas. Instead of creating a simple ranking system that ranks players statistically, you’ll have access to multiple data sets that take a deep dive into individual aspects of the game that will provide a clearer understanding of the key performance indicators. 
 
-- Form Factor: Determine how data can be leveraged to identify areas
-of improvement for player performance and how that data can be
-used to determine success in the future. Previous win/loss statistics
-may not be a key factor to gauge success in the future. Therefore,
-you will need to analyze ball-by-ball data and other data sets to help
-layout a use case for how the Cricket Australia team can be more
-successful in the upcoming seasons.
+- **Form Factor**: Determine how data can be leveraged to identify areas of improvement for player performance and how that data can be used to determine success in the future. Previous win/loss statistics may not be a key factor to gauge success in the future. Therefore, you will need to analyze ball-by-ball data and other data sets to help layout a use case for how the Cricket Australia team can be more successful in the upcoming seasons.
 
-- Real Time Strategy: Determine strategies to help mitigate a player
-being dismissed from game play using data. For example, your
-solution can build algorithms to predict the chances of a batsman
-getting out given a sequence of deliveries
+- **Real Time Strategy**: Determine strategies to help mitigate a player being dismissed from game play using data. For example, your solution can build algorithms to predict the chances of a batsman getting out given a sequence of deliveries
 
-- Match Strategy: Given that there are different types of Cricket matches that
-can be played, define optimal match strategies using the data provided to
-help teams prepare more effectively. Keep in mind that during these
-different types of matches, both the batting and bowling teams will need
-effective strategies in order to be successful.
+- **Match Strategy**: Given that there are different types of Cricket matches that can be played, define optimal match strategies using the data provided to help teams prepare more effectively. Keep in mind that during these different types of matches, both the batting and bowling teams will need effective strategies in order to be successful.
 
-- DRS: Improve on field performance by leveraging umpire, grounds and
-match data to make decision-making easier for cricket players and leaders.
-The idea behind this solution is to highlight areas where umpires, and
-possibly even the team captains, are making the wrong decisions so that we
-can better prepare them for future matches.
+- **DRS**: Improve on field performance by leveraging umpire, grounds and match data to make decision-making easier for cricket players and leaders. The idea behind this solution is to highlight areas where umpires, and possibly even the team captains, are making the wrong decisions so that we can better prepare them for future matches.
 
-- Prototype: Prototypes and technology solutions to build end-to-end
-integrated digital applications to manage and coordinate players, travel,
-partner engagements, payments and appearances. You will also want to
-consider the aspects of player training to ensure better coordination and
-management of the Australian National Team.
+- Prototype: Prototypes and technology solutions to build end-to-end integrated digital applications to manage and coordinate players, travel, partner engagements, payments and appearances. You will also want to consider the aspects of player training to ensure better coordination and management of the Australian National Team.
 
 
 ### Challenge #2: Fan Engagement
@@ -81,8 +51,6 @@ With this challenge, we are looking for disruptive solutions that leverage cutti
 This is the open innovation challenge track, in which you are welcome to come up with your own idea and submit for the TechJam - only if you do not see a solution listed that you would like to work on.
 
 If you go this route, the best practice is to first run your idea by a mentor for the TechJam to get some feedback and make sure you are still creating something that is relevant for the TechJam. Be sure to mention on your project page that you spoke to the mentor and discuss how you came up with your creative solutions.
-
-
 
 ## Judging Criteria
 Projects will be judged with the following criteria. As a reminder, projects must be submitted by September 2, 2021 - you will not be able to publish or edit your projects after this deadline.
