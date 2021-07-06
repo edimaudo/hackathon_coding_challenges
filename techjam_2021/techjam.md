@@ -31,7 +31,7 @@ This challenge requires looking for solutions that leverage historical player pe
 
 - **DRS**: Improve on field performance by leveraging umpire, grounds and match data to make decision-making easier for cricket players and leaders. The idea behind this solution is to highlight areas where umpires, and possibly even the team captains, are making the wrong decisions so that we can better prepare them for future matches.
 
-- Prototype: Prototypes and technology solutions to build end-to-end integrated digital applications to manage and coordinate players, travel, partner engagements, payments and appearances. You will also want to consider the aspects of player training to ensure better coordination and management of the Australian National Team.
+- **Prototype**: Prototypes and technology solutions to build end-to-end integrated digital applications to manage and coordinate players, travel, partner engagements, payments and appearances. You will also want to consider the aspects of player training to ensure better coordination and management of the Australian National Team.
 
 
 ### Challenge #2: Fan Engagement
