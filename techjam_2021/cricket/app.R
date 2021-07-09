@@ -25,6 +25,13 @@ for (package in packages) {
 # dropdowns
 #=============
 
+#=============
+# UI
+#=============
+title <- tags$a(href='http://cricketaustralia.com',"Baggy Green",
+       tags$img(src='cricket_australia.jpeg',height='50',width='50'))
+
+
 ui <- dashboardPage(skin = "green",
     dashboardHeader(title = "Baggy Green"),
     dashboardSidebar(
