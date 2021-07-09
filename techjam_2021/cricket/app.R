@@ -25,11 +25,11 @@ for (package in packages) {
 # dropdowns
 #=============
 
-ui <- dashboardPage(
-    dashboardHeader(title = "Cricket Australia"),
+ui <- dashboardPage(skin = "green",
+    dashboardHeader(title = "Baggy Green"),
     dashboardSidebar(
         sidebarMenu(
-            menuItem("About", tabName = "about", icon = icon("th")),
+            menuItem("About", tabName = "about", icon = icon("far fa-address-card")),
             menuItem("Cricket Australia", tabName = "cricket_australia", icon = icon("th")),
             menuItem("Cricket Primer", tabName = "cricket_primer", icon = icon("th")),
             menuItem("Grounds", tabName = "grounds", icon = icon("th")),
