@@ -8,3 +8,7 @@ Baggy Green is a data exploration and analytics tool for the Cricket Australia (
 It was inspired by the HCLTech TechJam (insert url).  
 It is powered by data from Cricket Australia (insert url).  
 Talk about the different sections of the application and what they do
+
+https://www.cricketaustralia.com.au
+
+https://hcl-ca-techjamplatform.bemyapp.com
