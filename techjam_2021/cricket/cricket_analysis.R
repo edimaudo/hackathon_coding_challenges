@@ -43,26 +43,27 @@ ovals_facility_df <- read.delim("OvalsAndFacility.txt")
 ovals_facility_audit_df <- read.delim("OvalsAndFacilityAudit.txt")
 
 #fix column names
-colnames(ovals_facility_df) <- c('PropertyID ','PropertyName ','PropertySuburb ',
-                                 'PropertyRegion ','FederalElectorateDescription ',
-                                 'StateElectorateDescription ','NumberOfOvals ',
-                                 'PropertyState ','PropertyPostcode ',
-                                 'PropertyLatitude ','PropertyLongitude ',
-                                 'OvalID ','MyCricketOvalID ','OvalName ',
-                                 'OvalLatitude ','OvalLongitude ',
-                                 'OvalDimension ','PitchType ')
-colnames(ovals_facility_audit_df) <- ()
+colnames(ovals_facility_df) <- c('PropertyID','PropertyName','PropertySuburb',
+                                 'PropertyRegion','FederalElectorateDescription',
+                                 'StateElectorateDescription','NumberOfOvals',
+                                 'PropertyState','PropertyPostcode',
+                                 'PropertyLatitude','PropertyLongitude',
+                                 'OvalID','MyCricketOvalID','OvalName',
+                                 'OvalLatitude','OvalLongitude',
+                                 'OvalDimension','PitchType')
 
+colnames(ovals_facility_audit_df) <- c('AuditID ','PropertyID','FacilityGroup',
+                                       'AuditSectionName','QuestionID','AuditQuestion',
+                                       'QuestionOrder','FacilityNumber','AuditResponse',
+                                       'MeetsNationalCompliance')
 
-
-
-
-# - **DRS**: Improve on field performance by leveraging umpire,
+#**DRS**: Improve on field performance by leveraging umpire,
 # grounds and match data to make decision-making easier for 
 # cricket players and leaders. The idea behind this solution is to highlight areas where 
 # umpires, and possibly even the team captains, are making the wrong decisions 
 
-
+#What ar the performance metrics
+brainstorm - wins/loss ratio
 
 
 
