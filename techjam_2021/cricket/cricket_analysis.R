@@ -38,26 +38,31 @@ for (package in packages) {
 #===================
 # grounds
 #===================
+matches_df <- read.delim("Matches.txt")
 ovals_facility_df <- read.delim("OvalsAndFacility.txt")
 ovals_facility_audit_df <- read.delim("OvalsAndFacilityAudit.txt")
 
 #fix column names
+colnames(ovals_facility_df) <- c('PropertyID ','PropertyName ','PropertySuburb ',
+                                 'PropertyRegion ','FederalElectorateDescription ',
+                                 'StateElectorateDescription ','NumberOfOvals ',
+                                 'PropertyState ','PropertyPostcode ',
+                                 'PropertyLatitude ','PropertyLongitude ',
+                                 'OvalID ','MyCricketOvalID ','OvalName ',
+                                 'OvalLatitude ','OvalLongitude ',
+                                 'OvalDimension ','PitchType ')
+colnames(ovals_facility_audit_df) <- ()
 
-# Grounds 
-# - Insights into the grounds
-# - ground revenue
-# - possible whether 
+
+
+
+
 # - **DRS**: Improve on field performance by leveraging umpire,
 # grounds and match data to make decision-making easier for 
 # cricket players and leaders. The idea behind this solution is to highlight areas where 
 # umpires, and possibly even the team captains, are making the wrong decisions 
 
-ovals_facility_df
-types of grounds and other parts of the data
-performance on the ground - combine with match(
-performance based on dollars - revenue
-)
 
 
-# Revenue
-#so that we can better prepare them for future matches.
+
+
