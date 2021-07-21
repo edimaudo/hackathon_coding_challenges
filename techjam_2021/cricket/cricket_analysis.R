@@ -48,6 +48,8 @@ colnames(ovals_facility_audit_df) <- c('AuditID ','PropertyID','FacilityGroup',
 # Player analytics
 #===================
 #get player metrics from players_df
+player_info <- players_df %>%
+  select(Player.Surname,  Player.Other.Names)
 
 #player performance from matches, matches player, ball player, ball delivery
 
