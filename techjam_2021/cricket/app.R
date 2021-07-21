@@ -37,12 +37,8 @@ ui <- dashboardPage(skin = "green",
     dashboardSidebar(
         sidebarMenu(
             menuItem("About", tabName = "about", icon = icon("far fa-address-card")),
-            #menuItem("Cricket Australia", tabName = "cricket_australia", icon = icon("th")),
-            #menuItem("Cricket Primer", tabName = "cricket_primer", icon = icon("th")),
-            menuItem("Grounds", tabName = "grounds", icon = icon("th")),
-            menuItem("Team", tabName = "team", icon = icon("th")),
             menuItem("Player", tabName = "player", icon = icon("th")),
-            menuItem("Match", tabName = "match", icon = icon("th"))
+            menuItem("Team", tabName = "team", icon = icon("th"))
         )
     ),
     dashboardBody(
@@ -52,11 +48,7 @@ ui <- dashboardPage(skin = "green",
                             #tableOutput("contents")
                         )
           ),
-        tabItem(tabName = "grounds",
-                mainPanel(
-                    #tableOutput("contents")
-                )
-        ),
+      
         tabItem(tabName = "team",
                 mainPanel(
                     #tableOutput("contents")
@@ -67,14 +59,8 @@ ui <- dashboardPage(skin = "green",
                     #tableOutput("contents")
                 )
         ),
-        tabItem(tabName = "match",
-                mainPanel(
-                    #tableOutput("contents")
-                )
+
         )
-        
-    )
-       
     )
 )  
 
