@@ -66,18 +66,20 @@ Multiple submissions: You can submit multiple projects to the hackathon, as a pa
 Re-submission/editing of submissions: You can re-submit or edit your submission until the submission deadline. Your latest version of a submission before the deadline will be considered for judging.
 
 
-# Pontential ideas
+## Pontential ideas
 
 
 - housing aggregator
 https://www.uipath.com/community/rpa-community-blog/rpa-developers-automating-personal-lives
-(plus simple stats + using Automation 360, IQ Bot, Discovery Bot and/or AARI + ai if possible)
 
+- car hunt aggregator 
 
-- car hunt aggregator (using Automation 360, IQ Bot, Discovery Bot and/or AARI)
-
-- rpa car parts aggregator (using Automation 360, IQ Bot, Discovery Bot and/or AARI)
+- rpa car parts aggregator 
 
 University Health Network (UHN) Problem Statement
 This option will allow you to create an innovative solution that improves the overall check-in process and patient’s waiting experience.
-simple stats + using Automation 360, IQ Bot, Discovery Bot and/or AARI + AI if possible
+
+
+## Solutions
+Simple stats
+It will use utomation 360 cloud. Solutions + making use of IQ Bot or AARI will receive additional points.
