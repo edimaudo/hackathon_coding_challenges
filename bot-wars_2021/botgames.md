@@ -67,6 +67,8 @@ Re-submission/editing of submissions: You can re-submit or edit your submission 
 
 
 ## Pontential ideas
+University Health Network (UHN) Problem Statement
+This option will allow you to create an innovative solution that improves the overall check-in process and patient’s waiting experience.
 
 
 - housing aggregator
@@ -74,10 +76,7 @@ https://www.uipath.com/community/rpa-community-blog/rpa-developers-automating-pe
 
 - car hunt aggregator 
 
-- rpa car parts aggregator 
 
-University Health Network (UHN) Problem Statement
-This option will allow you to create an innovative solution that improves the overall check-in process and patient’s waiting experience.
 
 
 ## Solutions
