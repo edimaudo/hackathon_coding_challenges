@@ -35,10 +35,28 @@ Kiva is an organization with many departments and areas of expertise that operat
 - Functionality: Does the product function as intended? It is robust and easy to interact with?
 - Presentation: Does the design of the product enhance the functionality of the product? Does it communicate its message and intentions clearly?
 
+## Project Requirements
+(i) What to Create: Entrants must build a project to further poverty alleviation and financial inclusion addressing at least one of the problem statements listed; all projects must be a completed application, well-thought out innovation, or game-changing product idea. (Completed applications are encouraged, see judging criteria) (each a “Project”). 
+
+(ii) Functionality: If the Project is a completed application, the project must be capable of being successfully installed and running consistently on the platform for which it is intended and must function as depicted in the video and/or expressed in the text description.
+
+(iii) Platforms: A submitted completed application Project must run on the platform for which it is intended and which is specified in the Submission Requirements. 
+
+(iv) New & Existing: Projects must be newly created by the Entrant during the Hackathon Submission Period.
+
+(v) Third Party Integrations: If a Project integrates any third-party SDK, APIs and/or data, Entrant must be authorized to use them.
+
+(vi) Testing: The Entrant must make the Project available free of charge and without any restriction, for testing, evaluation and use by the Sponsor, Administrator and Judges until the Judging Period ends. 
+
 ## Submission Requirements
-- If it contains code, the project must be open source under the following license: Apache 2.0 - https://opensource.org/licenses/Apache-2.0
+- Include a Project that meets the above Project Requirements.
+- Must make the Project open source under the following license: Apache 2.0 - https://opensource.org/licenses/Apache-2.0
 - Include a text description that should explain the features and functionality of your Project.
 - Include a demonstration video of your Project. The video portion of the submission:
- - should be less than three (3) minutes
- - should include footage that shows the functionality of the Project
- - must be uploaded to and made publicly visible on YouTube, Vimeo, Facebook Video, or Youku, and a link to the video must be provided on the submission form on the Hackathon Website
+  - should be less than three (3) minutes
+  - should include footage that shows the functionality of the Project as a completed application, well-thought out innovation, or game-changing product idea
+  - must be uploaded to and made publicly visible on YouTube, Vimeo, Facebook Video, or Youku, and a link to the video must be provided on the submission form on the Hackathon Website; and
+  - must not include third party trademarks, or copyrighted music or other material unless the Entrant has permission to use such material.
+  - Be the original work of the submitter, be solely owned by the submitter, and not violate the IP rights of any other person or entity.
+  - Access must be provided to an Entrant’s working Project for judging and testing by providing a link to a website, functioning demo, or a test build. If Entrant’s website is private, Entrant must include login credentials in its testing instructions.
+  - Multiple Submissions: An Entrant may submit more than one Submission, however, each submission must be unique and substantially different from each of the Entrant’s other Submissions, as determined by the Sponsor and Devpost in their sole discretion.
