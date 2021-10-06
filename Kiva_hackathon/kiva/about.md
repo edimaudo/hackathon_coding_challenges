@@ -3,7 +3,7 @@
 ![Kiva](http://www-kiva-org.global.ssl.fastly.net/cms/kiva_logo_2.png)
 
 ### About Kiva
-![Kiva](https://www.kiva.org) is a social impact organization with a mission to expand financial access to help underserved individuals and communities thrive.
+[Kiva](https://www.kiva.org) is a social impact organization with a mission to expand financial access to help underserved individuals and communities thrive.
 
 ### About Application
 This application leverages Kiva's data snapshot to build financial tools that would help further poverty alleviation and financial inclusion.  The application focuses on two key areas
