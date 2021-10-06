@@ -13,7 +13,7 @@ This application leverages Kiva's data snapshot to build financial tools that wo
 ### Features
 - Include a text description that should explain the features and functionality of your Project.
 
-### How do I use it?
+
 
 
 
