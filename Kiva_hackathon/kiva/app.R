@@ -9,7 +9,8 @@ rm(list = ls()) # Clear environment
 #=============
 packages <- c('ggplot2', 'corrplot','tidyverse','readxl',
               'shiny','shinydashboard','scales','dplyr','mlbench','caTools',
-              'forecast','TTR','xts','lubridate')
+              'forecast','TTR','xts','lubridate',
+              "dummies",'readxl','forecast','TTR','xts','lubridate')
 for (package in packages) {
     if (!require(package, character.only=T, quietly=T)) {
         install.packages(package)
@@ -42,6 +43,9 @@ ui <- dashboardPage(
   ),
   dashboardBody(
     tabItems(
+      tabPanel("Introduction",
+               includeMarkdown("intro.md"),
+               hr()),
       tabItem(tabName = "data",
               sidebarLayout(
                 sidebarPanel(
@@ -111,3 +115,15 @@ shinyApp(ui, server)
 
 
 #loan impact using sroi framework
+
+#===============
+#TO DO
+#- BUILD preliminary UI LAYOUT
+#- BUILD ABOUT
+#- BUILD UI LAYOUT
+#- LOAD DATA + INFO
+# - Fund distribution - How might we optimize fund distribution to borrowers?
+# - Loan impact - How might we show the impact of the loans?
+# - Test model
+
+  
