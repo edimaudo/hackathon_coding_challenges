@@ -37,15 +37,10 @@ Kiva is an organization with many departments and areas of expertise that operat
 
 ## Project Requirements
 (i) What to Create: Entrants must build a project to further poverty alleviation and financial inclusion addressing at least one of the problem statements listed; all projects must be a completed application, well-thought out innovation, or game-changing product idea. (Completed applications are encouraged, see judging criteria) (each a “Project”). 
-
 (ii) Functionality: If the Project is a completed application, the project must be capable of being successfully installed and running consistently on the platform for which it is intended and must function as depicted in the video and/or expressed in the text description.
-
 (iii) Platforms: A submitted completed application Project must run on the platform for which it is intended and which is specified in the Submission Requirements. 
-
 (iv) New & Existing: Projects must be newly created by the Entrant during the Hackathon Submission Period.
-
 (v) Third Party Integrations: If a Project integrates any third-party SDK, APIs and/or data, Entrant must be authorized to use them.
-
 (vi) Testing: The Entrant must make the Project available free of charge and without any restriction, for testing, evaluation and use by the Sponsor, Administrator and Judges until the Judging Period ends. 
 
 ## Submission Requirements
