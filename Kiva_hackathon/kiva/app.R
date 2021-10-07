@@ -1,3 +1,19 @@
+#portfolio optimization using loan data
+# by sector
+# by country
+# other factors (lender term, repayment interval, distribution model)
+
+#impact modeling
+#loan impact using sroi framework
+
+#===============
+#TO DO
+#- BUILD UI LAYOUT
+# - Fund distribution - How might we optimize fund distribution to borrowers?
+# - Loan impact - How might we show the impact of the loans?
+# - Test model
+
+
 #=============
 # Kiva Application
 #=============
@@ -39,43 +55,43 @@ ui <- dashboardPage(skin = "green",
     )
   ),
   dashboardBody(
-      tabPanel("about",
-               includeMarkdown("about.md"),
-               hr()),
-      tabItems(
-        tabItem(tabName = "fund",
-                sidebarLayout(
-                  sidebarPanel(
-                    # selectInput("aggregateInput", "Aggregate", 
-                    #             choices = aggregate_info, selected = 'weekly'),
-                    # selectInput("typeInput", "Type", 
-                    #             choices = type_info,selected = "All"),
-                    # selectInput("regionInput", "Region", 
-                    #             choices = region_info, selected = "All"),
-                    # selectInput("frequencyInput", "Frequency", 
-                    #             choices = frequency_info, selected = 7),
-                    # selectInput("horizonInput", "Forecast Horizon", 
-                    #             choices = horizon_info, selected = 12),
-                    # selectInput("modelInput", "Model", 
-                    #             choices = model_info, selected = 'auto exponential'),
-                    submitButton("Submit")
-                  ),
-                  mainPanel(
-                    h2("Revenue Forecast Analysis",style="text-align: center;"), 
-                    fluidRow(
-                      h3("Forecast Plot",style="text-align: center;"),
-                      #plotOutput("forecastPlot"),
-                      br()#,
-                      #h3("Forecast Accuracy",style="text-align: center;"),
-                      #DT::dataTableOutput("accuracyOutput")
-                    )
-                  )
-                )
-        )
-      )
-)
+               tabItems(
+                 tabItem(tabName = "about",includeMarkdown("about.md"),hr()),
+                 tabItem(tabName = "fund",
+                         sidebarLayout(
+                           sidebarPanel(
+                             # selectInput("aggregateInput", "Aggregate", 
+                             #             choices = aggregate_info, selected = 'weekly'),
+                             # selectInput("typeInput", "Type", 
+                             #             choices = type_info,selected = "All"),
+                             # selectInput("regionInput", "Region", 
+                             #             choices = region_info, selected = "All"),
+                             # selectInput("frequencyInput", "Frequency", 
+                             #             choices = frequency_info, selected = 7),
+                             # selectInput("horizonInput", "Forecast Horizon", 
+                             #             choices = horizon_info, selected = 12),
+                             # selectInput("modelInput", "Model", 
+                             #             choices = model_info, selected = 'auto exponential'),
+                             submitButton("Submit")
+                           ),
+                           mainPanel(
+                             h2("Revenue Forecast Analysis",style="text-align: center;"), 
+                             fluidRow(
+                               h3("Forecast Plot",style="text-align: center;"),
+                               #plotOutput("forecastPlot"),
+                               br()#,
+                               #h3("Forecast Accuracy",style="text-align: center;"),
+                               #DT::dataTableOutput("accuracyOutput")
+                             )
+                           )
+                         )
+                 )
+               )
+               )
 
 )
+
+
 
 
 #=============
@@ -87,25 +103,6 @@ server <- function(input, output,session) {
 
 shinyApp(ui, server)
 
-#portfolio optimization using loan data
-# by sector
 
-# by country
-
-#other factors (lender term, repayment interval, distribution model)
-
-
-#loan impact using sroi framework
-
-#===============
-#TO DO
-#- BUILD ABOUT
-#- LOAD DATA + INFO
-#- BUILD preliminary UI LAYOUT
-
-#- BUILD UI LAYOUT
-# - Fund distribution - How might we optimize fund distribution to borrowers?
-# - Loan impact - How might we show the impact of the loans?
-# - Test model
 
   
