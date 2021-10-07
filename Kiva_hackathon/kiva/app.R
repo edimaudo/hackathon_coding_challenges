@@ -21,10 +21,10 @@ df <- data.table::fread("loans.csv")
 #=============
 # UI drop-down
 #=============
-sector <- c(sort(unique(loans$SECTOR_NAME)))
-country <- c(sort(unique(loans$COUNTRY_NAME)))
-lender_term <- c(sort(unique(loans$LENDER_TERM)))
-repayment_interval <- c(sort(unique(loans$REPAYMENT_INTERVAL)))
+sector <- c(sort(unique(df$SECTOR_NAME)))
+country <- c(sort(unique(df$COUNTRY_NAME)))
+lender_term <- c(sort(unique(df$LENDER_TERM)))
+repayment_interval <- c(sort(unique(df$REPAYMENT_INTERVAL)))
 #=============
 # UI Layout 
 #=============
@@ -33,7 +33,7 @@ ui <- dashboardPage(skin = "green",
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
-      menuItem("Data Insights", tabName = "analysis", icon = icon("th")),
+      #menuItem("Data Insights", tabName = "insights", icon = icon("th")),
       menuItem("Fund analysis", tabName = "fund", icon = icon("th")),
       menuItem("Loan Impact", tabName = "loan", icon = icon("th"))
     )
@@ -43,7 +43,35 @@ ui <- dashboardPage(skin = "green",
                includeMarkdown("about.md"),
                hr()),
       tabItems(
-        
+        tabItem(tabName = "fund",
+                sidebarLayout(
+                  sidebarPanel(
+                    # selectInput("aggregateInput", "Aggregate", 
+                    #             choices = aggregate_info, selected = 'weekly'),
+                    # selectInput("typeInput", "Type", 
+                    #             choices = type_info,selected = "All"),
+                    # selectInput("regionInput", "Region", 
+                    #             choices = region_info, selected = "All"),
+                    # selectInput("frequencyInput", "Frequency", 
+                    #             choices = frequency_info, selected = 7),
+                    # selectInput("horizonInput", "Forecast Horizon", 
+                    #             choices = horizon_info, selected = 12),
+                    # selectInput("modelInput", "Model", 
+                    #             choices = model_info, selected = 'auto exponential'),
+                    submitButton("Submit")
+                  ),
+                  mainPanel(
+                    h2("Revenue Forecast Analysis",style="text-align: center;"), 
+                    fluidRow(
+                      h3("Forecast Plot",style="text-align: center;"),
+                      #plotOutput("forecastPlot"),
+                      br()#,
+                      #h3("Forecast Accuracy",style="text-align: center;"),
+                      #DT::dataTableOutput("accuracyOutput")
+                    )
+                  )
+                )
+        )
       )
 )
 
