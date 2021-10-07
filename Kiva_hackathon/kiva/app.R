@@ -21,7 +21,7 @@ rm(list = ls()) # Clear environment
 #=============
 # Package Information
 #=============
-packages <- c('ggplot2', 'corrplot','tidyverse','readxl',
+packages <- c('ggplot2', 'corrplot','tidyverse','readxl','doParallel',
               'shiny','shinydashboard','scales','dplyr','mlbench','caTools',
               "dummies",'readxl','forecast','TTR','xts','lubridate','data.table')
 for (package in packages) {
@@ -33,7 +33,10 @@ for (package in packages) {
 #=============
 # data
 #=============
+cl <- makePSOCKcluster(4)
+registerDoParallel(cl)
 df <- data.table::fread("loans.csv")
+stopCluster(cl)
 #=============
 # UI drop-down
 #=============
