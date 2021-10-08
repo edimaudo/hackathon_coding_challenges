@@ -23,7 +23,7 @@ rm(list = ls()) # Clear environment
 #=============
 packages <- c('ggplot2', 'corrplot','tidyverse','readxl','doParallel',
               'shiny','shinydashboard','scales','dplyr','mlbench','caTools',
-              "dummies",'readxl','forecast','TTR','xts','lubridate','data.table')
+              "dummies",'readxl','forecast','TTR','xts','lubridate','data.table','timetk')
 for (package in packages) {
     if (!require(package, character.only=T, quietly=T)) {
         install.packages(package)
