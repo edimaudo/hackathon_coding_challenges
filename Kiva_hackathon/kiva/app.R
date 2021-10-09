@@ -22,7 +22,7 @@ rm(list = ls()) # Clear environment
 # Package Information
 #=============
 packages <- c('ggplot2', 'corrplot','tidyverse','readxl','doParallel',
-              'shiny','shinydashboard','scales','dplyr','mlbench','caTools',
+              'shiny','shinydashboard','scales','dplyr','mlbench','caTools','RColorBrewer',
               "dummies",'readxl','forecast','TTR','xts','lubridate','data.table','timetk')
 for (package in packages) {
     if (!require(package, character.only=T, quietly=T)) {
@@ -40,10 +40,11 @@ stopCluster(cl)
 #=============
 # UI drop-down
 #=============
-sector <- c(sort(unique(df$SECTOR_NAME)))
-country <- c(sort(unique(df$COUNTRY_NAME)))
-lender_term <- c(sort(unique(df$LENDER_TERM)))
-repayment_interval <- c(sort(unique(df$REPAYMENT_INTERVAL)))
+sector <- c("All",c(sort(unique(df$SECTOR_NAME)))) 
+country <- c("All",c(sort(unique(df$COUNTRY_NAME))))
+lender_term <- c("All",c(sort(unique(df$LENDER_TERM)))) 
+repayment_interval <- c("All",c(sort(unique(df$REPAYMENT_INTERVAL))))
+
 #=============
 # UI Layout 
 #=============
@@ -52,7 +53,6 @@ ui <- dashboardPage(skin = "green",
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
-      #menuItem("Data Insights", tabName = "insights", icon = icon("th")),
       menuItem("Fund analysis", tabName = "fund", icon = icon("th")),
       menuItem("Loan Impact", tabName = "loan", icon = icon("th"))
     )
@@ -63,28 +63,24 @@ ui <- dashboardPage(skin = "green",
                  tabItem(tabName = "fund",
                          sidebarLayout(
                            sidebarPanel(
-                             # selectInput("aggregateInput", "Aggregate", 
-                             #             choices = aggregate_info, selected = 'weekly'),
-                             # selectInput("typeInput", "Type", 
-                             #             choices = type_info,selected = "All"),
-                             # selectInput("regionInput", "Region", 
-                             #             choices = region_info, selected = "All"),
-                             # selectInput("frequencyInput", "Frequency", 
-                             #             choices = frequency_info, selected = 7),
-                             # selectInput("horizonInput", "Forecast Horizon", 
-                             #             choices = horizon_info, selected = 12),
-                             # selectInput("modelInput", "Model", 
-                             #             choices = model_info, selected = 'auto exponential'),
+                             selectInput("sectorInput", "Sector", 
+                                          choices = sector, selected = 'All'),
+                             selectInput("countryInput", "Country", 
+                                          choices = countryo,selected = "All"),
+                              selectInput("lenderInput", "Lender Term", 
+                                          choices = lender_term, selected = "All"),
+                             selectInput("repaymentInput", "Repayment Interval", 
+                                          choices = repayment_interval, selected = "All"),
                              submitButton("Submit")
                            ),
                            mainPanel(
-                             h2("Revenue Forecast Analysis",style="text-align: center;"), 
+                             h2("Portfolio Breakdown",style="text-align: center;"), 
                              fluidRow(
-                               h3("Forecast Plot",style="text-align: center;"),
-                               #plotOutput("forecastPlot"),
-                               br()#,
-                               #h3("Forecast Accuracy",style="text-align: center;"),
-                               #DT::dataTableOutput("accuracyOutput")
+                               h3("Minimum Variance Portfolio",style="text-align: center;"),
+                               plotOutput("minvarPlot"),
+                               br(),
+                               h3("Efficient Portfolio",style="text-align: center;"),
+                               plotOutput("efficientPlot"),
                              )
                            )
                          )
@@ -102,6 +98,16 @@ ui <- dashboardPage(skin = "green",
 #=============
 server <- function(input, output,session) {
 
+  # min variance portfolio
+  output$minvarPlot <- renderPlot({
+    
+  })
+  
+  # efficiency portfolio
+  output$efficientPlot <- renderPlot({
+    
+  })
+  
 }
 
 shinyApp(ui, server)
