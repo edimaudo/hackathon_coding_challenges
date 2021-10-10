@@ -40,54 +40,69 @@ stopCluster(cl)
 #=============
 # UI drop-down
 #=============
-sector <- c("All",c(sort(unique(df$SECTOR_NAME)))) 
-country <- c("All",c(sort(unique(df$COUNTRY_NAME))))
-lender_term <- c("All",c(sort(unique(df$LENDER_TERM)))) 
-repayment_interval <- c("All",c(sort(unique(df$REPAYMENT_INTERVAL))))
+sector <- c("All", c(sort(unique(df$SECTOR_NAME))))
+country <- c("All", c(sort(unique(df$COUNTRY_NAME))))
+lender_term <- c("All", c(sort(unique(df$LENDER_TERM))))
+repayment_interval <-
+  c("All", c(sort(unique(
+    df$REPAYMENT_INTERVAL
+  ))))
 
 #=============
-# UI Layout 
+# UI Layout
 #=============
-ui <- dashboardPage(skin = "green",
+ui <- dashboardPage(
+  skin = "green",
   dashboardHeader(title = "Kiva Application"),
-  dashboardSidebar(
-    sidebarMenu(
-      menuItem("About", tabName = "about", icon = icon("th")),
-      menuItem("Fund analysis", tabName = "fund", icon = icon("th")),
-      menuItem("Loan Impact", tabName = "loan", icon = icon("th"))
-    )
-  ),
-  dashboardBody(
-               tabItems(
-                 tabItem(tabName = "about",includeMarkdown("about.md"),hr()),
-                 tabItem(tabName = "fund",
-                         sidebarLayout(
-                           sidebarPanel(
-                             selectInput("sectorInput", "Sector", 
-                                          choices = sector, selected = 'All'),
-                             selectInput("countryInput", "Country", 
-                                          choices = countryo,selected = "All"),
-                              selectInput("lenderInput", "Lender Term", 
-                                          choices = lender_term, selected = "All"),
-                             selectInput("repaymentInput", "Repayment Interval", 
-                                          choices = repayment_interval, selected = "All"),
-                             submitButton("Submit")
-                           ),
-                           mainPanel(
-                             h2("Portfolio Breakdown",style="text-align: center;"), 
-                             fluidRow(
-                               h3("Minimum Variance Portfolio",style="text-align: center;"),
-                               plotOutput("minvarPlot"),
-                               br(),
-                               h3("Efficient Portfolio",style="text-align: center;"),
-                               plotOutput("efficientPlot"),
-                             )
-                           )
-                         )
-                 )
-               )
-               )
-
+  dashboardSidebar(sidebarMenu(
+    menuItem("About", tabName = "about", icon = icon("th")),
+    menuItem("Fund analysis", tabName = "fund", icon = icon("th")),
+    menuItem("Loan Impact", tabName = "loan", icon = icon("th"))
+  )),
+  dashboardBody(tabItems(
+    tabItem(tabName = "about", includeMarkdown("about.md"), hr()),
+    tabItem(tabName = "fund",
+            sidebarLayout(
+              sidebarPanel(
+                selectInput(
+                  "sectorInput",
+                  "Sector",
+                  choices = sector,
+                  selected = 'All'
+                ),
+                selectInput(
+                  "countryInput",
+                  "Country",
+                  choices = country,
+                  selected = "All"
+                ),
+                selectInput(
+                  "lenderInput",
+                  "Lender Term",
+                  choices = lender_term,
+                  selected = "All"
+                ),
+                selectInput(
+                  "repaymentInput",
+                  "Repayment Interval",
+                  choices = repayment_interval,
+                  selected = "All"
+                ),
+                submitButton("Submit")
+              ),
+              mainPanel(
+                h2("Portfolio Breakdown", style = "text-align: center;"),
+                fluidRow(
+                  h3("Minimum Variance Portfolio", style = "text-align: center;"),
+                  plotOutput("minvarPlot"),
+                  br(),
+                  h3("Efficient Portfolio", style = "text-align: center;"),
+                  plotOutput("efficientPlot"),
+                )
+              )
+            ))
+  ))
+  
 )
 
 
