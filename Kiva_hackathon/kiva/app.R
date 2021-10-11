@@ -178,13 +178,13 @@ server <- function(input, output,session) {
     #max_sr <- portfolio_values[which.max(portfolio_values$SharpeRatio),]   
     
     min_var %>%
-      gather(Agriculture:Wholesale, key = Asset,
+      gather(Agriculture:Wholesale, key = Sector,
              value = Weights) %>%
-      mutate(Asset = as.factor(Asset)) %>%
-      ggplot(aes(x = fct_reorder(Asset,Weights), y = Weights, fill = Asset)) +
+      mutate(Sector = as.factor(Sector)) %>%
+      ggplot(aes(x = fct_reorder(Sector,Weights), y = Weights, fill = Sector)) +
       geom_bar(stat = 'identity') +
       theme_minimal() + coord_flip() + 
-      labs(x = 'Assets', y = 'Weights') +
+      labs(x = 'Sectors', y = 'Weights') +
       scale_y_continuous(labels = scales::percent)    
   })
   
@@ -279,13 +279,13 @@ server <- function(input, output,session) {
     max_sr <- portfolio_values[which.max(portfolio_values$SharpeRatio),]   
     
     max_sr %>%
-      gather(column_info, key = Asset,
+      gather(column_info, key = Sector,
              value = Weights) %>%
-      mutate(Asset = as.factor(Asset)) %>%
-      ggplot(aes(x = fct_reorder(Asset,Weights), y = Weights, fill = Asset)) +
+      mutate(Sector = as.factor(Sector)) %>%
+      ggplot(aes(x = fct_reorder(Sector,Weights), y = Weights, fill = Sector)) +
       geom_bar(stat = 'identity') + 
       theme_minimal() + coord_flip() + 
-      labs(x = 'Assets', y = 'Weights') +
+      labs(x = 'Sectors', y = 'Weights') +
       scale_y_continuous(labels = scales::percent) 
   })
   
