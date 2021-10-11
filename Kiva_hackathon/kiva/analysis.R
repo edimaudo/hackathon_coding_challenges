@@ -120,7 +120,7 @@ p <- max_sr %>%
   geom_bar(stat = 'identity') + 
   theme_minimal() + coord_flip() + 
   labs(x = 'Assets', y = 'Weights', title = "Tangency Portfolio Weights") +
-  scale_y_continuous(labels = scales::percent) + 
+  scale_y_continuous(labels = scales::percent) 
   
 
 # p <- portfolio_values %>%
