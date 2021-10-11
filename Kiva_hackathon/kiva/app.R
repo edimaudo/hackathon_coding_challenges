@@ -40,14 +40,9 @@ stopCluster(cl)
 #=============
 # UI drop-down
 #=============
-sector <- c("All", c(sort(unique(df$SECTOR_NAME))))
 country <- c("All", c(sort(unique(df$COUNTRY_NAME))))
-lender_term <- c("All", c(sort(unique(df$LENDER_TERM))))
-repayment_interval <-
-  c("All", c(sort(unique(
-    df$REPAYMENT_INTERVAL
-  ))))
-
+#lender_term <- c("All", c(sort(unique(df$LENDER_TERM))))
+#repayment_interval <-c("All", c(sort(unique(df$REPAYMENT_INTERVAL))))
 #=============
 # UI Layout
 #=============
@@ -64,30 +59,10 @@ ui <- dashboardPage(
     tabItem(tabName = "fund",
             sidebarLayout(
               sidebarPanel(
-                selectInput(
-                  "sectorInput",
-                  "Sector",
-                  choices = sector,
-                  selected = 'All'
-                ),
-                selectInput(
-                  "countryInput",
-                  "Country",
-                  choices = country,
-                  selected = "All"
-                ),
-                selectInput(
-                  "lenderInput",
-                  "Lender Term",
-                  choices = lender_term,
-                  selected = "All"
-                ),
-                selectInput(
-                  "repaymentInput",
-                  "Repayment Interval",
-                  choices = repayment_interval,
-                  selected = "All"
-                ),
+                selectInput("countryInput","Country",choices = country,selected = "All"),
+                #selectInput("lenderInput","Lender Term",choices = lender_term,selected = "All"),
+                #sliderInput("lenderInput","Lender Term",min = 1, max = 195, value = 10),
+                #selectInput("repaymentInput","Repayment Interval",choices = repayment_interval,selected = "All"),
                 submitButton("Submit")
               ),
               mainPanel(
@@ -104,17 +79,48 @@ ui <- dashboardPage(
   ))
   
 )
-
-
-
-
 #=============
 # Define server logic 
 #=============
 server <- function(input, output,session) {
-
+  
+  #filter by funded and clean up dates
+  funds_df <- df %>%
+    filter(STATUS == 'funded') %>%
+    select(FUNDED_AMOUNT, SECTOR_NAME, COUNTRY_NAME,DISBURSE_TIME) %>%
+    na.omit()
+  funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
+  funds_df$DISBURSE_TIME <- NULL
+  
+  # filter by country information
+  if (input$countryInput != "All"){
+    funds_df2 <- funds_df %>% 
+      filter(COUNTRY_NAME == input$countryInput) %>%
+      group_by(SECTOR_NAME, DISBURSE_DATE) %>%
+      dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
+      select(SECTOR_NAME, DISBURSE_DATE,TOTAL_FUNDED_AMOUNT)
+  } else {
+    funds_df2 <- funds_df %>% 
+      group_by(SECTOR_NAME, DISBURSE_DATE) %>%
+      dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
+      select(SECTOR_NAME, DISBURSE_DATE,TOTAL_FUNDED_AMOUNT)    
+  }
+  
+  # create time series
+  funds_df_xts <- funds_df2 %>%
+    spread(SECTOR_NAME, value = TOTAL_FUNDED_AMOUNT) %>%
+    tk_xts()
+  funds_df_xts[is.na(funds_df_xts)] <- 0
+  
+  # remove dataframes
+  funds_df <- NULL
+  funds_df2 <- NULL
+  
+  
   # min variance portfolio
   output$minvarPlot <- renderPlot({
+    
+
     
   })
   
