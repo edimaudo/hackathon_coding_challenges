@@ -18,7 +18,9 @@ loans <- data.table::fread("loans.csv")
 
 column_info <- unique(loans$SECTOR_NAME)
 
+#=============
 # fund distribution
+#=============
 funds_df <- loans %>%
   filter(STATUS == 'funded') %>%
   select(FUNDED_AMOUNT, SECTOR_NAME, COUNTRY_NAME,DISBURSE_TIME,LENDER_TERM,REPAYMENT_INTERVAL) %>%
@@ -144,3 +146,6 @@ p <- max_sr %>%
 #            yend = 0.365, color = 'red', arrow = arrow(type = "open"))
 # 
 # p
+
+#=============
+# loan impact
