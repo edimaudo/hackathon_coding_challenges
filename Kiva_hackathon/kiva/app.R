@@ -70,7 +70,22 @@ ui <- dashboardPage(
                   plotOutput("efficientPlot"),
                 )
               )
-            ))
+            )
+          ), 
+    tabItem(tabName = "loan",
+            sidebarLayout(
+              sidebarPanel(
+                selectInput("countryInput","Country",choices = country,selected = "All"),
+                submitButton("Submit")
+              ),
+              mainPanel(
+                h2("Portfolio Breakdown", style = "text-align: center;"),
+                fluidRow(
+                  h3("Minimum Variance Portfolio", style = "text-align: center;"),
+            )
+          )
+        )
+    )
   ))
   
 )
@@ -87,7 +102,9 @@ server <- function(input, output,session) {
   funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
   funds_df$DISBURSE_TIME <- NULL
   
+  #=============
   # min variance portfolio
+  #=============
   output$minvarPlot <- renderPlot({
     # filter by country information
     if (input$countryInput != "All"){
@@ -187,8 +204,9 @@ server <- function(input, output,session) {
       labs(x = 'Sectors', y = 'Weights') +
       scale_y_continuous(labels = scales::percent)    
   })
-  
+  #=============
   # efficiency portfolio
+  #=============
   output$efficientPlot <- renderPlot({
     # filter by country information
     if (input$countryInput != "All"){
