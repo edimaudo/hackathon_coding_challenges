@@ -41,8 +41,6 @@ stopCluster(cl)
 # UI drop-down
 #=============
 country <- c("All", c(sort(unique(df$COUNTRY_NAME))))
-#lender_term <- c("All", c(sort(unique(df$LENDER_TERM))))
-#repayment_interval <-c("All", c(sort(unique(df$REPAYMENT_INTERVAL))))
 #=============
 # UI Layout
 #=============
@@ -60,9 +58,6 @@ ui <- dashboardPage(
             sidebarLayout(
               sidebarPanel(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
-                #selectInput("lenderInput","Lender Term",choices = lender_term,selected = "All"),
-                #sliderInput("lenderInput","Lender Term",min = 1, max = 195, value = 10),
-                #selectInput("repaymentInput","Repayment Interval",choices = repayment_interval,selected = "All"),
                 submitButton("Submit")
               ),
               mainPanel(
@@ -84,8 +79,6 @@ ui <- dashboardPage(
 #=============
 server <- function(input, output,session) {
   
-  
-  
   #filter by funded and clean up dates
   funds_df <- df %>%
     filter(STATUS == 'funded') %>%
@@ -93,8 +86,6 @@ server <- function(input, output,session) {
     na.omit()
   funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
   funds_df$DISBURSE_TIME <- NULL
-  
-
   
   # min variance portfolio
   output$minvarPlot <- renderPlot({
