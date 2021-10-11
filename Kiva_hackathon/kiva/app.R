@@ -184,7 +184,7 @@ server <- function(input, output,session) {
     # - The minimum variance portfolio
     # - The tangency portfolio (the portfolio with highest sharpe ratio)
     min_var <- portfolio_values[which.min(portfolio_values$Risk),]
-    max_sr <- portfolio_values[which.max(portfolio_values$SharpeRatio),]   
+    #max_sr <- portfolio_values[which.max(portfolio_values$SharpeRatio),]   
     
     min_var %>%
       gather(Agriculture:Wholesale, key = Asset,
@@ -284,7 +284,7 @@ server <- function(input, output,session) {
     # Next lets look at the portfolios that matter the most.
     # - The minimum variance portfolio
     # - The tangency portfolio (the portfolio with highest sharpe ratio)
-    min_var <- portfolio_values[which.min(portfolio_values$Risk),]
+    #min_var <- portfolio_values[which.min(portfolio_values$Risk),]
     max_sr <- portfolio_values[which.max(portfolio_values$SharpeRatio),]   
     
     max_sr %>%
