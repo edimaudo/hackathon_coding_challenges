@@ -1,19 +1,3 @@
-#portfolio optimization using loan data
-# by sector
-# by country
-# other factors (lender term, repayment interval, distribution model)
-
-#impact modeling
-#loan impact using sroi framework
-
-#===============
-#TO DO
-#- BUILD UI LAYOUT
-# - Fund distribution - How might we optimize fund distribution to borrowers?
-# - Loan impact - How might we show the impact of the loans?
-# - Test model
-
-
 #=============
 # Kiva Application
 #=============
@@ -31,7 +15,7 @@ for (package in packages) {
     }
 }
 #=============
-# data
+# Load data
 #=============
 cl <- makePSOCKcluster(4)
 registerDoParallel(cl)
@@ -41,6 +25,7 @@ stopCluster(cl)
 # UI drop-down
 #=============
 country <- c("All", c(sort(unique(df$COUNTRY_NAME))))
+sector <- c(sort(unique(df$SECTOR_NAME)))
 #=============
 # UI Layout
 #=============
@@ -63,11 +48,11 @@ ui <- dashboardPage(
               mainPanel(
                 h2("Portfolio Breakdown", style = "text-align: center;"),
                 fluidRow(
-                  h3("Minimum Variance Portfolio", style = "text-align: center;"),
-                  plotOutput("minvarPlot"),
-                  br(),
                   h3("Efficient Portfolio", style = "text-align: center;"),
                   plotOutput("efficientPlot"),
+                  br(),
+                  h3("Minimum Variance Portfolio", style = "text-align: center;"),
+                  plotOutput("minvarPlot"),
                 )
               )
             )
@@ -76,12 +61,16 @@ ui <- dashboardPage(
             sidebarLayout(
               sidebarPanel(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
+                selectInput("sectorInput","Sector",choices = sector,selected = "Canada"),
+                sliderInput("yearInput", "Year",min = 1,max = 30,value = 5, step = 1),
+                sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 50, step = 5),
                 submitButton("Submit")
               ),
               mainPanel(
-                h2("Portfolio Breakdown", style = "text-align: center;"),
+                h2("Loan Impact", style = "text-align: center;"),
                 fluidRow(
-                  h3("Minimum Variance Portfolio", style = "text-align: center;"),
+                  h3("SROI Model", style = "text-align: center;"),
+                  DT::dataTableOutput("loanOutput")
             )
           )
         )
@@ -90,7 +79,7 @@ ui <- dashboardPage(
   
 )
 #=============
-# Define server logic 
+# Server logic 
 #=============
 server <- function(input, output,session) {
   
@@ -101,6 +90,8 @@ server <- function(input, output,session) {
     na.omit()
   funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
   funds_df$DISBURSE_TIME <- NULL
+  
+  
   
   #=============
   # min variance portfolio
@@ -202,7 +193,9 @@ server <- function(input, output,session) {
       geom_bar(stat = 'identity') +
       theme_minimal() + coord_flip() + 
       labs(x = 'Sectors', y = 'Weights') +
-      scale_y_continuous(labels = scales::percent)    
+      scale_y_continuous(labels = scales::percent)   
+    
+    # add error handler since some countries don't yield any result
   })
   #=============
   # efficiency portfolio
@@ -305,6 +298,14 @@ server <- function(input, output,session) {
       theme_minimal() + coord_flip() + 
       labs(x = 'Sectors', y = 'Weights') +
       scale_y_continuous(labels = scales::percent) 
+  
+    # add error handler since some countries don't yield any result
+    })
+  #=============
+  # SROI model
+  #=============
+  output$loanOutputOutput <- DT::renderDataTable({
+    
   })
   
 }
