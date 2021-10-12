@@ -85,7 +85,7 @@ server <- function(input, output,session) {
   
   #filter by funded and clean up dates
   funds_df <- df %>%
-    filter(STATUS == 'funded') %>%
+    filter(STATUS %in% c('funded','fundRaising')) %>%
     select(FUNDED_AMOUNT, SECTOR_NAME, COUNTRY_NAME,DISBURSE_TIME) %>%
     na.omit()
   funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
