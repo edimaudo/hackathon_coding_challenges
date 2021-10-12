@@ -63,6 +63,7 @@ ui <- dashboardPage(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
                 selectInput("sectorInput","Sector",choices = sector,selected = "Canada"),
                 sliderInput("yearInput", "Year",min = 1,max = 30,value = 5, step = 1),
+                liderInput("deadInput", "Dead Weight (%)",min = 1,max = 100,value = 50, step = 5),
                 sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 50, step = 5),
                 submitButton("Submit")
               ),
