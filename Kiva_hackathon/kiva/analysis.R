@@ -164,18 +164,28 @@ p <- max_sr %>%
 glimpse(loans)
 
 # values that will be used
-FUNDED_AMOUNT 
-STATUS
-SECTOR_NAME
-ACTIVITY_NAME 
-LENDER_TERM 
-NUM_LENDERS_TOTAL 
-COUNTRY_NAME
+# FUNDED_AMOUNT 
+# STATUS
+# SECTOR_NAME
+# ACTIVITY_NAME 
+# LENDER_TERM 
+# NUM_LENDERS_TOTAL 
+# COUNTRY_NAME
+# 
+# time_period<- c(1:25)
+# inputs - loan amount
+# dropdown will be by sector
+# stakeholders - number of lenders
+# outcomes - activity names
+# generate outcomes for the different activities
+# discount rate values
 
-time_period<- c(1:25)
-inputs - loan amount
-dropdown will be by sector
-stakeholders - number of lenders
-outcomes - activity names
-generate outcomes for the different activities
-discount rate values
+time_period <- 5
+dropoff <- 0.1
+discount_rate = 0.035
+
+
+
+loan_df2 <- loans %>%
+  filter(STATUS %in%c('funded','fundRaising')) %>%
+  select(FUNDED_AMOUNT, SECTOR_NAME, ACTIVITY_NAME, LENDER_TERM, NUM_LENDERS_TOTAL, COUNTRY_NAME)
