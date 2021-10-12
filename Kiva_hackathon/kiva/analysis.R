@@ -18,6 +18,16 @@ loans <- data.table::fread("loans.csv")
 
 column_info <- unique(loans$SECTOR_NAME)
 
+loans %>%
+  filter(STATUS == 'funded') %>%
+  dplyr::group_by(COUNTRY_NAME) %>%
+  dplyr::summarise(count=n()) %>%
+  select(COUNTRY_NAME, count) %>%
+  arrange(count)
+  filter(COUNTRY_NAME=='CANADA') 
+
+
+
 #=============
 # fund distribution
 #=============
@@ -149,3 +159,23 @@ p <- max_sr %>%
 
 #=============
 # loan impact
+#=============
+
+glimpse(loans)
+
+# values that will be used
+FUNDED_AMOUNT 
+STATUS
+SECTOR_NAME
+ACTIVITY_NAME 
+LENDER_TERM 
+NUM_LENDERS_TOTAL 
+COUNTRY_NAME
+
+time_period<- c(1:25)
+inputs - loan amount
+dropdown will be by sector
+stakeholders - number of lenders
+outcomes - activity names
+generate outcomes for the different activities
+discount rate values
