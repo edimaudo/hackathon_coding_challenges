@@ -163,16 +163,18 @@ p <- max_sr %>%
 #=============
 # overview of the borrower
 #drop down by country
-Distribution model mix (pie chart)
-Repayment interval mix (pie chart)
-gender mix
-Average number of NUM_LENDERS_TOTAL 
-Average LENDER_TERM 
-top 5 and bottom 5 sectors
-top 5 and bottom 5 activities
-word cloud of LOAN_USE 
-word cloud tags
-Avergae loan time frame (POSTED_TIME  vs DISBURSE_TIME)
+# Distribution model mix (pie chart)
+# Repayment interval mix (pie chart)
+# gender mix
+# Average number of NUM_LENDERS_TOTAL 
+# Average LENDER_TERM 
+# top 5 and bottom 5 sectors
+# top 5 and bottom 5 activities
+# word cloud of LOAN_USE 
+# word cloud tags
+# Avergae loan time frame (POSTED_TIME  vs DISBURSE_TIME)
+# Avg loans by year-month
+
 
 
 #=============
