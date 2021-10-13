@@ -34,8 +34,9 @@ ui <- dashboardPage(
   dashboardHeader(title = "Kiva Application"),
   dashboardSidebar(sidebarMenu(
     menuItem("About", tabName = "about", icon = icon("th")),
-    menuItem("Fund analysis", tabName = "fund", icon = icon("th")),
-    menuItem("Loan Impact", tabName = "loan", icon = icon("th"))
+    menuItem("Borrower Overview", tabName = "borrower", icon = icon("th")),
+    menuItem("Portfolio optimization", tabName = "fund", icon = icon("th")),
+    
   )),
   dashboardBody(tabItems(
     tabItem(tabName = "about", includeMarkdown("about.md"), hr()),
@@ -57,13 +58,13 @@ ui <- dashboardPage(
               )
             )
           ), 
-    tabItem(tabName = "loan",
+    tabItem(tabName = "borrower",
             sidebarLayout(
               sidebarPanel(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
                 selectInput("sectorInput","Sector",choices = sector,selected = "Canada"),
                 sliderInput("yearInput", "Year",min = 1,max = 30,value = 5, step = 1),
-                liderInput("deadInput", "Dead Weight (%)",min = 1,max = 100,value = 50, step = 5),
+                liderInput("dROPInput", "Drop Off (%)",min = 1,max = 100,value = 50, step = 5),
                 sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 50, step = 5),
                 submitButton("Submit")
               ),
