@@ -157,6 +157,24 @@ p <- max_sr %>%
 # 
 # p
 
+
+#=============
+# borrower dashboard
+#=============
+# overview of the borrower
+#drop down by country
+Distribution model mix (pie chart)
+Repayment interval mix (pie chart)
+gender mix
+Average number of NUM_LENDERS_TOTAL 
+Average LENDER_TERM 
+top 5 and bottom 5 sectors
+top 5 and bottom 5 activities
+word cloud of LOAN_USE 
+word cloud tags
+Avergae loan time frame (POSTED_TIME  vs DISBURSE_TIME)
+
+
 #=============
 # loan impact
 #=============
@@ -171,7 +189,7 @@ glimpse(loans)
 # LENDER_TERM 
 # NUM_LENDERS_TOTAL 
 # COUNTRY_NAME
-# 
+# LOAN_ID 
 # time_period<- c(1:25)
 # inputs - loan amount
 # dropdown will be by sector
@@ -188,4 +206,25 @@ discount_rate = 0.035
 
 loan_df2 <- loans %>%
   filter(STATUS %in%c('funded','fundRaising')) %>%
-  select(FUNDED_AMOUNT, SECTOR_NAME, ACTIVITY_NAME, LENDER_TERM, NUM_LENDERS_TOTAL, COUNTRY_NAME)
+  na.omit() %>%
+  dplyr::group_by(ACTIVITY_NAME) %>%
+  dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+            TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+            TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+  dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+  select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)
+
+loan_df2$IMPACT <- loan_df2$TOTAL_FUNDED_AMOUNT * loan_df2$TOTAL_NUMBER_LENDERS
+
+# CALCULATE DROP OFF TO GET BENEFITS
+
+# CALCLATE DISCOUNTED VALUES
+
+#GENERATE PRESENT VALUE
+
+# GENERATE NPV
+
+# total input = total present value - net present value
+
+# total present value - total inputs
+# SROI total present value / total inputs
