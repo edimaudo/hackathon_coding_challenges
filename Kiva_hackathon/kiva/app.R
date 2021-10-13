@@ -34,9 +34,9 @@ ui <- dashboardPage(
   dashboardHeader(title = "Kiva Application"),
   dashboardSidebar(sidebarMenu(
     menuItem("About", tabName = "about", icon = icon("th")),
-    menuItem("Borrower Overview", tabName = "borrower", icon = icon("th")),
-    menuItem("Portfolio optimization", tabName = "fund", icon = icon("th")),
-    
+    menuItem("Borrower ", tabName = "borrower", icon = icon("th")),
+    menuItem("Fund Distribution", tabName = "fund", icon = icon("th")),
+    menuItem("Loan Impact", tabName = "loan", icon = icon("th")),
   )),
   dashboardBody(tabItems(
     tabItem(tabName = "about", includeMarkdown("about.md"), hr()),
@@ -58,7 +58,7 @@ ui <- dashboardPage(
               )
             )
           ), 
-    tabItem(tabName = "borrower",
+    tabItem(tabName = "loan",
             sidebarLayout(
               sidebarPanel(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
