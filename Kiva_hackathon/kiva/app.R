@@ -25,7 +25,7 @@ stopCluster(cl)
 # UI drop-down
 #=============
 country <- c("All", c(sort(unique(df$COUNTRY_NAME))))
-sector <- c(sort(unique(df$SECTOR_NAME)))
+sector <- c("All",c(sort(unique(df$SECTOR_NAME))))
 #=============
 # UI Layout
 #=============
@@ -34,12 +34,30 @@ ui <- dashboardPage(
   dashboardHeader(title = "Kiva Application"),
   dashboardSidebar(sidebarMenu(
     menuItem("About", tabName = "about", icon = icon("th")),
-    menuItem("Borrower ", tabName = "borrower", icon = icon("th")),
+    menuItem("Sector Insights", tabName = "sector", icon = icon("th")),
     menuItem("Fund Distribution", tabName = "fund", icon = icon("th")),
     menuItem("Loan Impact", tabName = "loan", icon = icon("th"))
   )),
   dashboardBody(tabItems(
     tabItem(tabName = "about", includeMarkdown("about.md"), hr()),
+    tabItem(tabName = "sector",
+            sidebarLayout(
+              sidebarPanel(
+                selectInput("countryInput","Country",choices = country,selected = "All"),
+                submitButton("Submit")
+              ),
+              mainPanel(
+                h2("Portfolio Breakdown", style = "text-align: center;"),
+                fluidRow(
+                  h3("Efficient Portfolio", style = "text-align: center;"),
+                  plotOutput("efficientPlot"),
+                  br(),
+                  h3("Minimum Variance Portfolio", style = "text-align: center;"),
+                  plotOutput("minvarPlot"),
+                )
+              )
+            )
+    ), 
     tabItem(tabName = "fund",
             sidebarLayout(
               sidebarPanel(
@@ -58,31 +76,14 @@ ui <- dashboardPage(
               )
             )
           ), 
-    tabItem(tabName = "borrower",
-            sidebarLayout(
-              sidebarPanel(
-                selectInput("countryInput","Country",choices = country,selected = "All"),
-                submitButton("Submit")
-              ),
-              mainPanel(
-                h2("Portfolio Breakdown", style = "text-align: center;"),
-                fluidRow(
-                  h3("Efficient Portfolio", style = "text-align: center;"),
-                  plotOutput("efficientPlot"),
-                  br(),
-                  h3("Minimum Variance Portfolio", style = "text-align: center;"),
-                  plotOutput("minvarPlot"),
-                )
-              )
-            )
-    ), 
+
     tabItem(tabName = "loan",
             sidebarLayout(
               sidebarPanel(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
-                selectInput("sectorInput","Sector",choices = sector,selected = "Canada"),
+                selectInput("sectorInput","Sector",choices = sector,selected = "All"),
                 sliderInput("yearInput", "Year",min = 1,max = 30,value = 5, step = 1),
-                sliderInput("dROPInput", "Drop Off (%)",min = 1,max = 100,value = 50, step = 5),
+                sliderInput("dropInput", "Drop Off (%)",min = 1,max = 100,value = 50, step = 5),
                 sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 50, step = 5),
                 submitButton("Submit")
               ),
