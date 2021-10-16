@@ -39,7 +39,9 @@ ui <- dashboardPage(
     menuItem("Loan Impact", tabName = "loan", icon = icon("th"))
   )),
   dashboardBody(tabItems(
+    #====About====
     tabItem(tabName = "about", includeMarkdown("about.md"), hr()),
+    #====Sector====
     tabItem(tabName = "sector",
             sidebarLayout(
               sidebarPanel(
@@ -47,17 +49,20 @@ ui <- dashboardPage(
                 submitButton("Submit")
               ),
               mainPanel(
-                h2("Portfolio Breakdown", style = "text-align: center;"),
+                h2("Sector", style = "text-align: center;"),
                 fluidRow(
-                  h3("Efficient Portfolio", style = "text-align: center;"),
-                  plotOutput("efficientPlot"),
-                  br(),
-                  h3("Minimum Variance Portfolio", style = "text-align: center;"),
-                  plotOutput("minvarPlot"),
+                  column(2,
+                         h3("Efficient Portfolio", style = "text-align: center;"),
+                         plotOutput("efficientPlot"),
+                         h3("Minimum Variance Portfolio", style = "text-align: center;"),
+                         plotOutput("minvarPlot"),    
+                  )
+                  
                 )
               )
             )
     ), 
+    #====Fund====
     tabItem(tabName = "fund",
             sidebarLayout(
               sidebarPanel(
@@ -76,7 +81,7 @@ ui <- dashboardPage(
               )
             )
           ), 
-
+    #====Loan====
     tabItem(tabName = "loan",
             sidebarLayout(
               sidebarPanel(
