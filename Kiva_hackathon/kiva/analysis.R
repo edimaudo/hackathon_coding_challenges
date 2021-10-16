@@ -160,8 +160,9 @@ sector_df <- loans %>%
     dplyr::top_n(5) %>%
     select(SECTOR_NAME, count)
 ggplot(sector_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = SECTOR_NAME)) +
-  geom_bar(stat = "identity", width = 0.3) + theme_light()  + 
-  coord_flip()
+  geom_bar(stat = "identity", width = 0.3) + theme_minimal() + scale_y_continuous(labels = comma) +
+  coord_flip() + xlab("Sectors") + 
+  ylab("Count") + scale_colour_discrete(name="Sector Name")
   
   sector_df <- loans %>%
     filter(STATUS %in% c('funded','fundRaising')) %>%
@@ -170,8 +171,9 @@ ggplot(sector_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = SECTOR_NAME))
     dplyr::top_n(-5) %>%
     select(SECTOR_NAME, count)
   ggplot(sector_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = SECTOR_NAME)) +
-    geom_bar(stat = "identity", width = 0.3) + theme_light()  + 
-    coord_flip()
+    geom_bar(stat = "identity", width = 0.3) + theme_minimal() + scale_y_continuous(labels = comma) +
+    coord_flip() + xlab("Sector Name") + 
+    ylab("Count")
      
 
 # AVG NUM OF LENDERS BY SECTOR
@@ -181,7 +183,7 @@ sectors_lender_df <- loans %>%
   dplyr::summarise(AVG_NUM_LENDERS = mean(NUM_LENDERS_TOTAL)) %>%
   select(SECTOR_NAME, AVG_NUM_LENDERS)
   ggplot(data = sectors_lender_df,aes(x=SECTOR_NAME, y=AVG_NUM_LENDERS, fill = SECTOR_NAME)) +
-  geom_bar(stat = "identity", width = 0.3) + theme_light()  + 
+  geom_bar(stat = "identity", width = 0.3) + theme_minimal()  + scale_y_continuous(labels = comma) 
   coord_flip()
 
   # AVG LENDER TERM BY SECTOR
