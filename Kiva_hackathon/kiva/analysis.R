@@ -196,8 +196,6 @@ sectors_lender_df <- loans %>%
     coord_flip() + xlab("Top 5 Sectors") + 
     ylab("TOTAL FUNDED AMOUNT") + guides(scale = "none")
  
-
-    
   # Distribution model mix
   distribution_df <- loans %>%
     filter(STATUS %in% c('funded','fundRaising')) %>%
@@ -207,7 +205,7 @@ sectors_lender_df <- loans %>%
   ggplot(distribution_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = DISTRIBUTION_MODEL)) +
     geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
     coord_flip() + xlab("Sectors") + 
-    ylab("Count") + scale_colour_discrete(name="Distribution Model")
+    ylab("Count") + guides(fill=guide_legend(title="Distribution Model"))
   
   # Repayment interval mix 
   repayment_df <- loans %>%
@@ -215,22 +213,32 @@ sectors_lender_df <- loans %>%
     dplyr::group_by(SECTOR_NAME,REPAYMENT_INTERVAL) %>%
     dplyr::summarise(count = n()) %>%
     select(SECTOR_NAME,REPAYMENT_INTERVAL, count)
-  ggplot(reapyment_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = REPAYMENT_INTERVAL)) +
+  ggplot(repayment_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = REPAYMENT_INTERVAL)) +
     geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
     coord_flip() + xlab("Sectors") + 
-    ylab("Count") + scale_colour_discrete(name="Repayment Interval")
+    ylab("Count") + guides(fill=guide_legend(title="Repayment Interval"))
    
   
   
-  # Avergae loan time frame (POSTED_TIME  vs DISBURSE_TIME) by sector
-  # sectors_loam_time_df <- loans %>%
-  #   filter(STATUS %in% c('funded','fundRaising')) %>%
-  #   mutate(POSTED_DISBURSED_TIME = DISBURSE_TIME - POSTED_TIME) %>%
-  #   dplyr::group_by(SECTOR_NAME) %>%
-  #   dplyr::summarise(AVG_POSTED_DISBURSED_TIME = mean(POSTED_DISBURSED_TIME)) %>% 
-  #   select(SECTOR_NAME,AVG_POSTED_DISBURSED_TIME)
-   
-  # Funded loans by year heatmap or funded loans by year-month heatmap
+  # Average loan time frame (POSTED_TIME  vs DISBURSE_TIME) by sector
+  loans$POSTED_DISBURSED_TIME = as.Date(loans$DISBURSE_TIME) - as.Date(loans$POSTED_TIME)
+  loans$POSTED_DISBURSED_TIME[is.na(loans$POSTED_DISBURSED_TIME )] <- 0
+  sectors_loan_time_df <- loans %>%
+    filter(STATUS %in% c('funded','fundRaising')) %>%
+    dplyr::group_by(SECTOR_NAME) %>%
+    dplyr::summarise(AVG_POSTED_DISBURSED_TIME = mean(POSTED_DISBURSED_TIME)) %>% 
+    select(SECTOR_NAME,AVG_POSTED_DISBURSED_TIME)
+  sectors_loan_time_df$AVG_POSTED_DISBURSED_TIME <- -(sectors_loan_time_df$AVG_POSTED_DISBURSED_TIME)
+
+  ggplot(sectors_loan_time_df,aes(x=reorder(SECTOR_NAME, AVG_POSTED_DISBURSED_TIME),
+                                  y=AVG_POSTED_DISBURSED_TIME, 
+                                  fill = SECTOR_NAME)) +
+    geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+    coord_flip() + xlab("Sectors") + 
+    ylab("Average Loan disbursment time in days") + guides(scale = "none")
+  
+  # Funded loans by year heatmap or funded loans by year-month heatmap (secotr, funded amount, year month)
+  
   
 
   
