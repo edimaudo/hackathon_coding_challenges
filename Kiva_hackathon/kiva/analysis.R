@@ -15,7 +15,7 @@ for (package in packages) {
 }
 
 loans <- data.table::fread("loans.csv")
-loans <- as.data.frame(loans)
+
 
 #=============
 # fund distribution
@@ -157,25 +157,12 @@ sector_df <- loans %>%
     filter(STATUS %in% c('funded','fundRaising')) %>%
     dplyr::group_by(SECTOR_NAME) %>%
     dplyr::summarise(count = n()) %>%
-    dplyr::top_n(5) %>%
     select(SECTOR_NAME, count)
 ggplot(sector_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = SECTOR_NAME)) +
-  geom_bar(stat = "identity", width = 0.3) + theme_minimal() + scale_y_continuous(labels = comma) +
+  geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
   coord_flip() + xlab("Sectors") + 
-  ylab("Count") + scale_colour_discrete(name="Sector Name")
+  ylab("Count") + guides(fill = FALSE)
   
-  sector_df <- loans %>%
-    filter(STATUS %in% c('funded','fundRaising')) %>%
-    dplyr::group_by(SECTOR_NAME) %>%
-    dplyr::summarise(count = n()) %>%
-    dplyr::top_n(-5) %>%
-    select(SECTOR_NAME, count)
-  ggplot(sector_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = SECTOR_NAME)) +
-    geom_bar(stat = "identity", width = 0.3) + theme_minimal() + scale_y_continuous(labels = comma) +
-    coord_flip() + xlab("Sector Name") + 
-    ylab("Count")
-     
-
 # AVG NUM OF LENDERS BY SECTOR
 sectors_lender_df <- loans %>%
   filter(STATUS %in% c('funded','fundRaising')) %>%
@@ -183,8 +170,9 @@ sectors_lender_df <- loans %>%
   dplyr::summarise(AVG_NUM_LENDERS = mean(NUM_LENDERS_TOTAL)) %>%
   select(SECTOR_NAME, AVG_NUM_LENDERS)
   ggplot(data = sectors_lender_df,aes(x=SECTOR_NAME, y=AVG_NUM_LENDERS, fill = SECTOR_NAME)) +
-  geom_bar(stat = "identity", width = 0.3) + theme_minimal()  + scale_y_continuous(labels = comma) 
-  coord_flip()
+  geom_bar(stat = "identity") + theme_minimal()  + scale_y_continuous(labels = comma) 
+  coord_flip() + xlab("Sector Name") + 
+    ylab("Average No. of Lenders") + guides(fill = FALSE)
 
   # AVG LENDER TERM BY SECTOR
   sectors_lender_term_df <- loans %>%
@@ -193,31 +181,47 @@ sectors_lender_df <- loans %>%
     dplyr::summarise(AVG_NUM_LENDERS_TERM = mean(LENDER_TERM)) %>%
     select(SECTOR_NAME, AVG_NUM_LENDERS_TERM)
   ggplot(data = sectors_lender_term_df,aes(x=SECTOR_NAME, y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
-    geom_bar(stat = "identity", width = 0.3) + theme_light()  + 
-    coord_flip()
+    geom_bar(stat = "identity") + theme_light()  + 
+    coord_flip() xlab("Sector Name") + 
+    ylab("Average Lender Term") + guides(fill = FALSE)
 
-  # top 5 and bottom 5 sectors BY FUNDED AMOUNT
-  
+  # FUNDED AMOUNT
+  sector_funded_amount_df <- loans %>%
+    filter(STATUS %in% c('funded','fundRaising')) %>%
+    dplyr::group_by(SECTOR_NAME) %>%
+    dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
+    select(SECTOR_NAME, TOTAL_FUNDED_AMOUNT)
+  ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, TOTAL_FUNDED_AMOUNT),y=TOTAL_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
+    geom_bar(stat = "identity", width = 0.3) + theme_minimal() + scale_y_continuous(labels = comma) +
+    coord_flip() + xlab("Top 5 Sectors") + 
+    ylab("TOTAL FUNDED AMOUNT") + guides(scale = "none")
+ 
+
+    
   # Distribution model mix
-  # distribution_df <- loans %>%
-  #   filter(STATUS %in% c('funded','fundRaising')) %>%
-  #   dplyr::group_by(DISTRIBUTION_MODEL) %>%
-  #   dplyr::summarise(count = n()) %>%
-  #   select(DISTRIBUTION_MODEL, count)
-  # ggplot(distribution_df,aes(x=DISTRIBUTION_MODEL, y=count)) +
-  #   geom_bar(stat = "identity", width = 0.3, fill = "#FF6566") + theme_light()  + 
-  #   coord_flip()
+  distribution_df <- loans %>%
+    filter(STATUS %in% c('funded','fundRaising')) %>%
+    dplyr::group_by(SECTOR_NAME,DISTRIBUTION_MODEL) %>%
+    dplyr::summarise(count = n()) %>%
+    select(SECTOR_NAME,DISTRIBUTION_MODEL, count)
+  ggplot(distribution_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = DISTRIBUTION_MODEL)) +
+    geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+    coord_flip() + xlab("Sectors") + 
+    ylab("Count") + scale_colour_discrete(name="Distribution Model")
   
   # Repayment interval mix 
-  # repayment_df <- loans %>%
-  #   filter(STATUS %in% c('funded','fundRaising')) %>%
-  #   dplyr::group_by(REPAYMENT_INTERVAL) %>%
-  #   dplyr::summarise(count = n()) %>%
-  #   select(RREPAYMENT_INTERVAL, count)
-  # ggplot(repayment_df,aes(x=REPAYMENT_INTERVAL, y=count, fill=REPAYMENT_INTERVAL)) +
-  #   geom_bar(stat = "identity", width = 0.3) + theme_light()  +
-  #   coord_flip()
+  repayment_df <- loans %>%
+    filter(STATUS %in% c('funded','fundRaising')) %>%
+    dplyr::group_by(SECTOR_NAME,REPAYMENT_INTERVAL) %>%
+    dplyr::summarise(count = n()) %>%
+    select(SECTOR_NAME,REPAYMENT_INTERVAL, count)
+  ggplot(reapyment_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = REPAYMENT_INTERVAL)) +
+    geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+    coord_flip() + xlab("Sectors") + 
+    ylab("Count") + scale_colour_discrete(name="Repayment Interval")
    
+  
+  
   # Avergae loan time frame (POSTED_TIME  vs DISBURSE_TIME) by sector
   # sectors_loam_time_df <- loans %>%
   #   filter(STATUS %in% c('funded','fundRaising')) %>%
@@ -228,13 +232,7 @@ sectors_lender_df <- loans %>%
    
   # Funded loans by year heatmap or funded loans by year-month heatmap
   
-  # top 10 words in loan use
-  
-  # top 10 words in tags
-  
-  # word cloud of LOAN_USE 
-  
-  # word cloud tags 
+
   
 #=============
 # loan impact
