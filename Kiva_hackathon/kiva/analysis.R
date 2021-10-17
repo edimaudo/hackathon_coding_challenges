@@ -189,12 +189,12 @@ sectors_lender_df <- loans %>%
   sector_funded_amount_df <- loans %>%
     filter(STATUS %in% c('funded','fundRaising')) %>%
     dplyr::group_by(SECTOR_NAME) %>%
-    dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
+    dplyr::summarise(AVG_FUNDED_AMOUNT = mean(FUNDED_AMOUNT)) %>%
     select(SECTOR_NAME, TOTAL_FUNDED_AMOUNT)
   ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, TOTAL_FUNDED_AMOUNT),y=TOTAL_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
     geom_bar(stat = "identity", width = 0.3) + theme_minimal() + scale_y_continuous(labels = comma) +
     coord_flip() + xlab("Top 5 Sectors") + 
-    ylab("TOTAL FUNDED AMOUNT") + guides(scale = "none")
+    ylab("AVERAGE FUNDED AMOUNT") + guides(scale = "none")
  
   # Distribution model mix
   distribution_df <- loans %>%
@@ -238,8 +238,25 @@ sectors_lender_df <- loans %>%
     ylab("Average Loan disbursment time in days") + guides(scale = "none")
   
   # Funded loans by year heatmap or funded loans by year-month heatmap (secotr, funded amount, year month)
-  
-  
+  funded_loan_time_df <- loans %>%
+    filter(STATUS %in% c('funded','fundRaising')) %>%
+    mutate(DISBURSED_TIME = lubridate::year(as.Date(DISBURSE_TIME))) %>%
+    dplyr::group_by(SECTOR_NAME,DISBURSED_TIME) %>%
+    dplyr::summarise(AVG_FUNDED_AMOUNT = MEAN(FUNDED_AMOUNT)) %>%
+    select(SECTOR_NAME,DISBURSED_TIME,TOTAL_FUNDED_AMOUNT)
+  funded_loan_time_df <- na.omit(funded_loan_time_df)
+
+
+  options(scipen=10000)
+  #overall summary
+  col1 = "#d8e1cf" 
+  col2 = "#438484"
+  ggplot(funded_loan_time_df, aes(DISBURSED_TIME, SECTOR_NAME, fill= AVG_FUNDED_AMOUNT)) + 
+    geom_tile() + 
+    scale_fill_gradient(low = col1, high = col2) +
+    guides(fill=guide_legend(title="Total Funded Amount")) +
+    labs(title = "Total Funded Amount",x = "Year", y = "Sector") +
+    theme_minimal()
 
   
 #=============
