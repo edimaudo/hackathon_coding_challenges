@@ -51,11 +51,10 @@ ui <- dashboardPage(
               mainPanel(
                 h2("Sector", style = "text-align: center;"),
                 fluidRow(
-                  column(2,
-                         h3("Efficient Portfolio", style = "text-align: center;"),
-                         plotOutput("efficientPlot"),
-                         h3("Minimum Variance Portfolio", style = "text-align: center;"),
-                         plotOutput("minvarPlot"),    
+                         h3("Sector Insights", style = "text-align: center;"),
+                         #plotOutput("efficientPlot"),
+                         #h3("Minimum Variance Portfolio", style = "text-align: center;"),
+                         #plotOutput("minvarPlot"),    
                   )
                   
                 )
@@ -334,6 +333,30 @@ server <- function(input, output,session) {
     
   })
   
+  
+  #=============
+  # SECTOR COUNT
+  #=============
+  
+  #=============
+  # SECTOR COUNT
+  #=============
+  
+  #=============
+  # SECTOR COUNT
+  #=============
+  
+  #=============
+  # SECTOR COUNT
+  #=============
+  
+  #=============
+  # SECTOR COUNT
+  #=============
+  
+  #=============
+  # SECTOR COUNT
+  #=============
 }
 
 shinyApp(ui, server)
