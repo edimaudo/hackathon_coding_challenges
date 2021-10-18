@@ -286,29 +286,16 @@ time_period <- 5
 dropoff <- 0.1
 discount_rate = 0.035
 
+# loan_df2 <- loans %>%
+#   filter(STATUS %in%c('funded','fundRaising')) %>%
+#   na.omit() %>%
+#   dplyr::group_by(ACTIVITY_NAME) %>%
+#   dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+#             TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+#             TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+#   dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+#   select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)
+# 
 
 
-loan_df2 <- loans %>%
-  filter(STATUS %in%c('funded','fundRaising')) %>%
-  na.omit() %>%
-  dplyr::group_by(ACTIVITY_NAME) %>%
-  dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
-            TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
-            TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
-  dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
-  select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)
-
-loan_df2$IMPACT <- loan_df2$TOTAL_FUNDED_AMOUNT * loan_df2$TOTAL_NUMBER_LENDERS
-
-# CALCULATE DROP OFF TO GET BENEFITS
-
-# CALCLATE DISCOUNTED VALUES
-
-#GENERATE PRESENT VALUE
-
-# GENERATE NPV
-
-# total input = total present value - net present value
-
-# total present value - total inputs
-# SROI total present value / total inputs
+# https://www.galp.com/corp/Portals/0/Recursos/Sustentabilidade/SharedResources/Documents/GALP_SROI_EN.pdf
