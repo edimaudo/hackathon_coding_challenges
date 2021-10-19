@@ -6,14 +6,18 @@ rm(list = ls())
 #=============
 packages <- c('ggplot2', 'corrplot','tidyverse','readxl',
               'shiny','shinydashboard','scales','dplyr','mlbench','caTools',
-              'forecast','TTR','xts','lubridate','data.table','timetk')
+              'forecast','TTR','xts','lubridate','data.table','timetk',
+              'stopwords','tidytext','stringr','reshape2', 
+              'textmineR','topicmodels','textclean')
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
     install.packages(package)
     library(package, character.only=T)
   }
 }
-
+# ==============
+# load data
+# ---------------
 loans <- data.table::fread("loans.csv")
 
 
@@ -237,7 +241,7 @@ sectors_lender_df <- loans %>%
     coord_flip() + xlab("Sectors") + 
     ylab("Average Loan disbursment time in days") + guides(scale = "none")
   
-  # Funded loans by year heatmap or funded loans by year-month heatmap (secotr, funded amount, year month)
+  # Funded loans by year heatmap 
   funded_loan_time_df <- loans %>%
     filter(STATUS %in% c('funded','fundRaising')) %>%
     mutate(DISBURSED_TIME = lubridate::year(as.Date(DISBURSE_TIME))) %>%
@@ -258,6 +262,144 @@ sectors_lender_df <- loans %>%
     labs(title = "Total Funded Amount",x = "Year", y = "Sector") +
     theme_minimal()
 
+  
+  # top 10 words by sector
+  # function to remove special characters
+  removeSpecialChars <- function(x) gsub("[^a-zA-Z0-9 ]", " ", x)
+  
+  # remove special characters
+  loans$TAGS <- sapply(loans$TAGS, removeSpecialChars)
+  
+  # convert everything to lower case
+  loans$TAGS <- sapply(loans$TAGS, tolower)
+
+  # word breakdown 
+  review_words <- loans %>%
+    unnest_tokens(word, TAGS) %>%
+    anti_join(stop_words) %>%
+    distinct() %>%
+    filter(nchar(word) > 3)
+
+  # word frequency
+  full_word_count <- loans %>%
+    unnest_tokens(word, TAGS) %>%
+    group_by(SECTOR_NAME) %>%
+    summarise(num_words = n()) %>%
+    arrange(desc(num_words)) 
+
+  # keywords by SECTOR NAME
+  review_product_rating <- review_words %>%
+    group_by(Product, Rating) %>%
+    count(word, sort = TRUE) %>%
+    select(Product, Rating, word, n) %>%
+    arrange(desc(Product,Rating))  
+
+  #=============
+  # TF-IDF analysis
+  #=============
+  
+  # tf-idf by Product & Rating
+  popular_tfidf_words <- df %>%
+    unnest_tokens(word, Review) %>%
+    distinct() %>%
+    filter(nchar(word) > 3, !word %in% remove_keywords) %>%
+    count(Product, Rating, word, sort = TRUE) %>%
+    ungroup() %>%
+    bind_tf_idf(word, Rating, n)
+  
+  top_popular_tfidf_words <- popular_tfidf_words %>%
+    arrange(desc(tf_idf)) %>%
+    mutate(word = factor(word, levels = rev(unique(word)))) %>%
+    group_by(Product, Rating) %>% 
+    slice(seq_len(8)) %>%
+    ungroup() %>%
+    arrange(desc(Product, Rating)) %>%
+    mutate(row = row_number())
+  
+  # =================
+  # Topic modelling
+  #===================
+  textcleaner <- function(x){
+    x <- as.character(x)
+    
+    x <- x %>%
+      str_to_lower() %>%  # convert all the string to low alphabet
+      replace_contraction() %>% # replace contraction to their multi-word forms
+      replace_internet_slang() %>% # replace internet slang to normal words
+      #replace_emoji(replacement = " ") %>% # replace emoji to words
+      #replace_emoticon(replacement = " ") %>% # replace emoticon to words
+      replace_hash(replacement = "") %>% # remove hashtag
+      replace_word_elongation() %>% # replace informal writing with known semantic replacements
+      replace_number(remove = T) %>% # remove number
+      replace_date(replacement = "") %>% # remove date
+      replace_time(replacement = "") %>% # remove time
+      str_remove_all(pattern = "[[:punct:]]") %>% # remove punctuation
+      str_remove_all(pattern = "[^\\s]*[0-9][^\\s]*") %>% # remove mixed string n number
+      str_squish() %>% # reduces repeated whitespace inside a string.
+      str_trim() # removes whitespace from start and end of string
+    
+    return(as.data.frame(x))
+    
+  }
+  
+  #=====================
+  # Topic modellings by ratings
+  #=====================
+  data_1 <- df %>% filter(Rating == 1)
+  data_2 <- df %>% filter(Rating  == 2)
+  data_3 <- df %>% filter(Rating  == 3)
+  data_4 <- df %>% filter(Rating  == 4)
+  data_5 <- df %>% filter(Rating  == 5)
+  table(df$Rating)
+  
+  set.seed(1502)
+  
+  # Rating 5
+  # apply textcleaner function. note: we only clean the text without convert it to dtm
+  clean_5 <- textcleaner(data_5$Review)
+  clean_5 <- clean_5 %>% mutate(id = rownames(clean_5))
+  
+  # crete dtm
+  dtm_r_5 <- CreateDtm(doc_vec = clean_5$x,
+                       doc_names = clean_5$id,
+                       ngram_window = c(1,2),
+                       stopword_vec = stopwords("en"),
+                       verbose = F)
+  
+  dtm_r_5 <- dtm_r_5[,colSums(dtm_r_5)>2]
+  
+  mod_lda_5 <- FitLdaModel(dtm = dtm_r_5,
+                           k = 20, # number of topic
+                           iterations = 500,
+                           burnin = 180,
+                           alpha = 0.1,beta = 0.05,
+                           optimize_alpha = T,
+                           calc_likelihood = T,
+                           calc_coherence = T,
+                           calc_r2 = T)
+  
+  mod_lda_5$top_terms <- GetTopTerms(phi = mod_lda_5$phi,M = 15)
+  mod_lda_5$prevalence <- colSums(mod_lda_5$theta)/sum(mod_lda_5$theta)*100
+  
+  mod_lda_5$summary <- data.frame(topic = rownames(mod_lda_5$phi),
+                                  coherence = round(mod_lda_5$coherence,3),
+                                  prevalence = round(mod_lda_5$prevalence,3),
+                                  top_terms = apply(mod_lda_5$top_terms,2,
+                                                    function(x){paste(x,collapse = ", ")}))
+  
+  modsum_5 <- mod_lda_5$summary %>%
+    `rownames<-`(NULL)
+  
+  #visualization
+  modsum_5 %>% pivot_longer(cols = c(coherence,prevalence)) %>%
+    ggplot(aes(x = factor(topic,levels = unique(topic)), y = value, group = 1)) +
+    geom_point() + geom_line() +
+    facet_wrap(~name,scales = "free_y",nrow = 2) +
+    theme_minimal() +
+    labs(title = "Best topics by coherence and prevalence score",
+         subtitle = "Text review with 5 rating",
+         x = "Topics", y = "Value")
+  
   
 #=============
 # loan impact
