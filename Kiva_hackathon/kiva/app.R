@@ -53,18 +53,25 @@ ui <- dashboardPage(
                 fluidRow(
                   column(2,
                          h3("Sector Count", style = "text-align: center;"),
-                         plotOutput("sectorCountPlot"), 
+                         plotOutput("sectorCountPlot"),
+                         h3("Sector Count", style = "text-align: center;"),
+                         plotOutput("lenderSectorPlot")
+                  )
+                ),
+                fluidRow(
+                  column(2,
+                         h3("Sector Count", style = "text-align: center;"),
+                         plotOutput("sectorCountPlot"),
+                         h3("Sector Count", style = "text-align: center;"),
+                         plotOutput("lenderSectorPlot")
                          
                   )
-                         #plotOutput("efficientPlot"),
-                         #h3("Minimum Variance Portfolio", style = "text-align: center;"),
-                         #plotOutput("minvarPlot"),    
+
                   )
                   
                 )
               )
-            )
-    ), 
+            ),
     #====Fund====
     tabItem(tabName = "fund",
             sidebarLayout(
@@ -89,9 +96,7 @@ ui <- dashboardPage(
             sidebarLayout(
               sidebarPanel(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
-                selectInput("sectorInput","Sector",choices = sector,selected = "All"),
                 sliderInput("yearInput", "Year",min = 1,max = 30,value = 5, step = 1),
-                sliderInput("dropInput", "Drop Off (%)",min = 1,max = 100,value = 50, step = 5),
                 sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 50, step = 5),
                 submitButton("Submit")
               ),
@@ -104,9 +109,10 @@ ui <- dashboardPage(
           )
         )
     )
-  ))
-  
+  )
+ )
 )
+
 #=============
 # Server logic 
 #=============
@@ -118,9 +124,7 @@ server <- function(input, output,session) {
     select(FUNDED_AMOUNT, SECTOR_NAME, COUNTRY_NAME,DISBURSE_TIME) %>%
     na.omit()
   funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
-  funds_df$DISBURSE_TIME <- NULL
-  
-  
+  #funds_df$DISBURSE_TIME <- NULL
   
   #=============
   # min variance portfolio
