@@ -17,10 +17,10 @@ for (package in packages) {
 #=============
 # Load data
 #=============
-cl <- makePSOCKcluster(4)
-registerDoParallel(cl)
+#cl <- makePSOCKcluster(4)
+#registerDoParallel(cl)
 df <- data.table::fread("loans.csv")
-stopCluster(cl)
+#stopCluster(cl)
 #=============
 # UI drop-down
 #=============
