@@ -49,9 +49,13 @@ ui <- dashboardPage(
                 submitButton("Submit")
               ),
               mainPanel(
-                h2("Sector", style = "text-align: center;"),
+                h2("Sector Insight", style = "text-align: center;"),
                 fluidRow(
-                         h3("Sector Insights", style = "text-align: center;"),
+                  column(2,
+                         h3("Sector Count", style = "text-align: center;"),
+                         plotOutput("sectorCountPlot"), 
+                         
+                  )
                          #plotOutput("efficientPlot"),
                          #h3("Minimum Variance Portfolio", style = "text-align: center;"),
                          #plotOutput("minvarPlot"),    
@@ -337,26 +341,42 @@ server <- function(input, output,session) {
   #=============
   # SECTOR COUNT
   #=============
+  output$sectorCountPlot <- renderPlot({})
   
   #=============
-  # SECTOR COUNT
+  # # AVG NUM OF LENDERS BY SECTOR
   #=============
+  output$lenderSectorPlot <- renderPlot({})
   
   #=============
-  # SECTOR COUNT
+  # # AVG LENDER TERM BY SECTOR
   #=============
+  output$lenderTermSectorPlot <- renderPlot({})
   
   #=============
-  # SECTOR COUNT
+  # FUNDED AMOUNT BY SECTOR
   #=============
+  output$fundSectorPlot <- renderPlot({})
   
   #=============
-  # SECTOR COUNT
+  # DISTRIBUTION MODEL BY SECTOR
   #=============
+  output$distributionSectorPlot <- renderPlot({})
   
   #=============
-  # SECTOR COUNT
+  # REPAYMENT INTERVAL BY SECTOR
   #=============
+  output$repaymentSectorPlot <- renderPlot({})
+  
+  #=============
+  # AVERAGE LOAN TIMEFRAME BY SECTOR
+  #=============
+  output$loanSectorPlot <- renderPlot({})
+  
+  #=============
+  # FUNDED LOANS YEAR AND BY SECTOR
+  #=============
+  output$fundedLoansSectorPlot <- renderPlot({})
 }
 
 shinyApp(ui, server)
