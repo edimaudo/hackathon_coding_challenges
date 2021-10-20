@@ -53,19 +53,19 @@ ui <- dashboardPage(
                 fluidRow(
                          h3("Sector Count", style = "text-align: center;"),
                          plotOutput("sectorCountPlot"),
-                         h3("Lenders by Sector", style = "text-align: center;"),
+                         h3("# of Lenders by Sector", style = "text-align: center;"),
                          plotOutput("lenderSectorPlot"),
-                         h3("Lenders by Sector", style = "text-align: center;"),
+                         h3("Lenders Term by Sector", style = "text-align: center;"),
                          plotOutput("lenderTermSectorPlot"),
-                         h3("Lenders by Sector", style = "text-align: center;"),
+                         h3("Fund Amount by Sector", style = "text-align: center;"),
                          plotOutput("fundSectorPlot"),
-                         h3("Lenders by Sector", style = "text-align: center;"),
+                         h3("Distribution by Sector", style = "text-align: center;"),
                          plotOutput("distributionSectorPlot"),
-                         h3("Lenders by Sector", style = "text-align: center;"),
+                         h3("Repayment Interval by Sector", style = "text-align: center;"),
                          plotOutput("repaymentSectorPlot"),
-                         h3("Lenders by Sector", style = "text-align: center;"),
+                         h3("Average Loan period by Sector", style = "text-align: center;"),
                          plotOutput("loanTimeSectorPlot"),
-                         h3("Lenders by Sector", style = "text-align: center;"),
+                         h3("Funded Loan Heatmap", style = "text-align: center;"),
                          plotOutput("fundedLoansSectorPlot")
                   )
                 )
@@ -384,8 +384,8 @@ server <- function(input, output,session) {
         select(SECTOR_NAME, AVG_NUM_LENDERS)      
     }
     ggplot(data = sectors_lender_df,aes(x=SECTOR_NAME, y=AVG_NUM_LENDERS, fill = SECTOR_NAME)) +
-      geom_bar(stat = "identity") + theme_minimal()  + scale_y_continuous(labels = comma) 
-    coord_flip() + xlab("Sector Name") + 
+      geom_bar(stat = "identity") + theme_minimal()  + scale_y_continuous(labels = comma) +
+      coord_flip() + xlab("Sector Name") + 
       ylab("Average No. of Lenders") + guides(fill = FALSE)
     
   })
@@ -423,18 +423,18 @@ server <- function(input, output,session) {
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
         dplyr::group_by(SECTOR_NAME) %>%
         dplyr::summarise(AVG_FUNDED_AMOUNT = mean(FUNDED_AMOUNT)) %>%
-        select(SECTOR_NAME, TOTAL_FUNDED_AMOUNT)
+        select(SECTOR_NAME, AVG_FUNDED_AMOUNT)
     } else{
       sector_funded_amount_df <- loans %>%
         filter(STATUS %in% c('funded','fundRaising')) %>%
         dplyr::group_by(SECTOR_NAME) %>%
         dplyr::summarise(AVG_FUNDED_AMOUNT = mean(FUNDED_AMOUNT)) %>%
-        select(SECTOR_NAME, TOTAL_FUNDED_AMOUNT)
+        select(SECTOR_NAME, AVG_FUNDED_AMOUNT)
     }
-    ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, TOTAL_FUNDED_AMOUNT),y=TOTAL_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
-      geom_bar(stat = "identity", width = 0.3) + theme_minimal() + scale_y_continuous(labels = comma) +
+    ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, AVG_FUNDED_AMOUNT),y=AVG_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
+      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Top 5 Sectors") + 
-      ylab("AVERAGE FUNDED AMOUNT") + guides(scale = "none")
+      ylab("AVERAGE FUNDED AMOUNT") + guides(fill = FALSE)
   })
   
   #=============
@@ -513,7 +513,7 @@ server <- function(input, output,session) {
                                     fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
-      ylab("Average Loan disbursment time in days") + guides(scale = "none")
+      ylab("Average Loan disbursment time in days") + guides(fill = FALSE)
   })
   
   #=============
@@ -529,22 +529,21 @@ server <- function(input, output,session) {
         mutate(DISBURSED_TIME = lubridate::year(as.Date(DISBURSE_TIME))) %>%
         dplyr::group_by(SECTOR_NAME,DISBURSED_TIME) %>%
         dplyr::summarise(AVG_FUNDED_AMOUNT = MEAN(FUNDED_AMOUNT)) %>%
-        select(SECTOR_NAME,DISBURSED_TIME,TOTAL_FUNDED_AMOUNT)
-      funded_loan_time_df <- na.omit(funded_loan_time_df)
+        select(SECTOR_NAME,DISBURSED_TIME,AVG_FUNDED_AMOUNT )
     } else{
       funded_loan_time_df <- loans %>%
         filter(STATUS %in% c('funded','fundRaising')) %>%
         mutate(DISBURSED_TIME = lubridate::year(as.Date(DISBURSE_TIME))) %>%
         dplyr::group_by(SECTOR_NAME,DISBURSED_TIME) %>%
-        dplyr::summarise(AVG_FUNDED_AMOUNT = MEAN(FUNDED_AMOUNT)) %>%
-        select(SECTOR_NAME,DISBURSED_TIME,TOTAL_FUNDED_AMOUNT)
-      funded_loan_time_df <- na.omit(funded_loan_time_df)
+        dplyr::summarise(AVG_FUNDED_AMOUNT = mean(FUNDED_AMOUNT)) %>%
+        select(SECTOR_NAME,DISBURSED_TIME,AVG_FUNDED_AMOUNT )
     }
+    funded_loan_time_df <- na.omit(funded_loan_time_df)
     ggplot(funded_loan_time_df, aes(DISBURSED_TIME, SECTOR_NAME, fill= AVG_FUNDED_AMOUNT)) + 
       geom_tile() + 
-      scale_fill_gradient(low = col1, high = col2) +
+      scale_fill_gradient() +
       guides(fill=guide_legend(title="Total Funded Amount")) +
-      labs(title = "Total Funded Amount",x = "Year", y = "Sector") +
+      labs(title = "Average Funded Amount",x = "Year", y = "Sectors") +
       theme_minimal()
   })
 }
