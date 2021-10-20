@@ -124,6 +124,7 @@ server <- function(input, output,session) {
     na.omit()
   funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
   #funds_df$DISBURSE_TIME <- NULL
+  column_info <- c(sort(unique(loans$SECTOR_NAME)))
   
   #=============
   # min variance portfolio
@@ -383,9 +384,10 @@ server <- function(input, output,session) {
         dplyr::summarise(AVG_NUM_LENDERS = mean(NUM_LENDERS_TOTAL)) %>%
         select(SECTOR_NAME, AVG_NUM_LENDERS)      
     }
-    ggplot(data = sectors_lender_df,aes(x=SECTOR_NAME, y=AVG_NUM_LENDERS, fill = SECTOR_NAME)) +
+    ggplot(data = sectors_lender_df,aes(x=reorder(SECTOR_NAME,AVG_NUM_LENDERS), y=AVG_NUM_LENDERS, 
+                                        fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal()  + scale_y_continuous(labels = comma) +
-      coord_flip() + xlab("Sector Name") + 
+      coord_flip() + xlab("Sectors") + 
       ylab("Average No. of Lenders") + guides(fill = FALSE)
     
   })
@@ -407,9 +409,10 @@ server <- function(input, output,session) {
         dplyr::summarise(AVG_NUM_LENDERS_TERM = mean(LENDER_TERM)) %>%
         select(SECTOR_NAME, AVG_NUM_LENDERS_TERM)      
     }
-    ggplot(data = sectors_lender_term_df,aes(x=SECTOR_NAME, y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
+    ggplot(data = sectors_lender_term_df,aes(x=order(SECTOR_NAME,AVG_NUM_LENDERS_TERM) , 
+                                             y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_light()  + 
-      coord_flip() + xlab("Sector Name") + 
+      coord_flip() + xlab("Sectors") + 
       ylab("Average Lender Term") + guides(fill = FALSE)
     
   })
@@ -433,7 +436,7 @@ server <- function(input, output,session) {
     }
     ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, AVG_FUNDED_AMOUNT),y=AVG_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
-      coord_flip() + xlab("Top 5 Sectors") + 
+      coord_flip() + xlab("Sectors") + 
       ylab("AVERAGE FUNDED AMOUNT") + guides(fill = FALSE)
   })
   
@@ -542,8 +545,8 @@ server <- function(input, output,session) {
     ggplot(funded_loan_time_df, aes(DISBURSED_TIME, SECTOR_NAME, fill= AVG_FUNDED_AMOUNT)) + 
       geom_tile() + 
       scale_fill_gradient() +
-      guides(fill=guide_legend(title="Total Funded Amount")) +
-      labs(title = "Average Funded Amount",x = "Year", y = "Sectors") +
+      guides(fill=guide_legend(title="Average Funded Amount")) +
+      labs(x = "Year", y = "Sectors") +
       theme_minimal()
   })
 }
