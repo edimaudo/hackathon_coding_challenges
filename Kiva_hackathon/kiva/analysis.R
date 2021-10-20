@@ -262,7 +262,9 @@ sectors_lender_df <- loans %>%
     labs(title = "Total Funded Amount",x = "Year", y = "Sector") +
     theme_minimal()
 
-  
+  #===================
+  #text analysis
+  #===================
   # top 10 words by sector
   # function to remove special characters
   removeSpecialChars <- function(x) gsub("[^a-zA-Z0-9 ]", " ", x)
