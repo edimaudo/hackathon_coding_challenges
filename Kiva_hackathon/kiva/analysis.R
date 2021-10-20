@@ -249,8 +249,6 @@ sectors_lender_df <- loans %>%
     dplyr::summarise(AVG_FUNDED_AMOUNT = MEAN(FUNDED_AMOUNT)) %>%
     select(SECTOR_NAME,DISBURSED_TIME,TOTAL_FUNDED_AMOUNT)
   funded_loan_time_df <- na.omit(funded_loan_time_df)
-
-
   options(scipen=10000)
   #overall summary
   col1 = "#d8e1cf" 
