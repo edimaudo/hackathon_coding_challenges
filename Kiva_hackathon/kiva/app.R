@@ -24,12 +24,21 @@ loans <- data.table::fread("loans.csv")
 loans$LENDER_TERM[is.na(loans$LENDER_TERM)] <- 0
 loans$POSTED_DISBURSED_TIME = as.Date(loans$DISBURSE_TIME) - as.Date(loans$POSTED_TIME)
 loans$POSTED_DISBURSED_TIME[is.na(loans$POSTED_DISBURSED_TIME )] <- 0
+
+# Portfolio data
+funds_df <- loans %>%
+  filter(STATUS %in% c('funded','fundRaising')) %>%
+  select(FUNDED_AMOUNT, SECTOR_NAME, COUNTRY_NAME,DISBURSE_TIME) %>%
+  na.omit()
+funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
+
 stopCluster(cl)
 #=============
 # UI drop-down
 #=============
 country <- c("All", c(sort(unique(loans$COUNTRY_NAME))))
 sector <- c("All",c(sort(unique(loans$SECTOR_NAME))))
+column_info <- c(sort(unique(loans$SECTOR_NAME)))
 #=============
 # UI Layout
 #=============
@@ -121,14 +130,8 @@ ui <- dashboardPage(
 #=============
 server <- function(input, output,session) {
   
-  #filter by funded and clean up dates
-  funds_df <- loans %>%
-    filter(STATUS %in% c('funded','fundRaising')) %>%
-    select(FUNDED_AMOUNT, SECTOR_NAME, COUNTRY_NAME,DISBURSE_TIME) %>%
-    na.omit()
-  funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
-  #funds_df$DISBURSE_TIME <- NULL
-  column_info <- c(sort(unique(loans$SECTOR_NAME)))
+
+
   
   #=============
   # min variance portfolio
@@ -551,7 +554,7 @@ server <- function(input, output,session) {
     funded_loan_time_df <- na.omit(funded_loan_time_df)
     ggplot(funded_loan_time_df, aes(DISBURSED_TIME, SECTOR_NAME, fill= AVG_FUNDED_AMOUNT)) + 
       geom_tile() + 
-      scale_fill_gradient() +
+      scale_fill_gradient(col1, col2) +
       guides(fill=guide_legend(title="Average Funded Amount")) +
       labs(x = "Year", y = "Sectors") +
       theme_minimal()
