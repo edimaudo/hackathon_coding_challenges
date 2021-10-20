@@ -56,13 +56,17 @@ ui <- dashboardPage(
                          h3("Lenders by Sector", style = "text-align: center;"),
                          plotOutput("lenderSectorPlot"),
                          h3("Lenders by Sector", style = "text-align: center;"),
-                         plotOutput("lenderSectorPlot"),
+                         plotOutput("lenderTermSectorPlot"),
                          h3("Lenders by Sector", style = "text-align: center;"),
-                         plotOutput("lenderSectorPlot"),
+                         plotOutput("fundSectorPlot"),
                          h3("Lenders by Sector", style = "text-align: center;"),
-                         plotOutput("lenderSectorPlot"),
+                         plotOutput("distributionSectorPlot"),
                          h3("Lenders by Sector", style = "text-align: center;"),
-                         plotOutput("lenderSectorPlot")
+                         plotOutput("repaymentSectorPlot"),
+                         h3("Lenders by Sector", style = "text-align: center;"),
+                         plotOutput("loanTimeSectorPlot"),
+                         h3("Lenders by Sector", style = "text-align: center;"),
+                         plotOutput("fundedLoansSectorPlot")
                   )
                 )
               )
