@@ -17,10 +17,14 @@ for (package in packages) {
 #=============
 # Load data
 #=============
-#cl <- makePSOCKcluster(4)
-#registerDoParallel(cl)
+cl <- makePSOCKcluster(4)
+registerDoParallel(cl)
 loans <- data.table::fread("loans.csv")
-#stopCluster(cl)
+# Data updates
+loans$LENDER_TERM[is.na(loans$LENDER_TERM)] <- 0
+loans$POSTED_DISBURSED_TIME = as.Date(loans$DISBURSE_TIME) - as.Date(loans$POSTED_TIME)
+loans$POSTED_DISBURSED_TIME[is.na(loans$POSTED_DISBURSED_TIME )] <- 0
+stopCluster(cl)
 #=============
 # UI drop-down
 #=============
@@ -407,13 +411,17 @@ server <- function(input, output,session) {
         filter(STATUS %in% c('funded','fundRaising')) %>%
         dplyr::group_by(SECTOR_NAME) %>%
         dplyr::summarise(AVG_NUM_LENDERS_TERM = mean(LENDER_TERM)) %>%
-        select(SECTOR_NAME, AVG_NUM_LENDERS_TERM)      
+        select(SECTOR_NAME, AVG_NUM_LENDERS_TERM)     
     }
-    ggplot(data = sectors_lender_term_df,aes(x=order(SECTOR_NAME,AVG_NUM_LENDERS_TERM) , 
+    ggplot(data = sectors_lender_term_df,aes(x=reorder(SECTOR_NAME,AVG_NUM_LENDERS_TERM), 
                                              y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
-      geom_bar(stat = "identity") + theme_light()  + theme_minimal()  + scale_y_continuous(labels = comma) +
+      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) + 
       coord_flip() + xlab("Sectors") + 
       ylab("Average Lender Term") + guides(fill = FALSE)
+    
+    
+    
+
     
   })
   
@@ -434,7 +442,8 @@ server <- function(input, output,session) {
         dplyr::summarise(AVG_FUNDED_AMOUNT = mean(FUNDED_AMOUNT)) %>%
         select(SECTOR_NAME, AVG_FUNDED_AMOUNT)
     }
-    ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, AVG_FUNDED_AMOUNT),y=AVG_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
+    ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, AVG_FUNDED_AMOUNT),
+                                       y=AVG_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
       ylab("AVERAGE FUNDED AMOUNT") + guides(fill = FALSE)
@@ -492,8 +501,6 @@ server <- function(input, output,session) {
   # AVERAGE LOAN TIMEFRAME BY SECTOR
   #=============
   output$loanTimeSectorPlot <- renderPlot({
-    loans$POSTED_DISBURSED_TIME = as.Date(loans$DISBURSE_TIME) - as.Date(loans$POSTED_TIME)
-    loans$POSTED_DISBURSED_TIME[is.na(loans$POSTED_DISBURSED_TIME )] <- 0
     if (input$countryInput != "All"){
       sectors_loan_time_df <- loans %>%
       filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
