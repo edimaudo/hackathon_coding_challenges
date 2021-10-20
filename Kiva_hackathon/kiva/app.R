@@ -19,19 +19,19 @@ for (package in packages) {
 #=============
 #cl <- makePSOCKcluster(4)
 #registerDoParallel(cl)
-df <- data.table::fread("loans.csv")
+loans <- data.table::fread("loans.csv")
 #stopCluster(cl)
 #=============
 # UI drop-down
 #=============
-country <- c("All", c(sort(unique(df$COUNTRY_NAME))))
-sector <- c("All",c(sort(unique(df$SECTOR_NAME))))
+country <- c("All", c(sort(unique(loans$COUNTRY_NAME))))
+sector <- c("All",c(sort(unique(loans$SECTOR_NAME))))
 #=============
 # UI Layout
 #=============
 ui <- dashboardPage(
   skin = "green",
-  dashboardHeader(title = "Kiva Application"),
+  dashboardHeader(title = "Kiva"),
   dashboardSidebar(sidebarMenu(
     menuItem("About", tabName = "about", icon = icon("th")),
     menuItem("Sector Insights", tabName = "sector", icon = icon("th")),
@@ -49,26 +49,21 @@ ui <- dashboardPage(
                 submitButton("Submit")
               ),
               mainPanel(
-                h2("Sector Insight", style = "text-align: center;"),
+                h2("Sector Insights", style = "text-align: center;"),
                 fluidRow(
-                  column(2,
                          h3("Sector Count", style = "text-align: center;"),
                          plotOutput("sectorCountPlot"),
-                         h3("Sector Count", style = "text-align: center;"),
+                         h3("Lenders by Sector", style = "text-align: center;"),
+                         plotOutput("lenderSectorPlot"),
+                         h3("Lenders by Sector", style = "text-align: center;"),
+                         plotOutput("lenderSectorPlot"),
+                         h3("Lenders by Sector", style = "text-align: center;"),
+                         plotOutput("lenderSectorPlot"),
+                         h3("Lenders by Sector", style = "text-align: center;"),
+                         plotOutput("lenderSectorPlot"),
+                         h3("Lenders by Sector", style = "text-align: center;"),
                          plotOutput("lenderSectorPlot")
                   )
-                ),
-                fluidRow(
-                  column(2,
-                         h3("Sector Count", style = "text-align: center;"),
-                         plotOutput("sectorCountPlot"),
-                         h3("Sector Count", style = "text-align: center;"),
-                         plotOutput("lenderSectorPlot")
-                         
-                  )
-
-                  )
-                  
                 )
               )
             ),
@@ -119,7 +114,7 @@ ui <- dashboardPage(
 server <- function(input, output,session) {
   
   #filter by funded and clean up dates
-  funds_df <- df %>%
+  funds_df <- loans %>%
     filter(STATUS %in% c('funded','fundRaising')) %>%
     select(FUNDED_AMOUNT, SECTOR_NAME, COUNTRY_NAME,DISBURSE_TIME) %>%
     na.omit()
@@ -410,7 +405,7 @@ server <- function(input, output,session) {
     }
     ggplot(data = sectors_lender_term_df,aes(x=SECTOR_NAME, y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_light()  + 
-      coord_flip() xlab("Sector Name") + 
+      coord_flip() + xlab("Sector Name") + 
       ylab("Average Lender Term") + guides(fill = FALSE)
     
   })
@@ -420,9 +415,22 @@ server <- function(input, output,session) {
   #=============
   output$fundSectorPlot <- renderPlot({
     if (input$countryInput != "All"){
+      sector_funded_amount_df <- loans %>%
+        filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME) %>%
+        dplyr::summarise(AVG_FUNDED_AMOUNT = mean(FUNDED_AMOUNT)) %>%
+        select(SECTOR_NAME, TOTAL_FUNDED_AMOUNT)
     } else{
-      
+      sector_funded_amount_df <- loans %>%
+        filter(STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME) %>%
+        dplyr::summarise(AVG_FUNDED_AMOUNT = mean(FUNDED_AMOUNT)) %>%
+        select(SECTOR_NAME, TOTAL_FUNDED_AMOUNT)
     }
+    ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, TOTAL_FUNDED_AMOUNT),y=TOTAL_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
+      geom_bar(stat = "identity", width = 0.3) + theme_minimal() + scale_y_continuous(labels = comma) +
+      coord_flip() + xlab("Top 5 Sectors") + 
+      ylab("AVERAGE FUNDED AMOUNT") + guides(scale = "none")
   })
   
   #=============
@@ -430,9 +438,23 @@ server <- function(input, output,session) {
   #=============
   output$distributionSectorPlot <- renderPlot({
     if (input$countryInput != "All"){
+      distribution_df <- loans %>%
+        filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME,DISTRIBUTION_MODEL) %>%
+        dplyr::summarise(count = n()) %>%
+        select(SECTOR_NAME,DISTRIBUTION_MODEL, count)
     } else{
-      
+      distribution_df <- loans %>%
+        filter(STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME,DISTRIBUTION_MODEL) %>%
+        dplyr::summarise(count = n()) %>%
+        select(SECTOR_NAME,DISTRIBUTION_MODEL, count)
+
     }
+    ggplot(distribution_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = DISTRIBUTION_MODEL)) +
+      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+      coord_flip() + xlab("Sectors") + 
+      ylab("Count") + guides(fill=guide_legend(title="Distribution Model"))
   })
   
   #=============
@@ -440,29 +462,86 @@ server <- function(input, output,session) {
   #=============
   output$repaymentSectorPlot <- renderPlot({
     if (input$countryInput != "All"){
+      repayment_df <- loans %>%
+        filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME,REPAYMENT_INTERVAL) %>%
+        dplyr::summarise(count = n()) %>%
+        select(SECTOR_NAME,REPAYMENT_INTERVAL, count)
     } else{
-      
+      repayment_df <- loans %>%
+        filter(STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME,REPAYMENT_INTERVAL) %>%
+        dplyr::summarise(count = n()) %>%
+        select(SECTOR_NAME,REPAYMENT_INTERVAL, count)
+
     }
+    ggplot(repayment_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = REPAYMENT_INTERVAL)) +
+      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+      coord_flip() + xlab("Sectors") + 
+      ylab("Count") + guides(fill=guide_legend(title="Repayment Interval"))
   })
   
   #=============
   # AVERAGE LOAN TIMEFRAME BY SECTOR
   #=============
-  output$loanSectorPlot <- renderPlot({
+  output$loanTimeSectorPlot <- renderPlot({
+    loans$POSTED_DISBURSED_TIME = as.Date(loans$DISBURSE_TIME) - as.Date(loans$POSTED_TIME)
+    loans$POSTED_DISBURSED_TIME[is.na(loans$POSTED_DISBURSED_TIME )] <- 0
     if (input$countryInput != "All"){
+      sectors_loan_time_df <- loans %>%
+      filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME) %>%
+        dplyr::summarise(AVG_POSTED_DISBURSED_TIME = mean(POSTED_DISBURSED_TIME)) %>% 
+        select(SECTOR_NAME,AVG_POSTED_DISBURSED_TIME)
+      sectors_loan_time_df$AVG_POSTED_DISBURSED_TIME <- -(sectors_loan_time_df$AVG_POSTED_DISBURSED_TIME)
     } else{
+      sectors_loan_time_df <- loans %>%
+        filter(STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME) %>%
+        dplyr::summarise(AVG_POSTED_DISBURSED_TIME = mean(POSTED_DISBURSED_TIME)) %>% 
+        select(SECTOR_NAME,AVG_POSTED_DISBURSED_TIME)
+      sectors_loan_time_df$AVG_POSTED_DISBURSED_TIME <- -(sectors_loan_time_df$AVG_POSTED_DISBURSED_TIME)
       
     }
+    
+    ggplot(sectors_loan_time_df,aes(x=reorder(SECTOR_NAME, AVG_POSTED_DISBURSED_TIME),
+                                    y=AVG_POSTED_DISBURSED_TIME, 
+                                    fill = SECTOR_NAME)) +
+      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+      coord_flip() + xlab("Sectors") + 
+      ylab("Average Loan disbursment time in days") + guides(scale = "none")
   })
   
   #=============
   # FUNDED LOANS YEAR AND BY SECTOR
   #=============
   output$fundedLoansSectorPlot <- renderPlot({
+    options(scipen=10000)
+    col1 = "#d8e1cf" 
+    col2 = "#438484"
     if (input$countryInput != "All"){
+      funded_loan_time_df <- loans %>%
+      filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
+        mutate(DISBURSED_TIME = lubridate::year(as.Date(DISBURSE_TIME))) %>%
+        dplyr::group_by(SECTOR_NAME,DISBURSED_TIME) %>%
+        dplyr::summarise(AVG_FUNDED_AMOUNT = MEAN(FUNDED_AMOUNT)) %>%
+        select(SECTOR_NAME,DISBURSED_TIME,TOTAL_FUNDED_AMOUNT)
+      funded_loan_time_df <- na.omit(funded_loan_time_df)
     } else{
-      
+      funded_loan_time_df <- loans %>%
+        filter(STATUS %in% c('funded','fundRaising')) %>%
+        mutate(DISBURSED_TIME = lubridate::year(as.Date(DISBURSE_TIME))) %>%
+        dplyr::group_by(SECTOR_NAME,DISBURSED_TIME) %>%
+        dplyr::summarise(AVG_FUNDED_AMOUNT = MEAN(FUNDED_AMOUNT)) %>%
+        select(SECTOR_NAME,DISBURSED_TIME,TOTAL_FUNDED_AMOUNT)
+      funded_loan_time_df <- na.omit(funded_loan_time_df)
     }
+    ggplot(funded_loan_time_df, aes(DISBURSED_TIME, SECTOR_NAME, fill= AVG_FUNDED_AMOUNT)) + 
+      geom_tile() + 
+      scale_fill_gradient(low = col1, high = col2) +
+      guides(fill=guide_legend(title="Total Funded Amount")) +
+      labs(title = "Total Funded Amount",x = "Year", y = "Sector") +
+      theme_minimal()
   })
 }
 
