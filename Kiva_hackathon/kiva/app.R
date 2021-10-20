@@ -394,32 +394,76 @@ server <- function(input, output,session) {
   #=============
   # # AVG LENDER TERM BY SECTOR
   #=============
-  output$lenderTermSectorPlot <- renderPlot({})
+  output$lenderTermSectorPlot <- renderPlot({
+    if (input$countryInput != "All"){
+      sectors_lender_term_df <- loans %>%
+        filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME) %>%
+        dplyr::summarise(AVG_NUM_LENDERS_TERM = mean(LENDER_TERM)) %>%
+        select(SECTOR_NAME, AVG_NUM_LENDERS_TERM)
+    } else {
+      sectors_lender_term_df <- loans %>%
+        filter(STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME) %>%
+        dplyr::summarise(AVG_NUM_LENDERS_TERM = mean(LENDER_TERM)) %>%
+        select(SECTOR_NAME, AVG_NUM_LENDERS_TERM)      
+    }
+    ggplot(data = sectors_lender_term_df,aes(x=SECTOR_NAME, y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
+      geom_bar(stat = "identity") + theme_light()  + 
+      coord_flip() xlab("Sector Name") + 
+      ylab("Average Lender Term") + guides(fill = FALSE)
+    
+  })
   
   #=============
   # FUNDED AMOUNT BY SECTOR
   #=============
-  output$fundSectorPlot <- renderPlot({})
+  output$fundSectorPlot <- renderPlot({
+    if (input$countryInput != "All"){
+    } else{
+      
+    }
+  })
   
   #=============
   # DISTRIBUTION MODEL BY SECTOR
   #=============
-  output$distributionSectorPlot <- renderPlot({})
+  output$distributionSectorPlot <- renderPlot({
+    if (input$countryInput != "All"){
+    } else{
+      
+    }
+  })
   
   #=============
   # REPAYMENT INTERVAL BY SECTOR
   #=============
-  output$repaymentSectorPlot <- renderPlot({})
+  output$repaymentSectorPlot <- renderPlot({
+    if (input$countryInput != "All"){
+    } else{
+      
+    }
+  })
   
   #=============
   # AVERAGE LOAN TIMEFRAME BY SECTOR
   #=============
-  output$loanSectorPlot <- renderPlot({})
+  output$loanSectorPlot <- renderPlot({
+    if (input$countryInput != "All"){
+    } else{
+      
+    }
+  })
   
   #=============
   # FUNDED LOANS YEAR AND BY SECTOR
   #=============
-  output$fundedLoansSectorPlot <- renderPlot({})
+  output$fundedLoansSectorPlot <- renderPlot({
+    if (input$countryInput != "All"){
+    } else{
+      
+    }
+  })
 }
 
 shinyApp(ui, server)
