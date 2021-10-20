@@ -345,12 +345,51 @@ server <- function(input, output,session) {
   #=============
   # SECTOR COUNT
   #=============
-  output$sectorCountPlot <- renderPlot({})
+  output$sectorCountPlot <- renderPlot({
+    if (input$countryInput != "All"){
+      sector_df <- loans %>%
+        filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME) %>%
+        dplyr::summarise(count = n()) %>%
+        select(SECTOR_NAME, count)
+    } else {
+      sector_df <- loans %>%
+        filter(STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME) %>%
+        dplyr::summarise(count = n()) %>%
+        select(SECTOR_NAME, count)
+    }    
+  
+    ggplot(sector_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = SECTOR_NAME)) +
+      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+      coord_flip() + xlab("Sectors") + 
+      ylab("Count") + guides(fill = FALSE)
+  })
   
   #=============
   # # AVG NUM OF LENDERS BY SECTOR
   #=============
-  output$lenderSectorPlot <- renderPlot({})
+  output$lenderSectorPlot <- renderPlot({
+    
+    if (input$countryInput != "All"){
+      sectors_lender_df <- loans %>%
+        filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME) %>%
+        dplyr::summarise(AVG_NUM_LENDERS = mean(NUM_LENDERS_TOTAL)) %>%
+        select(SECTOR_NAME, AVG_NUM_LENDERS)
+    } else {
+      sectors_lender_df <- loans %>%
+        filter(STATUS %in% c('funded','fundRaising')) %>%
+        dplyr::group_by(SECTOR_NAME) %>%
+        dplyr::summarise(AVG_NUM_LENDERS = mean(NUM_LENDERS_TOTAL)) %>%
+        select(SECTOR_NAME, AVG_NUM_LENDERS)      
+    }
+    ggplot(data = sectors_lender_df,aes(x=SECTOR_NAME, y=AVG_NUM_LENDERS, fill = SECTOR_NAME)) +
+      geom_bar(stat = "identity") + theme_minimal()  + scale_y_continuous(labels = comma) 
+    coord_flip() + xlab("Sector Name") + 
+      ylab("Average No. of Lenders") + guides(fill = FALSE)
+    
+  })
   
   #=============
   # # AVG LENDER TERM BY SECTOR
