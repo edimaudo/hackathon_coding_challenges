@@ -411,7 +411,7 @@ server <- function(input, output,session) {
     }
     ggplot(data = sectors_lender_term_df,aes(x=order(SECTOR_NAME,AVG_NUM_LENDERS_TERM) , 
                                              y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
-      geom_bar(stat = "identity") + theme_light()  + 
+      geom_bar(stat = "identity") + theme_light()  + theme_minimal()  + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
       ylab("Average Lender Term") + guides(fill = FALSE)
     
