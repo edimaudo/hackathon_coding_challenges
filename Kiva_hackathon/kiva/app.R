@@ -5,9 +5,9 @@ rm(list = ls()) # Clear environment
 #=============
 # Package Information
 #=============
-packages <- c('ggplot2', 'corrplot','tidyverse','readxl','doParallel',
-              'shiny','shinydashboard','scales','dplyr','mlbench','caTools','RColorBrewer',
-              "dummies",'readxl','forecast','TTR','xts','lubridate','data.table','timetk')
+packages <- c('ggplot2', 'corrplot','tidyverse','doParallel',
+              'shiny','shinydashboard','scales','dplyr','mlbench','caTools',
+              "dummies",'forecast','TTR','xts','lubridate','data.table','timetk')
 for (package in packages) {
     if (!require(package, character.only=T, quietly=T)) {
         install.packages(package)
@@ -24,7 +24,6 @@ loans <- data.table::fread("loans.csv")
 loans$LENDER_TERM[is.na(loans$LENDER_TERM)] <- 0
 loans$POSTED_DISBURSED_TIME = as.Date(loans$DISBURSE_TIME) - as.Date(loans$POSTED_TIME)
 loans$POSTED_DISBURSED_TIME[is.na(loans$POSTED_DISBURSED_TIME )] <- 0
-
 # Portfolio data
 funds_df <- loans %>%
   filter(STATUS %in% c('funded','fundRaising')) %>%
@@ -54,7 +53,7 @@ ui <- dashboardPage(
   dashboardBody(tabItems(
     #====About====
     tabItem(tabName = "about", includeMarkdown("about.md"), hr()),
-    #====Sector====
+    #====Sector Insights====
     tabItem(tabName = "sector",
             sidebarLayout(
               sidebarPanel(
@@ -84,7 +83,7 @@ ui <- dashboardPage(
                 )
               )
             ),
-    #====Fund====
+    #====Fund Distribution====
     tabItem(tabName = "fund",
             sidebarLayout(
               sidebarPanel(
@@ -103,20 +102,22 @@ ui <- dashboardPage(
               )
             )
           ), 
-    #====Loan====
+    #====Loan Impact====
     tabItem(tabName = "loan",
             sidebarLayout(
               sidebarPanel(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
-                sliderInput("yearInput", "Year",min = 1,max = 30,value = 5, step = 1),
-                sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 50, step = 5),
+                selectInput("sectorInput","Sector",choices = sector,selected = "All"),
+                sliderInput("yearInput", "Year",min = 1,max = 10,value = 5, step = 1),
+                sliderInput("retentionInput", "Retention Rate (%)",min = 1,max = 100,value = 10, step = 5),
+                sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 5, step = 5),
                 submitButton("Submit")
               ),
               mainPanel(
                 h2("Loan Impact", style = "text-align: center;"),
                 fluidRow(
                   h3("SROI Model", style = "text-align: center;"),
-                  DT::dataTableOutput("loanOutput")
+                  valueBoxOutput("sroiBox"),
             )
           )
         )
@@ -130,7 +131,7 @@ ui <- dashboardPage(
 #=============
 server <- function(input, output,session) {
   #=============
-  # mMinimum Variance Portfolio
+  # Minimum Variance Portfolio
   #=============
   output$minvarPlot <- renderPlot({
     # filter by country information
@@ -234,7 +235,7 @@ server <- function(input, output,session) {
     # add error handler since some countries don't yield any result
   })
   #=============
-  # Efficiency Portfolio
+  # Efficient Portfolio
   #=============
   output$efficientPlot <- renderPlot({
     # filter by country information
@@ -337,10 +338,63 @@ server <- function(input, output,session) {
   
     # add error handler since some countries don't yield any result
     })
+  
   #=============
   # SROI model
   #=============
-  output$loanOutputOutput <- DT::renderDataTable({
+  output$sroiBox <- renderValueBox({
+    
+    year <- as.numeric(input$yearInput)
+    retention_rate <- as.numeric(input$retentionInput)
+    discount_rate <- as.numeric(input$discountInput)
+    
+    if (input$countryInput == "All"){ 
+      if (input$sectorInput == "All"){
+        loan_df2 <- loans %>%
+          filter(STATUS %in% c('funded','fundRaising')) %>%
+          na.omit() %>%
+          dplyr::group_by(ACTIVITY_NAME) %>%
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)       
+      } else {
+        loan_df2 <- loans %>%
+          filter(STATUS %in% c('funded','fundRaising'), SECTOR_NAME == input$sectorInput) %>%
+          na.omit() %>%
+          dplyr::group_by(ACTIVITY_NAME) %>%
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM) 
+      }
+    } else {
+      if (input$sectorInput == "All"){
+        loan_df2 <- loans %>%
+          filter(STATUS %in% c('funded','fundRaising'), COUNTRY_NAME == input$countryInput) %>%
+          na.omit() %>%
+          dplyr::group_by(ACTIVITY_NAME) %>%
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)       
+      } else {
+        loan_df2 <- loans %>%
+          filter(STATUS %in% c('funded','fundRaising'),COUNTRY_NAME == input$countryInput, SECTOR_NAME == input$sectorInput) %>%
+          na.omit() %>%
+          dplyr::group_by(ACTIVITY_NAME) %>%
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM) 
+      }
+    }
+
+    
     
   })
   
