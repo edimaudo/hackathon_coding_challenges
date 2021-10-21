@@ -129,12 +129,8 @@ ui <- dashboardPage(
 # Server logic 
 #=============
 server <- function(input, output,session) {
-  
-
-
-  
   #=============
-  # min variance portfolio
+  # min. variance portfolio
   #=============
   output$minvarPlot <- renderPlot({
     # filter by country information
