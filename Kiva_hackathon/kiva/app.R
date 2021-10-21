@@ -130,7 +130,7 @@ ui <- dashboardPage(
 #=============
 server <- function(input, output,session) {
   #=============
-  # min. variance portfolio
+  # mMinimum Variance Portfolio
   #=============
   output$minvarPlot <- renderPlot({
     # filter by country information
@@ -234,7 +234,7 @@ server <- function(input, output,session) {
     # add error handler since some countries don't yield any result
   })
   #=============
-  # efficiency portfolio
+  # Efficiency Portfolio
   #=============
   output$efficientPlot <- renderPlot({
     # filter by country information
