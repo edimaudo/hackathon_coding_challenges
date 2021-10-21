@@ -179,14 +179,16 @@ sectors_lender_df <- loans %>%
     ylab("Average No. of Lenders") + guides(fill = FALSE)
 
   # AVG LENDER TERM BY SECTOR
+  loans$LENDER_TERM[is.na(loans$LENDER_TERM)] <- 0
   sectors_lender_term_df <- loans %>%
     filter(STATUS %in% c('funded','fundRaising')) %>%
     dplyr::group_by(SECTOR_NAME) %>%
     dplyr::summarise(AVG_NUM_LENDERS_TERM = mean(LENDER_TERM)) %>%
     select(SECTOR_NAME, AVG_NUM_LENDERS_TERM)
-  ggplot(data = sectors_lender_term_df,aes(x=SECTOR_NAME, y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
-    geom_bar(stat = "identity") + theme_light()  + 
-    coord_flip() xlab("Sector Name") + 
+  ggplot(data = sectors_lender_term_df,aes(x=reorder(SECTOR_NAME,AVG_NUM_LENDERS_TERM), 
+                                           y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
+    geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) + 
+    coord_flip() + xlab("Sectors") + 
     ylab("Average Lender Term") + guides(fill = FALSE)
 
   # FUNDED AMOUNT
@@ -195,7 +197,8 @@ sectors_lender_df <- loans %>%
     dplyr::group_by(SECTOR_NAME) %>%
     dplyr::summarise(AVG_FUNDED_AMOUNT = mean(FUNDED_AMOUNT)) %>%
     select(SECTOR_NAME, TOTAL_FUNDED_AMOUNT)
-  ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, TOTAL_FUNDED_AMOUNT),y=TOTAL_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
+  ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, TOTAL_FUNDED_AMOUNT),y=TOTAL_FUNDED_AMOUNT, 
+                                     fill = SECTOR_NAME)) +
     geom_bar(stat = "identity", width = 0.3) + theme_minimal() + scale_y_continuous(labels = comma) +
     coord_flip() + xlab("Top 5 Sectors") + 
     ylab("AVERAGE FUNDED AMOUNT") + guides(scale = "none")
@@ -426,18 +429,51 @@ glimpse(loans)
 
 time_period <- 5
 dropoff <- 0.1
-discount_rate = 0.035
+discount_rate <- 0.035
+reduction_rate <- 0.1
 
-# loan_df2 <- loans %>%
-#   filter(STATUS %in%c('funded','fundRaising')) %>%
-#   na.omit() %>%
-#   dplyr::group_by(ACTIVITY_NAME) %>%
-#   dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
-#             TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
-#             TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
-#   dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
-#   select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)
-# 
+loan_df2 <- loans %>%
+   filter(STATUS %in%c('funded','fundRaising')) %>%
+   na.omit() %>%
+   dplyr::group_by(ACTIVITY_NAME) %>%
+   dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+             TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+             TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+   dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+   select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)
 
 
-# https://www.galp.com/corp/Portals/0/Recursos/Sustentabilidade/SharedResources/Documents/GALP_SROI_EN.pdf
+# calculate reduction per year
+# create matrix that is m x n where m is the number of activities and n is the number of years
+reduction_data <- matrix(nrow = length(loan_df2$ACTIVITY_NAME),ncol = time_period + 1)
+reduction_info <- vector('numeric', length = time_period)
+
+for (i in 1:length(loan_df2$ACTIVITY_NAME)) {
+  temp <- c()
+  activity_info <- loan_df2$ACTIVITY_NAME[i]
+  reduction_info <- c()
+  loan_info <- loan_df2$TOTAL_FUNDED_AMOUNT[i]
+  
+  for (j in 1:time_period){
+    if (j != 1) {
+      reduction_info[j] <- reduction_info[j-1] * (1 - reduction_rate)
+    } else {
+      reduction_info[1] <- loan_info
+    }
+  }
+  
+  temp <-  c(activity_info,reduction_info)
+  reduction_data[i,] <- temp
+  
+}
+
+npv_data <- c()
+# calculate npv
+
+# get total npv - sum of all npv
+
+# investment value is  is average of total funds
+
+# Social Impact value = total npv - investment value
+
+# SROI = Social Impact Value/Investment value
