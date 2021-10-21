@@ -1,7 +1,7 @@
 ![Kiva](http://www-kiva-org.global.ssl.fastly.net/cms/kiva_logo_2.png)
 
 ### About Kiva
-[Kiva](https://www.kiva.org) is a social impact organization with a mission to expand financial access to help underserved individuals and communities thrive.
+[Kiva](https://www.kiva.org) is a social impact organization with a mission to expand financial access to help under-served individuals and communities thrive.
 
 ### About Application
 This application leverages Kiva's data snapshot to build financial tools that would help further poverty alleviation and financial inclusion.  The application focuses on two key areas
@@ -9,13 +9,11 @@ This application leverages Kiva's data snapshot to build financial tools that wo
 - Loan impact - How might we show the impact of the loans?
  
 ### Features
-- Include a text description that should explain the features and functionality of your Project.
+- Sector Insights by Country
+- Fund distribution by Country
+- Loan Impact using SROI framework
 
-
-
-
-
-
+### Copyright Information
 Copyright 2021 Edima Udo
 
 Licensed under the Apache License, Version 2.0 (the "License");
