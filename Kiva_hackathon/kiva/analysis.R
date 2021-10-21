@@ -467,13 +467,40 @@ for (i in 1:length(loan_df2$ACTIVITY_NAME)) {
   
 }
 
-npv_data <- c()
+
 # calculate npv
+npv_data <- c()
+
+for (i in 2:ncol(reduction_data)){
+  temp <- sum(as.numeric(reduction_data[,i]))
+  npv_data[i-1] <- temp / ((1 + discount_rate) ^ i)
+}
 
 # get total npv - sum of all npv
+total_npv <- sum(npv_data)
 
 # investment value is  is average of total funds
+investment_value = mean(loan_df2$TOTAL_FUNDED_AMOUNT)
 
 # Social Impact value = total npv - investment value
+social_impact_value = total_npv - investment_value 
 
 # SROI = Social Impact Value/Investment value
+sroi = social_impact_value / investment_value
+
+
+# --------------------
+# Borrower Insights
+## Generate ggplots
+## Design layout & incorporate into app
+
+# Loan impact
+## build loan impact model
+
+## create design + incorproate into app
+
+## clean up code
+
+## Final test
+
+## Create video and other ancilliary stuff
