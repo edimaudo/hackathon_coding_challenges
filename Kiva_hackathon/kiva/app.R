@@ -117,7 +117,9 @@ ui <- dashboardPage(
                 h2("Loan Impact", style = "text-align: center;"),
                 fluidRow(
                   h3("SROI Model", style = "text-align: center;"),
-                  valueBoxOutput("sroiBox"),
+                  valueBoxOutput("countryBox"),
+                  valueBoxOutput("sectorBox"),
+                  #valueBoxOutput("sroiBox"),
             )
           )
         )
@@ -342,11 +344,26 @@ server <- function(input, output,session) {
   #=============
   # SROI model
   #=============
+  
+  output$countryBox <- renderValueBox ({
+    valueBox(
+      paste0(input$countryInput), "Country Info", icon = icon("list"),
+      color = "purple"
+    )
+  })
+  
+  output$sectorBox <- renderValueBox ({ 
+    valueBox(
+      paste0(input$sectorInput), "Sector Info", icon = icon("list"),
+      color = "purple"
+    )
+    })
+  
   output$sroiBox <- renderValueBox({
     
     year <- as.numeric(input$yearInput)
-    retention_rate <- as.numeric(input$retentionInput)
-    discount_rate <- as.numeric(input$discountInput)
+    retention_rate <- as.numeric(input$retentionInput)/100
+    discount_rate <- as.numeric(input$discountInput)/100
     
     if (input$countryInput == "All"){ 
       if (input$sectorInput == "All"){
@@ -383,7 +400,8 @@ server <- function(input, output,session) {
           select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)       
       } else {
         loan_df2 <- loans %>%
-          filter(STATUS %in% c('funded','fundRaising'),COUNTRY_NAME == input$countryInput, SECTOR_NAME == input$sectorInput) %>%
+          filter(STATUS %in% c('funded','fundRaising'),
+                 COUNTRY_NAME == input$countryInput, SECTOR_NAME == input$sectorInput) %>%
           na.omit() %>%
           dplyr::group_by(ACTIVITY_NAME) %>%
           dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
@@ -394,7 +412,7 @@ server <- function(input, output,session) {
       }
     }
 
-    
+    valueBox(2, "Seeds Received")
     
   })
   
