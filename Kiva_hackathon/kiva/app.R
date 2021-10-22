@@ -5,7 +5,7 @@ rm(list = ls()) # Clear environment
 #=============
 # Package Information
 #=============
-packages <- c('ggplot2', 'corrplot','tidyverse','doParallel',
+packages <- c('ggplot2', 'corrplot','tidyverse','doParallel','memoise',
               'shiny','shinydashboard','scales','dplyr','mlbench','caTools',
               "dummies",'forecast','TTR','xts','lubridate','data.table','timetk')
 for (package in packages) {
@@ -135,7 +135,7 @@ server <- function(input, output,session) {
   #=============
   # Minimum Variance Portfolio
   #=============
-  output$minvarPlot <- renderPlot({
+  output$minvarPlot <- renderCachedPlot({
     # filter by country information
     if (input$countryInput != "All"){
       funds_df2 <- funds_df %>% 
@@ -239,7 +239,7 @@ server <- function(input, output,session) {
   #=============
   # Efficient Portfolio
   #=============
-  output$efficientPlot <- renderPlot({
+  output$efficientPlot <- renderCachedPlot({
     # filter by country information
     if (input$countryInput != "All"){
       funds_df2 <- funds_df %>% 
@@ -344,7 +344,6 @@ server <- function(input, output,session) {
   #=============
   # SROI model
   #=============
-  
   output$countryBox <- renderValueBox ({
     valueBox(
       paste0(input$countryInput), "Country Info", icon = icon("list"),
@@ -458,8 +457,6 @@ server <- function(input, output,session) {
     sroi <- social_impact_value / investment_value
     sroi <- as.character(sroi)
     
-    
-    
     valueBox(
       paste0("Social Return $ for $ " , sroi), "SROI", icon = icon("list"),
       color = "green"
@@ -471,7 +468,7 @@ server <- function(input, output,session) {
   #=============
   # SECTOR COUNT
   #=============
-  output$sectorCountPlot <- renderPlot({
+  output$sectorCountPlot <- renderCachedPlot({
     if (input$countryInput != "All"){
       sector_df <- loans %>%
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -495,7 +492,7 @@ server <- function(input, output,session) {
   #=============
   # # AVG NUM OF LENDERS BY SECTOR
   #=============
-  output$lenderSectorPlot <- renderPlot({
+  output$lenderSectorPlot <- renderCachedPlot({
     
     if (input$countryInput != "All"){
       sectors_lender_df <- loans %>%
@@ -521,7 +518,7 @@ server <- function(input, output,session) {
   #=============
   # # AVG LENDER TERM BY SECTOR
   #=============
-  output$lenderTermSectorPlot <- renderPlot({
+  output$lenderTermSectorPlot <- renderCachedPlot({
     if (input$countryInput != "All"){
       sectors_lender_term_df <- loans %>%
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -550,7 +547,7 @@ server <- function(input, output,session) {
   #=============
   # FUNDED AMOUNT BY SECTOR
   #=============
-  output$fundSectorPlot <- renderPlot({
+  output$fundSectorPlot <- renderCachedPlot({
     if (input$countryInput != "All"){
       sector_funded_amount_df <- loans %>%
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -574,7 +571,7 @@ server <- function(input, output,session) {
   #=============
   # DISTRIBUTION MODEL BY SECTOR
   #=============
-  output$distributionSectorPlot <- renderPlot({
+  output$distributionSectorPlot <- renderCachedPlot({
     if (input$countryInput != "All"){
       distribution_df <- loans %>%
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -598,7 +595,7 @@ server <- function(input, output,session) {
   #=============
   # REPAYMENT INTERVAL BY SECTOR
   #=============
-  output$repaymentSectorPlot <- renderPlot({
+  output$repaymentSectorPlot <- renderCachedPlot({
     if (input$countryInput != "All"){
       repayment_df <- loans %>%
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -622,7 +619,7 @@ server <- function(input, output,session) {
   #=============
   # AVERAGE LOAN TIMEFRAME BY SECTOR
   #=============
-  output$loanTimeSectorPlot <- renderPlot({
+  output$loanTimeSectorPlot <- renderCachedPlot({
     if (input$countryInput != "All"){
       sectors_loan_time_df <- loans %>%
       filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -651,7 +648,7 @@ server <- function(input, output,session) {
   #=============
   # FUNDED LOANS YEAR AND BY SECTOR
   #=============
-  output$fundedLoansSectorPlot <- renderPlot({
+  output$fundedLoansSectorPlot <- renderCachedPlot({
     options(scipen=10000)
     col1 = "#d8e1cf" 
     col2 = "#438484"
