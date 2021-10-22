@@ -108,9 +108,9 @@ ui <- dashboardPage(
               sidebarPanel(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
                 selectInput("sectorInput","Sector",choices = sector,selected = "All"),
-                sliderInput("yearInput", "Year",min = 0.5,max = 15,value = 5, step = 1),
-                sliderInput("retentionInput", "Retention Rate (%)",min = 0.5,max = 100,value = 10, step = 10),
-                sliderInput("discountInput", "Discount Rate (%)",min = 0.5,max = 100,value = 5, step = 10),
+                sliderInput("yearInput", "Year",min = 1,max = 15,value = 5, step = 1),
+                sliderInput("retentionInput", "Retention Rate (%)",min = 1,max = 100,value = 10, step = 10),
+                sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 5, step = 10),
                 submitButton("Submit")
               ),
               mainPanel(
@@ -119,7 +119,7 @@ ui <- dashboardPage(
                   h3("SROI Model", style = "text-align: center;"),
                   valueBoxOutput("countryBox"),
                   valueBoxOutput("sectorBox"),
-                  #valueBoxOutput("sroiBox"),
+                  valueBoxOutput("sroiBox"),
             )
           )
         )
@@ -361,7 +361,7 @@ server <- function(input, output,session) {
   
   output$sroiBox <- renderValueBox({
     
-    year <- as.numeric(input$yearInput)
+    time_period <- as.numeric(input$yearInput)
     retention_rate <- as.numeric(input$retentionInput)/100
     discount_rate <- as.numeric(input$discountInput)/100
     
@@ -411,11 +411,57 @@ server <- function(input, output,session) {
           select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM) 
       }
     }
-
+    
+    # calculate reduction per year
+    # create matrix that is m x n where m is the number of activities and n is the number of years
+    reduction_data <- matrix(nrow = length(loan_df2$ACTIVITY_NAME),ncol = time_period + 1)
+    reduction_info <- vector('numeric', length = time_period)
+    
+    for (i in 1:length(loan_df2$ACTIVITY_NAME)) {
+      temp <- c()
+      activity_info <- loan_df2$ACTIVITY_NAME[i]
+      reduction_info <- c()
+      loan_info <- loan_df2$TOTAL_FUNDED_AMOUNT[i]
+      
+      for (j in 1:time_period){
+        if (j != 1) {
+          reduction_info[j] <- reduction_info[j-1] * (1 - reduction_rate)
+        } else {
+          reduction_info[1] <- loan_info
+        }
+      }
+      
+      temp <-  c(activity_info,reduction_info)
+      reduction_data[i,] <- temp
+      
+    }
+    
+    
+    # calculate npv
+    npv_data <- c()
+    
+    for (i in 2:ncol(reduction_data)){
+      temp <- sum(as.numeric(reduction_data[,i]))
+      npv_data[i-1] <- temp / ((1 + discount_rate) ^ i)
+    }
+    
+    # get total npv - sum of all npv
+    total_npv <- sum(npv_data)
+    
+    # investment value is  is average of total funds
+    investment_value <- mean(loan_df2$TOTAL_FUNDED_AMOUNT)
+    
+    # Social Impact value = total npv - investment value
+    social_impact_value <- total_npv - investment_value 
+    
+    # SROI = Social Impact Value/Investment value
+    sroi <- social_impact_value / investment_value
+    sroi <- as.character(sroi)
+    
     
     
     valueBox(
-      paste0(input$sectorInput), "Sector Info", icon = icon("list"),
+      paste0("Social Return $ for $ " , sroi), "SROI", icon = icon("list"),
       color = "green"
     )
     
