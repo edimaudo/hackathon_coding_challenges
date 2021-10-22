@@ -108,9 +108,9 @@ ui <- dashboardPage(
               sidebarPanel(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
                 selectInput("sectorInput","Sector",choices = sector,selected = "All"),
-                sliderInput("yearInput", "Year",min = 1,max = 15,value = 5, step = 1),
-                sliderInput("retentionInput", "Retention Rate (%)",min = 0,max = 100,value = 10, step = 10),
-                sliderInput("discountInput", "Discount Rate (%)",min = 0,max = 100,value = 5, step = 10),
+                sliderInput("yearInput", "Year",min = 0.5,max = 15,value = 5, step = 1),
+                sliderInput("retentionInput", "Retention Rate (%)",min = 0.5,max = 100,value = 10, step = 10),
+                sliderInput("discountInput", "Discount Rate (%)",min = 0.5,max = 100,value = 5, step = 10),
                 submitButton("Submit")
               ),
               mainPanel(
@@ -412,7 +412,12 @@ server <- function(input, output,session) {
       }
     }
 
-    valueBox(2, "Seeds Received")
+    
+    
+    valueBox(
+      paste0(input$sectorInput), "Sector Info", icon = icon("list"),
+      color = "green"
+    )
     
   })
   
