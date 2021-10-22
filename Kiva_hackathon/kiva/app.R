@@ -108,9 +108,9 @@ ui <- dashboardPage(
               sidebarPanel(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
                 selectInput("sectorInput","Sector",choices = sector,selected = "All"),
-                sliderInput("yearInput", "Year",min = 1,max = 10,value = 5, step = 1),
-                sliderInput("retentionInput", "Retention Rate (%)",min = 1,max = 100,value = 10, step = 5),
-                sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 5, step = 5),
+                sliderInput("yearInput", "Year",min = 1,max = 15,value = 5, step = 1),
+                sliderInput("retentionInput", "Retention Rate (%)",min = 0,max = 100,value = 10, step = 10),
+                sliderInput("discountInput", "Discount Rate (%)",min = 0,max = 100,value = 5, step = 10),
                 submitButton("Submit")
               ),
               mainPanel(
@@ -232,7 +232,7 @@ server <- function(input, output,session) {
       geom_bar(stat = 'identity') +
       theme_minimal() + coord_flip() + 
       labs(x = 'Sectors', y = 'Weights') +
-      scale_y_continuous(labels = scales::percent)   
+      scale_y_continuous(labels = scales::percent) + guides(scale = "none")
     
     # add error handler since some countries don't yield any result
   })
@@ -336,7 +336,7 @@ server <- function(input, output,session) {
       geom_bar(stat = 'identity') + 
       theme_minimal() + coord_flip() + 
       labs(x = 'Sectors', y = 'Weights') +
-      scale_y_continuous(labels = scales::percent) 
+      scale_y_continuous(labels = scales::percent) + guides(scale = "none")
   
     # add error handler since some countries don't yield any result
     })
@@ -438,7 +438,7 @@ server <- function(input, output,session) {
     ggplot(sector_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
-      ylab("Count") + guides(fill = FALSE)
+      ylab("Count") + guides(scale = "none")
   })
   
   #=============
@@ -463,7 +463,7 @@ server <- function(input, output,session) {
                                         fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal()  + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
-      ylab("Average No. of Lenders") + guides(fill = FALSE)
+      ylab("Average No. of Lenders") + guides(scale = "none")
     
   })
   
@@ -488,7 +488,7 @@ server <- function(input, output,session) {
                                              y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) + 
       coord_flip() + xlab("Sectors") + 
-      ylab("Average Lender Term") + guides(fill = FALSE)
+      ylab("Average Lender Term") + guides(scale = "none")
     
     
     
@@ -517,7 +517,7 @@ server <- function(input, output,session) {
                                        y=AVG_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
-      ylab("AVERAGE FUNDED AMOUNT") + guides(fill = FALSE)
+      ylab("AVERAGE FUNDED AMOUNT") + guides(scale = "none")
   })
   
   #=============
@@ -594,7 +594,7 @@ server <- function(input, output,session) {
                                     fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
-      ylab("Average Loan disbursment time in days") + guides(fill = FALSE)
+      ylab("Average Loan disbursment time in days") + guides(scale = "none")
   })
   
   #=============
