@@ -8,7 +8,7 @@ packages <- c('ggplot2', 'corrplot','tidyverse','readxl',
               'shiny','shinydashboard','scales','dplyr','mlbench','caTools',
               'forecast','TTR','xts','lubridate','data.table','timetk',
               'stopwords','tidytext','stringr','reshape2', 
-              'textmineR','topicmodels','textclean')
+              'textmineR','topicmodels','textclean', 'memoise')
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
     install.packages(package)
@@ -17,8 +17,15 @@ for (package in packages) {
 }
 # ==============
 # load data
-# ---------------
-loans <- data.table::fread("loans.csv")
+# ==============
+
+# Using a local cache
+cache_dir <- cache_filesystem("cache")
+fct <- function(){
+  data <- data.table::fread("loans.csv")
+}
+loans <- memoise(fct, cache = cache_dir)
+
 
 
 #=============
@@ -490,16 +497,10 @@ sroi = social_impact_value / investment_value
 
 
 # --------------------
-# Borrower Insights
-## Generate ggplots
-## Design layout & incorporate into app
 
-# Loan impact
-## build loan impact model
-
-## create design + incorproate into app
 
 ## clean up code
+## convert to tabsets
 
 ## Final test
 
