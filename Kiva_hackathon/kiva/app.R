@@ -17,13 +17,12 @@ for (package in packages) {
 #=============
 # Load data
 #=============
-cl <- makePSOCKcluster(4)
-registerDoParallel(cl)
-loans <- data.table::fread("loans.csv")
-# Data updates
+loans <- readRDS("loans.rds")
+# Update loan data
 loans$LENDER_TERM[is.na(loans$LENDER_TERM)] <- 0
 loans$POSTED_DISBURSED_TIME = as.Date(loans$DISBURSE_TIME) - as.Date(loans$POSTED_TIME)
 loans$POSTED_DISBURSED_TIME[is.na(loans$POSTED_DISBURSED_TIME )] <- 0
+
 # Portfolio data
 funds_df <- loans %>%
   filter(STATUS %in% c('funded','fundRaising')) %>%
@@ -31,13 +30,12 @@ funds_df <- loans %>%
   na.omit()
 funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
 
-stopCluster(cl)
+column_info <- c(sort(unique(loans$SECTOR_NAME))) # sector information
 #=============
 # UI drop-down
 #=============
 country <- c("All", c(sort(unique(loans$COUNTRY_NAME))))
 sector <- c("All",c(sort(unique(loans$SECTOR_NAME))))
-column_info <- c(sort(unique(loans$SECTOR_NAME)))
 #=============
 # UI Layout
 #=============
@@ -109,7 +107,7 @@ ui <- dashboardPage(
                 selectInput("countryInput","Country",choices = country,selected = "All"),
                 selectInput("sectorInput","Sector",choices = sector,selected = "All"),
                 sliderInput("yearInput", "Year",min = 1,max = 15,value = 5, step = 1),
-                sliderInput("retentionInput", "Retention Rate (%)",min = 1,max = 100,value = 10, step = 10),
+                sliderInput("reductionInput", "Reduction Rate (%)",min = 1,max = 100,value = 10, step = 10),
                 sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 5, step = 10),
                 submitButton("Submit")
               ),
@@ -135,7 +133,7 @@ server <- function(input, output,session) {
   #=============
   # Minimum Variance Portfolio
   #=============
-  output$minvarPlot <- renderCachedPlot({
+  output$minvarPlot <- renderPlot({
     # filter by country information
     if (input$countryInput != "All"){
       funds_df2 <- funds_df %>% 
@@ -239,7 +237,7 @@ server <- function(input, output,session) {
   #=============
   # Efficient Portfolio
   #=============
-  output$efficientPlot <- renderCachedPlot({
+  output$efficientPlot <- renderPlot({
     # filter by country information
     if (input$countryInput != "All"){
       funds_df2 <- funds_df %>% 
@@ -361,7 +359,7 @@ server <- function(input, output,session) {
   output$sroiBox <- renderValueBox({
     
     time_period <- as.numeric(input$yearInput)
-    retention_rate <- as.numeric(input$retentionInput)/100
+    reduction_rate <- as.numeric(input$reductionInput)/100
     discount_rate <- as.numeric(input$discountInput)/100
     
     if (input$countryInput == "All"){ 
@@ -468,7 +466,7 @@ server <- function(input, output,session) {
   #=============
   # SECTOR COUNT
   #=============
-  output$sectorCountPlot <- renderCachedPlot({
+  output$sectorCountPlot <- renderPlot({
     if (input$countryInput != "All"){
       sector_df <- loans %>%
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -492,7 +490,7 @@ server <- function(input, output,session) {
   #=============
   # # AVG NUM OF LENDERS BY SECTOR
   #=============
-  output$lenderSectorPlot <- renderCachedPlot({
+  output$lenderSectorPlot <- renderPlot({
     
     if (input$countryInput != "All"){
       sectors_lender_df <- loans %>%
@@ -518,7 +516,7 @@ server <- function(input, output,session) {
   #=============
   # # AVG LENDER TERM BY SECTOR
   #=============
-  output$lenderTermSectorPlot <- renderCachedPlot({
+  output$lenderTermSectorPlot <- renderPlot({
     if (input$countryInput != "All"){
       sectors_lender_term_df <- loans %>%
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -547,7 +545,7 @@ server <- function(input, output,session) {
   #=============
   # FUNDED AMOUNT BY SECTOR
   #=============
-  output$fundSectorPlot <- renderCachedPlot({
+  output$fundSectorPlot <- renderPlot({
     if (input$countryInput != "All"){
       sector_funded_amount_df <- loans %>%
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -571,7 +569,7 @@ server <- function(input, output,session) {
   #=============
   # DISTRIBUTION MODEL BY SECTOR
   #=============
-  output$distributionSectorPlot <- renderCachedPlot({
+  output$distributionSectorPlot <- renderPlot({
     if (input$countryInput != "All"){
       distribution_df <- loans %>%
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -595,7 +593,7 @@ server <- function(input, output,session) {
   #=============
   # REPAYMENT INTERVAL BY SECTOR
   #=============
-  output$repaymentSectorPlot <- renderCachedPlot({
+  output$repaymentSectorPlot <- renderPlot({
     if (input$countryInput != "All"){
       repayment_df <- loans %>%
         filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -619,7 +617,7 @@ server <- function(input, output,session) {
   #=============
   # AVERAGE LOAN TIMEFRAME BY SECTOR
   #=============
-  output$loanTimeSectorPlot <- renderCachedPlot({
+  output$loanTimeSectorPlot <- renderPlot({
     if (input$countryInput != "All"){
       sectors_loan_time_df <- loans %>%
       filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
@@ -648,7 +646,7 @@ server <- function(input, output,session) {
   #=============
   # FUNDED LOANS YEAR AND BY SECTOR
   #=============
-  output$fundedLoansSectorPlot <- renderCachedPlot({
+  output$fundedLoansSectorPlot <- renderPlot({
     options(scipen=10000)
     col1 = "#d8e1cf" 
     col2 = "#438484"
