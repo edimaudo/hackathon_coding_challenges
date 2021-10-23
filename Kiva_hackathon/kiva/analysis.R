@@ -18,10 +18,6 @@ for (package in packages) {
 # ==============
 # load data
 # ==============
-
-loans <- data.table::fread("loans.csv")
-saveRDS(loans, file = "loans.rds")
-
 loans2 <- readRDS("loans.rds")
 
 #=============
@@ -248,12 +244,12 @@ sectors_lender_df <- loans %>%
     ylab("Average Loan disbursment time in days") + guides(scale = "none")
   
   # Funded loans by year heatmap 
-  funded_loan_time_df <- loans %>%
+  funded_loan_time_df <- loans2 %>%
     filter(STATUS %in% c('funded','fundRaising')) %>%
     mutate(DISBURSED_TIME = lubridate::year(as.Date(DISBURSE_TIME))) %>%
     dplyr::group_by(SECTOR_NAME,DISBURSED_TIME) %>%
-    dplyr::summarise(AVG_FUNDED_AMOUNT = MEAN(FUNDED_AMOUNT)) %>%
-    select(SECTOR_NAME,DISBURSED_TIME,TOTAL_FUNDED_AMOUNT)
+    dplyr::summarise(AVG_FUNDED_AMOUNT = mean(FUNDED_AMOUNT)) %>%
+    select(SECTOR_NAME,DISBURSED_TIME,AVG_FUNDED_AMOUNT )
   funded_loan_time_df <- na.omit(funded_loan_time_df)
   options(scipen=10000)
   #overall summary
@@ -262,9 +258,13 @@ sectors_lender_df <- loans %>%
   ggplot(funded_loan_time_df, aes(DISBURSED_TIME, SECTOR_NAME, fill= AVG_FUNDED_AMOUNT)) + 
     geom_tile() + 
     scale_fill_gradient(low = col1, high = col2) +
-    guides(fill=guide_legend(title="Total Funded Amount")) +
+    guides(fill=guide_legend(title="Avg Funded Amount")) +
     labs(title = "Total Funded Amount",x = "Year", y = "Sector") +
-    theme_minimal()
+    theme_minimal() + guides(fill=guide_legend(title="Average Funded Amount")) + 
+    theme(axis.text.x = element_text(size = 12),
+          axis.text.y = element_text(size = 12),
+          axis.title.x = element_text(size = 14, face = "bold"),
+          axis.title.y = element_text(size = 14, face = "bold"))
 
   #===================
   #text analysis
@@ -501,3 +501,12 @@ sroi = social_impact_value / investment_value
 ## Final test
 
 ## Create video and other ancilliary stuff
+
+ggplot(funded_loan_time_df, aes(DISBURSED_TIME, SECTOR_NAME, fill= AVG_FUNDED_AMOUNT)) +
+  geom_tile() +
+  scale_fill_gradient(col1, col2) +
+  guides(fill=guide_legend(title="Average Funded Amount")) +
+  labs(x = "Year", y = "Sectors") +
+  theme_minimal() + guides(fill=guide_legend(title="Average Funded Amount")) + 
+  theme(axis.text.x = element_text(face = "bold", size = 12),
+        axis.text.y = element_text(face = "bold", size = 12))
