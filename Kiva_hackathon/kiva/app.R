@@ -340,130 +340,6 @@ server <- function(input, output,session) {
     })
   
   #=============
-  # SROI model
-  #=============
-  output$countryBox <- renderValueBox ({
-    valueBox(
-      paste0(input$countryInput), "Country Info", icon = icon("list"),
-      color = "purple"
-    )
-  })
-  
-  output$sectorBox <- renderValueBox ({ 
-    valueBox(
-      paste0(input$sectorInput), "Sector Info", icon = icon("list"),
-      color = "purple"
-    )
-    })
-  
-  output$sroiBox <- renderValueBox({
-    
-    time_period <- as.numeric(input$yearInput)
-    reduction_rate <- as.numeric(input$reductionInput)/100
-    discount_rate <- as.numeric(input$discountInput)/100
-    
-    if (input$countryInput == "All"){ 
-      if (input$sectorInput == "All"){
-        loan_df2 <- loans %>%
-          filter(STATUS %in% c('funded','fundRaising')) %>%
-          na.omit() %>%
-          dplyr::group_by(ACTIVITY_NAME) %>%
-          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
-                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
-                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
-          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
-          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)       
-      } else {
-        loan_df2 <- loans %>%
-          filter(STATUS %in% c('funded','fundRaising'), SECTOR_NAME == input$sectorInput) %>%
-          na.omit() %>%
-          dplyr::group_by(ACTIVITY_NAME) %>%
-          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
-                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
-                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
-          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
-          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM) 
-      }
-    } else {
-      if (input$sectorInput == "All"){
-        loan_df2 <- loans %>%
-          filter(STATUS %in% c('funded','fundRaising'), COUNTRY_NAME == input$countryInput) %>%
-          na.omit() %>%
-          dplyr::group_by(ACTIVITY_NAME) %>%
-          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
-                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
-                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
-          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
-          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)       
-      } else {
-        loan_df2 <- loans %>%
-          filter(STATUS %in% c('funded','fundRaising'),
-                 COUNTRY_NAME == input$countryInput, SECTOR_NAME == input$sectorInput) %>%
-          na.omit() %>%
-          dplyr::group_by(ACTIVITY_NAME) %>%
-          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
-                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
-                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
-          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
-          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM) 
-      }
-    }
-    
-    # calculate reduction per year
-    # create matrix that is m x n where m is the number of activities and n is the number of years
-    reduction_data <- matrix(nrow = length(loan_df2$ACTIVITY_NAME),ncol = time_period + 1)
-    reduction_info <- vector('numeric', length = time_period)
-    
-    for (i in 1:length(loan_df2$ACTIVITY_NAME)) {
-      temp <- c()
-      activity_info <- loan_df2$ACTIVITY_NAME[i]
-      reduction_info <- c()
-      loan_info <- loan_df2$TOTAL_FUNDED_AMOUNT[i]
-      
-      for (j in 1:time_period){
-        if (j != 1) {
-          reduction_info[j] <- reduction_info[j-1] * (1 - reduction_rate)
-        } else {
-          reduction_info[1] <- loan_info
-        }
-      }
-      
-      temp <-  c(activity_info,reduction_info)
-      reduction_data[i,] <- temp
-      
-    }
-    
-    
-    # calculate npv
-    npv_data <- c()
-    
-    for (i in 2:ncol(reduction_data)){
-      temp <- sum(as.numeric(reduction_data[,i]))
-      npv_data[i-1] <- temp / ((1 + discount_rate) ^ i)
-    }
-    
-    # get total npv - sum of all npv
-    total_npv <- sum(npv_data)
-    
-    # investment value is  is average of total funds
-    investment_value <- mean(loan_df2$TOTAL_FUNDED_AMOUNT)
-    
-    # Social Impact value = total npv - investment value
-    social_impact_value <- total_npv - investment_value 
-    
-    # SROI = Social Impact Value/Investment value
-    sroi <- social_impact_value / investment_value
-    sroi <- as.character(round(sroi,2))
-    
-    valueBox(
-      paste0(sroi), "Social Return $ for $ ", icon = icon("thumbs-up", lib = "glyphicon"),
-      color = "green"
-    )
-    
-  })
-  
-  
-  #=============
   # SECTOR COUNT
   #=============
   output$sectorCountPlot <- renderPlot({
@@ -640,7 +516,7 @@ server <- function(input, output,session) {
   })
   
   #=============
-  # FUNDED LOANS YEAR AND BY SECTOR
+  # FUNDED LOANS BY YEAR AND SECTOR
   #=============
   output$fundedLoansSectorPlot <- renderPlot({
     options(scipen=10000)
@@ -651,7 +527,7 @@ server <- function(input, output,session) {
       filter(COUNTRY_NAME == input$countryInput,STATUS %in% c('funded','fundRaising')) %>%
         mutate(DISBURSED_TIME = lubridate::year(as.Date(DISBURSE_TIME))) %>%
         dplyr::group_by(SECTOR_NAME,DISBURSED_TIME) %>%
-        dplyr::summarise(AVG_FUNDED_AMOUNT = MEAN(FUNDED_AMOUNT)) %>%
+        dplyr::summarise(AVG_FUNDED_AMOUNT = mean(FUNDED_AMOUNT)) %>%
         select(SECTOR_NAME,DISBURSED_TIME,AVG_FUNDED_AMOUNT )
     } else{
       funded_loan_time_df <- loans %>%
@@ -662,13 +538,142 @@ server <- function(input, output,session) {
         select(SECTOR_NAME,DISBURSED_TIME,AVG_FUNDED_AMOUNT )
     }
     funded_loan_time_df <- na.omit(funded_loan_time_df)
-    ggplot(funded_loan_time_df, aes(DISBURSED_TIME, SECTOR_NAME, fill= AVG_FUNDED_AMOUNT)) + 
-      geom_tile() + 
-      scale_fill_gradient(col1, col2) +
-      guides(fill=guide_legend(title="Average Funded Amount")) +
-      labs(x = "Year", y = "Sectors") +
-      theme_minimal() + guides(fill=guide_legend(title="Average Funded Amount"))
+    
+    # if(!is.null(funded_loan_time_df)){
+      ggplot(funded_loan_time_df, aes(DISBURSED_TIME, SECTOR_NAME, fill= AVG_FUNDED_AMOUNT)) +
+        geom_tile() +
+        scale_fill_gradient(col1, col2) +
+        guides(fill=guide_legend(title="Average Funded Amount")) +
+        labs(x = "Year", y = "Sectors") +
+        theme_minimal() + guides(fill=guide_legend(title="Average Funded Amount"))
+    # }
+
   })
+  #=============
+  # SROI model
+  #=============
+  output$countryBox <- renderValueBox ({
+    valueBox(
+      paste0(input$countryInput), "Country Info", icon = icon("list"),
+      color = "purple"
+    )
+  })
+  
+  output$sectorBox <- renderValueBox ({ 
+    valueBox(
+      paste0(input$sectorInput), "Sector Info", icon = icon("list"),
+      color = "purple"
+    )
+  })
+  
+  output$sroiBox <- renderValueBox({
+    
+    time_period <- as.numeric(input$yearInput)
+    reduction_rate <- as.numeric(input$reductionInput)/100
+    discount_rate <- as.numeric(input$discountInput)/100
+    
+    if (input$countryInput == "All"){ 
+      if (input$sectorInput == "All"){
+        loan_df2 <- loans %>%
+          filter(STATUS %in% c('funded','fundRaising')) %>%
+          na.omit() %>%
+          dplyr::group_by(ACTIVITY_NAME) %>%
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)       
+      } else {
+        loan_df2 <- loans %>%
+          filter(STATUS %in% c('funded','fundRaising'), SECTOR_NAME == input$sectorInput) %>%
+          na.omit() %>%
+          dplyr::group_by(ACTIVITY_NAME) %>%
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM) 
+      }
+    } else {
+      if (input$sectorInput == "All"){
+        loan_df2 <- loans %>%
+          filter(STATUS %in% c('funded','fundRaising'), COUNTRY_NAME == input$countryInput) %>%
+          na.omit() %>%
+          dplyr::group_by(ACTIVITY_NAME) %>%
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)       
+      } else {
+        loan_df2 <- loans %>%
+          filter(STATUS %in% c('funded','fundRaising'),
+                 COUNTRY_NAME == input$countryInput, SECTOR_NAME == input$sectorInput) %>%
+          na.omit() %>%
+          dplyr::group_by(ACTIVITY_NAME) %>%
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
+                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
+                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
+          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
+          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM) 
+      }
+    }
+    
+    # calculate reduction per year
+    # create matrix that is m x n where m is the number of activities and n is the number of years
+    reduction_data <- matrix(nrow = length(loan_df2$ACTIVITY_NAME),ncol = time_period + 1)
+    reduction_info <- vector('numeric', length = time_period)
+    
+    for (i in 1:length(loan_df2$ACTIVITY_NAME)) {
+      temp <- c()
+      activity_info <- loan_df2$ACTIVITY_NAME[i]
+      reduction_info <- c()
+      loan_info <- loan_df2$TOTAL_FUNDED_AMOUNT[i]
+      
+      for (j in 1:time_period){
+        if (j != 1) {
+          reduction_info[j] <- reduction_info[j-1] * (1 - reduction_rate)
+        } else {
+          reduction_info[1] <- loan_info
+        }
+      }
+      
+      temp <-  c(activity_info,reduction_info)
+      reduction_data[i,] <- temp
+      
+    }
+    
+    
+    # calculate npv
+    npv_data <- c()
+    
+    for (i in 2:ncol(reduction_data)){
+      temp <- sum(as.numeric(reduction_data[,i]))
+      npv_data[i-1] <- temp / ((1 + discount_rate) ^ i)
+    }
+    
+    # get total npv - sum of all npv
+    total_npv <- sum(npv_data)
+    
+    # investment value is  is average of total funds
+    investment_value <- mean(loan_df2$TOTAL_FUNDED_AMOUNT)
+    
+    # Social Impact value = total npv - investment value
+    social_impact_value <- total_npv - investment_value 
+    
+    # SROI = Social Impact Value/Investment value
+    sroi <- social_impact_value / investment_value
+    sroi <- as.character(round(sroi,2))
+    
+    valueBox(
+      paste0(sroi), "Social Return $ for $ ", icon = icon("thumbs-up", lib = "glyphicon"),
+      color = "green"
+    )
+    
+  })
+  
+  
+  
 }
 
 shinyApp(ui, server)
