@@ -19,14 +19,10 @@ for (package in packages) {
 # load data
 # ==============
 
-# Using a local cache
-cache_dir <- cache_filesystem("cache")
-fct <- function(){
-  data <- data.table::fread("loans.csv")
-}
-loans <- memoise(fct, cache = cache_dir)
+loans <- data.table::fread("loans.csv")
+saveRDS(loans, file = "loans.rds")
 
-
+loans2 <- readRDS("loans.rds")
 
 #=============
 # fund distribution
