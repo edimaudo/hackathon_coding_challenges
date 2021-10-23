@@ -230,7 +230,7 @@ server <- function(input, output,session) {
       geom_bar(stat = 'identity') +
       theme_minimal() + coord_flip() + 
       labs(x = 'Sectors', y = 'Weights') +
-      scale_y_continuous(labels = scales::percent) + guides(scale = "none")
+      scale_y_continuous(labels = scales::percent) + theme(legend.position="none")
     
     # add error handler since some countries don't yield any result
   })
@@ -334,7 +334,7 @@ server <- function(input, output,session) {
       geom_bar(stat = 'identity') + 
       theme_minimal() + coord_flip() + 
       labs(x = 'Sectors', y = 'Weights') +
-      scale_y_continuous(labels = scales::percent) + guides(scale = "none")
+      scale_y_continuous(labels = scales::percent) + theme(legend.position="none")
   
     # add error handler since some countries don't yield any result
     })
@@ -453,10 +453,10 @@ server <- function(input, output,session) {
     
     # SROI = Social Impact Value/Investment value
     sroi <- social_impact_value / investment_value
-    sroi <- as.character(sroi)
+    sroi <- as.character(round(sroi,2))
     
     valueBox(
-      paste0("Social Return $ for $ " , sroi), "SROI", icon = icon("list"),
+      paste0(sroi), "Social Return $ for $ ", icon = icon("thumbs-up", lib = "glyphicon"),
       color = "green"
     )
     
@@ -484,7 +484,7 @@ server <- function(input, output,session) {
     ggplot(sector_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
-      ylab("Count") + guides(scale = "none")
+      ylab("Count") + theme(legend.position="none")
   })
   
   #=============
@@ -509,7 +509,7 @@ server <- function(input, output,session) {
                                         fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal()  + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
-      ylab("Average No. of Lenders") + guides(scale = "none")
+      ylab("Average No. of Lenders") + theme(legend.position="none")
     
   })
   
@@ -534,12 +534,8 @@ server <- function(input, output,session) {
                                              y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) + 
       coord_flip() + xlab("Sectors") + 
-      ylab("Average Lender Term") + guides(scale = "none")
-    
-    
-    
-
-    
+      ylab("Average Lender Term") + theme(legend.position="none")
+  
   })
   
   #=============
@@ -563,7 +559,7 @@ server <- function(input, output,session) {
                                        y=AVG_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
-      ylab("AVERAGE FUNDED AMOUNT") + guides(scale = "none")
+      ylab("AVERAGE FUNDED AMOUNT") + theme(legend.position="none")
   })
   
   #=============
@@ -640,7 +636,7 @@ server <- function(input, output,session) {
                                     fill = SECTOR_NAME)) +
       geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
-      ylab("Average Loan disbursment time in days") + guides(scale = "none")
+      ylab("Average Loan disbursment time in days") + theme(legend.position="none")
   })
   
   #=============
@@ -671,7 +667,7 @@ server <- function(input, output,session) {
       scale_fill_gradient(col1, col2) +
       guides(fill=guide_legend(title="Average Funded Amount")) +
       labs(x = "Year", y = "Sectors") +
-      theme_minimal()
+      theme_minimal() + guides(fill=guide_legend(title="Average Funded Amount"))
   })
 }
 
