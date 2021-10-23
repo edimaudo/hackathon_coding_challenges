@@ -228,7 +228,10 @@ server <- function(input, output,session) {
       mutate(Sector = as.factor(Sector)) %>%
       ggplot(aes(x = fct_reorder(Sector,Weights), y = Weights, fill = Sector)) +
       geom_bar(stat = 'identity') +
-      theme_minimal() + coord_flip() + 
+      theme_minimal()  + theme(axis.text.x = element_text(size = 12),           
+                               axis.text.y = element_text(size = 12),           
+                               axis.title.x = element_text(size = 14, face = "bold"),           
+                               axis.title.y = element_text(size = 14, face = "bold")) + coord_flip() + 
       labs(x = 'Sectors', y = 'Weights') +
       scale_y_continuous(labels = scales::percent) + theme(legend.position="none")
     
@@ -332,7 +335,10 @@ server <- function(input, output,session) {
       mutate(Sector = as.factor(Sector)) %>%
       ggplot(aes(x = fct_reorder(Sector,Weights), y = Weights, fill = Sector)) +
       geom_bar(stat = 'identity') + 
-      theme_minimal() + coord_flip() + 
+      theme_minimal()  + theme(axis.text.x = element_text(size = 12), 
+                               axis.text.y = element_text(size = 12), 
+                               axis.title.x = element_text(size = 14, face = "bold"), 
+                               axis.title.y = element_text(size = 14, face = "bold")) + coord_flip() + 
       labs(x = 'Sectors', y = 'Weights') +
       scale_y_continuous(labels = scales::percent) + theme(legend.position="none")
   
@@ -358,7 +364,7 @@ server <- function(input, output,session) {
     }    
   
     ggplot(sector_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = SECTOR_NAME)) +
-      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+      geom_bar(stat = "identity") + theme_minimal()  + theme(axis.text.x = element_text(size = 12),           axis.text.y = element_text(size = 12),           axis.title.x = element_text(size = 14, face = "bold"),           axis.title.y = element_text(size = 14, face = "bold")) + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
       ylab("Count") + theme(legend.position="none")
   })
@@ -383,7 +389,7 @@ server <- function(input, output,session) {
     }
     ggplot(data = sectors_lender_df,aes(x=reorder(SECTOR_NAME,AVG_NUM_LENDERS), y=AVG_NUM_LENDERS, 
                                         fill = SECTOR_NAME)) +
-      geom_bar(stat = "identity") + theme_minimal()  + scale_y_continuous(labels = comma) +
+      geom_bar(stat = "identity") + theme_minimal()  + theme(axis.text.x = element_text(size = 12),           axis.text.y = element_text(size = 12),           axis.title.x = element_text(size = 14, face = "bold"),           axis.title.y = element_text(size = 14, face = "bold"))  + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
       ylab("Average No. of Lenders") + theme(legend.position="none")
     
@@ -408,7 +414,7 @@ server <- function(input, output,session) {
     }
     ggplot(data = sectors_lender_term_df,aes(x=reorder(SECTOR_NAME,AVG_NUM_LENDERS_TERM), 
                                              y=AVG_NUM_LENDERS_TERM, fill = SECTOR_NAME)) +
-      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) + 
+      geom_bar(stat = "identity") + theme_minimal()  + theme(axis.text.x = element_text(size = 12),           axis.text.y = element_text(size = 12),           axis.title.x = element_text(size = 14, face = "bold"),           axis.title.y = element_text(size = 14, face = "bold")) + scale_y_continuous(labels = comma) + 
       coord_flip() + xlab("Sectors") + 
       ylab("Average Lender Term") + theme(legend.position="none")
   
@@ -433,7 +439,7 @@ server <- function(input, output,session) {
     }
     ggplot(sector_funded_amount_df,aes(x=reorder(SECTOR_NAME, AVG_FUNDED_AMOUNT),
                                        y=AVG_FUNDED_AMOUNT, fill = SECTOR_NAME)) +
-      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+      geom_bar(stat = "identity") + theme_minimal()  + theme(axis.text.x = element_text(size = 12),           axis.text.y = element_text(size = 12),           axis.title.x = element_text(size = 14, face = "bold"),           axis.title.y = element_text(size = 14, face = "bold")) + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
       ylab("AVERAGE FUNDED AMOUNT") + theme(legend.position="none")
   })
@@ -457,7 +463,7 @@ server <- function(input, output,session) {
 
     }
     ggplot(distribution_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = DISTRIBUTION_MODEL)) +
-      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+      geom_bar(stat = "identity") + theme_minimal()  + theme(axis.text.x = element_text(size = 12),           axis.text.y = element_text(size = 12),           axis.title.x = element_text(size = 14, face = "bold"),           axis.title.y = element_text(size = 14, face = "bold")) + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
       ylab("Count") + guides(fill=guide_legend(title="Distribution Model"))
   })
@@ -481,7 +487,7 @@ server <- function(input, output,session) {
 
     }
     ggplot(repayment_df,aes(x=reorder(SECTOR_NAME, count),y=count, fill = REPAYMENT_INTERVAL)) +
-      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+      geom_bar(stat = "identity") + theme_minimal()  + theme(axis.text.x = element_text(size = 12),           axis.text.y = element_text(size = 12),           axis.title.x = element_text(size = 14, face = "bold"),           axis.title.y = element_text(size = 14, face = "bold")) + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
       ylab("Count") + guides(fill=guide_legend(title="Repayment Interval"))
   })
@@ -510,7 +516,7 @@ server <- function(input, output,session) {
     ggplot(sectors_loan_time_df,aes(x=reorder(SECTOR_NAME, AVG_POSTED_DISBURSED_TIME),
                                     y=AVG_POSTED_DISBURSED_TIME, 
                                     fill = SECTOR_NAME)) +
-      geom_bar(stat = "identity") + theme_minimal() + scale_y_continuous(labels = comma) +
+      geom_bar(stat = "identity") + theme_minimal()  + theme(axis.text.x = element_text(size = 12),           axis.text.y = element_text(size = 12),           axis.title.x = element_text(size = 14, face = "bold"),           axis.title.y = element_text(size = 14, face = "bold")) + scale_y_continuous(labels = comma) +
       coord_flip() + xlab("Sectors") + 
       ylab("Average Loan disbursment time in days") + theme(legend.position="none")
   })
@@ -545,7 +551,9 @@ server <- function(input, output,session) {
         scale_fill_gradient(col1, col2) +
         guides(fill=guide_legend(title="Average Funded Amount")) +
         labs(x = "Year", y = "Sectors") +
-        theme_minimal() + guides(fill=guide_legend(title="Average Funded Amount"))
+        theme_minimal()  + theme(axis.text.x = element_text(size = 12),           axis.text.y = element_text(size = 12),           axis.title.x = element_text(size = 14, face = "bold"),           axis.title.y = element_text(size = 14, face = "bold")) + guides(fill=guide_legend(title="Average Funded Amount")) + 
+        theme(axis.text.x = element_text(face = "bold", size = 12),
+              axis.text.y = element_text(face = "bold", size = 12))
     # }
 
   })
