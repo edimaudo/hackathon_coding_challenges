@@ -2,7 +2,7 @@ rm(list = ls())
 
 #packages 
 packages <- c('ggplot2', 'corrplot','tidyverse','shiny','shinydashboard',
-              'SnowballC','wordcloud')
+              'SnowballC','wordcloud', 'RColorBrewer')
 #load packages
 for (package in packages) {
     if (!require(package, character.only=T, quietly=T)) {
