@@ -5,7 +5,7 @@ rm(list = ls()) # Clear environment
 #=============
 # Package Information
 #=============
-packages <- c('ggplot2', 'corrplot','tidyverse','doParallel','memoise',
+packages <- c('ggplot2', 'corrplot','tidyverse','doParallel','memoise','qs',
               'shiny','shinydashboard','scales','dplyr','mlbench','caTools',
               "dummies",'forecast','TTR','xts','lubridate','data.table','timetk')
 for (package in packages) {
@@ -17,20 +17,30 @@ for (package in packages) {
 #=============
 # Load data
 #=============
-loans <- readRDS("loans.rds")
+loans <-  qread("loans.qs") #read.csv("loans2.csv") 
 # Update loan data
+
 loans$LENDER_TERM[is.na(loans$LENDER_TERM)] <- 0
-loans$POSTED_DISBURSED_TIME = as.Date(loans$DISBURSE_TIME) - as.Date(loans$POSTED_TIME)
+loans$POSTED_DISBURSED_TIME <- as.Date(loans$DISBURSE_TIME) - as.Date(loans$POSTED_TIME)
 loans$POSTED_DISBURSED_TIME[is.na(loans$POSTED_DISBURSED_TIME )] <- 0
-
-# Portfolio data
-funds_df <- loans %>%
-  filter(STATUS %in% c('funded','fundRaising')) %>%
-  select(FUNDED_AMOUNT, SECTOR_NAME, COUNTRY_NAME,DISBURSE_TIME) %>%
-  na.omit()
-funds_df$DISBURSE_DATE <- as.Date(funds_df$DISBURSE_TIME)
-
+loans$DISBURSE_TIME <- as.Date(loans$DISBURSE_TIME)
 column_info <- c(sort(unique(loans$SECTOR_NAME))) # sector information
+
+# Fund distribution
+funds_df2 <- loans %>%
+  filter(STATUS %in% c('funded','fundRaising')) %>%
+  group_by(SECTOR_NAME, DISBURSE_TIME) %>%
+  dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
+  na.omit() %>%
+  select(SECTOR_NAME, DISBURSE_TIME,TOTAL_FUNDED_AMOUNT) 
+
+# SROI
+loan_df2 <- loans %>%
+  filter(STATUS %in% c('funded','fundRaising')) %>%
+  na.omit() %>%
+  dplyr::group_by(ACTIVITY_NAME) %>%
+  dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
+  select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT) 
 #=============
 # UI drop-down
 #=============
@@ -85,17 +95,17 @@ ui <- dashboardPage(
     tabItem(tabName = "fund",
             sidebarLayout(
               sidebarPanel(
-                selectInput("countryInput","Country",choices = country,selected = "All"),
+                selectInput("countryFundInput","Country",choices = country,selected = "All"), 
                 submitButton("Submit")
               ),
               mainPanel(
                 h2("Portfolio Breakdown", style = "text-align: center;"),
                 fluidRow(
-                  h3("Efficient Portfolio", style = "text-align: center;"),
-                  plotOutput("efficientPlot"),
-                  br(),
                   h3("Minimum Variance Portfolio", style = "text-align: center;"),
                   plotOutput("minvarPlot"),
+                  br(),
+                  h3("Efficient Portfolio", style = "text-align: center;"),
+                  plotOutput("efficientPlot"),
                 )
               )
             )
@@ -104,22 +114,21 @@ ui <- dashboardPage(
     tabItem(tabName = "loan",
             sidebarLayout(
               sidebarPanel(
-                selectInput("countryInput","Country",choices = country,selected = "All"),
-                selectInput("sectorInput","Sector",choices = sector,selected = "All"),
-                sliderInput("yearInput", "Year",min = 1,max = 15,value = 5, step = 1),
-                sliderInput("reductionInput", "Reduction Rate (%)",min = 1,max = 100,value = 10, step = 10),
-                sliderInput("discountInput", "Discount Rate (%)",min = 1,max = 100,value = 5, step = 10),
+                selectInput("sectorLoanInput","Sector",choices = sector,selected = "All"),
+                selectInput("countryLoanInput","Country",choices = country,selected = "All"),
+                sliderInput("yearInput", "Year",min = 0,max = 15,value = 5, step = 1),
+                sliderInput("reductionInput", "Reduction Rate (%)",min = 0,max = 100,value = 10, step = 10),
+                sliderInput("discountInput", "Discount Rate (%)",min = 0,max = 100,value = 5, step = 10),
                 submitButton("Submit")
               ),
               mainPanel(
-                h2("Loan Impact", style = "text-align: center;"),
+                h2("SROI Model", style = "text-align: center;"),
                 fluidRow(
-                  h3("SROI Model", style = "text-align: center;"),
                   valueBoxOutput("countryBox"),
                   valueBoxOutput("sectorBox"),
-                  valueBoxOutput("sroiBox"),
-            )
-          )
+                  valueBoxOutput("sroiBox")
+                )
+             )
         )
     )
   )
@@ -129,230 +138,214 @@ ui <- dashboardPage(
 #=============
 # Server logic 
 #=============
-server <- function(input, output,session) {
+server <- function(input, output) {
   
-  #---------------
+  #------------------------------
   # Fund Distribution
-  #---------------
+  #------------------------------
   
   #=============
   # Minimum Variance Portfolio
   #=============
   output$minvarPlot <- renderPlot({
     # filter by country information
-    if (input$countryInput != "All"){
-      funds_df2 <- funds_df %>% 
-        filter(COUNTRY_NAME == input$countryInput) %>%
-        group_by(SECTOR_NAME, DISBURSE_DATE) %>%
+    if (input$countryFundInput != "All"){
+      funds_df2 <- loans %>% 
+        filter(STATUS %in% c('funded','fundRaising'),COUNTRY_NAME == input$countryFundInput) %>%
+        group_by(SECTOR_NAME, DISBURSE_TIME) %>%
         dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
-        select(SECTOR_NAME, DISBURSE_DATE,TOTAL_FUNDED_AMOUNT)
-    } else {
-      funds_df2 <- funds_df %>% 
-        group_by(SECTOR_NAME, DISBURSE_DATE) %>%
-        dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
-        select(SECTOR_NAME, DISBURSE_DATE,TOTAL_FUNDED_AMOUNT)    
+        na.omit() %>%
+        select(SECTOR_NAME, DISBURSE_TIME,TOTAL_FUNDED_AMOUNT) 
     }
     
-    # create time series
-    funds_df_xts <- funds_df2 %>%
-      spread(SECTOR_NAME, value = TOTAL_FUNDED_AMOUNT) %>%
-      tk_xts()
-    funds_df_xts[is.na(funds_df_xts)] <- 0
+    column_info <- c(sort(unique(funds_df2$SECTOR_NAME)))
     
-    # remove dataframe
-    funds_df <- NULL
-    funds_df2 <- NULL
-    
-    # mean daily loans
-    mean_ret <- colMeans(funds_df_xts)
-    
-    # covariance matrix with annualization
-    cov_mat <- cov(funds_df_xts) * 252
-    
-    #simulation of 10000 portfolios
-    num_port <- 10000
-    # Creating a matrix to store the weights
-    all_wts <- matrix(nrow = num_port,ncol = length(column_info))
-    # Portfolio returns
-    port_returns <- vector('numeric', length = num_port)
-    # Portfolio Standard deviation
-    port_risk <- vector('numeric', length = num_port)
-    # Portfolio Sharpe Ratio
-    sharpe_ratio <- vector('numeric', length = num_port)
-    
-    set.seed(1)
-    # simulation
-    for (i in seq_along(port_returns)) {
-      
-      wts <- runif(length(column_info))
-      wts <- wts/sum(wts)
-      
-      # Storing weight in the matrix
-      all_wts[i,] <- wts
-      
+      # create time series
+      funds_df_xts <- funds_df2 %>%
+        spread(SECTOR_NAME, value = TOTAL_FUNDED_AMOUNT) %>%
+        tk_xts()
+      funds_df_xts[is.na(funds_df_xts)] <- 0
+
+      # mean daily loans
+      mean_ret <- colMeans(funds_df_xts)
+
+      # covariance matrix with annualization
+      cov_mat <- cov(funds_df_xts) * 252
+
+      #simulation of 10000 portfolios
+      num_port <- 10000
+      # Creating a matrix to store the weights
+      all_wts <- matrix(nrow = num_port,ncol = length(column_info))
       # Portfolio returns
-      port_ret <- sum(wts * mean_ret)
-      port_ret <- ((port_ret + 1)^252) - 1
-      
-      # Storing Portfolio Returns values
-      port_returns[i] <- port_ret
-      
-      # Creating and storing portfolio risk
-      port_sd <- sqrt(t(wts) %*% (cov_mat  %*% wts))
-      port_risk[i] <- port_sd
-      
-      # Creating and storing Portfolio Sharpe Ratios
-      # Assuming 0% Risk free rate
-      sr <- port_ret/port_sd
-      sharpe_ratio[i] <- sr
-      
-    }
+      port_returns <- vector('numeric', length = num_port)
+      # Portfolio Standard deviation
+      port_risk <- vector('numeric', length = num_port)
+      # Portfolio Sharpe Ratio
+      sharpe_ratio <- vector('numeric', length = num_port)
+
+      set.seed(1)
+      # simulation
+      for (i in seq_along(port_returns)) {
+
+        wts <- runif(length(column_info))
+        wts <- wts/sum(wts)
+
+        # Storing weight in the matrix
+        all_wts[i,] <- wts
+
+        # Portfolio returns
+        port_ret <- sum(wts * mean_ret)
+        port_ret <- ((port_ret + 1)^252) - 1
+
+        # Storing Portfolio Returns values
+        port_returns[i] <- port_ret
+
+        # Creating and storing portfolio risk
+        port_sd <- sqrt(t(wts) %*% (cov_mat  %*% wts))
+        port_risk[i] <- port_sd
+
+        # Creating and storing Portfolio Sharpe Ratios
+        # Assuming 0% Risk free rate
+        sr <- port_ret/port_sd
+        sharpe_ratio[i] <- sr
+
+      }
+
+      # Storing the values in the table
+      portfolio_values <- tibble(Return = port_returns,
+                                 Risk = port_risk,
+                                 SharpeRatio = sharpe_ratio)
+
+      # Converting matrix to a tibble and changing column names
+      all_wts <- tk_tbl(all_wts)
+      column_info <- unique(column_info)
+      colnames(all_wts) <- column_info
+
+      # Combing all the values together
+      portfolio_values <- tk_tbl(cbind(all_wts, portfolio_values))
+
+      # - The minimum variance portfolio
+      min_var <- portfolio_values[which.min(portfolio_values$Risk),]
+      length_info <- ncol(min_var)-3
+
+      min_var %>%
+        gather(colnames(min_var)[1:length_info], key = Sector,
+               value = Weights) %>%
+        mutate(Sector = as.factor(Sector)) %>%
+        ggplot(aes(x = fct_reorder(Sector,Weights), y = Weights, fill = Sector)) +
+        geom_bar(stat = 'identity') +
+        theme_minimal()  + theme(axis.text.x = element_text(size = 12),
+                                 axis.text.y = element_text(size = 12),
+                                 axis.title.x = element_text(size = 14, face = "bold"),
+                                 axis.title.y = element_text(size = 14, face = "bold")) + coord_flip() +
+        labs(x = 'Sectors', y = 'Weights') +
+        scale_y_continuous(labels = scales::percent) + theme(legend.position="none")
     
-    # Storing the values in the table
-    portfolio_values <- tibble(Return = port_returns,
-                               Risk = port_risk,
-                               SharpeRatio = sharpe_ratio)
-    
-    # Converting matrix to a tibble and changing column names
-    all_wts <- tk_tbl(all_wts)
-    column_info <- unique(column_info)
-    colnames(all_wts) <- column_info
-    
-    # Combing all the values together
-    portfolio_values <- tk_tbl(cbind(all_wts, portfolio_values))
-    
-    # Next lets look at the portfolios that matter the most.
-    # - The minimum variance portfolio
-    # - The tangency portfolio (the portfolio with highest sharpe ratio)
-    min_var <- portfolio_values[which.min(portfolio_values$Risk),]
-    #max_sr <- portfolio_values[which.max(portfolio_values$SharpeRatio),]   
-    
-    min_var %>%
-      gather(Agriculture:Wholesale, key = Sector,
-             value = Weights) %>%
-      mutate(Sector = as.factor(Sector)) %>%
-      ggplot(aes(x = fct_reorder(Sector,Weights), y = Weights, fill = Sector)) +
-      geom_bar(stat = 'identity') +
-      theme_minimal()  + theme(axis.text.x = element_text(size = 12),           
-                               axis.text.y = element_text(size = 12),           
-                               axis.title.x = element_text(size = 14, face = "bold"),           
-                               axis.title.y = element_text(size = 14, face = "bold")) + coord_flip() + 
-      labs(x = 'Sectors', y = 'Weights') +
-      scale_y_continuous(labels = scales::percent) + theme(legend.position="none")
-    
-    # add error handler since some countries don't yield any result
   })
   #=============
   # Efficient Portfolio
   #=============
   output$efficientPlot <- renderPlot({
     # filter by country information
-    if (input$countryInput != "All"){
-      funds_df2 <- funds_df %>% 
-        filter(COUNTRY_NAME == input$countryInput) %>%
-        group_by(SECTOR_NAME, DISBURSE_DATE) %>%
+    if (input$countryFundInput != "All"){
+      funds_df2 <- loans %>% 
+        filter(STATUS %in% c('funded','fundRaising'),COUNTRY_NAME == input$countryFundInput) %>%
+        group_by(SECTOR_NAME, DISBURSE_TIME) %>%
         dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
-        select(SECTOR_NAME, DISBURSE_DATE,TOTAL_FUNDED_AMOUNT)
-    } else {
-      funds_df2 <- funds_df %>% 
-        group_by(SECTOR_NAME, DISBURSE_DATE) %>%
-        dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
-        select(SECTOR_NAME, DISBURSE_DATE,TOTAL_FUNDED_AMOUNT)    
+        na.omit() %>%
+        select(SECTOR_NAME, DISBURSE_TIME,TOTAL_FUNDED_AMOUNT) 
     }
+    column_info <- c(sort(unique(funds_df2$SECTOR_NAME)))
     
-    # create time series
-    funds_df_xts <- funds_df2 %>%
-      spread(SECTOR_NAME, value = TOTAL_FUNDED_AMOUNT) %>%
-      tk_xts()
-    funds_df_xts[is.na(funds_df_xts)] <- 0
-    
-    # remove dataframe
-    funds_df <- NULL
-    funds_df2 <- NULL
-    
-    # mean daily loans
-    mean_ret <- colMeans(funds_df_xts)
-    
-    # covariance matrix with annualization
-    cov_mat <- cov(funds_df_xts) * 252
-    
-    #simulation of 10000 portfolios
-    num_port <- 10000
-    # Creating a matrix to store the weights
-    all_wts <- matrix(nrow = num_port,ncol = length(column_info))
-    # Portfolio returns
-    port_returns <- vector('numeric', length = num_port)
-    # Portfolio Standard deviation
-    port_risk <- vector('numeric', length = num_port)
-    # Portfolio Sharpe Ratio
-    sharpe_ratio <- vector('numeric', length = num_port)
-    
-    set.seed(1)
-    # simulation
-    for (i in seq_along(port_returns)) {
+   # if (!dim(funds_df2)[1] == 0) 
+      # create time series
+      funds_df_xts <- funds_df2 %>%
+        spread(SECTOR_NAME, value = TOTAL_FUNDED_AMOUNT) %>%
+        tk_xts()
+      funds_df_xts[is.na(funds_df_xts)] <- 0
       
-      wts <- runif(length(column_info))
-      wts <- wts/sum(wts)
+      # mean daily loans
+      mean_ret <- colMeans(funds_df_xts)
       
-      # Storing weight in the matrix
-      all_wts[i,] <- wts
+      # covariance matrix with annualization
+      cov_mat <- cov(funds_df_xts) * 252
       
+      #simulation of 10000 portfolios
+      num_port <- 10000
+      # Creating a matrix to store the weights
+      all_wts <- matrix(nrow = num_port,ncol = length(column_info))
       # Portfolio returns
-      port_ret <- sum(wts * mean_ret)
-      port_ret <- ((port_ret + 1)^252) - 1
+      port_returns <- vector('numeric', length = num_port)
+      # Portfolio Standard deviation
+      port_risk <- vector('numeric', length = num_port)
+      # Portfolio Sharpe Ratio
+      sharpe_ratio <- vector('numeric', length = num_port)
       
-      # Storing Portfolio Returns values
-      port_returns[i] <- port_ret
+      set.seed(1)
+      # simulation
+      for (i in seq_along(port_returns)) {
+        
+        wts <- runif(length(column_info))
+        wts <- wts/sum(wts)
+        
+        # Storing weight in the matrix
+        all_wts[i,] <- wts
+        
+        # Portfolio returns
+        port_ret <- sum(wts * mean_ret)
+        port_ret <- ((port_ret + 1)^252) - 1
+        
+        # Storing Portfolio Returns values
+        port_returns[i] <- port_ret
+        
+        # Creating and storing portfolio risk
+        port_sd <- sqrt(t(wts) %*% (cov_mat  %*% wts))
+        port_risk[i] <- port_sd
+        
+        # Creating and storing Portfolio Sharpe Ratios
+        # Assuming 0% Risk free rate
+        sr <- port_ret/port_sd
+        sharpe_ratio[i] <- sr
+        
+      }
       
-      # Creating and storing portfolio risk
-      port_sd <- sqrt(t(wts) %*% (cov_mat  %*% wts))
-      port_risk[i] <- port_sd
+      # Storing the values in the table
+      portfolio_values <- tibble(Return = port_returns,
+                                 Risk = port_risk,
+                                 SharpeRatio = sharpe_ratio)
       
-      # Creating and storing Portfolio Sharpe Ratios
-      # Assuming 0% Risk free rate
-      sr <- port_ret/port_sd
-      sharpe_ratio[i] <- sr
+      # Converting matrix to a tibble and changing column names
+      all_wts <- tk_tbl(all_wts)
+      column_info <- unique(column_info)
+      colnames(all_wts) <- column_info
       
-    }
-    
-    # Storing the values in the table
-    portfolio_values <- tibble(Return = port_returns,
-                               Risk = port_risk,
-                               SharpeRatio = sharpe_ratio)
-    
-    # Converting matrix to a tibble and changing column names
-    all_wts <- tk_tbl(all_wts)
-    column_info <- unique(column_info)
-    colnames(all_wts) <- column_info
-    
-    # Combing all the values together
-    portfolio_values <- tk_tbl(cbind(all_wts, portfolio_values))
-    
-    # Next lets look at the portfolios that matter the most.
-    # - The minimum variance portfolio
-    # - The tangency portfolio (the portfolio with highest sharpe ratio)
-    #min_var <- portfolio_values[which.min(portfolio_values$Risk),]
-    max_sr <- portfolio_values[which.max(portfolio_values$SharpeRatio),]   
-    
-    max_sr %>%
-      gather(column_info, key = Sector,
-             value = Weights) %>%
-      mutate(Sector = as.factor(Sector)) %>%
-      ggplot(aes(x = fct_reorder(Sector,Weights), y = Weights, fill = Sector)) +
-      geom_bar(stat = 'identity') + 
-      theme_minimal()  + theme(axis.text.x = element_text(size = 12), 
-                               axis.text.y = element_text(size = 12), 
-                               axis.title.x = element_text(size = 14, face = "bold"), 
-                               axis.title.y = element_text(size = 14, face = "bold")) + coord_flip() + 
-      labs(x = 'Sectors', y = 'Weights') +
-      scale_y_continuous(labels = scales::percent) + theme(legend.position="none")
-
+      # Combing all the values together
+      portfolio_values <- tk_tbl(cbind(all_wts, portfolio_values))
+      
+      # Next lets look at the portfolios that matter the most.
+      # - The tangency portfolio (the portfolio with highest sharpe ratio)
+      max_sr <- portfolio_values[which.max(portfolio_values$SharpeRatio),]   
+      length_info <- ncol(max_sr)-3
+      
+      max_sr %>%
+        gather(colnames(max_sr)[1:length_info], key = Sector,
+               value = Weights) %>%
+        mutate(Sector = as.factor(Sector)) %>%
+        ggplot(aes(x = fct_reorder(Sector,Weights), y = Weights, fill = Sector)) +
+        geom_bar(stat = 'identity') + 
+        theme_minimal()  + theme(axis.text.x = element_text(size = 12), 
+                                 axis.text.y = element_text(size = 12), 
+                                 axis.title.x = element_text(size = 14, face = "bold"), 
+                                 axis.title.y = element_text(size = 14, face = "bold")) + coord_flip() + 
+        labs(x = 'Sectors', y = 'Weights') +
+        scale_y_continuous(labels = scales::percent) + theme(legend.position="none")    
+      
     })
   
   
-  #---------------
+  #------------------------------
   # Sector Insights
-  #---------------
+  #------------------------------
   
   #=============
   # SECTOR COUNT
@@ -582,36 +575,35 @@ server <- function(input, output,session) {
     }
     funded_loan_time_df <- na.omit(funded_loan_time_df)
     
-    # if(!is.null(funded_loan_time_df)){
       ggplot(funded_loan_time_df, aes(DISBURSED_TIME, SECTOR_NAME, fill= AVG_FUNDED_AMOUNT)) +
         geom_tile() +
-        scale_fill_gradient(col1, col2) +
+        scale_fill_gradient(low = col1, high = col2) +
         guides(fill=guide_legend(title="Average Funded Amount")) +
         labs(x = "Year", y = "Sectors") +
         theme_minimal()  + theme(axis.text.x = element_text(size = 12),           
                                  axis.text.y = element_text(size = 12),           
                                  axis.title.x = element_text(size = 14, face = "bold"),           
-                                 axis.title.y = element_text(size = 14, face = "bold")) + 
-        guides(fill=guide_legend(title="Average Funded Amount")) + 
-        theme(axis.text.x = element_text(face = "bold", size = 12),
-              axis.text.y = element_text(face = "bold", size = 12))
-    # }
+                                 axis.title.y = element_text(size = 14, face = "bold"))
+    
 
   })
-  #=============
+  #------------------------------
   # SROI model
-  #=============
-  output$countryBox <- renderValueBox ({
+  #------------------------------
+
+  
+  output$sectorBox <- renderValueBox ({ 
+    sector_info <- input$sectorLoanInput
     valueBox(
-      paste0(input$countryInput), "Country Info", icon = icon("list"),
+      sector_info, "Sector", icon = icon("list"),
       color = "purple"
     )
   })
   
-  output$sectorBox <- renderValueBox ({ 
+  output$countryBox <- shinydashboard::renderValueBox ({ 
+    country_info <- input$countryLoanInput
     valueBox(
-      paste0(input$sectorInput), "Sector Info", icon = icon("list"),
-      color = "purple"
+      country_info, "Country", icon = icon("list"),color = "blue"
     )
   })
   
@@ -621,108 +613,76 @@ server <- function(input, output,session) {
     reduction_rate <- as.numeric(input$reductionInput)/100
     discount_rate <- as.numeric(input$discountInput)/100
     
-    if (input$countryInput == "All"){ 
-      if (input$sectorInput == "All"){
+    if ((input$countryLoanInput == "All")  & (input$sectorLoanInput != "All") ){ 
         loan_df2 <- loans %>%
-          filter(STATUS %in% c('funded','fundRaising')) %>%
+          filter(STATUS %in% c('funded','fundRaising'), SECTOR_NAME == input$sectorLoanInput) %>%
           na.omit() %>%
           dplyr::group_by(ACTIVITY_NAME) %>%
-          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
-                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
-                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
-          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
-          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)       
-      } else {
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
+          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT) 
+    } else if ((input$countryLoanInput != "All") & (input$sectorLoanInput == "All")) {
         loan_df2 <- loans %>%
-          filter(STATUS %in% c('funded','fundRaising'), SECTOR_NAME == input$sectorInput) %>%
+          filter(STATUS %in% c('funded','fundRaising'), COUNTRY_NAME == input$countryLoanInput) %>%
           na.omit() %>%
           dplyr::group_by(ACTIVITY_NAME) %>%
-          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
-                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
-                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
-          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
-          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM) 
-      }
-    } else {
-      if (input$sectorInput == "All"){
-        loan_df2 <- loans %>%
-          filter(STATUS %in% c('funded','fundRaising'), COUNTRY_NAME == input$countryInput) %>%
-          na.omit() %>%
-          dplyr::group_by(ACTIVITY_NAME) %>%
-          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
-                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
-                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
-          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
-          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM)       
-      } else {
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
+        select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT)      
+      } else if ((input$countryLoanInput != "All")  & (input$sectorLoanInput != "All")) {
         loan_df2 <- loans %>%
           filter(STATUS %in% c('funded','fundRaising'),
-                 COUNTRY_NAME == input$countryInput, SECTOR_NAME == input$sectorInput) %>%
+                 COUNTRY_NAME == input$countryLoanInput, SECTOR_NAME == input$sectorLoanInput) %>%
           na.omit() %>%
           dplyr::group_by(ACTIVITY_NAME) %>%
-          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT),
-                           TOTAL_NUMBER_LENDERS = sum(NUM_LENDERS_TOTAL),
-                           TOTAL_LENDER_TERM = sum(LENDER_TERM)) %>%
-          dplyr::mutate(TOTAL_LENDER_TERM = TOTAL_LENDER_TERM/12) %>%
-          select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT,TOTAL_NUMBER_LENDERS, TOTAL_LENDER_TERM) 
+          dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
+        select(ACTIVITY_NAME,TOTAL_FUNDED_AMOUNT) 
       }
-    }
     
-    # calculate reduction per year
-    # create matrix that is m x n where m is the number of activities and n is the number of years
-    reduction_data <- matrix(nrow = length(loan_df2$ACTIVITY_NAME),ncol = time_period + 1)
-    reduction_info <- vector('numeric', length = time_period)
     
-    for (i in 1:length(loan_df2$ACTIVITY_NAME)) {
-      temp <- c()
-      activity_info <- loan_df2$ACTIVITY_NAME[i]
-      reduction_info <- c()
-      loan_info <- loan_df2$TOTAL_FUNDED_AMOUNT[i]
-      
-      for (j in 1:time_period){
-        if (j != 1) {
-          reduction_info[j] <- reduction_info[j-1] * (1 - reduction_rate)
-        } else {
-          reduction_info[1] <- loan_info
+   # if (dim(loan_df2)[1] == 0){
+      sroi <- 0
+      sroi <- as.character(sroi)  
+  #  } else {
+      # calculate reduction per year
+      reduction_data <- matrix(nrow = length(loan_df2$ACTIVITY_NAME),ncol = time_period + 1)
+      reduction_info <- vector('numeric', length = time_period)
+      for (i in 1:length(loan_df2$ACTIVITY_NAME)) {
+        temp <- c()
+        activity_info <- loan_df2$ACTIVITY_NAME[i]
+        reduction_info <- c()
+        loan_info <- loan_df2$TOTAL_FUNDED_AMOUNT[i]
+        
+        for (j in 1:time_period){
+          if (j != 1) {
+            reduction_info[j] <- reduction_info[j-1] * (1 - reduction_rate)
+          } else {
+            reduction_info[1] <- loan_info
+          }
         }
+        temp <-  c(activity_info,reduction_info)
+        reduction_data[i,] <- temp
       }
       
-      temp <-  c(activity_info,reduction_info)
-      reduction_data[i,] <- temp
-      
-    }
-    
-    
-    # calculate npv
-    npv_data <- c()
-    
-    for (i in 2:ncol(reduction_data)){
-      temp <- sum(as.numeric(reduction_data[,i]))
-      npv_data[i-1] <- temp / ((1 + discount_rate) ^ i)
-    }
-    
-    # get total npv - sum of all npv
-    total_npv <- sum(npv_data)
-    
-    # investment value is  is average of total funds
-    investment_value <- mean(loan_df2$TOTAL_FUNDED_AMOUNT)
-    
-    # Social Impact value = total npv - investment value
-    social_impact_value <- total_npv - investment_value 
-    
-    # SROI = Social Impact Value/Investment value
-    sroi <- social_impact_value / investment_value
-    sroi <- as.character(round(sroi,2))
-    
+      # calculate npv
+      npv_data <- c()
+      for (i in 2:ncol(reduction_data)){
+        temp <- sum(as.numeric(reduction_data[,i]))
+        npv_data[i-1] <- temp / ((1 + discount_rate) ^ i)
+      }
+      # get total npv - sum of all npv
+      total_npv <- sum(npv_data)
+      # investment value is  is average of total funds
+      investment_value <- mean(loan_df2$TOTAL_FUNDED_AMOUNT)
+      # Social Impact value = total npv - investment value
+      social_impact_value <- total_npv - investment_value 
+      # SROI = Social Impact Value/Investment value
+      sroi <- social_impact_value / investment_value
+      sroi <- as.character(round(sroi,2))   
+   # }
     valueBox(
       paste0(sroi), "Social Return $ for $ ", icon = icon("thumbs-up", lib = "glyphicon"),
       color = "green"
     )
-    
   })
-  
-  
-  
 }
 
 shinyApp(ui, server)
