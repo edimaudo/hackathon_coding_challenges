@@ -1,6 +1,13 @@
 # Modzy AI Hackathon
 ***
 
+### Requirements
+ Build an AI-powered project (application, solution, integration, or library) using Modzy that creatively delivers AI-generated insights to end users or enhances how developers interact with Modzy. We are looking for your creativity. What can you build that delivers AI-generated insights to end users or enhances how developers interact with Modzy.
+
+### Submission
+- Provide access to the code repository for your project by making it public or by sharing access with testing@devpost.com and info@modzy.com OR by providing a link to a deployed demo of the project.
+- Include a video (no more than 3 minutes) where you explain and demonstrate your project in action. Videos must be uploaded to YouTube, Vimeo, or Facebook Video and made public.
+- Your complete submission form on Devpost before the final deadline.
 
 ### JUDGING CRITERIA
 
