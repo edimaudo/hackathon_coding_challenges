@@ -22,7 +22,11 @@ df= load_data()
 #    st.write(data)
 
 #Dropdowns values
-program_area_info = df['Program_area_update'].unique().tolist()
+program_area_info = df['Program_area_update'].unique()
+program_area_info = program_area_info.astype('str')
+program_area_info = program_area_info.tolist()
+program_area_info.sort()
+
 
 #geographical area served
 #program area
