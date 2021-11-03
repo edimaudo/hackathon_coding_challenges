@@ -5,7 +5,6 @@ import plotly.express as px
 
 st.title('OTF Insights')
 
-
 DATA_URL = "otf.xlsx"
 
 @st.cache
@@ -14,13 +13,41 @@ def load_data():
 	return data
 
 # Load data
-data_load_state = st.text('Loading data...')
+#data_load_state = st.text('Loading data...')
 df= load_data()
 #data_load_state.text("Done!")
 
 #if st.checkbox('Show raw data'):
 #    st.subheader('Raw data')
 #    st.write(data)
+
+#Dropdowns values
+program_area_info = df['Program_area_update'].unique().tolist()
+
+#geographical area served
+#program area
+#age group
+#budget fund
+
+# Add a selectbox to the sidebar:
+add_selectbox = st.sidebar.selectbox(
+    'Program Area',
+    program_area_info
+)
+add_selectbox = st.sidebar.selectbox(
+    'Age Group',
+    program_area_info
+)
+
+
+
+left_column, right_column = st.beta_columns(2)
+# You can use a column just like st.sidebar:
+left_column.button('Press me!')
+
+
+
+
 
 ## Total grants by year
 st.subheader('Total grants by year')
