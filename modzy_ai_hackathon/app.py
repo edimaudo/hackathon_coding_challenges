@@ -5,7 +5,7 @@ import plotly.express as px
 
 st.title('OTF Insights')
 
-## /Users/edima/Documents/Coding/hackathon-coding-challenges/modzy_ai_hackathon/
+
 DATA_URL = "otf.xlsx"
 
 @st.cache
@@ -16,7 +16,7 @@ def load_data():
 # Load data
 data_load_state = st.text('Loading data...')
 df= load_data()
-data_load_state.text("Done!")
+#data_load_state.text("Done!")
 
 #if st.checkbox('Show raw data'):
 #    st.subheader('Raw data')
@@ -78,6 +78,7 @@ st.plotly_chart(fig)
 
 
 ## Total grants by year by program area
+st.subheader('Total grants by Program area and year')
 df_total_grants = df[['Amount_awarded','Program_area_update','Fiscal_year_update']]
 df_total_grants_agg = df_total_grants.groupby(['Program_area_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
                                                                       ('Amount_awarded', 'sum')).reset_index()
@@ -86,10 +87,11 @@ df_total_grants_agg.columns = ['Program_area','Fiscal_year', 'Total_Amount_Award
 
 fig = px.bar(df_total_grants_agg, x="Fiscal_year", y="Total_Amount_Awarded", color='Program_area',
              height=400)
-fig.show()
+st.plotly_chart(fig)
 
 
 ## Total grants by year by age group
+st.subheader('Total grants by Age group and year')
 df_total_grants = df[['Amount_awarded','Age_group_update','Fiscal_year_update']]
 df_total_grants_agg = df_total_grants.groupby(['Age_group_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
                                                                       ('Amount_awarded', 'sum')).reset_index()
@@ -98,10 +100,11 @@ df_total_grants_agg.columns = ['Age_group','Fiscal_year', 'Total_Amount_Awarded'
 
 fig = px.bar(df_total_grants_agg, x="Fiscal_year", y="Total_Amount_Awarded", color='Age_group',
              height=400)
-fig.show()
+st.plotly_chart(fig)
 
 
 # Total grants by Budget fund by year
+st.subheader('Total grants by Budget fund and year')
 df_total_grants = df[['Amount_awarded','Budget_fund_update','Fiscal_year_update']]
 df_total_grants_agg = df_total_grants.groupby(['Budget_fund_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
                                                                       ('Amount_awarded', 'sum')).reset_index()
@@ -110,6 +113,6 @@ df_total_grants_agg.columns = ['Budget_fund','Fiscal_year', 'Total_Amount_Awarde
 
 fig = px.bar(df_total_grants_agg, x="Fiscal_year", y="Total_Amount_Awarded", color='Budget_fund',
              height=400)
-fig.show()
+st.plotly_chart(fig)
 
 
