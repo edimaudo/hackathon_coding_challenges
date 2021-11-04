@@ -65,11 +65,11 @@ add_selectbox = st.sidebar.selectbox(
     'Budget Fund',
     budget_fund_info
 )
+st.sidebar.button("Submit")
 
 #==================
 # Visualization
 #==================
-
 ## Total grants by year
 df_total_grants = df[['Amount_awarded','Fiscal_year_update']]
 df_total_grants_agg = df_total_grants.groupby('Fiscal_year_update').agg(Total_Amount_Awarded = 
@@ -94,7 +94,6 @@ df_total_grants_agg.columns = ['Age Group', 'Total Amount Awarded']
 df_total_grants_agg = df_total_grants_agg.sort_values("Total Amount Awarded", ascending=True).reset_index()
 age_group_fig = px.bar(df_total_grants_agg, x="Total Amount Awarded", y="Age Group", orientation='h')
 
-
 ## Total grands by budget fund
 df_total_grants = df[['Amount_awarded','Budget_fund_update']]
 df_total_grants_agg = df_total_grants.groupby('Budget_fund_update').agg(Total_Amount_Awarded = 
@@ -103,74 +102,56 @@ df_total_grants_agg.columns = ['Budget Fund', 'Total Amount Awarded']
 df_total_grants_agg = df_total_grants_agg.sort_values("Total Amount Awarded", ascending=True).reset_index()
 budget_fund_fig = px.bar(df_total_grants_agg, x="Total Amount Awarded", y="Budget Fund", orientation='h')
 
+## Total grants by year by program area
+df_total_grants = df[['Amount_awarded','Program_area_update','Fiscal_year_update']]
+df_total_grants_agg = df_total_grants.groupby(['Program_area_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
+                                                                      ('Amount_awarded', 'sum')).reset_index()
+df_total_grants_agg.columns = ['Program Area','Fiscal Year', 'Total Amount Awarded']
+grant_program_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
+	color='Program Area',height=400)
 
 
-# ## Total grants by recipient city top 10
-# st.subheader('Total grants by top 10 cities')
-# df_total_grants = df[['Amount_awarded','Recipient_org_city_update']]
-# df_total_grants_agg = df_total_grants.groupby('Recipient_org_city_update').agg(Total_Amount_Awarded = 
-#                                                                       ('Amount_awarded', 'sum')).reset_index()
-# df_total_grants_agg.columns = ['Recipient_city', 'Total_Amount_Awarded']
-# df_total_grants_agg = df_total_grants_agg.sort_values("Total_Amount_Awarded", ascending=False).reset_index()
-# df_total_grants_agg = df_total_grants_agg.head(10)
-# fig = px.bar(df_total_grants_agg, x="Total_Amount_Awarded", y="Recipient_city", orientation='h')
-# st.plotly_chart(fig)
+## Total grants by year by age group
+df_total_grants = df[['Amount_awarded','Age_group_update','Fiscal_year_update']]
+df_total_grants_agg = df_total_grants.groupby(['Age_group_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
+                                                                      ('Amount_awarded', 'sum')).reset_index()
 
+df_total_grants_agg.columns = ['Age Group','Fiscal Year', 'Total Amount Awarded']
 
-# ## Total grants by year by program area
-# st.subheader('Total grants by Program area and year')
-# df_total_grants = df[['Amount_awarded','Program_area_update','Fiscal_year_update']]
-# df_total_grants_agg = df_total_grants.groupby(['Program_area_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
-#                                                                       ('Amount_awarded', 'sum')).reset_index()
+grant_age_group_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
+	color='Age Group',height=400)
 
-# df_total_grants_agg.columns = ['Program_area','Fiscal_year', 'Total_Amount_Awarded']
+# Total grants by Budget fund by year
+df_total_grants = df[['Amount_awarded','Budget_fund_update','Fiscal_year_update']]
+df_total_grants_agg = df_total_grants.groupby(['Budget_fund_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
+                                                                      ('Amount_awarded', 'sum')).reset_index()
 
-# fig = px.bar(df_total_grants_agg, x="Fiscal_year", y="Total_Amount_Awarded", color='Program_area',
-#              height=400)
-# st.plotly_chart(fig)
+df_total_grants_agg.columns = ['Budget Fund','Fiscal Year', 'Total Amount Awarded']
 
+grant_budget_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
+	color='Budget Fund',height=400)
 
-# ## Total grants by year by age group
-# st.subheader('Total grants by Age group and year')
-# df_total_grants = df[['Amount_awarded','Age_group_update','Fiscal_year_update']]
-# df_total_grants_agg = df_total_grants.groupby(['Age_group_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
-#                                                                       ('Amount_awarded', 'sum')).reset_index()
+column1, column2, column3 = st.beta_columns(3)
+column1.header("Topic Modeling")
+column2.header("Sentiment analysis")
+column3.header("Named Entity Recognition")
 
-# df_total_grants_agg.columns = ['Age_group','Fiscal_year', 'Total_Amount_Awarded']
+col1 = st.beta_container()
+col1.header("Total Grants by Year")
+col1.subheader('Total Grants by Program Area & Year')
+col1.plotly_chart(grant_program_fig)
+col1.subheader('Total Grants by Age group & Year')
+col1.plotly_chart(grant_age_group_fig)
+col1.subheader('Total Grants by Budget Fund & Year')
+col1.plotly_chart(grant_budget_fig)
 
-# fig = px.bar(df_total_grants_agg, x="Fiscal_year", y="Total_Amount_Awarded", color='Age_group',
-#              height=400)
-# st.plotly_chart(fig)
-
-
-# # Total grants by Budget fund by year
-# st.subheader('Total grants by Budget fund and year')
-# df_total_grants = df[['Amount_awarded','Budget_fund_update','Fiscal_year_update']]
-# df_total_grants_agg = df_total_grants.groupby(['Budget_fund_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
-#                                                                       ('Amount_awarded', 'sum')).reset_index()
-
-# df_total_grants_agg.columns = ['Budget_fund','Fiscal_year', 'Total_Amount_Awarded']
-
-# fig = px.bar(df_total_grants_agg, x="Fiscal_year", y="Total_Amount_Awarded", color='Budget_fund',
-#              height=400)
-# st.plotly_chart(fig)
-
-
-
-
-
-col1, col2 = st.beta_columns([2, 2])
-
-col1.header("Total Calculations")
-col1.subheader('Total grants by year')
-col1.plotly_chart(grant_fig)
-col1.subheader('Total grants by Program area')
-col1.plotly_chart(program_fig)
-col1.subheader('Total grants by Age group')
-col1.plotly_chart(age_group_fig)
-col1.subheader('Total grants by Budget Fund')
-col1.plotly_chart(budget_fund_fig)
-
-col2.header("Total Calculations by Year")
+col2 = st.beta_container()
+col2.header("Total Grants")
+col2.subheader('Total Grants by Program area')
+col2.plotly_chart(program_fig)
+col2.subheader('Total Grants by Age group')
+col2.plotly_chart(age_group_fig)
+col2.subheader('Total Grants by Budget Fund')
+col2.plotly_chart(budget_fund_fig)
 
 
