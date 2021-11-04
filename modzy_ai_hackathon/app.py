@@ -14,12 +14,8 @@ def load_data():
 
 # Load data
 #data_load_state = st.text('Loading data...')
-df= load_data()
+df = load_data()
 #data_load_state.text("Done!")
-
-#if st.checkbox('Show raw data'):
-#    st.subheader('Raw data')
-#    st.write(data)
 
 #=================
 # Dropdowns values
@@ -110,7 +106,6 @@ df_total_grants_agg.columns = ['Program Area','Fiscal Year', 'Total Amount Award
 grant_program_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
 	color='Program Area',height=400)
 
-
 ## Total grants by year by age group
 df_total_grants = df[['Amount_awarded','Age_group_update','Fiscal_year_update']]
 df_total_grants_agg = df_total_grants.groupby(['Age_group_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
@@ -131,27 +126,37 @@ df_total_grants_agg.columns = ['Budget Fund','Fiscal Year', 'Total Amount Awarde
 grant_budget_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
 	color='Budget Fund',height=400)
 
+
+#=====================
+# Text Description data
+#=====================
+english_description_info = df['English_description'].unique()
+english_description_info = english_description_info.astype('str')
+english_description_info = english_description_info.tolist()
+
 column1, column2, column3 = st.beta_columns(3)
 column1.header("Topic Modeling")
 column2.header("Sentiment analysis")
 column3.header("Named Entity Recognition")
 
 col1 = st.beta_container()
-col1.header("Total Grants by Year")
-col1.subheader('Total Grants by Program Area & Year')
-col1.plotly_chart(grant_program_fig)
-col1.subheader('Total Grants by Age group & Year')
-col1.plotly_chart(grant_age_group_fig)
-col1.subheader('Total Grants by Budget Fund & Year')
-col1.plotly_chart(grant_budget_fig)
+col1.header("Total Grants")
+col1.subheader('Total Grants by Program area')
+col1.plotly_chart(program_fig)
+col1.subheader('Total Grants by Age group')
+col1.plotly_chart(age_group_fig)
+col1.subheader('Total Grants by Budget Fund')
+col1.plotly_chart(budget_fund_fig)
 
 col2 = st.beta_container()
-col2.header("Total Grants")
-col2.subheader('Total Grants by Program area')
-col2.plotly_chart(program_fig)
-col2.subheader('Total Grants by Age group')
-col2.plotly_chart(age_group_fig)
-col2.subheader('Total Grants by Budget Fund')
-col2.plotly_chart(budget_fund_fig)
+col2.header("Total Grants by Year")
+col2.subheader('Total Grants by Program Area & Year')
+col2.plotly_chart(grant_program_fig)
+col2.subheader('Total Grants by Age group & Year')
+col2.plotly_chart(grant_age_group_fig)
+col2.subheader('Total Grants by Budget Fund & Year')
+col2.plotly_chart(grant_budget_fig)
+
+
 
 
