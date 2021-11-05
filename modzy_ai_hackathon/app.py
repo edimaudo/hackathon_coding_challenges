@@ -15,7 +15,15 @@ def load_data():
 # Load data
 #data_load_state = st.text('Loading data...')
 df = load_data()
+df_backup = df
 #data_load_state.text("Done!")
+
+#=====================
+# Text Description data
+#=====================
+english_description_info = df['English_description'].unique()
+english_description_info = english_description_info.astype('str')
+english_description_info = english_description_info.tolist()
 
 #=================
 # Dropdowns values
@@ -45,26 +53,27 @@ budget_fund_info = budget_fund_info.tolist()
 budget_fund_info.sort()
 
 # Add a selectbox to the sidebar:
-add_selectbox = st.sidebar.selectbox(
-    'Program Area',
-    program_area_info
-)
-add_selectbox = st.sidebar.selectbox(
-    'Recipient City',
-    geographical_area_info
-)
-add_selectbox = st.sidebar.selectbox(
-    'Age Group',
-    age_group_info
-)
-add_selectbox = st.sidebar.selectbox(
-    'Budget Fund',
-    budget_fund_info
-)
-st.sidebar.button("Submit")
+program_area_selectbox = st.sidebar.selectbox("Program Area",program_area_info)
+geo_area_selectbox = st.sidebar.selectbox('Recipient City',geographical_area_info)
+age_group_selectbox = st.sidebar.selectbox('Age Group',age_group_info)
+budget_fund_selectbox = st.sidebar.selectbox('Budget Fund',budget_fund_info)
+submit_button = st.sidebar.button("Submit")
+reset_button = st.sidebar.button("  Reset  ")
+
 
 #==================
-# Visualization
+# Updated dataframe based on selection
+#==================
+if submit_button:
+	df = df[(df['Program_area_update'] == program_area_selectbox) & 
+              (df['Recipient_org_city_update'] == geo_area_selectbox) & 
+              (df['Age_group_update'] == age_group_selectbox) & 
+              (df['Budget_fund_update'] == budget_fund_selectbox)]
+if reset_button:
+	df = df_backup
+
+#==================
+# Visualization setup
 #==================
 ## Total grants by year
 df_total_grants = df[['Amount_awarded','Fiscal_year_update']]
@@ -103,41 +112,42 @@ df_total_grants = df[['Amount_awarded','Program_area_update','Fiscal_year_update
 df_total_grants_agg = df_total_grants.groupby(['Program_area_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
                                                                       ('Amount_awarded', 'sum')).reset_index()
 df_total_grants_agg.columns = ['Program Area','Fiscal Year', 'Total Amount Awarded']
-grant_program_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
-	color='Program Area',height=400)
-
+if not df_total_grants_agg.empty:
+	grant_program_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded",color='Program Area',height=400)
+else:
+	grant_program_fig = ""
 ## Total grants by year by age group
 df_total_grants = df[['Amount_awarded','Age_group_update','Fiscal_year_update']]
 df_total_grants_agg = df_total_grants.groupby(['Age_group_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
                                                                       ('Amount_awarded', 'sum')).reset_index()
 
 df_total_grants_agg.columns = ['Age Group','Fiscal Year', 'Total Amount Awarded']
-
-grant_age_group_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
+if not df_total_grants_agg.empty:
+	grant_age_group_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
 	color='Age Group',height=400)
 
 # Total grants by Budget fund by year
 df_total_grants = df[['Amount_awarded','Budget_fund_update','Fiscal_year_update']]
 df_total_grants_agg = df_total_grants.groupby(['Budget_fund_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
                                                                       ('Amount_awarded', 'sum')).reset_index()
-
 df_total_grants_agg.columns = ['Budget Fund','Fiscal Year', 'Total Amount Awarded']
-
-grant_budget_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
+if not df_total_grants_agg.empty:
+	grant_budget_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
 	color='Budget Fund',height=400)
 
 
-#=====================
-# Text Description data
-#=====================
-english_description_info = df['English_description'].unique()
-english_description_info = english_description_info.astype('str')
-english_description_info = english_description_info.tolist()
 
+#================
+# Text analytics display
+#================
 column1, column2, column3 = st.beta_columns(3)
 column1.header("Topic Modeling")
 column2.header("Sentiment analysis")
 column3.header("Named Entity Recognition")
+
+#================
+# Visualization display
+#================
 
 col1 = st.beta_container()
 col1.header("Total Grants")
@@ -151,11 +161,14 @@ col1.plotly_chart(budget_fund_fig)
 col2 = st.beta_container()
 col2.header("Total Grants by Year")
 col2.subheader('Total Grants by Program Area & Year')
-col2.plotly_chart(grant_program_fig)
+if not df_total_grants_agg.empty:
+	col2.plotly_chart(grant_program_fig)
 col2.subheader('Total Grants by Age group & Year')
-col2.plotly_chart(grant_age_group_fig)
+if not df_total_grants_agg.empty:
+	col2.plotly_chart(grant_age_group_fig)
 col2.subheader('Total Grants by Budget Fund & Year')
-col2.plotly_chart(grant_budget_fig)
+if not df_total_grants_agg.empty:
+	col2.plotly_chart(grant_budget_fig)
 
 
 
