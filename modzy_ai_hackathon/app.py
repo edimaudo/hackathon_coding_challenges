@@ -1,3 +1,10 @@
+#================
+# OTF Insights
+# Application applies modzy sdk to perform text analytics
+# Also uses plotly to generate bar charts
+#================
+
+# Load libraries
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -13,7 +20,6 @@ def load_data():
 	return data
 
 # Load data
-#data_load_state = st.text('Loading data...')
 df = load_data()
 df_backup = df
 #data_load_state.text("Done!")
@@ -28,17 +34,24 @@ english_description_info = english_description_info.tolist()
 #=================
 # Dropdowns values
 #=================
-# Program area
-program_area_info = df['Program_area_update'].unique()
-program_area_info = program_area_info.astype('str')
-program_area_info = program_area_info.tolist()
-program_area_info.sort()
 
 # Geographical area 
 geographical_area_info = df['Recipient_org_city_update'].unique()
 geographical_area_info = geographical_area_info.astype('str')
 geographical_area_info = geographical_area_info.tolist()
 geographical_area_info.sort()
+
+#Grant Program
+
+
+# remove program area, Age group, Budget fund
+# Program area
+program_area_info = df['Program_area_update'].unique()
+program_area_info = program_area_info.astype('str')
+program_area_info = program_area_info.tolist()
+program_area_info.sort()
+
+
 
 # Age group
 age_group_info = df['Age_group_update'].unique()
@@ -65,12 +78,30 @@ reset_button = st.sidebar.button("  Reset  ")
 # Updated dataframe based on selection
 #==================
 if submit_button:
+	# update this code
 	df = df[(df['Program_area_update'] == program_area_selectbox) & 
               (df['Recipient_org_city_update'] == geo_area_selectbox) & 
               (df['Age_group_update'] == age_group_selectbox) & 
               (df['Budget_fund_update'] == budget_fund_selectbox)]
+    #generate text
+    #create input.txt if it does not already exist
+    #write text to it
 if reset_button:
 	df = df_backup
+	# empty dataframes for visualization informatio
+
+#================
+# Text analytics logic
+#================
+
+#================
+# Metrics logic
+#================
+
+#==================
+# Metrics setup
+#==================
+
 
 #==================
 # Visualization setup
@@ -135,8 +166,6 @@ if not df_total_grants_agg.empty:
 	grant_budget_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
 	color='Budget Fund',height=400)
 
-
-
 #================
 # Text analytics display
 #================
@@ -170,6 +199,6 @@ col2.subheader('Total Grants by Budget Fund & Year')
 if not df_total_grants_agg.empty:
 	col2.plotly_chart(grant_budget_fig)
 
-
+#
 
 
