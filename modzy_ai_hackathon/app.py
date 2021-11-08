@@ -41,39 +41,16 @@ geographical_area_info = geographical_area_info.astype('str')
 geographical_area_info = geographical_area_info.tolist()
 geographical_area_info.sort()
 
-
 # Year
 fiscal_year_info = df['Fiscal_year_update'].unique()
 fiscal_year_info = fiscal_year_info.astype('int')
 fiscal_year_info = fiscal_year_info.tolist()
 fiscal_year_info.sort()
 
-
-# remove program area, Age group, Budget fund
-# Program area
-# program_area_info = df['Program_area_update'].unique()
-# program_area_info = program_area_info.astype('str')
-# program_area_info = program_area_info.tolist()
-# program_area_info.sort()
-
-
-
-# # Age group
-# age_group_info = df['Age_group_update'].unique()
-# age_group_info = age_group_info.astype('str')
-# age_group_info = age_group_info.tolist()
-# age_group_info.sort()
-
-# # Budget fund
-# budget_fund_info = df['Budget_fund_update'].unique()
-# budget_fund_info = budget_fund_info.astype('str')
-# budget_fund_info = budget_fund_info.tolist()
-# budget_fund_info.sort()
-
-# Add a selectbox to the sidebar:
+# Sidebar
 geo_area_selectbox = st.sidebar.selectbox('City',geographical_area_info)
-fiscal_year_slider = st.sidebar.slider('Fiscal Year',fiscal_year_info[0],fiscal_year_info[-1],fiscal_year_info[-1])
-
+fiscal_year_slider = st.sidebar.slider('Fiscal Year',fiscal_year_info[0],
+	fiscal_year_info[-1],fiscal_year_info[-1])
 submit_button = st.sidebar.button("Submit")
 reset_button = st.sidebar.button("  Reset  ")
 
@@ -83,10 +60,8 @@ reset_button = st.sidebar.button("  Reset  ")
 #==================
 if submit_button:
 	# update this code
-	df = df[(df['Program_area_update'] == program_area_selectbox) & 
-              (df['Recipient_org_city_update'] == geo_area_selectbox) & 
-              (df['Age_group_update'] == age_group_selectbox) & 
-              (df['Budget_fund_update'] == budget_fund_selectbox)]
+	df = df[(df['Fiscal_year_update'] <= fiscal_year_slider ) & 
+              (df['Recipient_org_city_update'] == geo_area_selectbox) ]
     #generate text
     #create input.txt if it does not already exist
     #write text to it
