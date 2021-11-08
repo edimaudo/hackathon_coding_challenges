@@ -36,12 +36,17 @@ english_description_info = english_description_info.tolist()
 #=================
 
 # Geographical area 
-# geographical_area_info = df['Recipient_org_city_update'].unique()
-# geographical_area_info = geographical_area_info.astype('str')
-# geographical_area_info = geographical_area_info.tolist()
-# geographical_area_info.sort()
+geographical_area_info = df['Recipient_org_city_update'].unique()
+geographical_area_info = geographical_area_info.astype('str')
+geographical_area_info = geographical_area_info.tolist()
+geographical_area_info.sort()
 
-#Grant Program
+
+# Year
+fiscal_year_info = df['Fiscal_year_update'].unique()
+fiscal_year_info = fiscal_year_info.astype('int')
+fiscal_year_info = fiscal_year_info.tolist()
+fiscal_year_info.sort()
 
 
 # remove program area, Age group, Budget fund
@@ -66,10 +71,8 @@ english_description_info = english_description_info.tolist()
 # budget_fund_info.sort()
 
 # Add a selectbox to the sidebar:
-# program_area_selectbox = st.sidebar.selectbox("Program Area",program_area_info)
-# geo_area_selectbox = st.sidebar.selectbox('Recipient City',geographical_area_info)
-# age_group_selectbox = st.sidebar.selectbox('Age Group',age_group_info)
-# budget_fund_selectbox = st.sidebar.selectbox('Budget Fund',budget_fund_info)
+geo_area_selectbox = st.sidebar.selectbox('City',geographical_area_info)
+fiscal_year_slider = st.sidebar.slider('Fiscal Year',fiscal_year_info[0],fiscal_year_info[-1],fiscal_year_info[-1])
 
 submit_button = st.sidebar.button("Submit")
 reset_button = st.sidebar.button("  Reset  ")
@@ -98,6 +101,10 @@ if reset_button:
 #================
 # Metrics logic
 #================
+
+# of organization
+# Geographical_area_served
+# Amount_applied_for
 
 #==================
 # Metrics setup
@@ -139,6 +146,8 @@ if reset_button:
 # df_total_grants_agg = df_total_grants_agg.sort_values("Total Amount Awarded", ascending=True).reset_index()
 # budget_fund_fig = px.bar(df_total_grants_agg, x="Total Amount Awarded", y="Budget Fund", orientation='h')
 
+# ## Total grants by Grant Program
+
 # ## Total grants by year by program area
 # df_total_grants = df[['Amount_awarded','Program_area_update','Fiscal_year_update']]
 # df_total_grants_agg = df_total_grants.groupby(['Program_area_update','Fiscal_year_update']).agg(Total_Amount_Awarded = 
@@ -166,6 +175,8 @@ if reset_button:
 # if not df_total_grants_agg.empty:
 # 	grant_budget_fig = px.bar(df_total_grants_agg, x="Fiscal Year", y="Total Amount Awarded", 
 # 	color='Budget Fund',height=400)
+
+# # Total grants by Grant Program by year
 
 #================
 # Text analytics display
