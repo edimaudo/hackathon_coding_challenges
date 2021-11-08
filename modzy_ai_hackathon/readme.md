@@ -19,3 +19,14 @@ Could the submission solve a real-world problem to help businesses, government, 
 
 *Quality of the Idea*
 Is the submission well thought out and have a clear purpose? Will it hold up if put to the test to scale quickly or be used over a long period of time?
+
+### Business Problem
+Analyzing charity organizations based on their descriptions.  For this project Ontario Trillium Foundation (OTF) will be used.
+
+### Solution
+The solution will be built using Streamlit and it will contain Business visualization of OTF Data
+and text analytics using mozdy.
+
+### About OTF
+The Ontario Trillium Foundation (OTF) is an agency of the Government of Ontario and one of Canada’s leading granting foundations. Our investments in communities across the province help build healthy and vibrant communities. Our key funder, the Ministry of Heritage, Sport, Tourism and Culture Industries enables us to provide grants that can make the greatest impact. OTF also administers grants on behalf of the Ministry of Children, Community and Social Services. Last year, $115 million was invested into more than 644 projects in communities across the province
+https://otf.ca/who-we-are/about-us/our-story
