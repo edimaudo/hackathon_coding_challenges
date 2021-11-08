@@ -7,10 +7,9 @@
 # Load libraries
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.express as px
 from modzy import ApiClient, error
-from utils import display_rle_mask
+import json, datetime, requests
 
 st.title('OTF Insights')
 
@@ -171,7 +170,7 @@ if reset_button:
 #================
 # Text analytics display
 #================
-column1, column2, column3 = st.beta_columns(3)
+column1, column2, column3 = st.columns(3)
 column1.header("Topic Modeling")
 column2.header("Sentiment analysis")
 column3.header("Named Entity Recognition")
