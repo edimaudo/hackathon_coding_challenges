@@ -19,7 +19,6 @@ DATA_URL = "otf.xlsx"
 def load_data():
 	data = pd.read_excel(DATA_URL)
 	return data
-
 # Load data
 df = load_data()
 df_backup = df
@@ -68,6 +67,26 @@ if submit_button:
 if reset_button:
 	df = df_backup
 	# empty dataframes for visualization informatio
+
+
+#=================
+# Authentication url
+#=================
+API_URL = "https://app.modzy.com/api"
+API_KEY = "81RXRBBjPDUaGDuCrC38.ZNGC6q7LmLhtoIiPwTiT"
+
+def authenticate_url():
+	if API_URL == "https://<your.modzy.url>/api":
+		raise Exception("Change the API_URL variable to your instance URL")
+	if API_KEY == "<your.api.key>":
+		raise Exception("Insert your API Key")
+    
+# setup our API Client
+client = ApiClient(base_url=API_URL, api_key=API_KEY)
+
+# get model 
+# Query model by name
+sentiment_model_info = client.models.get_by_name("Sentiment Analysis")
 
 #================
 # Text analytics logic
