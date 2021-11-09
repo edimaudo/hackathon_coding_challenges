@@ -123,6 +123,7 @@ def sentiment_analysis(input_text):
 # json_output_flat = flatten_json(json_output)
 # json_output_df = json_normalize(json_output_flat)
 # st.dataframe(json_output_df)
+
 def topic_analysis(input_text):
     job = client.jobs.submit_text('m8z2mwe3pt', '1.0.1', {'input.txt': input_text})
     result = client.results.block_until_complete(job, timeout=None)
