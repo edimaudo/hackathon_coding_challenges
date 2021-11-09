@@ -30,9 +30,15 @@ INPUT_TEXT = "test.txt"
 #=====================
 # Text Description data
 #=====================
+english_info_df = df[['Organization_name','English_description']]
+english_info_df = english_info_df.groupby(['Organization_name', 'English_description']).first()
+
 english_description_info = df['English_description'].unique()
 english_description_info = english_description_info.astype('str')
 english_description_info = english_description_info.tolist()
+
+english_info_df = df[['Organization_name','English_description']]
+english_info_df = english_info_df.groupby(['Organization_name', 'English_description']).first()
 
 #=================
 # Dropdowns values
@@ -87,6 +93,9 @@ client = ApiClient(base_url=API_URL, api_key=API_KEY)
 # Sentiment analysis model
 sentiment_model_info = client.models.get_by_name("Sentiment Analysis")
 
+# Topic modelling model
+topic_model_info = client.models.get_by_name("Text Topic Modeling")
+
 def flatten_json(y):
     out = {}
 
@@ -110,10 +119,15 @@ def sentiment_analysis(input_text):
     result = client.results.block_until_complete(job, timeout=None)
     return (result['results']['job']['results.json']['data']['result'])
 
-json_output = sentiment_analysis(INPUT_TEXT)
-json_output_flat = flatten_json(json_output)
-json_output_df = json_normalize(json_output_flat)
-st.dataframe(json_output_df)
+# json_output = sentiment_analysis(INPUT_TEXT)
+# json_output_flat = flatten_json(json_output)
+# json_output_df = json_normalize(json_output_flat)
+# st.dataframe(json_output_df)
+def topic_analysis(input_text):
+    job = client.jobs.submit_text('m8z2mwe3pt', '1.0.1', {'input.txt': input_text})
+    result = client.results.block_until_complete(job, timeout=None)
+    return (result['results']['job']['results.json'])
+
 
 #================
 # Metrics logic
