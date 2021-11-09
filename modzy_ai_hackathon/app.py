@@ -10,6 +10,8 @@ import pandas as pd
 import plotly.express as px
 from modzy import ApiClient, error
 import json, datetime, requests
+from pandas.io.json import json_normalize
+
 
 st.title('OTF Insights')
 
@@ -22,6 +24,8 @@ def load_data():
 # Load data
 df = load_data()
 df_backup = df
+
+INPUT_TEXT = "test.txt"
 
 #=====================
 # Text Description data
@@ -69,28 +73,47 @@ if reset_button:
 	# empty dataframes for visualization informatio
 
 
-#=================
-# Authentication url
-#=================
+#================
+# Text analytics logic
+#================
 API_URL = "https://app.modzy.com/api"
 API_KEY = "81RXRBBjPDUaGDuCrC38.ZNGC6q7LmLhtoIiPwTiT"
 
-def authenticate_url():
-	if API_URL == "https://<your.modzy.url>/api":
-		raise Exception("Change the API_URL variable to your instance URL")
-	if API_KEY == "<your.api.key>":
-		raise Exception("Insert your API Key")
-    
 # setup our API Client
 client = ApiClient(base_url=API_URL, api_key=API_KEY)
 
 # get model 
 # Query model by name
+# Sentiment analysis model
 sentiment_model_info = client.models.get_by_name("Sentiment Analysis")
 
-#================
-# Text analytics logic
-#================
+def flatten_json(y):
+    out = {}
+
+    def flatten(x, name=''):
+        if type(x) is dict:
+            for a in x:
+                flatten(x[a], name + a + '_')
+        elif type(x) is list:
+            i = 0
+            for a in x:
+                flatten(a, name + str(i) + '_')
+                i += 1
+        else:
+            out[name[:-1]] = x
+
+    flatten(y)
+    return out
+
+def sentiment_analysis(input_text):
+    job = client.jobs.submit_text('ed542963de', '1.0.1', {'input.txt': input_text})
+    result = client.results.block_until_complete(job, timeout=None)
+    return (result['results']['job']['results.json']['data']['result'])
+
+json_output = sentiment_analysis(INPUT_TEXT)
+json_output_flat = flatten_json(json_output)
+json_output_df = json_normalize(json_output_flat)
+st.dataframe(json_output_df)
 
 #================
 # Metrics logic
@@ -175,10 +198,10 @@ sentiment_model_info = client.models.get_by_name("Sentiment Analysis")
 #================
 # Text analytics display
 #================
-column1, column2, column3 = st.columns(3)
-column1.header("Topic Modeling")
-column2.header("Sentiment analysis")
-column3.header("Named Entity Recognition")
+# column1, column2, column3 = st.columns(3)
+# column1.header("Topic Modeling")
+# column2.header("Sentiment analysis")
+# column3.header("Named Entity Recognition")
 
 #================
 # Visualization display
