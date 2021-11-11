@@ -11,20 +11,19 @@ import plotly.express as px
 from modzy import ApiClient, error
 import json, datetime, requests
 from pandas.io.json import json_normalize
-
+import os, os.path
 
 st.title('OTF Insights')
-
-DATA_URL = "otf.xlsx"
 
 @st.cache
 def load_data():
 	data = pd.read_excel(DATA_URL)
 	return data
+
 # Load data
+DATA_URL = "otf.xlsx"
 df = load_data()
 df_backup = df
-
 INPUT_TEXT = "test.txt"
 
 #=====================
@@ -68,67 +67,13 @@ reset_button = st.sidebar.button("  Reset  ")
 # Updated dataframe based on selection
 #==================
 if submit_button:
-	# update this code
-	df = df[(df['Fiscal_year_update'] <= fiscal_year_slider ) & 
-              (df['Recipient_org_city_update'] == geo_area_selectbox) ]
-    #generate text
-    #create input.txt if it does not already exist
-    #write text to it
+    df = df[(df['Fiscal_year_update'] <= fiscal_year_slider ) & (df['Recipient_org_city_update'] == geo_area_selectbox) ]
+    english_description_info = df['English_description'].unique() #generate text
+    os.remove("input.txt")
+    english_description_info.to_csv("input.txt")
 if reset_button:
-	df = df_backup
-	# empty dataframes for visualization informatio
-
-
-#================
-# Text analytics logic
-#================
-API_URL = "https://app.modzy.com/api"
-API_KEY = "81RXRBBjPDUaGDuCrC38.ZNGC6q7LmLhtoIiPwTiT"
-
-# setup our API Client
-client = ApiClient(base_url=API_URL, api_key=API_KEY)
-
-# get model 
-# Query model by name
-# Sentiment analysis model
-sentiment_model_info = client.models.get_by_name("Sentiment Analysis")
-
-# Topic modelling model
-topic_model_info = client.models.get_by_name("Text Topic Modeling")
-
-def flatten_json(y):
-    out = {}
-
-    def flatten(x, name=''):
-        if type(x) is dict:
-            for a in x:
-                flatten(x[a], name + a + '_')
-        elif type(x) is list:
-            i = 0
-            for a in x:
-                flatten(a, name + str(i) + '_')
-                i += 1
-        else:
-            out[name[:-1]] = x
-
-    flatten(y)
-    return out
-
-def sentiment_analysis(input_text):
-    job = client.jobs.submit_text('ed542963de', '1.0.1', {'input.txt': input_text})
-    result = client.results.block_until_complete(job, timeout=None)
-    return (result['results']['job']['results.json']['data']['result'])
-
-# json_output = sentiment_analysis(INPUT_TEXT)
-# json_output_flat = flatten_json(json_output)
-# json_output_df = json_normalize(json_output_flat)
-# st.dataframe(json_output_df)
-
-def topic_analysis(input_text):
-    job = client.jobs.submit_text('m8z2mwe3pt', '1.0.1', {'input.txt': input_text})
-    result = client.results.block_until_complete(job, timeout=None)
-    return (result['results']['job']['results.json'])
-
+    df = df_backup
+	# empty dataframes for visualization information
 
 #================
 # Metrics logic
@@ -139,12 +84,7 @@ def topic_analysis(input_text):
 # Amount_applied_for
 
 #==================
-# Metrics setup
-#==================
-
-
-#==================
-# Visualization setup
+# Visualization logic
 #==================
 ## Total grants by year
 # df_total_grants = df[['Amount_awarded','Fiscal_year_update']]
@@ -211,15 +151,64 @@ def topic_analysis(input_text):
 # # Total grants by Grant Program by year
 
 #================
-# Text analytics display
+# Text analytics logic
 #================
-# column1, column2, column3 = st.columns(3)
-# column1.header("Topic Modeling")
-# column2.header("Sentiment analysis")
-# column3.header("Named Entity Recognition")
+API_URL = "https://app.modzy.com/api"
+API_KEY = "81RXRBBjPDUaGDuCrC38.ZNGC6q7LmLhtoIiPwTiT"
+
+# setup our API Client
+client = ApiClient(base_url=API_URL, api_key=API_KEY)
+
+# get model 
+# Query model by name
+# Sentiment analysis model
+sentiment_model_info = client.models.get_by_name("Sentiment Analysis")
+
+# Topic modelling model
+topic_model_info = client.models.get_by_name("Text Topic Modeling")
+
+def flatten_json(y):
+    out = {}
+
+    def flatten(x, name=''):
+        if type(x) is dict:
+            for a in x:
+                flatten(x[a], name + a + '_')
+        elif type(x) is list:
+            i = 0
+            for a in x:
+                flatten(a, name + str(i) + '_')
+                i += 1
+        else:
+            out[name[:-1]] = x
+
+    flatten(y)
+    return out
+
+def sentiment_analysis(input_text):
+    job = client.jobs.submit_text('ed542963de', '1.0.1', {'input.txt': input_text})
+    result = client.results.block_until_complete(job, timeout=None)
+    return (result['results']['job']['results.json']['data']['result'])
+
+# json_output = sentiment_analysis(INPUT_TEXT)
+# json_output_flat = flatten_json(json_output)
+# json_output_df = json_normalize(json_output_flat)
+# st.dataframe(json_output_df)
+
+def topic_analysis(input_text):
+    job = client.jobs.submit_text('m8z2mwe3pt', '1.0.1', {'input.txt': input_text})
+    result = client.results.block_until_complete(job, timeout=None)
+    return (result['results']['job']['results.json'])
+
+
+
+#==================
+# Metrics setup
+#==================
+
 
 #================
-# Visualization display
+# Visualization setup
 #================
 
 # col1 = st.beta_container()
@@ -243,6 +232,11 @@ def topic_analysis(input_text):
 # if not df_total_grants_agg.empty:
 # 	col2.plotly_chart(grant_budget_fig)
 
-#
 
-
+#================
+# Text analytics setup
+#================
+# column1, column2, column3 = st.columns(3)
+# column1.header("Topic Modeling")
+# column2.header("Sentiment analysis")
+# column3.header("Named Entity Recognition")
