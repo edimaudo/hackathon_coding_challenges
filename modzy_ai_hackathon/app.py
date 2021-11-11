@@ -69,7 +69,8 @@ reset_button = st.sidebar.button("  Reset  ")
 if submit_button:
     df = df[(df['Fiscal_year_update'] <= fiscal_year_slider ) & (df['Recipient_org_city_update'] == geo_area_selectbox) ]
     english_description_info = df['English_description'].unique() #generate text
-    os.remove("input.txt")
+    english_description_info = pd.DataFrame(english_description_info)
+    #os.remove("input.txt")
     english_description_info.to_csv("input.txt")
 if reset_button:
     df = df_backup
