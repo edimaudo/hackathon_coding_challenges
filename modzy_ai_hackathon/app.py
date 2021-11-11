@@ -48,6 +48,7 @@ geographical_area_info = df['Recipient_org_city_update'].unique()
 geographical_area_info = geographical_area_info.astype('str')
 geographical_area_info = geographical_area_info.tolist()
 geographical_area_info.sort()
+geographical_area_info.insert(0, "All") #add All
 
 # Year
 fiscal_year_info = df['Fiscal_year_update'].unique()
@@ -67,7 +68,10 @@ reset_button = st.sidebar.button("  Reset  ")
 # Updated dataframe based on selection
 #==================
 if submit_button:
-    df = df[(df['Fiscal_year_update'] <= fiscal_year_slider ) & (df['Recipient_org_city_update'] == geo_area_selectbox) ]
+    if geo_area_selectbox != "All":
+        df = df[(df['Fiscal_year_update'] <= fiscal_year_slider ) & (df['Recipient_org_city_update'] == geo_area_selectbox) ]
+    else:
+        df = df[(df['Fiscal_year_update'] <= fiscal_year_slider)]
     english_description_info = df['English_description'].unique() #generate text
     english_description_info = pd.DataFrame(english_description_info)
     os.remove("input.txt")
@@ -153,52 +157,51 @@ if reset_button:
 #================
 # Text analytics logic
 #================
-API_URL = "https://app.modzy.com/api"
-API_KEY = "81RXRBBjPDUaGDuCrC38.ZNGC6q7LmLhtoIiPwTiT"
+# API_URL = "https://app.modzy.com/api"
+# API_KEY = "81RXRBBjPDUaGDuCrC38.ZNGC6q7LmLhtoIiPwTiT"
 
-# setup our API Client
-client = ApiClient(base_url=API_URL, api_key=API_KEY)
+# # setup our API Client
+# client = ApiClient(base_url=API_URL, api_key=API_KEY)
 
-# get model 
-# Query model by name
-# Sentiment analysis model
-sentiment_model_info = client.models.get_by_name("Sentiment Analysis")
+# # Sentiment analysis model
+# sentiment_model_info = client.models.get_by_name("Sentiment Analysis")
 
-# Topic modelling model
-topic_model_info = client.models.get_by_name("Text Topic Modeling")
+# # Topic modelling model
+# topic_model_info = client.models.get_by_name("Text Topic Modeling")
 
-def flatten_json(y):
-    out = {}
+# # function to flatten JSON
+# def flatten_json(y):
+#     out = {}
 
-    def flatten(x, name=''):
-        if type(x) is dict:
-            for a in x:
-                flatten(x[a], name + a + '_')
-        elif type(x) is list:
-            i = 0
-            for a in x:
-                flatten(a, name + str(i) + '_')
-                i += 1
-        else:
-            out[name[:-1]] = x
+#     def flatten(x, name=''):
+#         if type(x) is dict:
+#             for a in x:
+#                 flatten(x[a], name + a + '_')
+#         elif type(x) is list:
+#             i = 0
+#             for a in x:
+#                 flatten(a, name + str(i) + '_')
+#                 i += 1
+#         else:
+#             out[name[:-1]] = x
 
-    flatten(y)
-    return out
+#     flatten(y)
+#     return out
 
-def sentiment_analysis(input_text):
-    job = client.jobs.submit_text('ed542963de', '1.0.1', {'input.txt': input_text})
-    result = client.results.block_until_complete(job, timeout=None)
-    return (result['results']['job']['results.json']['data']['result'])
+# def sentiment_analysis(input_text):
+#     job = client.jobs.submit_text('ed542963de', '1.0.1', {'input.txt': input_text})
+#     result = client.results.block_until_complete(job, timeout=None)
+#     return (result['results']['job']['results.json']['data']['result'])
 
 # json_output = sentiment_analysis(INPUT_TEXT)
 # json_output_flat = flatten_json(json_output)
 # json_output_df = json_normalize(json_output_flat)
 # st.dataframe(json_output_df)
 
-def topic_analysis(input_text):
-    job = client.jobs.submit_text('m8z2mwe3pt', '1.0.1', {'input.txt': input_text})
-    result = client.results.block_until_complete(job, timeout=None)
-    return (result['results']['job']['results.json'])
+# def topic_analysis(input_text):
+#     job = client.jobs.submit_text('m8z2mwe3pt', '1.0.1', {'input.txt': input_text})
+#     result = client.results.block_until_complete(job, timeout=None)
+#     return (result['results']['job']['results.json'])
 
 
 
