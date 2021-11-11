@@ -60,14 +60,13 @@ fiscal_year_info.sort()
 geo_area_selectbox = st.sidebar.selectbox('City',geographical_area_info)
 fiscal_year_slider = st.sidebar.slider('Fiscal Year',fiscal_year_info[0],
 	fiscal_year_info[-1],fiscal_year_info[-1])
-submit_button = st.sidebar.button("Submit")
-reset_button = st.sidebar.button("  Reset  ")
+submit_checkbox = st.checkbox('Submit')
 
 
 #==================
 # Updated dataframe based on selection
 #==================
-if submit_button:
+if submit_checkbox:
     if geo_area_selectbox != "All":
         df = df[(df['Fiscal_year_update'] <= fiscal_year_slider ) & (df['Recipient_org_city_update'] == geo_area_selectbox) ]
     else:
@@ -76,7 +75,7 @@ if submit_button:
     english_description_info = pd.DataFrame(english_description_info)
     os.remove("input.txt")
     english_description_info.to_csv("input.txt")
-if reset_button:
+else:
     df = df_backup
 
 #================
