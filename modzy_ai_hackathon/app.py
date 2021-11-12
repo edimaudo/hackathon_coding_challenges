@@ -48,7 +48,7 @@ geographical_area_info = df['Recipient_org_city_update'].unique()
 geographical_area_info = geographical_area_info.astype('str')
 geographical_area_info = geographical_area_info.tolist()
 geographical_area_info.sort()
-#geographical_area_info.insert(0, "All") #add All
+geographical_area_info.insert(0, "All") #add All
 
 # Year
 fiscal_year_info = df['Fiscal_year_update'].unique()
@@ -60,7 +60,7 @@ fiscal_year_info.sort()
 geo_area_selectbox = st.sidebar.selectbox('City',geographical_area_info)
 fiscal_year_slider = st.sidebar.slider('Fiscal Year',fiscal_year_info[0],
 	fiscal_year_info[-1],fiscal_year_info[-1])
-submit_checkbox = st.sidebar.checkbox('Submit')
+submit_checkbox = st.sidebar.checkbox('UPDATE')
 
 
 #==================
