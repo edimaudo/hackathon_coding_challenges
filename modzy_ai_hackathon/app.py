@@ -48,7 +48,7 @@ geographical_area_info = df['Recipient_org_city_update'].unique()
 geographical_area_info = geographical_area_info.astype('str')
 geographical_area_info = geographical_area_info.tolist()
 geographical_area_info.sort()
-geographical_area_info.insert(0, "All") #add All
+#geographical_area_info.insert(0, "All") #add All
 
 # Year
 fiscal_year_info = df['Fiscal_year_update'].unique()
@@ -60,7 +60,7 @@ fiscal_year_info.sort()
 geo_area_selectbox = st.sidebar.selectbox('City',geographical_area_info)
 fiscal_year_slider = st.sidebar.slider('Fiscal Year',fiscal_year_info[0],
 	fiscal_year_info[-1],fiscal_year_info[-1])
-submit_checkbox = st.checkbox('Submit')
+submit_checkbox = st.sidebar.checkbox('Submit')
 
 
 #==================
@@ -78,13 +78,35 @@ if submit_checkbox:
 else:
     df = df_backup
 
+
+
 #================
 # Metrics logic
 #================
+df_metrics_geo_agg = df.groupby(['Geographical_area_served']).agg(Total_Amount_Awarded = 
+                                                                       ('Amount_awarded', 'sum')).reset_index()
+df_metrics_geo_agg.columns = ['Geographical_area_served','Total Amount Awarded']
+geo_count = df_metrics_geo_agg['Geographical_area_served'].count()
 
-# of organization
-# Geographical_area_served
-# Amount_applied_for
+
+df_metrics_org_agg = df.groupby(['Organization_name']).agg(Total_Amount_Awarded = 
+                                                                       ('Amount_awarded', 'sum')).reset_index()
+df_metrics_org_agg.columns = ['Organization Name','Total Amount Awarded']
+org_count = df_metrics_org_agg['Organization Name'].count()
+amount_awarded = df_metrics_org_agg['Total Amount Awarded'].sum()
+amount_awarded = "{:,}".format(amount_awarded)
+
+
+
+#==================
+# Metrics setup
+#==================
+metric_col1, metric_col2, metric_col3 = st.columns(3)
+
+metric_col1.metric("# of organizations", str(geo_count))
+metric_col2.metric("Areas Served", str(org_count))
+metric_col3.metric("Amount Awarded (CAD)", str(amount_awarded))
+
 
 #==================
 # Visualization logic
@@ -204,9 +226,7 @@ else:
 
 
 
-#==================
-# Metrics setup
-#==================
+
 
 
 #================
@@ -242,3 +262,5 @@ else:
 # column1.header("Topic Modeling")
 # column2.header("Sentiment analysis")
 # column3.header("Named Entity Recognition")
+
+#st.dataframe(df)
