@@ -1,4 +1,5 @@
-## Challenges Areas
+# Challenges Areas
+***
 1) Cross-border movement
 Enabling a more efficient collection and environmentally sound cross-border movement of e-waste through the collaboration of all involved actors.
 
@@ -55,3 +56,46 @@ business web app to keep track of the waste through the lifecycle of the process
  - State of the supply chain
  - recycling guidelines
  - Send information to business and consumers about latest updates and knowledge + backend (ML systems for trend analysis, customer segmentation, ) for customized messages
+
+
+# Lean Canvas
+***
+
+## Problem
+Recycling in Rwanda is not as effective as it should be.  There is a need to develop efficient, sustainable, and reliable solutions to improve the collection and cross-border movement of e-waste in Rwanda.
+
+## Solution 
+Business and customer applications that would help in individuals/businesses to better understand how they can recycle better by providing critical information.  
+
+
+## Key Metrics
+- Amount recycled measurement
+- Recycling pollutants measurements
+- Business/customer app usage
+
+## Cost Structures
+- Cost to build the application
+- Cost to maintain the application
+- Cost to update content
+
+## Unique value proposition (single clear compelling message)
+- Nothing out there in the market today
+
+## Unfair advantage (Can't be easily bought or copied)
+- Business insights
+
+## Customer Segment
+- Citizens of Rwanda
+- Rwanda's businesses
+
+## Channels (Path to customers)
+- Newspaper ads
+- Influencers
+- Government
+- Word of mouth
+
+## Revenue stream
+- Reduced health care costs
+
+# Application Design
+***
