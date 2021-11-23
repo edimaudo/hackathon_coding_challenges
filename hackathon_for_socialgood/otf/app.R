@@ -66,7 +66,7 @@ ui <- dashboardPage(
                     sidebarLayout(
                         sidebarPanel(
                             sliderInput("Years", "Years:", min = 1999, max = 2019, 
-                                        value = yearSliderInput, step=1, ticks = FALSE, sep="")
+                                        step=1, ticks = FALSE, sep="")
                         ),
                         mainPanel(
                             fluidRow(
