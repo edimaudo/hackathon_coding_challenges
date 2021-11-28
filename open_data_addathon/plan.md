@@ -28,9 +28,9 @@ Tool will provide the ability to run forecasts
 
 ## Timeline
 Flesh out problem Nov 25-27
-Design solution Nov 28-29
-Population Project Page with prelimiary info Nov 30
-Build solution Dec 1 - 8
+Data review Nov 28-29
+Population Project Page with prelimiary info Dec 1
+design + Build solution Dec 1 - 8
 Update project page Dec 9
 Finalize solution Dec 10
 Finalize project page Dec 11
