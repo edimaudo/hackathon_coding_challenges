@@ -1,22 +1,14 @@
+# Social Impact Hackathon for N
+
 ## Timeline
 November 27 @ 9-10am: Introductions, form your team and do some Exploratory Data Analysis!
 
 November 27 – December 4: Collaborate with your teammates and complete your analyses & solution
 
-Latest by 4PM, December 4:
+December 4: 4PM
 Submit your presentations – Add them to the Final Presentations folder in Google Drive
 
-(Note: Only registered Datathon attendees will have access to this Folder. Message us on Slack if you are
-a registered attendee but still don’t have access to it.)
-
-December 4 @ 5-7pm:
-Each team will be given 15 mins to present their findings and ~5 mins Q&A
-time. A Greener Future will also be there and may have questions about your insights/analysis.
-
-Have questions? Ask us in Slack
-
-Even if you were not able to have conclusive findings it would be nice to know your discovery process and what you learned.
-If you cannot attend the presentations, let us know, send us your work and we will do our best to present on your behalf.
+December 4 5-7pm: Presentations (15 mins + 5 for Q&A)
 
 ## Data
 Tweets about trending topics in the US 
@@ -34,29 +26,45 @@ Ex. Climate Change, Renewable Energy, Fossil Fuel, Global Warming
 You’ll get all tweets that correspond with those trends.
 
 ## Data Dictionary
-Columns
-
 Trend: #SaveThePlanet
-
 Date: 2021-11-15
-
 Interval: 2021-11-15 12:00:00 UTC
-
 Text: “The oil pollution in the Gulf needs to stop @JoeBiden. #SaveThePlanet”
-
 URL: www.twitter.com/@gretathunberg/1125215828
-
 Fav Count: 1202
-
 Retweet Count : 240
 
-## Today’s Challenge:
+## Judging criteria
+completeness, functionality, and storytelling/presentation abilities.
+
+## Objective
+The goal of this event, is to create a web app solution (or prototype) for an environmental non-profit organization to organize public sentiment on Twitter so viewers can digest trending news supporting their cause.
+
 Reveal the online discourse about environmental news so A Greener Future can deliver a unique perspective about their industry to their industry.
 
-Some questions to ask yourself:
-“How will I score a trend higher than the others?”
-“Can I create new insights on a daily, weekly, or monthly cadence?”
+Look for common themes, subtopics, large influencers in the space the NFP could collaborate with, popular content the NFP should use, ways to increase Twitter followers & increase Twitter engagement
 
-“What visuals or insights will get us featured in a newsletter or blog?”
-“What content would trend in r/Environment?”
+Key questions
+From greener future
+- What kind of environmental messaging works on twitter (doom and gloom, positive messaging etc)
+- Do users respond well to event promotion or infographics? What is the audience looking for
+- Are the certain influencer or organizations on twitter that greener future should be working with
+- How can we convert twitter followers and engagemnt to monthly donors
+- what type of communication strategy works well (science based audience etc)
 
+Other points
+- “How will I score a trend higher than the others?”
+- “Can I create new insights on a daily, weekly, or monthly cadence?”
+- “What visuals or insights will get us featured in a newsletter or blog?”
+- “What content would trend in r/Environment?”
+
+
+Questions to solve for
+
+EDA
+- Are the certain influencer or organizations on twitter that greener future should be working with
+- “Can I create new insights on a daily, weekly, or monthly cadence?”
+
+Sentiment analysis
+What kind of environmental messaging works on twitter (doom and gloom, positive messaging etc)
+what type of communication strategy works well (science based audience etc)
