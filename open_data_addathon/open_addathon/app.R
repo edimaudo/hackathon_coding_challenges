@@ -19,11 +19,16 @@ for (package in packages) {
 # Load data
 #=============
 
-# Health
+# Health data
 cancer_death <- read.csv("Cancer Death - Data.csv")
 cancer_incidence <- read.csv("CancerIncidence.csv")
 communicable_disease <- read.csv("Communicable Diseases - Data.csv")
-
+episode <- read.csv("Episodes - Data.csv")
+patient_number <- read.csv("Number of annual patients_1.csv")
+patient_classification <- read.csv("Patient Classification according to gender_1.csv")
+payer_claims <- read.csv("Payer Claims - Data.csv")
+patient_addiction <- read.csv("Percentage of addiction on the various  substances for NRC patients_0.csv")
+population_benchmarks <- read.csv("Population & Benchmarks - Data.csv")
 
 #===============
 # UI
