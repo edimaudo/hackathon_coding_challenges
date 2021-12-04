@@ -13,40 +13,40 @@ for (package in packages) {
         library(package, character.only=T)
     }
 }
-
-
 #=============
 # Load data
 #=============
 
 # Health data
-cancer_death <- read.csv("Cancer Death - Data.csv")
-cancer_incidence <- read.csv("CancerIncidence.csv")
-communicable_disease <- read.csv("Communicable Diseases - Data.csv")
-episode <- read.csv("Episodes - Data.csv")
-patient_number <- read.csv("Number of annual patients_1.csv")
-patient_classification <- read.csv("Patient Classification according to gender_1.csv")
-payer_claims <- read.csv("Payer Claims - Data.csv")
-patient_addiction <- read.csv("Percentage of addiction on the various  substances for NRC patients_0.csv")
-population_benchmarks <- read.csv("Population & Benchmarks - Data.csv")
+cancer_death <- read.csv("health/Cancer Death - Data.csv")
+cancer_incidence <- read.csv("health/CancerIncidence.csv")
+communicable_disease <- read.csv("health/Communicable Diseases - Data.csv")
+episode <- read.csv("health/Episodes - Data.csv")
+patient_number <- read.csv("health/Number of annual patients_1.csv")
+patient_classification <- read.csv("health/Patient Classification according to gender_1.csv")
+payer_claims <- read.csv("health/Payer Claims - Data.csv")
+patient_addiction <- read.csv("health/Percentage of addiction on the various  substances for NRC patients_0.csv")
+population_benchmarks <- read.csv("health/Population & Benchmarks - Data.csv")
 
 #===============
 # UI
 #===============
-# UI Drop-downs
-time_info <- c('time','day','day of week','month')
-keyword_info <- sort(c(unique(df$keyword)))
-trend_info <- sort(c(unique(df$trend)))
 
-ui <- dashboardPage(skin = "green",
-                    dashboardHeader(title = "Greener Future "),
+# UI Drop-downs
+# time_info <- c('time','day','day of week','month')
+# keyword_info <- sort(c(unique(df$keyword)))
+# trend_info <- sort(c(unique(df$trend)))
+
+ui <- dashboardPage(
+                    dashboardHeader(title = "Adda "),
                     dashboardSidebar(
                         sidebarMenu(
-                            menuItem("Overview", tabName = "overview", icon = icon("th")), 
-                            menuItem("Keywords", tabName = "keyword", icon = icon("th")),
-                            menuItem("Compare Keywords", tabName = "comparekeyword", icon = icon("th")),
-                            menuItem("Trends", tabName = "trends", icon = icon("th")),
-                            menuItem("Compare Trends", tabName = "comparetrend", icon = icon("th"))
+                            menuItem("About", tabName = "about", icon = icon("th")), 
+                            menuItem("Health", tabName = "health", icon = icon("th"))#, 
+                            #menuItem("Keywords", tabName = "keyword", icon = icon("th")),
+                            #menuItem("Compare Keywords", tabName = "comparekeyword", icon = icon("th")),
+                            #menuItem("Trends", tabName = "trends", icon = icon("th")),
+                            #menuItem("Compare Trends", tabName = "comparetrend", icon = icon("th"))
                         )
                     ),
                     dashboardBody(
@@ -54,12 +54,15 @@ ui <- dashboardPage(skin = "green",
                             #=============#
                             # About
                             #=============#
-                            #=============#
-                            # Overview
-                            #=============#
+                            tabItem(tabName = "about",
+                                    mainPanel(
+                                        includeMarkdown("about.md"),
+                                    )
+                            )
                             #=============#
                             # Health
                             #=============#
+                            
                             #=============#
                             # Energy
                             #=============#
