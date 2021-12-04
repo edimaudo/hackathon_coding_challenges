@@ -20,7 +20,10 @@ for (package in packages) {
 #=============
 
 # Health
-df <- read.csv("filtered_tweets_labelled.csv")
+cancer_death <- read.csv("Cancer Death - Data.csv")
+cancer_incidence <- read.csv("CancerIncidence.csv")
+communicable_disease <- read.csv("Communicable Diseases - Data.csv")
+
 
 #===============
 # UI
