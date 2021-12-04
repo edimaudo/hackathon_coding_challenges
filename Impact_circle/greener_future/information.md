@@ -1,4 +1,4 @@
-# Social Impact Hackathon for N
+# Social Impact Hackathon for Greener Future
 
 ## Timeline
 November 27 @ 9-10am: Introductions, form your team and do some Exploratory Data Analysis!
@@ -14,12 +14,11 @@ December 4 5-7pm: Presentations (15 mins + 5 for Q&A)
 Tweets about trending topics in the US 
 Every hour* since June 2020
 
-Method
+### Method
 Mixed sampling - top 50 trends - 25 tweets every hour - 3 popular and 22 random
 Longer trends get more tweets
 Duplicates intentional
 Don’t fret about missing data
-
 Today, you’ll be getting a pre-filtered version with trends with environmental keywords
 Ex. Climate Change, Renewable Energy, Fossil Fuel, Global Warming
 
@@ -44,14 +43,13 @@ Reveal the online discourse about environmental news so A Greener Future can del
 
 Look for common themes, subtopics, large influencers in the space the NFP could collaborate with, popular content the NFP should use, ways to increase Twitter followers & increase Twitter engagement
 
-Key questions
+## Key questions
 From greener future
 - What kind of environmental messaging works on twitter (doom and gloom, positive messaging etc)
 - Do users respond well to event promotion or infographics? What is the audience looking for
 - Are the certain influencer or organizations on twitter that greener future should be working with
-- How can we convert twitter followers and engagemnt to monthly donors
+- How can we convert twitter followers and engagement to monthly donors
 - what type of communication strategy works well (science based audience etc)
-
 Other points
 - “How will I score a trend higher than the others?”
 - “Can I create new insights on a daily, weekly, or monthly cadence?”
@@ -59,12 +57,29 @@ Other points
 - “What content would trend in r/Environment?”
 
 
-Questions to solve for
+## Design
+About section
 
-EDA
-- Are the certain influencer or organizations on twitter that greener future should be working with
+1) Overall dashboard section
+- Have drop-down or buttons for weekday/weekend, Day of week , monthly trend
+- Info boxes with key information
+- top tweet boxes (by retweets, favortie count, by keywords)
+
+2) Tweet Insights (EDA) + topic modeling
+(dropdown by keyword) + date timeline
+- tables with top 10 people to follow by retweets and follow count
+- table showing top 10 tweets by topic
+- trend across time* 
+Questions that will be answered
+- Are the certain accounts on twitter that greener future should be working with
 - “Can I create new insights on a daily, weekly, or monthly cadence?”
 
-Sentiment analysis
-What kind of environmental messaging works on twitter (doom and gloom, positive messaging etc)
-what type of communication strategy works well (science based audience etc)
+
+3) Enviromental sentiment section (Sentiment analysis)
+- Top 10 tweets and their sentiment
+- accounts and their sentiment
+- trend across time
+Questions that will be answered
+- What kind of environmental messaging works on twitter (doom and gloom, positive messaging etc)
+- Are the certain accounts on twitter that greener future should be working with
+- what type of communication strategy works well (science based audience etc)*
