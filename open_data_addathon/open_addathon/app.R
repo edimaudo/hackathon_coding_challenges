@@ -17,16 +17,22 @@ for (package in packages) {
 # Load data
 #=============
 
-# Health data
-cancer_death <- read.csv("health/Cancer Death - Data.csv")
-cancer_incidence <- read.csv("health/CancerIncidence.csv")
-communicable_disease <- read.csv("health/Communicable Diseases - Data.csv")
-episode <- read.csv("health/Episodes - Data.csv")
-patient_number <- read.csv("health/Number of annual patients_1.csv")
-patient_classification <- read.csv("health/Patient Classification according to gender_1.csv")
-payer_claims <- read.csv("health/Payer Claims - Data.csv")
-patient_addiction <- read.csv("health/Percentage of addiction on the various  substances for NRC patients_0.csv")
-population_benchmarks <- read.csv("health/Population & Benchmarks - Data.csv")
+cancer_death <- read.csv("Cancer Death - Data.csv")
+cancer_incidence <- read.csv("CancerIncidence.csv")
+communicable_disease <- read.csv("Communicable Diseases - Data.csv")
+episode <- read.csv("Episodes - Data.csv")
+patient_number <- read.csv("Number of annual patients_1.csv")
+patient_classification <- read.csv("Patient Classification according to gender_1.csv")
+payer_claims <- read.csv("Payer Claims - Data.csv")
+patient_addiction <- read.csv("Percentage of addiction on the various  substances for NRC patients_0.csv")
+population_benchmarks <- read.csv("Population & Benchmarks - Data.csv")
+
+#=============
+# Data Update
+#=============
+#Update Nationality
+cancer_death$Nationality <- ifelse(cancer_death$Nationality=="Expatriate","Expatriates",ifelse(
+  cancer_death$Nationality=="National","Nationals","Unknown"))
 
 #===============
 # UI
@@ -37,11 +43,16 @@ population_benchmarks <- read.csv("health/Population & Benchmarks - Data.csv")
 # keyword_info <- sort(c(unique(df$keyword)))
 # trend_info <- sort(c(unique(df$trend)))
 
+cancer_nationality <- c("All",sort(unique(cancer_death$Nationality)))
+cancer_gender <- c("All",sort(unique(cancer_death$Gender)))
+cancer_year <- c("All",sort(unique(cancer_death$Year)))
+
 ui <- dashboardPage(
                     dashboardHeader(title = "Adda "),
                     dashboardSidebar(
                         sidebarMenu(
                             menuItem("About", tabName = "about", icon = icon("th")), 
+                            #menuItem("Overall", tabName = "overall", icon = icon("th")), 
                             menuItem("Health", tabName = "health", icon = icon("th"))#, 
                             #menuItem("Keywords", tabName = "keyword", icon = icon("th")),
                             #menuItem("Compare Keywords", tabName = "comparekeyword", icon = icon("th")),
@@ -55,14 +66,54 @@ ui <- dashboardPage(
                             # About
                             #=============#
                             tabItem(tabName = "about",
-                                    mainPanel(
-                                        includeMarkdown("about.md"),
-                                    )
-                            )
+                                    mainPanel(includeMarkdown("about.md"))
+                            ),
                             #=============#
                             # Health
                             #=============#
-                            
+                            tabItem(tabName = "health",
+                                      mainPanel(
+                                        h1("Healthcare",style="text-align: center;"),
+                                        
+                                        box(
+                                          title = "Cancer", status = "primary", solidHeader = TRUE,
+
+                                          fluidRow(
+                                            column(width = 5,
+                                                   selectInput("cancerNationalityInput", 
+                                                               "Nationality", choices = cancer_nationality),
+                                                   selectInput("cancerGenderInput", 
+                                                               "Gender", choices = cancer_gender),
+                                                   selectInput("cancerYearInput", 
+                                                               "Nationality", choices = cancer_year),
+                                                   tabBox(
+                                                   title = "Insights",
+                                                   id = "tabset1", width = '100%', height = "350px",
+                                                   tabPanel("Incidence", plotOutput("hourPlot")),
+                                                   tabPanel("Death", plotOutput("hourPlot"))
+                                                    )
+                                                   
+                                            )
+                                           
+                                              
+                                              
+                                              #tabPanel("Day", plotOutput("dayPlot")),
+                                              #tabPanel("Day of Week", plotOutput("dayofweekPlot")),
+                                              #tabPanel("Month", plotOutput("monthPlot")), 
+                                              #tabPanel('Keywords',DT::dataTableOutput("keywordTable")),
+                                              #tabPanel('Trends',DT::dataTableOutput("trendoverallTable")),
+                                              #tabPanel('Accounts',DT::dataTableOutput("accountoverallTable")),
+                                            #) 
+                                        #)#,
+                                       # box(
+                                      #    title = "Patients", status = "primary", solidHeader = TRUE,
+                                      #  ),
+                                      #  box(
+                                      #    title = "Insurance", status = "primary", solidHeader = TRUE,
+                                      #  )
+                                      )
+                                    
+                            )
                             #=============#
                             # Energy
                             #=============#
@@ -75,6 +126,8 @@ ui <- dashboardPage(
                             
                         )
                     )
+  )
+)
 )
 
 
@@ -89,7 +142,13 @@ server <- function(input, output,session) {
 #=============#
 # Health
 #=============#
-
+  #overall  month plots
+  output$healthdata <- DT::renderDataTable({
+    
+    DT::datatable(cancer_death)
+    
+  })
+  
 #=============#
 # Energy
 #=============#
