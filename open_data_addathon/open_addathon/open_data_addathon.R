@@ -37,4 +37,24 @@ cancer_nationality <- c("All",sort(unique(cancer_death$Nationality)))
 cancer_gender <- c("All",sort(unique(cancer_death$Gender)))
 cancer_year <- c("All",sort(unique(cancer_death$Year)))
 
+df <- cancer_incidence %>%
+  group_by(Year) %>%
+  summarise(Total = sum(Count)) %>%
+  select(Year, Total)
 
+df <- cancer_death %>%
+  group_by(Cancer.site) %>%
+  summarise(Total = sum(Count)) %>%
+  arrange(desc(Total)) %>%
+  top_n(5)%>%
+  select(Cancer.site, Total)
+
+ggplot(df, aes(reorder(Cancer.site,Total), Total)) + 
+  geom_bar(stat="identity", width = 0.5, position="dodge") +  coord_flip() +
+  theme_minimal() + scale_y_continuous(labels = comma) +
+  labs(x = "Cancer Site", y = "Total", fill="Gender") + 
+  theme(legend.text = element_text(size = 12),
+        legend.title = element_text(size = 15),
+        axis.title = element_text(size = 15),
+        axis.text = element_text(size = 15),
+        axis.text.x = element_text(angle = 0, hjust = 1))
