@@ -84,7 +84,6 @@ ui <- dashboardPage(
                                           tabBox(
                                             title = "Cancer care",
                                             id = "tabset1",
-                                            
                                             tabPanel("Incidence", plotOutput("incidencePlot", height = 150)),
                                             tabPanel("Death", plotOutput("deathPlot", height = 150)),
                                             tabPanel("Top 5 Cancer sites", plotOutput("cancerSitePlot", height = 150))
@@ -99,12 +98,13 @@ ui <- dashboardPage(
                                         ),
                                         fluidRow(
                                           tabBox(
-                                            title = "ER Visits",
+                                            title = "Disease",
                                             id = "tabset2",
-                                            tabPanel("Tab2", "Tab content 2")
+                                            tabPanel("Tab2", "Tab content 2"),
+                                            tabPanel("Tab1", "Tab content 1")
                                           ),
                                           tabBox(
-                                            title = "Communicable Infections",
+                                            title = "ER Visits",
                                             side = "right", height = "250px",
                                             selected = "Tab1",
                                             tabPanel("Tab1", "Tab content 1"),
