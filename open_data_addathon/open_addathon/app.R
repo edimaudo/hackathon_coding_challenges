@@ -50,8 +50,9 @@ episode$National.Expatriate <- ifelse(episode$National.Expatriate=="Expatriate",
 
 # Update communicable diseases Cases
 communicable_disease$Cases <- as.numeric(communicable_disease$Cases)
+# Update episode count
+episode$Episodes.Count <- as.numeric(episode$Episodes.Count)
 
-#
 #===============
 # UI
 #===============
@@ -62,36 +63,34 @@ cancer_gender <- c("All",sort(unique(cancer_death$Gender)))
 insurance_group <- c("All",sort(unique(payer_claims$Package.Group)))
 
 
+
 ui <- dashboardPage(
                     dashboardHeader(title = "Adda Discovery"),
                     dashboardSidebar(
                         sidebarMenu(
                             menuItem("About", tabName = "about", icon = icon("th")), 
                             menuItem("Health", tabName = "health", icon = icon("th")), 
-                            menuItem("Tourism", tabName = "tourism", icon = icon("th"))#,
-                            #menuItem("Tourism", tabName = "tourism", icon = icon("th")),
+                            menuItem("Tourism", tabName = "tourism", icon = icon("th"))
                         )
                     ),
                     dashboardBody(
                         tabItems(
-                            #=============#
+                            #=============
                             # About
-                            #=============#
+                            #=============
                             tabItem(tabName = "about",
                                     mainPanel(includeMarkdown("about.md"))
                             ),
-                            #=============#
+                            #=============
                             # Health
-                            #=============#
+                            #=============
                             tabItem(tabName = "health",
                                     sidebarLayout(
                                       sidebarPanel(
                                         selectInput("cancerNationalityInput",
                                                     "Nationality", choices = cancer_nationality),
                                         selectInput("cancerGenderInput",
-                                                    "Gender", choices = cancer_gender),
-                                        selectInput("insuranceInput",
-                                                    "Insurance Package", choices = insurance_group)
+                                                    "Gender", choices = cancer_gender)
                                       ),
                                       mainPanel(
                                         fluidRow(
@@ -100,32 +99,41 @@ ui <- dashboardPage(
                                             id = "tabset1",
                                             tabPanel("Incidence", plotOutput("incidencePlot", height = 150)),
                                             tabPanel("Death", plotOutput("deathPlot", height = 150)),
-                                            tabPanel("Top 5 Cancer sites", plotOutput("cancerSitePlot", height = 150))
+                                            tabPanel("Top 5 Cancer sites", 
+                                                     plotOutput("cancerSitePlot", height = 150))
                                           ),
                                           tabBox(
                                             title = "Insurance",
                                             side = "right", height = "250px",
                                             selected = "Payer Trend",
-                                            tabPanel("Payer Trend", plotOutput("insuranceTrendPlot", height = 150)),
-                                            tabPanel("Top 5 Payers", plotOutput("insurancePayerPlot", height = 150)) 
+                                            tabPanel("Payer Trend", 
+                                                     plotOutput("insuranceTrendPlot", height = 150))
                                           )
                                         ),
                                         fluidRow(
                                           tabBox(
-                                            title = "Communicable Disease",
+                                            title = "Communicable Diseases",
                                             id = "tabset2",
-                                            tabPanel("Disease Trend", plotOutput("diseaseTrendPlot", height = 150)),
-                                            tabPanel("Top 5 Diseases", plotOutput("diseasePlot", height = 150))
+                                            tabPanel("Disease Trend", 
+                                                     plotOutput("diseaseTrendPlot", height = 150)),
+                                            tabPanel("Top 5 Diseases", 
+                                                     plotOutput("diseasePlot", height = 150))
                                           ),
                                           tabBox(
-                                            title = "ER Visits",
+                                            title = "Episodes",
                                             side = "right", height = "250px",
-                                            selected = "Tab1",
-                                            tabPanel("Tab1", "Tab content 1"),
-                                            tabPanel("Tab2", "Tab content 2"),
-                                            tabPanel("Tab3", "Note that when side=right, the tab order is reversed.")
+                                            selected = "Episode Trends",
+                                            tabPanel("Top 5 ER Facilites", "Tab content 2"),
+                                            tabPanel("Sector vs region", "Nt, the ersed."),
+                                            tabPanel("Episode Trends", 
+                                                     plotOutput("erTrendPlot", height = 150)),
+                                            tabPanel("Patient type vs facility type", "Nt, the ersed."),
+                                            tabPanel("ER type vs patienttype", "Nt, the ersed."),
                                           )
                                         )
+                                        #=============
+                                        # Tourism
+                                        #=============
                                       )
                             )
                         )
@@ -288,14 +296,14 @@ server <- function(input, output,session) {
       summarise(Total = sum(Claims.Count)) %>%
       select(Year, Total)
     
-    if (input$insuranceInput != "All"){
-      df <- payer_claims %>%
-        filter(Package.Group == input$insuranceInput) %>%
-        group_by(Year) %>%
-        summarise(Total = sum(Claims.Count)) %>%
-        select(Year, Total)
-      
-    } 
+    # if (input$insuranceInput != "All"){
+    #   df <- payer_claims %>%
+    #     filter(Package.Group == input$insuranceInput) %>%
+    #     group_by(Year) %>%
+    #     summarise(Total = sum(Claims.Count)) %>%
+    #     select(Year, Total)
+    #   
+    # } 
     
     ggplot(data=df, aes(x=as.factor(Year), y=Total, group=1)) +
       geom_line()+
@@ -312,36 +320,38 @@ server <- function(input, output,session) {
 #=====================
 # Insurance Payer plot
 #=====================
-  output$insurancePayerPlot <- renderPlot({
-    df <- payer_claims %>%
-      group_by(Claim.Payer.Name) %>%
-      summarise(Total = sum(Claims.Count)) %>%
-      arrange(desc(Total)) %>%
-      top_n(5) %>%
-      select(Claim.Payer.Name, Total)
-    
-    if (input$insuranceInput != "All"){
-      df <- payer_claims %>%
-        filter(Package.Group == input$insuranceInput) %>%
-        group_by(Claim.Payer.Name) %>%
-        summarise(Total = sum(Claims.Count)) %>%
-        arrange(desc(Total)) %>%
-        top_n(5) %>%
-        select(Claim.Payer.Name, Total)
-      
-    } 
-    
-    ggplot(df, aes(reorder(Claim.Payer.Name,Total), Total)) + 
-      geom_bar(stat="identity", width = 0.5, position="dodge") +  coord_flip() +
-      theme_minimal() + scale_y_continuous(labels = comma) +
-      labs(x = "Cancer Site", y = "Total") + 
-      theme(legend.text = element_text(size = 10),
-            legend.title = element_text(size = 12),
-            axis.title = element_text(size = 10),
-            axis.text = element_text(size = 10),
-            axis.text.x = element_text(angle = 20, hjust = 1))
-    
-  })
+  # output$insurancePayerPlot <- renderPlot({
+  #   df <- payer_claims %>%
+  #     group_by(Claim.Payer.Name) %>%
+  #     summarise(Total = sum(Claims.Count)) %>%
+  #     arrange(desc(Total)) %>%
+  #     top_n(5) %>%
+  #     select(Claim.Payer.Name, Total)
+  #   
+  #   if (input$insuranceInput != "All"){
+  #     df <- payer_claims %>%
+  #       filter(Package.Group == input$insuranceInput) %>%
+  #       group_by(Claim.Payer.Name) %>%
+  #       summarise(Total = sum(Claims.Count)) %>%
+  #       arrange(desc(Total)) %>%
+  #       top_n(5) %>%
+  #       select(Claim.Payer.Name, Total)
+  #     
+  #   } 
+  #   
+  #   ggplot(df, aes(reorder(Claim.Payer.Name,Total), Total)) + 
+  #     geom_bar(stat="identity", width = 0.5, position="dodge") +  coord_flip() +
+  #     theme_minimal() + scale_y_continuous(labels = comma) +
+  #     labs(x = "Cancer Site", y = "Total") + 
+  #     theme(legend.text = element_text(size = 10),
+  #           legend.title = element_text(size = 10),
+  #           axis.title = element_text(size = 10),
+  #           axis.text = element_text(size = 8),
+  #           axis.text.x = element_text(angle = 20, hjust = 1))
+  #   
+  # })
+
+
 #===================
 # Communicable disease plot
 #===================
@@ -371,9 +381,9 @@ server <- function(input, output,session) {
     
   })
 
-  #===================
-  # Communicable disease top 5
-  #===================
+#===================
+# Communicable disease top 5
+#===================
   output$diseasePlot <- renderPlot({
     df <- communicable_disease %>%
       group_by(Disease) %>%
@@ -404,6 +414,35 @@ server <- function(input, output,session) {
             axis.text.x = element_text(angle = 0, hjust = 1))
   })
   
+
+#=================== 
+# ER Visits  
+#=================== 
+  output$erTrendPlot <- renderPlot({
+    df <- episode %>%
+      group_by(Year) %>%
+      summarise(Total = sum(Episodes.Count)) %>%
+      select(Year, Total)
+    
+    if (input$cancerNationalityInput != "All"){
+      df <- episode %>%
+        filter(National.Expatriate == input$cancerNationalityInput) %>%
+        group_by(Year) %>%
+        summarise(Total = sum(Cases)) %>%
+        select(Year, Total)
+    } 
+    
+    ggplot(data=df, aes(x=as.factor(Year), y=Total, group=1)) +
+      geom_line()+
+      geom_point() + theme_minimal() + scale_y_continuous(labels = comma) +
+      labs(x = "Year", y = "Total") + 
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    
+  })
 }
 
 shinyApp(ui, server)
