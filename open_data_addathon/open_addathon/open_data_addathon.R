@@ -33,6 +33,13 @@ population_benchmarks <- read.csv("Population & Benchmarks - Data.csv")
 cancer_death$Nationality <- ifelse(cancer_death$Nationality=="Expatriate","Expatriates",ifelse(
   cancer_death$Nationality=="National","Nationals","Unknown"))
 
+communicable_disease$Nationality <- ifelse(communicable_disease$Nationality=="Expatriate",
+                                           "Expatriates",
+                                           ifelse(communicable_disease$Nationality=="National",
+                                                  "Nationals","Unknown"))
+
+communicable_disease$Cases <- as.numeric(communicable_disease$Cases)
+
 cancer_nationality <- c("All",sort(unique(cancer_death$Nationality)))
 cancer_gender <- c("All",sort(unique(cancer_death$Gender)))
 cancer_year <- c("All",sort(unique(cancer_death$Year)))
@@ -49,12 +56,21 @@ df <- cancer_death %>%
   top_n(5)%>%
   select(Cancer.site, Total)
 
-ggplot(df, aes(reorder(Cancer.site,Total), Total)) + 
-  geom_bar(stat="identity", width = 0.5, position="dodge") +  coord_flip() +
-  theme_minimal() + scale_y_continuous(labels = comma) +
-  labs(x = "Cancer Site", y = "Total", fill="Gender") + 
+communicable_disease$Cases <- parse_number(communicable_disease$Cases)
+df <- communicable_disease %>%
+  group_by(Year) %>%
+  summarise(Total = sum(Cases)) %>%
+  select(Year, Total)
+
+ggplot(data=df, aes(x=Year, y=Total, group=1)) +
+  geom_line()+
+  geom_point() + theme_minimal() +
+  labs(x = "Year", y = "Total") + 
   theme(legend.text = element_text(size = 12),
         legend.title = element_text(size = 15),
         axis.title = element_text(size = 15),
         axis.text = element_text(size = 15),
         axis.text.x = element_text(angle = 0, hjust = 1))
+
+
+
