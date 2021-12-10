@@ -3,7 +3,7 @@ rm(list = ls()) #clear environment
 #===============
 # Libraries
 #===============
-packages <- c('ggplot2', 'corrplot','tidyverse',"caret",'scales',
+packages <- c('ggplot2', 'corrplot','tidyverse',"caret",'scales',"plotly",
               'dplyr','mlbench','caTools','forecast','TTR','xts','lubridate','shiny',
               'shinydashboard','tidyr','gridExtra','stopwords','tidytext','stringr',
               'reshape2', 'textdata','textmineR','topicmodels','textclean','pals','lubridate')
@@ -21,11 +21,13 @@ cancer_death <- read.csv("Cancer Death - Data.csv")
 cancer_incidence <- read.csv("CancerIncidence.csv")
 communicable_disease <- read.csv("Communicable Diseases - Data.csv")
 episode <- read.csv("Episodes - Data.csv")
-patient_number <- read.csv("Number of annual patients_1.csv")
-patient_classification <- read.csv("Patient Classification according to gender_1.csv")
+#patient_number <- read.csv("Number of annual patients_1.csv")
+#patient_classification <- read.csv("Patient Classification according to gender_1.csv")
 payer_claims <- read.csv("Payer Claims - Data.csv")
 patient_addiction <- read.csv("Percentage of addiction on the various  substances for NRC patients_0.csv")
 population_benchmarks <- read.csv("Population & Benchmarks - Data.csv")
+
+
 
 #=============
 # Data Update
@@ -34,30 +36,26 @@ population_benchmarks <- read.csv("Population & Benchmarks - Data.csv")
 cancer_death$Nationality <- ifelse(cancer_death$Nationality=="Expatriate","Expatriates",ifelse(
   cancer_death$Nationality=="National","Nationals","Unknown"))
 
+
+
 #===============
 # UI
 #===============
 
 # UI Drop-downs
-# time_info <- c('time','day','day of week','month')
-# keyword_info <- sort(c(unique(df$keyword)))
-# trend_info <- sort(c(unique(df$trend)))
-
 cancer_nationality <- c("All",sort(unique(cancer_death$Nationality)))
 cancer_gender <- c("All",sort(unique(cancer_death$Gender)))
-cancer_year <- c("All",sort(unique(cancer_death$Year)))
+insurance_group <- c("All",sort(unique(payer_claims$Package.Group)))
+
 
 ui <- dashboardPage(
-                    dashboardHeader(title = "Adda "),
+                    dashboardHeader(title = "Adda Discovery"),
                     dashboardSidebar(
                         sidebarMenu(
                             menuItem("About", tabName = "about", icon = icon("th")), 
-                            #menuItem("Overall", tabName = "overall", icon = icon("th")), 
-                            menuItem("Health", tabName = "health", icon = icon("th"))#, 
-                            #menuItem("Keywords", tabName = "keyword", icon = icon("th")),
-                            #menuItem("Compare Keywords", tabName = "comparekeyword", icon = icon("th")),
-                            #menuItem("Trends", tabName = "trends", icon = icon("th")),
-                            #menuItem("Compare Trends", tabName = "comparetrend", icon = icon("th"))
+                            menuItem("Health", tabName = "health", icon = icon("th")), 
+                            menuItem("Tourism", tabName = "tourism", icon = icon("th"))#,
+                            #menuItem("Tourism", tabName = "tourism", icon = icon("th")),
                         )
                     ),
                     dashboardBody(
@@ -72,62 +70,63 @@ ui <- dashboardPage(
                             # Health
                             #=============#
                             tabItem(tabName = "health",
+                                    sidebarLayout(
+                                      sidebarPanel(
+                                        selectInput("cancerNationalityInput",
+                                                    "Nationality", choices = cancer_nationality),
+                                        selectInput("cancerGenderInput",
+                                                    "Gender", choices = cancer_gender),
+                                        selectInput("insuranceInput",
+                                                    "Insurance Package", choices = insurance_group)
+                                      ),
                                       mainPanel(
-                                        h1("Healthcare",style="text-align: center;"),
-                                        
-                                        box(
-                                          title = "Cancer", status = "primary", solidHeader = TRUE,
-
-                                          fluidRow(
-                                            column(width = 5,
-                                                   selectInput("cancerNationalityInput", 
-                                                               "Nationality", choices = cancer_nationality),
-                                                   selectInput("cancerGenderInput", 
-                                                               "Gender", choices = cancer_gender),
-                                                   selectInput("cancerYearInput", 
-                                                               "Nationality", choices = cancer_year),
-                                                   tabBox(
-                                                   title = "Insights",
-                                                   id = "tabset1", width = '100%', height = "350px",
-                                                   tabPanel("Incidence", plotOutput("hourPlot")),
-                                                   tabPanel("Death", plotOutput("hourPlot"))
-                                                    )
-                                                   
-                                            )
-                                           
-                                              
-                                              
-                                              #tabPanel("Day", plotOutput("dayPlot")),
-                                              #tabPanel("Day of Week", plotOutput("dayofweekPlot")),
-                                              #tabPanel("Month", plotOutput("monthPlot")), 
-                                              #tabPanel('Keywords',DT::dataTableOutput("keywordTable")),
-                                              #tabPanel('Trends',DT::dataTableOutput("trendoverallTable")),
-                                              #tabPanel('Accounts',DT::dataTableOutput("accountoverallTable")),
-                                            #) 
-                                        #)#,
-                                       # box(
-                                      #    title = "Patients", status = "primary", solidHeader = TRUE,
-                                      #  ),
-                                      #  box(
-                                      #    title = "Insurance", status = "primary", solidHeader = TRUE,
-                                      #  )
+                                        fluidRow(
+                                          tabBox(
+                                            title = "Cancer care",
+                                            id = "tabset1",
+                                            
+                                            tabPanel("Incidence", plotOutput("incidencePlot", height = 150)),
+                                            tabPanel("Death", plotOutput("deathPlot", height = 150)),
+                                            tabPanel("Top 5 Cancer sites", plotOutput("cancerSitePlot", height = 150))
+                                          ),
+                                          tabBox(
+                                            title = "Insurance",
+                                            side = "right", height = "250px",
+                                            selected = "Payer Trend",
+                                            tabPanel("Payer Trend", plotOutput("insuranceTrendPlot", height = 150)),
+                                            tabPanel("Top 5 Payers", plotOutput("insurancePayerPlot", height = 150)) 
+                                          )
+                                        ),
+                                        fluidRow(
+                                          tabBox(
+                                            title = "ER Visits",
+                                            id = "tabset2",
+                                            tabPanel("Tab2", "Tab content 2")
+                                          ),
+                                          tabBox(
+                                            title = "Communicable Infections",
+                                            side = "right", height = "250px",
+                                            selected = "Tab1",
+                                            tabPanel("Tab1", "Tab content 1"),
+                                            tabPanel("Tab2", "Tab content 2"),
+                                            tabPanel("Tab3", "Note that when side=right, the tab order is reversed.")
+                                          )
+                                        )
+                    
+                                            #     tabBox(
+                                            # 
+                                            #       side = "right",
+                                            #       selected = "Payer Trend",
+                                            #       id = "tabset2", width = '10px', height = "10px",
+                                            #       tabPanel("Payer Trend", plotOutput("insuranceTrendPlot")),
+                                            #       tabPanel("Top 5 Payers", plotOutput("payerPlot")),
+                                            #     )
                                       )
-                                    
                             )
-                            #=============#
-                            # Energy
-                            #=============#
-                            #=============#
-                            # Tourism
-                            #=============#
-                            #=============#
-                            # Predictions
-                            #=============#
-                            
                         )
                     )
-  )
-)
+                    
+      )
 )
 
 
@@ -135,31 +134,217 @@ ui <- dashboardPage(
 # Server
 #===============
 server <- function(input, output,session) {
-#=============#
-# Overview
-#=============#
 
-#=============#
+cancer_check <- function(df,nationality,gender){
+  
+}
+
+
+
+#===================
 # Health
-#=============#
-  #overall  month plots
-  output$healthdata <- DT::renderDataTable({
+#===================
+
+# Cancer plots
+#===================
+# Cancer Incident plot
+#===================
+  output$incidencePlot <- renderPlot({
+
+    df <- cancer_incidence %>%
+      group_by(Year) %>%
+      summarise(Total = sum(Count)) %>%
+      select(Year, Total)
+        
+    if (input$cancerNationalityInput != "All"){
+      df <- cancer_incidence %>%
+        filter(Nationality == input$cancerNationalityInput) %>%
+        group_by(Year) %>%
+        summarise(Total = sum(Count)) %>%
+        select(Year, Total)
+      
+    } else if (input$cancerGenderInput != "All"){
+      df <- cancer_incidence %>%
+        filter(Gender == input$cancerGenderInput) %>%
+        group_by(Year) %>%
+        summarise(Total = sum(Count)) %>%
+        select(Year, Total)     
+    } else if (input$cancerGenderInput != "All" & input$cancerNationalityInput != "All"){
+      df <- cancer_incidence %>%
+        filter(Nationality == input$cancerNationalityInput,Gender == input$cancerGenderInput) %>%
+        group_by(Year) %>%
+        summarise(Total = sum(Count)) %>%
+        select(Year, Total)
+    }
+
     
-    DT::datatable(cancer_death)
+    ggplot(data=df, aes(x=Year, y=Total, group=1)) +
+      geom_line()+
+      geom_point() + theme_minimal() +
+      labs(x = "Year", y = "Total") + 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 15),
+            axis.title = element_text(size = 15),
+            axis.text = element_text(size = 15),
+            axis.text.x = element_text(angle = 0, hjust = 1))
     
   })
+  #===================
+  # Cancer death plot
+  #===================
+  output$deathPlot <- renderPlot({
+    df <- cancer_death %>%
+      group_by(Year) %>%
+      summarise(Total = sum(Count)) %>%
+      select(Year, Total)
+    
+    if (input$cancerNationalityInput != "All"){
+      df <- cancer_death %>%
+        filter(Nationality == input$cancerNationalityInput) %>%
+        group_by(Year) %>%
+        summarise(Total = sum(Count)) %>%
+        select(Year, Total)
+      
+    } else if (input$cancerGenderInput != "All"){
+      df <- cancer_death%>%
+        filter(Gender == input$cancerGenderInput) %>%
+        group_by(Year) %>%
+        summarise(Total = sum(Count)) %>%
+        select(Year, Total)     
+    } else if (input$cancerGenderInput != "All" & input$cancerNationalityInput != "All"){
+      df <- cancer_death %>%
+        filter(Nationality == input$cancerNationalityInput,Gender == input$cancerGenderInput) %>%
+        group_by(Year) %>%
+        summarise(Total = sum(Count)) %>%
+        select(Year, Total)
+    }
+    
+    ggplot(data=df, aes(x=Year, y=Total, group=1)) +
+      geom_line()+
+      geom_point() + theme_minimal() +
+      labs(x = "Year", y = "Total") + 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 15),
+            axis.title = element_text(size = 15),
+            axis.text = element_text(size = 15),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    
+    
+
+  })
+  #===================
+  # Cancer site plot
+  #===================
+  output$cancerSitePlot <- renderPlot({
+    df <- cancer_death %>%
+      group_by(Cancer.site) %>%
+      summarise(Total = sum(Count)) %>%
+      arrange(desc(Total)) %>%
+      top_n(5)%>%
+      select(Cancer.site, Total)
+    
+    if (input$cancerNationalityInput != "All"){
+      df <- cancer_death %>%
+        filter(Nationality == input$cancerNationalityInput) %>%
+        group_by(Cancer.site) %>%
+        summarise(Total = sum(Count)) %>%
+        arrange(desc(Total)) %>%
+        top_n(5)%>%
+        select(Cancer.site, Total)
+      
+    } else if (input$cancerGenderInput != "All"){
+      df <- cancer_death%>%
+        filter(Gender == input$cancerGenderInput) %>%
+        group_by(Cancer.site) %>%
+        summarise(Total = sum(Count)) %>%
+        arrange(desc(Total)) %>%
+        top_n(5)%>%
+        select(Cancer.site, Total)     
+    } else if (input$cancerGenderInput != "All" & input$cancerNationalityInput != "All"){
+      df <- cancer_death %>%
+        filter(Nationality == input$cancerNationalityInput, Gender == input$cancerGenderInput) %>%
+        group_by(Cancer.site) %>%
+        summarise(Total = sum(Count)) %>%
+        arrange(desc(Total)) %>%
+        top_n(5)%>%
+        select(Cancer.site, Total)
+    }
+    
+    
+    ggplot(df, aes(reorder(Cancer.site,Total), Total)) + 
+      geom_bar(stat="identity", width = 0.5, position="dodge") +  coord_flip() +
+      theme_minimal() + scale_y_continuous(labels = comma) +
+      labs(x = "Cancer Site", y = "Total") + 
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+  })
   
-#=============#
-# Energy
-#=============#
+# Insurance plots
+  output$insuranceTrendPlot <- renderPlot({
+    df <- payer_claims %>%
+      group_by(Year) %>%
+      summarise(Total = sum(Claims.Count)) %>%
+      select(Year, Total)
+    
+    if (input$insuranceInput != "All"){
+      df <- payer_claims %>%
+        filter(Package.Group == input$insuranceInput) %>%
+        group_by(Year) %>%
+        summarise(Total = sum(Claims.Count)) %>%
+        select(Year, Total)
+      
+    } 
+    
+    ggplot(data=df, aes(x=as.factor(Year), y=Total, group=1)) +
+      geom_line()+
+      geom_point() + theme_minimal() + scale_y_continuous(labels = comma) +
+      labs(x = "Year", y = "Total") + 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 15),
+            axis.title = element_text(size = 15),
+            axis.text = element_text(size = 15),
+            axis.text.x = element_text(angle = 45, hjust = 1))
+    
+  })
 
-#=============#
-# Tourism
-#=============#
+  # Insurance plots
+  output$insurancePayerPlot <- renderPlot({
+    df <- payer_claims %>%
+      group_by(Claim.Payer.Name) %>%
+      summarise(Total = sum(Claims.Count)) %>%
+      arrange(desc(Total)) %>%
+      top_n(5) %>%
+      select(Claim.Payer.Name, Total)
+    
+    if (input$insuranceInput != "All"){
+      df <- payer_claims %>%
+        filter(Package.Group == input$insuranceInput) %>%
+        group_by(Claim.Payer.Name) %>%
+        summarise(Total = sum(Claims.Count)) %>%
+        arrange(desc(Total)) %>%
+        top_n(5) %>%
+        select(Claim.Payer.Name, Total)
+      
+    } 
+    
+    ggplot(df, aes(reorder(Claim.Payer.Name,Total), Total)) + 
+      geom_bar(stat="identity", width = 0.5, position="dodge") +  coord_flip() +
+      theme_minimal() + scale_y_continuous(labels = comma) +
+      labs(x = "Cancer Site", y = "Total") + 
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 20, hjust = 1))
+    
+  })
 
-#=============#
-# Predictions
-#=============#
+  #insurancePayerPlot
+
+
 }
 
 shinyApp(ui, server)
