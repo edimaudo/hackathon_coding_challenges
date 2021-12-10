@@ -32,11 +32,15 @@ population_benchmarks <- read.csv("Population & Benchmarks - Data.csv")
 #=============
 # Data Update
 #=============
-#Update Nationality
+
+# Update Nationality
 cancer_death$Nationality <- ifelse(cancer_death$Nationality=="Expatriate","Expatriates",ifelse(
   cancer_death$Nationality=="National","Nationals","Unknown"))
 
-
+communicable_disease$Nationality <- ifelse(communicable_disease$Nationality=="Expatriate",
+                                           "Expatriates",
+                                           ifelse(communicable_disease$Nationality=="National",
+                                                  "Nationals","Unknown"))
 
 #===============
 # UI
