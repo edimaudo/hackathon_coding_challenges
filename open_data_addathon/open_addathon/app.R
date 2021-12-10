@@ -43,8 +43,15 @@ communicable_disease$Nationality <- ifelse(communicable_disease$Nationality=="Ex
                                            ifelse(communicable_disease$Nationality=="National",
                                                   "Nationals","Unknown"))
 
+episode$National.Expatriate <- ifelse(episode$National.Expatriate=="Expatriate",
+                                           "Expatriates",
+                                           ifelse(episode$National.Expatriate=="National",
+                                                  "Nationals","Unknown"))
+
 # Update communicable diseases Cases
 communicable_disease$Cases <- as.numeric(communicable_disease$Cases)
+
+#
 #===============
 # UI
 #===============
