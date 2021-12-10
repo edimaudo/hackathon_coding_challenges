@@ -72,5 +72,44 @@ ggplot(data=df, aes(x=Year, y=Total, group=1)) +
         axis.text = element_text(size = 15),
         axis.text.x = element_text(angle = 0, hjust = 1))
 
+df <- episode %>%
+  filter(Year >= 2011 & Year <= 2019) %>%
+  group_by(Facility.Reporting.Name) %>%
+  summarise(Total = sum(Episodes.Count)) %>%
+  select(Facility.Reporting.Name, Total)
 
+
+
+ggplot(df, aes(reorder(Facility.Reporting.Name,Total), Total)) + 
+  geom_bar(stat="identity", width = 0.5, position="dodge") +  coord_flip() +
+  theme_minimal() + scale_y_continuous(labels = comma) +
+  labs(x = "Facility", y = "Total") + 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(angle = 0, hjust = 1))
+
+
+
+df <- episode %>%
+  filter(Year >= 2011 & Year <= 2019) %>%
+  group_by(Inpatient.Outpatient, Facility.Type.Group) %>%
+  summarise(Total = sum(Episodes.Count)) %>%
+  select(Inpatient.Outpatient, Facility.Type.Group, Total)
+
+
+
+
+ggplot(df, aes(Facility.Type.Group,Total, fill=Inpatient.Outpatient)) +   
+  geom_violin() + 
+  #ggplot(df, aes(Facility.Type.Group,Total)) + 
+  # geom_bar(stat="identity", width = 0.5, position="dodge", aes(fill = Inpatient.Outpatient)) +
+  theme_minimal() + scale_y_continuous(labels = comma) +
+  labs(x = "Facility Type", y = "Total", fill="Patient Type") + 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(angle = 20, hjust = 1))
 
