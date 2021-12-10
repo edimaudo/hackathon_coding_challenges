@@ -61,7 +61,7 @@ episode$Episodes.Count <- as.numeric(episode$Episodes.Count)
 cancer_nationality <- c("All",sort(unique(cancer_death$Nationality)))
 cancer_gender <- c("All",sort(unique(cancer_death$Gender)))
 insurance_group <- c("All",sort(unique(payer_claims$Package.Group)))
-
+year_info <- c(2011,2012,2013,2014,2015,2016,2017,2018,2019)
 
 
 ui <- dashboardPage(
@@ -75,22 +75,25 @@ ui <- dashboardPage(
                     ),
                     dashboardBody(
                         tabItems(
-                            #=============
+                            ################
                             # About
-                            #=============
+                            ################
                             tabItem(tabName = "about",
                                     mainPanel(includeMarkdown("about.md"))
                             ),
-                            #=============
+                            ################
                             # Health
-                            #=============
+                            ################
                             tabItem(tabName = "health",
                                     sidebarLayout(
                                       sidebarPanel(
                                         selectInput("cancerNationalityInput",
                                                     "Nationality", choices = cancer_nationality),
                                         selectInput("cancerGenderInput",
-                                                    "Gender", choices = cancer_gender)
+                                                    "Gender", choices = cancer_gender),
+                                        sliderInput("yearInput","Year",min=min(year_info),max=max(year_info),
+                                                    value = c(min(year_info),max(year_info)),
+                                                    step =1,ticks = TRUE)
                                       ),
                                       mainPanel(
                                         fluidRow(
@@ -123,22 +126,25 @@ ui <- dashboardPage(
                                             title = "Episodes",
                                             side = "right", height = "250px",
                                             selected = "Episode Trends",
-                                            tabPanel("Top 5 ER Facilites", "Tab content 2"),
-                                            tabPanel("Sector vs region", "Nt, the ersed."),
+                                            tabPanel("Top 5 ER Facilites", 
+                                                     plotOutput("erFacilityPlot", height = 150)),
+                                            tabPanel("Sector & Region", 
+                                                     plotOutput("ersectorRegionPlot", height = 150)),
                                             tabPanel("Episode Trends", 
                                                      plotOutput("erTrendPlot", height = 150)),
-                                            tabPanel("Patient type vs facility type", "Nt, the ersed."),
-                                            tabPanel("ER type vs patienttype", "Nt, the ersed."),
+                                            tabPanel("Patient & Facility Type", 
+                                                     plotOutput("erPatientFacilityPlot", height = 150)),
+                                            tabPanel("ER & Patient Type", 
+                                                     plotOutput("erPatientTypePlot", height = 150)),
                                           )
                                         )
-                                        #=============
+                                        ################
                                         # Tourism
-                                        #=============
+                                        ################
                                       )
                             )
                         )
                     )
-                    
       )
 )
 
@@ -147,9 +153,10 @@ ui <- dashboardPage(
 # Server
 #===============
 server <- function(input, output,session) {
-#===================
+
+######################
 # Health
-#===================
+######################
 
 #===================
 # Cancer Incident plot
@@ -157,26 +164,28 @@ server <- function(input, output,session) {
   output$incidencePlot <- renderPlot({
 
     df <- cancer_incidence %>%
+      filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
       group_by(Year) %>%
       summarise(Total = sum(Count)) %>%
       select(Year, Total)
         
     if (input$cancerNationalityInput != "All"){
       df <- cancer_incidence %>%
-        filter(Nationality == input$cancerNationalityInput) %>%
+        filter(Nationality == input$cancerNationalityInput,Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Year) %>%
         summarise(Total = sum(Count)) %>%
         select(Year, Total)
       
     } else if (input$cancerGenderInput != "All"){
       df <- cancer_incidence %>%
-        filter(Gender == input$cancerGenderInput) %>%
+        filter(Gender == input$cancerGenderInput,Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Year) %>%
         summarise(Total = sum(Count)) %>%
         select(Year, Total)     
     } else if (input$cancerGenderInput != "All" & input$cancerNationalityInput != "All"){
       df <- cancer_incidence %>%
-        filter(Nationality == input$cancerNationalityInput,Gender == input$cancerGenderInput) %>%
+        filter(Nationality == input$cancerNationalityInput,Gender == input$cancerGenderInput,
+               Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Year) %>%
         summarise(Total = sum(Count)) %>%
         select(Year, Total)
@@ -199,26 +208,27 @@ server <- function(input, output,session) {
 #===================
   output$deathPlot <- renderPlot({
     df <- cancer_death %>%
+      filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
       group_by(Year) %>%
       summarise(Total = sum(Count)) %>%
       select(Year, Total)
     
     if (input$cancerNationalityInput != "All"){
       df <- cancer_death %>%
-        filter(Nationality == input$cancerNationalityInput) %>%
+        filter(Nationality == input$cancerNationalityInput,Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Year) %>%
         summarise(Total = sum(Count)) %>%
         select(Year, Total)
       
     } else if (input$cancerGenderInput != "All"){
       df <- cancer_death%>%
-        filter(Gender == input$cancerGenderInput) %>%
+        filter(Gender == input$cancerGenderInput,Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Year) %>%
         summarise(Total = sum(Count)) %>%
         select(Year, Total)     
     } else if (input$cancerGenderInput != "All" & input$cancerNationalityInput != "All"){
       df <- cancer_death %>%
-        filter(Nationality == input$cancerNationalityInput,Gender == input$cancerGenderInput) %>%
+        filter(Year >= input$yearInput[1] & Year <= input$yearInput[2],Nationality == input$cancerNationalityInput,Gender == input$cancerGenderInput) %>%
         group_by(Year) %>%
         summarise(Total = sum(Count)) %>%
         select(Year, Total)
@@ -242,6 +252,7 @@ server <- function(input, output,session) {
 #===================
   output$cancerSitePlot <- renderPlot({
     df <- cancer_death %>%
+      filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
       group_by(Cancer.site) %>%
       summarise(Total = sum(Count)) %>%
       arrange(desc(Total)) %>%
@@ -250,7 +261,8 @@ server <- function(input, output,session) {
     
     if (input$cancerNationalityInput != "All"){
       df <- cancer_death %>%
-        filter(Nationality == input$cancerNationalityInput) %>%
+        filter(Nationality == input$cancerNationalityInput,
+               Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Cancer.site) %>%
         summarise(Total = sum(Count)) %>%
         arrange(desc(Total)) %>%
@@ -259,7 +271,8 @@ server <- function(input, output,session) {
       
     } else if (input$cancerGenderInput != "All"){
       df <- cancer_death%>%
-        filter(Gender == input$cancerGenderInput) %>%
+        filter(Gender == input$cancerGenderInput,
+               Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Cancer.site) %>%
         summarise(Total = sum(Count)) %>%
         arrange(desc(Total)) %>%
@@ -267,7 +280,8 @@ server <- function(input, output,session) {
         select(Cancer.site, Total)     
     } else if (input$cancerGenderInput != "All" & input$cancerNationalityInput != "All"){
       df <- cancer_death %>%
-        filter(Nationality == input$cancerNationalityInput, Gender == input$cancerGenderInput) %>%
+        filter(Nationality == input$cancerNationalityInput, Gender == input$cancerGenderInput,
+               Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Cancer.site) %>%
         summarise(Total = sum(Count)) %>%
         arrange(desc(Total)) %>%
@@ -292,6 +306,7 @@ server <- function(input, output,session) {
 #=================
   output$insuranceTrendPlot <- renderPlot({
     df <- payer_claims %>%
+      filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
       group_by(Year) %>%
       summarise(Total = sum(Claims.Count)) %>%
       select(Year, Total)
@@ -357,13 +372,15 @@ server <- function(input, output,session) {
 #===================
   output$diseaseTrendPlot <- renderPlot({
     df <- communicable_disease %>%
+      filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
       group_by(Year) %>%
       summarise(Total = sum(Cases)) %>%
       select(Year, Total)
     
     if (input$cancerNationalityInput != "All"){
       df <- communicable_disease %>%
-        filter(Nationality == input$cancerNationalityInput) %>%
+        filter(Nationality == input$cancerNationalityInput,
+               Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Year) %>%
         summarise(Total = sum(Cases)) %>%
         select(Year, Total)
@@ -386,6 +403,7 @@ server <- function(input, output,session) {
 #===================
   output$diseasePlot <- renderPlot({
     df <- communicable_disease %>%
+      filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
       group_by(Disease) %>%
       summarise(Total = sum(Cases)) %>%
       arrange(desc(Total)) %>%
@@ -394,7 +412,8 @@ server <- function(input, output,session) {
     
     if (input$cancerNationalityInput != "All"){
       df <- communicable_disease %>%
-        filter(Nationality == input$cancerNationalityInput) %>%
+        filter(Nationality == input$cancerNationalityInput,
+               Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Disease) %>%
         summarise(Total = sum(Cases)) %>%
         arrange(desc(Total)) %>%
@@ -420,15 +439,17 @@ server <- function(input, output,session) {
 #=================== 
   output$erTrendPlot <- renderPlot({
     df <- episode %>%
+      filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
       group_by(Year) %>%
       summarise(Total = sum(Episodes.Count)) %>%
       select(Year, Total)
     
     if (input$cancerNationalityInput != "All"){
       df <- episode %>%
-        filter(National.Expatriate == input$cancerNationalityInput) %>%
+        filter(National.Expatriate == input$cancerNationalityInput,
+               Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
         group_by(Year) %>%
-        summarise(Total = sum(Cases)) %>%
+        summarise(Total = sum(Episodes.Count)) %>%
         select(Year, Total)
     } 
     
@@ -443,6 +464,139 @@ server <- function(input, output,session) {
             axis.text.x = element_text(angle = 0, hjust = 1))
     
   })
-}
+
+#=================== 
+# ER Facility top 5
+#=================== 
+output$erFacilityPlot <- renderPlot({
+  df <- episode %>%
+    filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
+    group_by(Facility.Reporting.Name) %>%
+    summarise(Total = sum(Episodes.Count)) %>%
+    arrange(desc(Total)) %>%
+    top_n(5) %>%
+    select(Facility.Reporting.Name, Total)
+  
+  if (input$cancerNationalityInput != "All"){
+    df <- episode %>%
+      filter(National.Expatriate == input$cancerNationalityInput,
+             Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
+      group_by(Facility.Reporting.Name) %>%
+      summarise(Total = sum(Episodes.Count)) %>%
+      arrange(desc(Total)) %>%
+      top_n(5) %>%
+      select(Facility.Reporting.Name, Total)
+  } 
+  
+  ggplot(df, aes(reorder(Facility.Reporting.Name,Total), Total)) + 
+    geom_bar(stat="identity", width = 0.5, position="dodge") +  coord_flip() +
+    theme_minimal() + scale_y_continuous(labels = comma) +
+    labs(x = "Facility", y = "Total") + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 20, hjust = 0.5))
+})
+
+#=================== 
+# Sector vs region
+#=================== 
+output$ersectorRegionPlot <- renderPlot({
+  df <- episode %>%
+    filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
+    group_by(Sector, Facility.Region) %>%
+    summarise(Total = sum(Episodes.Count)) %>%
+    select(Sector, Facility.Region, Total)
+  
+  if (input$cancerNationalityInput != "All"){
+    df <- episode %>%
+      filter(National.Expatriate == input$cancerNationalityInput,
+             Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
+      group_by(Sector, Facility.Region) %>%
+      summarise(Total = sum(Episodes.Count)) %>%
+      select(Sector, Facility.Region, Total)
+  }
+  
+  ggplot(df, aes(Facility.Region ,Total)) + 
+    geom_bar(stat="identity", width = 0.5, position="dodge", aes(fill = Sector)) +
+    theme_minimal() + scale_y_continuous(labels = comma) +
+    labs(x = "Facility", y = "Total") + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 20, hjust = 0.5))
+
+})
+
+
+#=================== 
+# Patient type vs facility type
+#=================== 
+output$erPatientFacilityPlot <- renderPlot({
+  df <- episode %>%
+    filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
+    group_by(Inpatient.Outpatient, Facility.Type.Group) %>%
+    summarise(Total = sum(Episodes.Count)) %>%
+    select(Inpatient.Outpatient, Facility.Type.Group, Total)
+  
+  if (input$cancerNationalityInput != "All"){
+    df <- episode %>%
+      filter(National.Expatriate == input$cancerNationalityInput,
+             Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
+      group_by(Inpatient.Outpatient, Facility.Type.Group) %>%
+      summarise(Total = sum(Episodes.Count)) %>%
+      select(Inpatient.Outpatient, Facility.Type.Group, Total)
+  }
+  
+  
+
+    ggplot(df, aes(Facility.Type.Group,Total)) + 
+    geom_bar(stat="identity", width = 0.5, aes(fill = Inpatient.Outpatient)) +
+    theme_minimal() + scale_y_continuous(labels = comma) +
+    labs(x = "Facility Type", y = "Total", fill="Patient Type") + 
+     theme(legend.text = element_text(size = 10),
+           legend.title = element_text(size = 10),
+           axis.title = element_text(size = 10),
+           axis.text = element_text(size = 10),
+           axis.text.x = element_text(angle = 20, hjust = 1))
+})
+
+#=================== 
+# Patient type vs ER type
+#=================== 
+output$erPatientTypePlot <- renderPlot({
+  df <- episode %>%
+    filter(Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
+    group_by(Inpatient.Outpatient, ER) %>%
+    summarise(Total = sum(Episodes.Count)) %>%
+    select(Inpatient.Outpatient, ER, Total)
+  
+  if (input$cancerNationalityInput != "All"){
+    df <- episode %>%
+      filter(National.Expatriate == input$cancerNationalityInput,
+             Year >= input$yearInput[1] & Year <= input$yearInput[2]) %>%
+      group_by(Inpatient.Outpatient, ER) %>%
+      summarise(Total = sum(Episodes.Count)) %>%
+      select(Inpatient.Outpatient, ER, Total)
+  }
+  
+  ggplot(df, aes(ER,Total)) + 
+    geom_bar(stat="identity", width = 0.5, aes(fill = Inpatient.Outpatient)) +
+    theme_minimal() + scale_y_continuous(labels = comma) +
+    labs(x = "Facility Type", y = "Total", fill="Patient Type") + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 0.5))
+})
+
+  
+######################
+# Tourism
+######################  
+  }
 
 shinyApp(ui, server)
