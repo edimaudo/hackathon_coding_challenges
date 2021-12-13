@@ -1,38 +1,56 @@
 # Open data addathon
 rm(list = ls()) #clear environment
-#===============
+################
 # Libraries
-#===============
-packages <- c('ggplot2', 'corrplot','tidyverse',"caret",'scales',"plotly",
-              'dplyr','mlbench','caTools','forecast','TTR','xts','lubridate','shiny',
-              'shinydashboard','tidyr','gridExtra','stopwords','tidytext','stringr',
-              'reshape2', 'textdata','textmineR','topicmodels','textclean','pals','lubridate')
-for (package in packages) {
-    if (!require(package, character.only=T, quietly=T)) {
-        install.packages(package)
-        library(package, character.only=T)
-    }
-}
-#=============
-# Load data
-#=============
+################
+# packages <- c('ggplot2','corrplot','tidyverse','scales','readxl','dplyr','lubridate','shiny','shinydashboard')
+# for (package in packages) {
+#     if (!require(package, character.only=T, quietly=T)) {
+#         install.packages(package)
+#         library(package, character.only=T)
+#     }
+# }
 
+library(ggplot2)
+library(corrplot)
+library(tidyverse)
+library(scales)
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(shiny)
+library(shinydashboard)
+################
+# Load data
+################
+
+#===============
 # Health data
+#===============
 cancer_death <- read.csv("Cancer Death - Data.csv")
 cancer_incidence <- read.csv("CancerIncidence.csv")
 communicable_disease <- read.csv("Communicable Diseases - Data.csv")
 episode <- read.csv("Episodes - Data.csv")
-#patient_number <- read.csv("Number of annual patients_1.csv")
-#patient_classification <- read.csv("Patient Classification according to gender_1.csv")
 payer_claims <- read.csv("Payer Claims - Data.csv")
-patient_addiction <- read.csv("Percentage of addiction on the various  substances for NRC patients_0.csv")
-population_benchmarks <- read.csv("Population & Benchmarks - Data.csv")
 
+#===============
 # Tourism data
+#===============
+guest_purpose <- read_excel("Tourism.xlsx",sheet = "Guest_by_purpose")
+top_country_visitors <- read_excel("Tourism.xlsx", sheet ="Top_Country_Hotel_Guest")
+city_hotel_rooms <- read_excel("Tourism.xlsx",sheet ="City_Hotel_Rooms")
 
-#=============
+revenue_star_rating <- read_excel("Tourism.xlsx", sheet ="Revenue_Star_Rating")
+revenue_region <- read_excel("Tourism.xlsx", sheet ="Revenue_Region")
+
+performance_city <- read_excel("Tourism.xlsx", sheet ="Performance by City")
+performance_star_rating <- read_excel("Tourism.xlsx", sheet ="Performance by Star-ratings")
+performance_zone <- read_excel("Tourism.xlsx", sheet ="Performance_Zone")
+
+
+################
 # Data Update
-#=============
+################
 
 # Update Nationality
 cancer_death$Nationality <- ifelse(cancer_death$Nationality=="Expatriate","Expatriates",ifelse(
@@ -53,17 +71,24 @@ communicable_disease$Cases <- as.numeric(communicable_disease$Cases)
 # Update episode count
 episode$Episodes.Count <- as.numeric(episode$Episodes.Count)
 
-#===============
+################
 # UI
-#===============
+################
 
+#================
 # UI Drop-downs
+#================
 cancer_nationality <- c("All",sort(unique(cancer_death$Nationality)))
 cancer_gender <- c("All",sort(unique(cancer_death$Gender)))
 insurance_group <- c("All",sort(unique(payer_claims$Package.Group)))
-year_info <- c(2011,2012,2013,2014,2015,2016,2017,2018,2019)
+year_info <- c(2011:2019)
+tourism_year_info <- c(2018:2020)
+quarter_info <- c(1:4)
+city_info <- c("All",'Abu Dhabi','Al Dhafra Region','Al-Ain')
 
-
+#================
+# UI Design
+#================
 ui <- dashboardPage(
                     dashboardHeader(title = "Adda Discovery"),
                     dashboardSidebar(
@@ -75,15 +100,15 @@ ui <- dashboardPage(
                     ),
                     dashboardBody(
                         tabItems(
-                            ################
-                            # About
-                            ################
+                        ################
+                        # About
+                        ################
                             tabItem(tabName = "about",
                                     mainPanel(includeMarkdown("about.md"))
                             ),
-                            ################
-                            # Health
-                            ################
+                        ################
+                        # Health
+                        ################
                             tabItem(tabName = "health",
                                     sidebarLayout(
                                       sidebarPanel(
@@ -96,6 +121,7 @@ ui <- dashboardPage(
                                                     step =1,ticks = TRUE)
                                       ),
                                       mainPanel(
+                                        h2("Health Insights",style="text-align: center; font-style: bold;"), 
                                         fluidRow(
                                           tabBox(
                                             title = "Cancer care",
@@ -135,23 +161,67 @@ ui <- dashboardPage(
                                             tabPanel("Patient & Facility Type", 
                                                      plotOutput("erPatientFacilityPlot", height = 150)),
                                             tabPanel("ER & Patient Type", 
-                                                     plotOutput("erPatientTypePlot", height = 150)),
+                                                     plotOutput("erPatientTypePlot", height = 150))
                                           )
                                         )
-                                        ################
-                                        # Tourism
-                                        ################
+
+                            
                                       )
                             )
+                        ),
+                        ################
+                        # Tourism
+                        ################
+                        tabItem(tabName = "tourism",
+                                sidebarLayout(
+                                  sidebarPanel(
+                                    sliderInput("yearTourismInput","Year",min=min(tourism_year_info),
+                                                max=max(tourism_year_info),
+                                                value = c(min(tourism_year_info),max(tourism_year_info)),
+                                                step =1,ticks = FALSE),
+                                    sliderInput("quarterTourismInput","Quarter",min=min(quarter_info),
+                                                max=max(quarter_info),
+                                                value = c(min(quarter_info),max(quarter_info)),
+                                                step =1,ticks = FALSE),
+                                    selectInput("cityTourismInput", "City", choices = city_info),
+                                  ),
+                                  mainPanel(
+                                    h2("Tourism Insights",style="text-align: center; font-style: bold;"),
+                                    fluidRow(
+                                      tabBox(
+                                        title = "Guests",
+                                        id = "tabset5",
+                                        width = "80%",
+                                        selected = "Purpose",
+                                        tabPanel("Purpose", plotOutput("purposeGuestPlot", height = 150)),
+                                        tabPanel("Country", plotOutput("countryGuestPlot", height = 150)),
+                                        tabPanel("Hotels", plotOutput("hotelGuestPlot", height = 150)),
+                                        tabPanel("Rooms", plotOutput("roomGuestPlot", height = 150))
+                                      )
+                                    ),
+                                    fluidRow(
+                                      tabBox(
+                                        title = "Revenue",
+                                        id = "tabset6",
+                                        width = "80%",
+                                        selected = "Regions",
+                                        tabPanel("Regions", plotOutput("regionRevenuePlot", height = 150)),
+                                        tabPanel("Star Ratings", plotOutput("starRatingRevenuePlot", height = 150)),
+                                        tabPanel("Revenue breakdown",plotOutput("revenueOtherPlot", height = 150))
+                                      )
+                                    )
+                                  )
+                                )
                         )
+                        
                     )
       )
 )
 
 
-#===============
+################
 # Server
-#===============
+################
 server <- function(input, output,session) {
 
 ######################
@@ -435,7 +505,7 @@ server <- function(input, output,session) {
   
 
 #=================== 
-# ER Visits  
+# ER Visits plot
 #=================== 
   output$erTrendPlot <- renderPlot({
     df <- episode %>%
@@ -597,6 +667,224 @@ output$erPatientTypePlot <- renderPlot({
 ######################
 # Tourism
 ######################  
+
+#=================== 
+# Guest
+#=================== 
+
+#=================== 
+# Hotel guests
+#=================== 
+output$hotelGuestPlot <- renderPlot({
+  if (input$cityTourismInput != "All" ){
+    df <- city_hotel_rooms  %>%
+      filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2],
+             Quarter >= input$quarterTourismInput[1] & Quarter <= input$quarterTourismInput[2],
+             City == input$cityTourismInput) %>%
+      group_by(City, Year) %>%
+      summarise(Total = sum(Hotels)) %>%
+      select(City, Year, Total)
+  } else {
+    df <- city_hotel_rooms  %>%
+      filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2],
+             Quarter >= input$quarterTourismInput[1] & Quarter <= input$quarterTourismInput[2]) %>%
+      group_by(City, Year) %>%
+      summarise(Total = sum(Hotels)) %>%
+      select(City, Year, Total)
+  }
+  
+  ggplot(df, aes(as.factor(Year),Total)) + 
+    geom_bar(stat="identity", width = 0.5,position="dodge", aes(fill = City),size=2) +
+    theme_minimal() + scale_y_continuous(labels = comma) +
+    labs(x = "Year", y = "Total", fill="City") + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+})
+#=================== 
+# Room guests
+#=================== 
+output$roomGuestPlot <- renderPlot({
+  if (input$cityTourismInput != "All" ){
+    df <- city_hotel_rooms  %>%
+      filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2],
+             Quarter >= input$quarterTourismInput[1] & Quarter <= input$quarterTourismInput[2],
+             City == input$cityTourismInput) %>%
+      group_by(City, Year) %>%
+      summarise(Total = sum(Rooms)) %>%
+      select(City, Year, Total)
+  } else {
+    df <- city_hotel_rooms  %>%
+      filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2],
+             Quarter >= input$quarterTourismInput[1] & Quarter <= input$quarterTourismInput[2]) %>%
+      group_by(City, Year) %>%
+      summarise(Total = sum(Rooms)) %>%
+      select(City, Year, Total)
+  }
+  
+  ggplot(df, aes(as.factor(Year),Total)) + 
+    geom_bar(stat="identity", width = 0.5,position="dodge", aes(fill = City),size=2) +
+    theme_minimal() + scale_y_continuous(labels = comma) +
+    labs(x = "Year", y = "Total", fill="City") + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  
+})
+
+#=================== 
+# Country guests
+#=================== 
+output$countryGuestPlot <- renderPlot({
+  df <- top_country_visitors  %>%
+    filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2]) %>%
+    group_by(Country) %>%
+    summarise(Total = sum(Total)) %>%
+    arrange(desc(Total)) %>%
+    select(Country, Total)
+
+  ggplot(df, aes(reorder(Country,Total),Total)) + 
+    geom_bar(stat="identity", width = 0.5,size=2) +
+    theme_minimal() + scale_y_continuous(labels = comma) + coord_flip() +
+    labs(x = "Country Visitors", y = "Total") + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  
+})
+
+#=================== 
+# Guest purpose
+#=================== 
+output$purposeGuestPlot <- renderPlot({
+  df <- guest_purpose %>%
+    filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2],
+           Quarter >= input$quarterTourismInput[1] & Quarter <= input$quarterTourismInput[2]) %>%
+    group_by(PurposeOfVisit, Year) %>%
+    summarise(Total = sum(TotalGuests)) %>%
+    select(PurposeOfVisit, Year, Total)
+  
+  ggplot(df, aes(as.factor(Year),Total)) + 
+    geom_bar(stat="identity", width = 0.5, position = "dodge", aes(fill = PurposeOfVisit),size=2) +
+    theme_minimal() + scale_y_continuous(labels = comma) +
+    labs(x = "Year", y = "Total", fill="Purpose of Visit") + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+})
+
+
+#=================== 
+# Revenue
+#=================== 
+
+#=================== 
+# Star Rating revenue
+#=================== 
+output$starRatingRevenuePlot <- renderPlot({
+   
+  df <- revenue_star_rating  %>%
+    filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2],
+           Quarter >= input$quarterTourismInput[1] & Quarter <= input$quarterTourismInput[2]) %>%
+    group_by(StarRating, Year) %>%
+    summarise(Total = sum(TotalRevenue)) %>%
+    select(StarRating, Year, Total)
+  
+  ggplot(df, aes(as.factor(Year),Total)) + 
+    geom_bar(stat="identity", width = 0.5, position = "dodge", aes(fill = StarRating),size=2) +
+    theme_minimal() + scale_y_continuous(labels = comma) +
+    labs(x = "Year", y = "Total", fill="Star Rating") + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  
+})
+#=================== 
+# Region Revenue
+#=================== 
+output$regionRevenuePlot <- renderPlot({
+  
+  if (input$cityTourismInput != "All" ){
+    df <- revenue_region  %>%
+      filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2],
+             Quarter >= input$quarterTourismInput[1] & Quarter <= input$quarterTourismInput[2],
+             Region == input$cityTourismInput) %>%
+      group_by(Region, Year) %>%
+      summarise(Total = sum(TotalRevenue)) %>%
+      select(Region, Year, Total)
+  } else {
+    df <- revenue_region  %>%
+      filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2],
+             Quarter >= input$quarterTourismInput[1] & Quarter <= input$quarterTourismInput[2]) %>%
+      group_by(Region, Year) %>%
+      summarise(Total = sum(TotalRevenue)) %>%
+      select(Region, Year, Total)
+  }
+    
+  ggplot(df, aes(as.factor(Year),Total)) + 
+    geom_bar(stat="identity", width = 0.5, position = "dodge", aes(fill = Region), size=2) +
+    theme_minimal() + scale_y_continuous(labels = comma) +
+    labs(x = "Year", y = "Total", fill="City/Region") + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  
+})
+#=================== 
+# Revenue Other
+#=================== 
+output$revenueOtherPlot <- renderPlot({
+  
+  if (input$cityTourismInput != "All" ){
+    df <- revenue_region  %>%
+      filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2],
+             Quarter >= input$quarterTourismInput[1] & Quarter <= input$quarterTourismInput[2],
+             Region == input$cityTourismInput) %>%
+      group_by(Quarter) %>%
+      summarise(`Room` = sum(RoomRevenue),
+                `Food & Beverage` = sum(`Food&Beverage Revenue`),	
+                `Other` = sum(OtherRevenue))  %>%
+      select(Quarter, `Room`, `Food & Beverage`,`Other`) %>%
+      pivot_longer(-Quarter, names_to = "variable", values_to = "value")
+  } else {
+    df <- revenue_region  %>%
+      filter(Year >= input$yearTourismInput[1] & Year <= input$yearTourismInput[2],
+             Quarter >= input$quarterTourismInput[1] & Quarter <= input$quarterTourismInput[2]) %>%
+      group_by(Quarter) %>%
+      summarise(`Room` = sum(RoomRevenue),
+                `Food & Beverage` = sum(`Food&Beverage Revenue`),	
+                `Other` = sum(OtherRevenue))  %>%
+      select(Quarter, `Room`, `Food & Beverage`,`Other`) %>%
+      pivot_longer(-Quarter, names_to = "variable", values_to = "value")
+  }
+  
+    ggplot(df, aes(Quarter, value, colour = variable)) + geom_line(size=2) + theme_minimal() +
+      labs(x = "Quarter", y = "Total", color="Revenue Type") +  scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+  
+})
+
+
+#=================== 
+# Performance
+#=================== 
+
   }
 
 shinyApp(ui, server)
