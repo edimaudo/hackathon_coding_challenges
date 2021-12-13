@@ -28,6 +28,12 @@ payer_claims <- read.csv("Payer Claims - Data.csv")
 patient_addiction <- read.csv("Percentage of addiction on the various  substances for NRC patients_0.csv")
 population_benchmarks <- read.csv("Population & Benchmarks - Data.csv")
 
+guest_purpose <- read_excel("Tourism.xlsx",sheet = "Guest_by_purpose")
+top_country_visitors <- read_excel("Tourism.xlsx", sheet ="Top_Country_Hotel_Guest")
+city_hotel_rooms <- read_excel("Tourism.xlsx",sheet ="City_Hotel_Rooms")
+
+revenue_star_rating <- read_excel("Tourism.xlsx", sheet ="Revenue_Star_Rating")
+revenue_region <- read_excel("Tourism.xlsx", sheet ="Revenue_Region")
 
 #Update Nationality
 cancer_death$Nationality <- ifelse(cancer_death$Nationality=="Expatriate","Expatriates",ifelse(
@@ -44,72 +50,21 @@ cancer_nationality <- c("All",sort(unique(cancer_death$Nationality)))
 cancer_gender <- c("All",sort(unique(cancer_death$Gender)))
 cancer_year <- c("All",sort(unique(cancer_death$Year)))
 
-df <- cancer_incidence %>%
-  group_by(Year) %>%
-  summarise(Total = sum(Count)) %>%
-  select(Year, Total)
-
-df <- cancer_death %>%
-  group_by(Cancer.site) %>%
-  summarise(Total = sum(Count)) %>%
+df <- top_country_visitors  %>%
+  filter(Year >= 2018 & Year <= 2020) %>%
+  group_by(Country) %>%
+  summarise(Total = sum(Total)) %>%
   arrange(desc(Total)) %>%
-  top_n(5)%>%
-  select(Cancer.site, Total)
-
-communicable_disease$Cases <- parse_number(communicable_disease$Cases)
-df <- communicable_disease %>%
-  group_by(Year) %>%
-  summarise(Total = sum(Cases)) %>%
-  select(Year, Total)
-
-ggplot(data=df, aes(x=Year, y=Total, group=1)) +
-  geom_line()+
-  geom_point() + theme_minimal() +
-  labs(x = "Year", y = "Total") + 
-  theme(legend.text = element_text(size = 12),
-        legend.title = element_text(size = 15),
-        axis.title = element_text(size = 15),
-        axis.text = element_text(size = 15),
-        axis.text.x = element_text(angle = 0, hjust = 1))
-
-df <- episode %>%
-  filter(Year >= 2011 & Year <= 2019) %>%
-  group_by(Facility.Reporting.Name) %>%
-  summarise(Total = sum(Episodes.Count)) %>%
-  select(Facility.Reporting.Name, Total)
+  select(Country, Year, Total)
 
 
-
-ggplot(df, aes(reorder(Facility.Reporting.Name,Total), Total)) + 
-  geom_bar(stat="identity", width = 0.5, position="dodge") +  coord_flip() +
-  theme_minimal() + scale_y_continuous(labels = comma) +
-  labs(x = "Facility", y = "Total") + 
+ggplot(df, aes(Country,Total)) + 
+  geom_bar(stat="identity", width = 0.5, aes(fill = Year)) +
+  theme_minimal() + scale_y_continuous(labels = comma) + coord_flip() +
+  labs(x = "Country", y = "Total", fill="Purpose of Visit") + 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 10),
         axis.text = element_text(size = 10),
         axis.text.x = element_text(angle = 0, hjust = 1))
-
-
-
-df <- episode %>%
-  filter(Year >= 2011 & Year <= 2019) %>%
-  group_by(Inpatient.Outpatient, Facility.Type.Group) %>%
-  summarise(Total = sum(Episodes.Count)) %>%
-  select(Inpatient.Outpatient, Facility.Type.Group, Total)
-
-
-
-
-ggplot(df, aes(Facility.Type.Group,Total, fill=Inpatient.Outpatient)) +   
-  geom_violin() + 
-  #ggplot(df, aes(Facility.Type.Group,Total)) + 
-  # geom_bar(stat="identity", width = 0.5, position="dodge", aes(fill = Inpatient.Outpatient)) +
-  theme_minimal() + scale_y_continuous(labels = comma) +
-  labs(x = "Facility Type", y = "Total", fill="Patient Type") + 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 10),
-        axis.text = element_text(size = 10),
-        axis.text.x = element_text(angle = 20, hjust = 1))
 
