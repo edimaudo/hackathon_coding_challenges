@@ -5,5 +5,9 @@ Women in STEM face equal economic and educational challenges that may contribute
 - Design a web platform powered by graph technology that empowers girls and women find great STEM roles and helps them strive
 
 ## Solution
+A web platform that will provide care giver and care companies a place to find quality work and workers.
+
+## Solution Details
+
 
 
