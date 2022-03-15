@@ -1,4 +1,4 @@
 - Brainstorm ideas
-- Review links provided + generate 4 ideas
-- find teammates + generate 4 ideas
+- Review links provided + generate 2 ideas
+- find teammates + generate 2 ideas
 - finalize logistics + generate 2 ideas
