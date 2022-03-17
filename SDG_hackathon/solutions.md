@@ -13,6 +13,7 @@ Manage waste, reduce, reuse, recycle, recover
  - Help you match people to your slightly used clothes
  - Helps you find people that can help you mend or clean the clothes well using sustainable materials
  - Helps you find retailers that build great clothes that last
+ - Trade clothes with other people
 
 3) Food mangement app
 - Helps you keep track of your food expiry dates + generates receipes + links to grocery store info
@@ -24,4 +25,3 @@ Manage waste, reduce, reuse, recycle, recover
 
 6) Reverse logistics app that matches returns with buyers
 
-7) 
