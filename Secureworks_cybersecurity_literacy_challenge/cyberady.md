@@ -28,3 +28,6 @@ Others
 - when clicked noise
 - when question is right sound
 - when question is wrong sound
+
+Build 
+Using phaser or Pure javascript+html+css with jquery
