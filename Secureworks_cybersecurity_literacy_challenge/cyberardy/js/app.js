@@ -1,3 +1,12 @@
+$(document).ready(function() {
+    
+    $("#orb").click(function() {
+        $("new-game").hide();
+    }
+    
+  
+});
+
 
 function generateGame(){
 
