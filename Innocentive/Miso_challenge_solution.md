@@ -54,6 +54,10 @@ The goal is to develop a new system that would assist MISO in meeting these crit
 - Simplify the outage coordination process
 - Simplify the overall process
 
+The solution that would solve these challenges in MOMS.  MOMS stands for MISO Outage Mangement System.  It encompasses two key areas:
+- outage management processes
+- outage management software
+
 
 
 
