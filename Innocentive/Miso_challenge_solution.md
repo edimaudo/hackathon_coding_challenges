@@ -9,12 +9,11 @@ Specifically, MISO seeks to improve in the following areas:
 - What would simplify the process?
 
 Any proposed solution should address the following Solution Requirements: 
-
-Propose a new approach to outage coordination that focuses on one or more of the following components:
 - Allows resource down time while protecting system integrity by ensuring a minimum quality of available resources
 - Balances overall system integrity with fairness to individual resource owners in allowing for routine maintenance
 - Integrates the request, analysis, and scheduling functions while allowing visibility of availability to requestors.
-- Provide detailed and specific guidance on how to implement major components of the proposed solution and how each component interacts with the other components, including stakeholder systems and input.
+
+Provide detailed and specific guidance on how to implement major components of the proposed solution and how each component interacts with the other components, including stakeholder systems and input.
 The solutions would preferably satisfy the additional following criteria (but not essential):
 - Provides insight into how other industries handle scheduled and unscheduled maintenance in high reliability environments.
 
@@ -36,10 +35,28 @@ c) Detailed narratives for different outage request scenarios beginning with a r
 # SOLUTION SUMMARY
 
 ## Solution Name
+MOMS - Miso Outage Management System
 
 ## Solution Abstract
+ 
 
 ## Solution conlusion
 
 
+#--------------------
 # SOLUTION IN DETAIL
+#--------------------
+MISO (Midcontinent Independent System Operator) is an independent, not-for-profit, member-based organization that delivers safe, cost-effective electric power across 15 U.S. states and the Canadian province of Manitoba. A major service they provide is the coordination of scheduled and unscheduled outages of electricity generation and transmission assets. These assets are controlled by various stakeholders and must occasionally be taken offline for maintenance and repair.  The current process for scheduling outages and coordinating with different stakeholders is cumbersome.  
+The goal is to develop a new system that would assist MISO in meeting these criteria:
+- Increase the certainty around outages
+- Minimize dependence on MISO staff
+- Driver greater predictability and accuracy
+- Simplify the outage coordination process
+- Simplify the overall process
+
+
+
+
+
+
+
