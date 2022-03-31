@@ -210,3 +210,6 @@ Easily record operating events for anytime-access and auditing
 Seamlessly connect to PCI or third-party systems to share approved outage data across your enterprise
 Interface with NERC eGADS
 Conform to all ISO/RTO and NERC data requirements
+
+
+## OMS Process
