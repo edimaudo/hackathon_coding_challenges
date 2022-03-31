@@ -12,9 +12,6 @@ About Miso
 - https://www.misoenergy.org/about/miso-strategy-and-value-proposition/miso-value-proposition/
 - https://www.misoenergy.org/about/miso-strategy-and-value-proposition/MISO_Strategy/
 
-
-
-Using OMS tools
 OMS Definition 
 - https://www.awesense.com/what-are-outage-management-systems-oms/
 
@@ -23,7 +20,6 @@ OMS tools - Digital twins
 - https://optelos.com/optimizingturnaroundplanningexecution/
 - https://optelos.com/power-utilities/
 - https://www.ge.com/digital/blog/riding-storm-network-digital-twin-enhance-electric-grid-reliability-resiliency
-- https://www.udcus.com/conversations/emergency-response-and-operational-digital-twin-clecos-dashboard-solution-enhancing
 
 Tech Setup needed
 - https://digpro.com/more-about-our-technology/our-platform-technology-and-architecture/
