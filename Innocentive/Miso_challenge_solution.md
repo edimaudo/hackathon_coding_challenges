@@ -213,3 +213,11 @@ Conform to all ISO/RTO and NERC data requirements
 
 
 ## OMS Process
+
+Have outage communication plan - - https://www.pagerduty.com/resources/learn/outage-communication/
+overall safety - https://safetymanagementgroup.com/best-practices-for-outage-season/
+outage planning - https://www.reliableplant.com/Read/20318/optimizing-outages-through-effective-task-planning
+outage coordination current state
+ - https://www.pjm.com/-/media/documents/manuals/m38.ashx
+ - http://www.oatioasis.com/woa/docs/MISO/MISOdocs/MM_Whitepaper.pdf
+ - https://www.caiso.com/Documents/RC0630.pdf
