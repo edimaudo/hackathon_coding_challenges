@@ -28,7 +28,7 @@ Tech Setup needed
 - https://www.powercosts.com/solutions/transmission-systems/
 
 Outage Process
-- https://www.chrobinson.com/blog/5-ways-to-prepare-for-successful-planned-outages/
+
 - https://www.pagerduty.com/resources/learn/outage-communication/
 - https://safetymanagementgroup.com/best-practices-for-outage-season/
 - https://www.reliableplant.com/Read/20318/optimizing-outages-through-effective-task-planning
