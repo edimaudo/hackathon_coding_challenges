@@ -32,15 +32,15 @@ c) Detailed narratives for different outage request scenarios beginning with a r
 3) Rationale as to why the Solver believes that the proposed system will work. This rationale should address each of the Solution Requirements described in the Detailed Description and should be supported with any relevant examples and/or scenarios.
 4) Data, drawings etc. necessary to convey the full extent of the proposed solution.
 
-# SOLUTION SUMMARY
+# SOLUTION
+Any proposed solution should address the following Solution Requirements: 
+- Allows resource down time while protecting system integrity by ensuring a minimum quality of available resources
+- Balances overall system integrity with fairness to individual resource owners in allowing for routine maintenance
+- Integrates the request, analysis, and scheduling functions while allowing visibility of availability to requestors.
 
-## Solution Name
-MOMS - Miso Outage Management System
-
-## Solution Abstract
- 
-
-## Solution conlusion
+Provide detailed and specific guidance on how to implement major components of the proposed solution and how each component interacts with the other components, including stakeholder systems and input.
+The solutions would preferably satisfy the additional following criteria (but not essential):
+- Provides insight into how other industries handle scheduled and unscheduled maintenance in high reliability environments.
 
 
 #--------------------
@@ -68,10 +68,6 @@ The status quo is not going to be effective moving forward as the supply fo powe
 An OMS is any type of software or computing device that assists in locating, analyzing, and fixing an outage on the energy grid.  OMS operates within the context of individual utilities, they are often able to coordinate with many different sources of data in order to get an accurate image of the grid in real-time. Some key sources that enable an OMS to function are a Geographical Information System (GIS), a Customer Information System (CIS), Automated Metering Infrastructure (AMI), Mobile Workforce Management Systems (MWM), and Supervisory Control and Data Acquisition Systems (SCADA). 
 Some features of an OMS can include but are not limited to, automatically reading grid data to determine an outage, alerting utility operators of any outages, and sending notifications to nearby field crews to investigate and fix outages. (https://www.awesense.com/what-are-outage-management-systems-oms/)
 
-## Benefits ot OMS
-- An OMS can make a big difference for your local/national utility and for your own power usage. Using new meter technology like AMI, outages are now detected faster than ever. Combined with a good OMS software, many outages today are fixed without anyone even noticing they occurred. 
-- Though many outages are detected when a person loses power in their home and calls up their local utility, a reliable OMS can identify this information and provide a quicker response than waiting for you and your neighbor to dial in. 
-- This automated coordination and processing an OMS provides means more reliable power and faster resolution for issues to help keep your home running smoothly.
 
 ## Features
 It is an integrated set of applications that streamline work processes and improve communications between field and operations personnel. It allows generation and transmission asset owners (and operators) the ability to comprehensively manage all outages and their lifecycles, from planning and operations all the way through reporting to ISO scheduling entities, NERC, etc
@@ -221,3 +217,9 @@ outage coordination current state
  - https://www.pjm.com/-/media/documents/manuals/m38.ashx
  - http://www.oatioasis.com/woa/docs/MISO/MISOdocs/MM_Whitepaper.pdf
  - https://www.caiso.com/Documents/RC0630.pdf
+
+ ## Benefits ot OMS
+- An OMS can make a big difference for your local/national utility and for your own power usage. Using new meter technology like AMI, outages are now detected faster than ever. Combined with a good OMS software, many outages today are fixed without anyone even noticing they occurred. 
+- Though many outages are detected when a person loses power in their home and calls up their local utility, a reliable OMS can identify this information and provide a quicker response than waiting for you and your neighbor to dial in. 
+- This automated coordination and processing an OMS provides means more reliable power and faster resolution for issues to help keep your home running smoothly.
+
