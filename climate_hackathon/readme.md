@@ -1,3 +1,11 @@
+## Overview
+WELCOME TO OUR CLIMATE HACKATHON DEDICATED TO A SUSTAINABLE FUTURE.
+This hackathon is about you. It's about me. It's about us and the Earth. It's a hackathon about respect for the environment and to stand united for the climate, through our way of living. This is about sustainability. Nothing else can be more important.
+
+Developers of all background and skills are welcome to participate, and we’re looking forward to your innovative contributions for an even more sustainable world.
+
+The environmental challenges are many, each with its own complexity. In some areas we have come a long way, in other areas the humanity has barely moved.
+
 
 ## WHAT TO BUILD:
 A software solution (completed or a prototype) using one or more technologies from Microsoft (including but not limited to Azure cloud, Power Platform, Microsoft 365) that solves one of the following challenges:
