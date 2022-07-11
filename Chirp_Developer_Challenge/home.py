@@ -30,8 +30,12 @@ metric_column4.metric("Most retweets","")
 
 st.header("Tweet Timeline!")
 timeline_column1, timeline_column2= st.columns(2)
-    # Graphs 
-    #Tweet volume (today, week)
-    #tweets by hour of day (today,week)
+timeline_option = ('Today','Week')
+
+# Graphs 
+#Tweet volume (today, week)
+tweet_volume_option = st.selectbox('Time option',timeline_option)
+
+#Tweets by hour of day (today,week)
 
 
