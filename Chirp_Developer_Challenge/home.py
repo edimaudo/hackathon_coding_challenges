@@ -17,24 +17,21 @@ cities = ['Ajax','Aurora','Bradford West Gwillimbury','Brampton','Brock','Burlin
 
 
 st.title('Overview')
-
-options = st.multiselect(
+with st.expander("List of GTA Cities"):
+    options = st.multiselect(
      'Cities',cities,cities)
 
- #filter data    
+st.header("Top of the Tweets!")
+metric_column1, metric_column2,metric_column3, metric_column4= st.columns(4)
+metric_column1.metric("Tweets today","")
+metric_column2.metric("Tweeters today","")
+metric_column3.metric("Most liked tweet","")
+metric_column4.metric("Most retweets","")
 
-st.header("Twitter Metrics")
-metric_column1, metric_column2= st.columns(2)
-metric_column1("Tweets today","")
-metric_column2("Tweeters today","")
-
-st.header("Twitter Graphs")
+st.header("Tweet Timeline!")
+timeline_column1, timeline_column2= st.columns(2)
     # Graphs 
     #Tweet volume (today, week)
     #tweets by hour of day (today,week)
 
-st.header("Top of the Tweets")
-    # Container
-    #twitter grid design
-    #Most liked tweets (past 12 hours)
-    #Most retweet (past 12 hrs)
+
