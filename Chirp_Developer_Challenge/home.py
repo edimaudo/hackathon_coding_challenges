@@ -36,6 +36,5 @@ timeline_option = ('Today','Week')
 #Tweet volume (today, week)
 tweet_volume_option = st.selectbox('Time option',timeline_option)
 
-#Tweets by hour of day (today,week)
 
 
