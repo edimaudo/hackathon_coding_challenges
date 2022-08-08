@@ -1,4 +1,3 @@
-
 ## Overview
 In celebration of the Chirp Developer Conference, we’re hosting the Chirp Developer Challenge! 
 Share your innovative experiences built with the Twitter API v2 for community recognition and prizes valued at over $520,000. Submit your app now through August 19th for your chance to be featured at Chirp. 
