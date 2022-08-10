@@ -1,5 +1,4 @@
 ## DeveloperWeek Cloud 2022 Hackathon
-
 The world’s largest cloud challenge-driven based hackathon.
 
 ## JUDGING CRITERIA
