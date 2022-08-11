@@ -1,5 +1,9 @@
 # Load libraries
 import streamlit as st
+import pandas as pd
+import plotly.express as px
+import os, os.path
+import pandas as pd
 
 st.title('OTF Charity Insights')
 st.write("The goal is to use open data from Ontario Trillium Foundation to analyze charity information")
@@ -7,3 +11,12 @@ st.write("The Ontario Trillium Foundation (OTF) is an agency of the Government o
 st.write("https://otf.ca/who-we-are/about-us/our-story")
 
 
+@st.cache
+def load_data():
+    data = pd.read_excel(DATA_URL)
+    data.dropna(inplace=True)
+    return data
+
+# Load data
+DATA_URL = "otf.xlsx"
+df = load_data()
