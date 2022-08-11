@@ -17,6 +17,7 @@ def load_data():
     return data
 
 # Load data
+global df
 DATA_URL = "otf.xlsx"
 df = load_data()
 
