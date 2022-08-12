@@ -3,11 +3,16 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import os, os.path
-import pandas as pd
 
+st.header("About")
 st.title('OTF Charity Insights')
+st.image("trillium-logo.jpeg")
 st.write("The goal is to use open data from Ontario Trillium Foundation to analyze charity information")
-st.write("The Ontario Trillium Foundation (OTF) is an agency of the Government of Ontario and one of Canada’s leading granting foundations. Our investments in communities across the province help build healthy and vibrant communities. Our key funder, the Ministry of Heritage, Sport, Tourism and Culture Industries enables us to provide grants that can make the greatest impact. OTF also administers grants on behalf of the Ministry of Children, Community and Social Services. Last year, $115 million was invested into more than 644 projects in communities across the province")
+st.write("The Ontario Trillium Foundation (OTF) is an agency of the Government of Ontario and one of Canada’s " + 
+"leading granting foundations. Our investments in communities across the province help build healthy and vibrant communities." + 
+"Our key funder, the Ministry of Heritage, Sport, Tourism and Culture Industries enables us to provide grants that can make the greatest impact. " +
+"OTF also administers grants on behalf of the Ministry of Children, Community and Social Services. Last year, $115 million was invested into more than" + 
+"644 projects in communities across the province")
 st.write("https://otf.ca/who-we-are/about-us/our-story")
 
 @st.cache
@@ -21,6 +26,7 @@ global df
 DATA_URL = "otf.xlsx"
 df = load_data()
 
+st.header("Overview")
 # Metrics
 top_container = st.container()
 bottom_container = st.container()
@@ -41,3 +47,33 @@ df_total_grants_agg.columns = ['Year', 'Amount Awarded (CAD)']
 df_total_grants_agg.sort_values('Amount Awarded (CAD)', ascending=True)
 fig = px.line(df_total_grants_agg, x="Year", y='Amount Awarded (CAD)')
 st.plotly_chart(fig, use_container_width=True)
+
+# Charity Insights
+charity_expander = st.expander()
+charity_top_container = st.container()
+charity_bottom_container = st.container()
+charity_metric_column1, charity_metric_column2,charity_metric_column3,charity_metric_column4 = st.columns(4)
+with charity_expander:
+    charity_choices = st.selectbox("")
+
+    st.header("Charity Insights")
+
+    st.subheader("Charity Overview")
+    ## build metrics
+    ##English description
+##incorporation #
+##registration #
+##Number of cities
+
+    ## build year trend
+    ##Funding Trend
+    st.subheader("Charity Yearly Insights")
+    year_choices = st.selectbox("")
+
+    ##Age breakdown
+##population served
+##grant programs
+##funded category 
+##budget fund
+##top 10 funded cities
+##area served map (https://stackoverflow.com/questions/58043978/display-data-on-real-map-based-on-postal-code)
