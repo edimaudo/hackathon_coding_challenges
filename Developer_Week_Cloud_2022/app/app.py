@@ -5,8 +5,8 @@ import plotly.express as px
 import os, os.path
 
 st.image("trillium-logo.jpeg")
-st.header("About")
 st.title('OTF Charity Insights')
+st.header("About")
 st.write("The goal is to use open data from Ontario Trillium Foundation to analyze charity information")
 st.write("The Ontario Trillium Foundation (OTF) is an agency of the Government of Ontario and one of Canada’s " + 
 "leading granting foundations. Our investments in communities across the province help build healthy and vibrant communities." + 
@@ -18,11 +18,9 @@ st.write("https://otf.ca/who-we-are/about-us/our-story")
 @st.cache
 def load_data():
     data = pd.read_excel(DATA_URL)
-    data.dropna(inplace=True)
     return data
 
 # Load data
-global df
 DATA_URL = "otf.xlsx"
 df = load_data()
 
@@ -41,24 +39,22 @@ with bottom_container:
     metric_column5.metric("# of Program Areas",str(df['Program_area_update'].unique()))
     metric_column6.metric("# of Age Groups Served",str(df['Age_group_update'].unique()))
 
-## Funding Trends
+# Funding Trends
 df_total_grants = df[['Amount_awarded','Fiscal_year_update']]
 df_total_grants_agg = df_total_grants.groupby('Fiscal_year_update').agg(Total_Amount_Awarded = 
                                                                       ('Amount_awarded', 'sum')).reset_index()
 df_total_grants_agg.columns = ['Year', 'Amount Awarded (CAD)']
-df_total_grants_agg.sort_values('Amount Awarded (CAD)', ascending=True)
-fig = px.line(df_total_grants_agg, x="Year", y='Amount Awarded (CAD)')
+df_total_grants_agg.sort_values("Amount Awarded (CAD)", ascending=True)
+fig = px.bar(df_total_grants_agg, x="Year", y="Amount Awarded (CAD)")
 st.plotly_chart(fig)
 
 # Charity Insights
-charity_expander = st.expander()
+st.header("Charity Insights")
 charity_top_container = st.container()
 charity_bottom_container = st.container()
 charity_metric_column1, charity_metric_column2,charity_metric_column3,charity_metric_column4 = st.columns(4)
-with charity_expander:
-    charity_choices = st.selectbox("")
-
-    st.header("Charity Insights")
+with st.expander("Charity Insights"):
+    #charity_choices = st.selectbox("")
 
     st.subheader("Charity Overview")
     ## build metrics
@@ -69,8 +65,8 @@ with charity_expander:
 
     ## build year trend
     ##Funding Trend
-    st.subheader("Charity Yearly Insights")
-    year_choices = st.selectbox("")
+    st.subheader("Yearly Insights")
+    #year_choices = st.selectbox("")
 
     ##Age breakdown
 ##population served
