@@ -27,17 +27,15 @@ df = load_data()
 st.header("Overview")
 # Metrics
 top_container = st.container()
-bottom_container = st.container()
 metric_column1, metric_column2,metric_column3,metric_column4, metric_column5,metric_column6 = st.columns(6)
 
 with top_container:
-    metric_column1.metric("# of Charities ",str(df['Identifier'].unique())) #len(pd.unique(df['height'])
-    metric_column2.metric("# of Years ",str(df['Fiscal_year_update'].unique()))
-    metric_column3.metric("# of Cities ",str(df['Recipient_org_city_update'].unique()))
-with bottom_container:
-    metric_column4.metric("# of Grant Programs",str(df['Grant_program'].unique()))
-    metric_column5.metric("# of Program Areas",str(df['Program_area_update'].unique()))
-    metric_column6.metric("# of Age Groups Served",str(df['Age_group_update'].unique()))
+    metric_column1.metric("Charities",str( len(df['Identifier'].unique()))) #len(pd.unique(df['height'])
+    metric_column2.metric("No. of Years",str(len(df['Fiscal_year_update'].unique())))
+    metric_column3.metric("Cities",str(len(df['Recipient_org_city_update'].unique())))
+    metric_column4.metric("Grant Programs",str(len(df['Grant_program'].unique())))
+    metric_column5.metric("Program Areas",str(len(df['Program_area_update'].unique())))
+    metric_column6.metric("Age Groups",str(len(df['Age_group_update'].unique())))#
 
 # Funding Trends
 df_total_grants = df[['Amount_awarded','Fiscal_year_update']]
@@ -54,7 +52,9 @@ charity_top_container = st.container()
 charity_bottom_container = st.container()
 charity_metric_column1, charity_metric_column2,charity_metric_column3,charity_metric_column4 = st.columns(4)
 with st.expander("Charity Insights"):
-    #charity_choices = st.selectbox("")
+    charities_list = df['Identifier'].unique()
+    charities_list.sort()
+    charity_choices = st.selectbox(charities_list)
 
     st.subheader("Charity Overview")
     ## build metrics
