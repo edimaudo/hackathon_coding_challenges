@@ -4,16 +4,19 @@ import pandas as pd
 import plotly.express as px
 import os, os.path
 
-st.image("trillium-logo.jpeg")
 st.title('OTF Charity Insights')
+
+
 st.header("About")
-st.write("The goal is to use open data from Ontario Trillium Foundation to analyze charity information")
-st.write("The Ontario Trillium Foundation (OTF) is an agency of the Government of Ontario and one of Canada’s " + 
-"leading granting foundations. Our investments in communities across the province help build healthy and vibrant communities." + 
-"Our key funder, the Ministry of Heritage, Sport, Tourism and Culture Industries enables us to provide grants that can make the greatest impact. " +
-"OTF also administers grants on behalf of the Ministry of Children, Community and Social Services. Last year, $115 million was invested into more than" + 
-"644 projects in communities across the province")
-st.write("https://otf.ca/who-we-are/about-us/our-story")
+with st.expander("About"):
+    st.image("trillium-logo.jpeg")
+    st.write("The goal is to use open data from Ontario Trillium Foundation to analyze charity data")
+    st.write("The Ontario Trillium Foundation (OTF) is an agency of the Government of Ontario and one of Canada’s " + 
+    "leading granting foundations. Our investments in communities across the province help build healthy and vibrant communities." + 
+    "Our key funder, the Ministry of Heritage, Sport, Tourism and Culture Industries enables us to provide grants that can make the greatest impact. " +
+    "OTF also administers grants on behalf of the Ministry of Children, Community and Social Services. Last year, $115 million was invested into more than" + 
+    "644 projects in communities across the province")
+    st.write("https://otf.ca/who-we-are/about-us/our-story")
 
 @st.cache
 def load_data():
@@ -25,26 +28,26 @@ DATA_URL = "otf.xlsx"
 df = load_data()
 
 st.header("Overview")
-# Metrics
-top_container = st.container()
-metric_column1, metric_column2,metric_column3,metric_column4, metric_column5,metric_column6 = st.columns(6)
 
-with top_container:
-    metric_column1.metric("Charities",str( len(df['Identifier'].unique()))) #len(pd.unique(df['height'])
-    metric_column2.metric("No. of Years",str(len(df['Fiscal_year_update'].unique())))
-    metric_column3.metric("Cities",str(len(df['Recipient_org_city_update'].unique())))
-    metric_column4.metric("Grant Programs",str(len(df['Grant_program'].unique())))
-    metric_column5.metric("Program Areas",str(len(df['Program_area_update'].unique())))
-    metric_column6.metric("Age Groups",str(len(df['Age_group_update'].unique())))#
+with st.expander("Overview"):
+    top_container = st.container()
+    metric_column1, metric_column2,metric_column3,metric_column4, metric_column5,metric_column6 = st.columns(6)
+    with top_container:
+        metric_column1.metric("Charities",str( len(df['Identifier'].unique()))) #len(pd.unique(df['height'])
+        metric_column2.metric("No. of Years",str(len(df['Fiscal_year_update'].unique())))
+        metric_column3.metric("Cities",str(len(df['Recipient_org_city_update'].unique())))
+        metric_column4.metric("Grant Programs",str(len(df['Grant_program'].unique())))
+        metric_column5.metric("Program Areas",str(len(df['Program_area_update'].unique())))
+        metric_column6.metric("Age Groups",str(len(df['Age_group_update'].unique())))#
 
-# Funding Trends
-df_total_grants = df[['Amount_awarded','Fiscal_year_update']]
-df_total_grants_agg = df_total_grants.groupby('Fiscal_year_update').agg(Total_Amount_Awarded = 
-                                                                      ('Amount_awarded', 'sum')).reset_index()
-df_total_grants_agg.columns = ['Year', 'Amount Awarded (CAD)']
-df_total_grants_agg.sort_values("Amount Awarded (CAD)", ascending=True)
-fig = px.bar(df_total_grants_agg, x="Year", y="Amount Awarded (CAD)")
-st.plotly_chart(fig)
+    # Funding Trends
+    df_total_grants = df[['Amount_awarded','Fiscal_year_update']]
+    df_total_grants_agg = df_total_grants.groupby('Fiscal_year_update').agg(Total_Amount_Awarded = 
+                                                                        ('Amount_awarded', 'sum')).reset_index()
+    df_total_grants_agg.columns = ['Year', 'Amount Awarded (CAD)']
+    df_total_grants_agg.sort_values("Amount Awarded (CAD)", ascending=True)
+    fig = px.bar(df_total_grants_agg, x="Year", y="Amount Awarded (CAD)")
+    st.plotly_chart(fig)
 
 # Charity Insights
 st.header("Charity Insights")
@@ -52,28 +55,29 @@ charity_top_container = st.container()
 charity_bottom_container = st.container()
 charity_metric_column1, charity_metric_column2,charity_metric_column3,charity_metric_column4 = st.columns(4)
 with st.expander("Charity Insights"):
-    charities_list = df['Identifier'].unique()
-    charities_list.sort()
-    charity_choices = st.selectbox(charities_list)
+    charity_list = df['Organization_name'].unique()
+    charity_list  = charity_list.astype('str')
+    charity_list.sort()
+    charity_choice = st.selectbox("Pick a Charity",charity_list)
 
     st.subheader("Charity Overview")
-    ## build metrics
+    charity = df[(df.Organization_name == charity_choice)]
     ##English description
     ##incorporation #
     ##registration #
     ##Number of cities
-
-    ## build year trend
     ##Funding Trend
     st.subheader("Yearly Insights")
-    #year_choices = st.selectbox("")
-
+    year_list = df['Fiscal_year_update'].unique()
+    year_list  = year_list.astype('int')
+    year_list.sort()
+    year_choice = st.selectbox("year",year_list)
     ##Age breakdown
-##population served
-##grant programs
-##funded category 
-##budget fund
-##top 10 funded cities
-##area served map (https://stackoverflow.com/questions/58043978/display-data-on-real-map-based-on-postal-code)
+    ##population served
+    ##grant programs
+    ##funded category 
+    ##budget fund
+    ##top 10 funded cities
+    ##area served map (https://stackoverflow.com/questions/58043978/display-data-on-real-map-based-on-postal-code)
 
 # City Insights
