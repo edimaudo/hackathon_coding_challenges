@@ -58,10 +58,8 @@ with st.expander("Charity Insights"):
 
     st.subheader("Charity Overview")
     charity_container = st.container()
-
-   
+    charity_metric_column1, charity_metric_column2,charity_metric_column3,charity_metric_column4 = st.columns(4)
     with charity_container:
-        charity_metric_column1, charity_metric_column2,charity_metric_column3,charity_metric_column4 = st.columns(4)
         charity = df[(df.Organization_name == charity_choice)]
         # English description
         charity_name = charity['Organization_name'].unique()
@@ -87,19 +85,37 @@ with st.expander("Charity Insights"):
         st.plotly_chart(fig)
 
     st.subheader("Yearly Insights")
-    year_list = df['Fiscal_year_update'].unique()
-    year_list  = year_list.astype('int')
-    year_list.sort()
-    year_choice = st.selectbox("year",year_list)
-    charity_year = df[(df.Organization_name == charity_choice)& (df.Fiscal_year_update == year_choice)]
-    #newdf = df[(df.origin == "JFK") & (df.carrier == "B6")]
-    ##Age breakdown
-    ##population served
-    ##grant programs
-    ##funded category 
-    ##budget fund
-    ##top 10 funded cities
-    ##area served map (https://stackoverflow.com/questions/58043978/display-data-on-real-map-based-on-postal-code)
+    year_container =  st.container()
+    with year_container:
+        year_list = df['Fiscal_year_update'].unique()
+        year_list  = year_list.astype('int')
+        year_list.sort()
+        year_choice = st.selectbox("year",year_list)
+        charity_year = df[(df.Organization_name == charity_choice)& (df.Fiscal_year_update == year_choice)]
+    
+        # Age breakdown 
+        age_group = charity_year[['Amount_awarded','Age_group_update']]
+        age_group_agg = age_group.groupby('Age_group_update').agg(Total_Amount_Awarded = 
+                                                                        ('Amount_awarded', 'sum')).reset_index()
+        age_group_agg.columns = ['Age Group', 'Amount Awarded (CAD)']
+        age_group_agg = age_group_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
+        fig = px.bar(age_group_agg, x="Amount Awarded (CAD)", y="Age Group", orientation='h')
+        st.plotly_chart(fig)
+        
+        # program area
+        program_area = charity_year[['Amount_awarded','Program_area_update']]
+        program_area_agg = program_area.groupby('Program_area_update').agg(Total_Amount_Awarded = 
+                                                                        ('Amount_awarded', 'sum')).reset_index()
+        program_area_agg.columns = ['Program Area', 'Amount Awarded (CAD)']
+        program_area_agg = program_area_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
+        fig = px.bar(program_area_agg, x="Amount Awarded (CAD)", y="Program Area", orientation='h')
+        st.plotly_chart(fig)
+        # population served
+        # grant programs
+        # funded category 
+        # budget fund
+        # top 10 funded cities
+        # area served map (https://stackoverflow.com/questions/58043978/display-data-on-real-map-based-on-postal-code)
 
 # City Insights
 
