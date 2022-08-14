@@ -110,11 +110,36 @@ with st.expander("Charity Insights"):
         program_area_agg = program_area_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
         fig = px.bar(program_area_agg, x="Amount Awarded (CAD)", y="Program Area", orientation='h')
         st.plotly_chart(fig)
+
         # population served
+        population_served = charity_year[['Amount_awarded','Population_served']]
+        population_served_agg = population_served.groupby('Population_served').agg(Total_Amount_Awarded = 
+                                                                        ('Amount_awarded', 'sum')).reset_index()
+        population_served_agg.columns = ['Population Served', 'Amount Awarded (CAD)']
+        population_served_agg = population_served_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
+        fig = px.bar(population_served_agg, x="Amount Awarded (CAD)", y="Population Served", orientation='h')
+        st.plotly_chart(fig)
+
         # grant programs
-        # funded category 
+        grant_program = charity_year[['Amount_awarded','Grant_program']]
+        grant_program_agg = grant_program.groupby('Grant_program').agg(Total_Amount_Awarded = 
+                                                                        ('Amount_awarded', 'sum')).reset_index()
+        grant_program_agg.columns = ['Grant Program', 'Amount Awarded (CAD)']
+        grant_program_agg = grant_program_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
+        fig = px.bar(grant_program_agg, x="Amount Awarded (CAD)", y="Grant Program", orientation='h')
+        st.plotly_chart(fig)
+
         # budget fund
+        budget_fund = charity_year[['Amount_awarded','Budget_fund']]
+        budget_fund_agg = budget_fund.groupby('Budget_fund').agg(Total_Amount_Awarded = 
+                                                                        ('Amount_awarded', 'sum')).reset_index()
+        budget_fund_agg.columns = ['Budget Fund', 'Amount Awarded (CAD)']
+        budget_fund_agg = budget_fund_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
+        fig = px.bar(budget_fund_agg, x="Amount Awarded (CAD)", y="Budget Fund", orientation='h')
+        st.plotly_chart(fig)
+        
         # top 10 funded cities
+        
         # area served map (https://stackoverflow.com/questions/58043978/display-data-on-real-map-based-on-postal-code)
 
 # City Insights
