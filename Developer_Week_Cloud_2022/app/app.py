@@ -138,8 +138,14 @@ with st.expander("Charity Insights"):
         fig = px.bar(budget_fund_agg, x="Amount Awarded (CAD)", y="Budget Fund", orientation='h')
         st.plotly_chart(fig)
         
-        # top 10 funded cities
-        
+        # cities
+        recipient_org_city_update = charity_year[['Amount_awarded','Recipient_org_city_update']]
+        recipient_org_city_update_agg = recipient_org_city_update.groupby('Recipient_org_city_update').agg(Total_Amount_Awarded = 
+                                                                        ('Amount_awarded', 'sum')).reset_index()
+        recipient_org_city_update_agg.columns = ['City', 'Amount Awarded (CAD)']
+        recipient_org_city_update_agg = recipient_org_city_update_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
+        fig = px.bar(recipient_org_city_update_agg, x="Amount Awarded (CAD)", y="City", orientation='h')
+        st.plotly_chart(fig)       
         # area served map (https://stackoverflow.com/questions/58043978/display-data-on-real-map-based-on-postal-code)
 
 # City Insights
