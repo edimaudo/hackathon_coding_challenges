@@ -3,15 +3,26 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import os, os.path
+import geopandas
 
 @st.cache
 def load_data():
     data = pd.read_excel(DATA_URL)
     return data
 
+
+@st.cache
+def load_shp():
+    data = geopandas.read_file(SHP_URL)
+    return data
+
 # Load data
 DATA_URL = "otf.xlsx"
 df = load_data()
+#SHP_URL = "gpr_000b11a_e.shp"
+#shp = load_shp()
+#ontario = canada[canada['PRUID'] == '35']
+
 
 st.title('OTF Charity Insights')
 # About
@@ -145,7 +156,8 @@ with st.expander("Charity Insights"):
         recipient_org_city_update_agg.columns = ['City', 'Amount Awarded (CAD)']
         recipient_org_city_update_agg = recipient_org_city_update_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
         fig = px.bar(recipient_org_city_update_agg, x="Amount Awarded (CAD)", y="City", orientation='h')
-        st.plotly_chart(fig)       
+        st.plotly_chart(fig)  
+
         # area served map (https://stackoverflow.com/questions/58043978/display-data-on-real-map-based-on-postal-code)
 
 # City Insights
