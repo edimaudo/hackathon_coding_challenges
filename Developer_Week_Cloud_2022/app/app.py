@@ -158,12 +158,15 @@ with st.expander("Charity Insights"):
         fig = px.bar(recipient_org_city_update_agg, x="Amount Awarded (CAD)", y="City", orientation='h')
         st.plotly_chart(fig)  
 
-        # area served map (https://stackoverflow.com/questions/58043978/display-data-on-real-map-based-on-postal-code)
-
-# City Insights
-
-
 # Prediction
+##Funding CATEGORY prediction (5 days)
+##by 
+##age group
+##City
+##Budget funding
+##program area
 
+# Charity Prediction
+st.header("Charity Prediction")
 
-# NLP
+with st.expander("Charity Prediction"):
