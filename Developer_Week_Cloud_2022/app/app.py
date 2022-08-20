@@ -185,6 +185,10 @@ with st.expander("Charity Prediction"):
     budget_fund.sort()
 
     city_choice = st.selectbox("Pick a City",city)
+    grant_choice = st.selectbox("Pick a Grant Option",grant)
+    program_area_choice = st.selectbox("Pick a Program Area",program_area)
+    age_choice = st.selectbox("Pick a Age group",age)
+    budget_fund_choice = st.selectbox("Pick a Budget Fund",budget_fund)
 
     
     
