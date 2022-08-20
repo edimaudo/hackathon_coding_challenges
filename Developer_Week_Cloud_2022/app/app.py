@@ -158,15 +158,34 @@ with st.expander("Charity Insights"):
         fig = px.bar(recipient_org_city_update_agg, x="Amount Awarded (CAD)", y="City", orientation='h')
         st.plotly_chart(fig)  
 
-# Prediction
-##Funding CATEGORY prediction (5 days)
-##by 
-##age group
-##City
-##Budget funding
-##program area
-
 # Charity Prediction
 st.header("Charity Prediction")
-
 with st.expander("Charity Prediction"):
+    charity_data = df[['Fiscal_year_update','Recipient_org_city_update','Grant_program',
+                 'Program_area_update','Age_group_update','Budget_fund_update','Amount_awarded']]
+    
+    city = charity_data['Recipient_org_city_update'].unique()
+    city  = city.astype('str')
+    city.sort()
+
+    city = charity_data['Recipient_org_city_update'].unique()
+    city  = city.astype('str')
+    city.sort()
+
+    city = charity_data['Recipient_org_city_update'].unique()
+    city  = city.astype('str')
+    city.sort()
+
+    city = charity_data['Recipient_org_city_update'].unique()
+    city  = city.astype('str')
+    city.sort()
+
+
+    city_choice = st.selectbox("Pick a City",city)
+
+    
+    
+    
+    
+    
+    Grant_program	Program_area_update	Age_group_update	Budget_fund_update
