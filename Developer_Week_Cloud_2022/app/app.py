@@ -168,18 +168,21 @@ with st.expander("Charity Prediction"):
     city  = city.astype('str')
     city.sort()
 
-    city = charity_data['Recipient_org_city_update'].unique()
-    city  = city.astype('str')
-    city.sort()
+    grant = charity_data['Grant_program'].unique()
+    grant  = grant.astype('str')
+    grant.sort()
 
-    city = charity_data['Recipient_org_city_update'].unique()
-    city  = city.astype('str')
-    city.sort()
+    program_area = charity_data['Program_area_update'].unique()
+    program_area  = program_area.astype('str')
+    program_area.sort()
 
-    city = charity_data['Recipient_org_city_update'].unique()
-    city  = city.astype('str')
-    city.sort()
+    age = charity_data['Age_group_update'].unique()
+    age  = age.astype('str')
+    age.sort()
 
+    budget_fund = charity_data['Budget_fund_update'].unique()
+    budget_fund  = budget_fund.astype('str')
+    budget_fund.sort()
 
     city_choice = st.selectbox("Pick a City",city)
 
@@ -188,4 +191,4 @@ with st.expander("Charity Prediction"):
     
     
     
-    Grant_program	Program_area_update	Age_group_update	Budget_fund_update
+    			
