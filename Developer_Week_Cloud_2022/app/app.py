@@ -184,12 +184,22 @@ with st.expander("Charity Prediction"):
     budget_fund = charity_data['Budget_fund_update'].unique()
     budget_fund  = budget_fund.astype('str')
     budget_fund.sort()
+
     with charity_metric_column1:
         city_choice = st.selectbox("Pick a City",city)
-    grant_choice = st.selectbox("Pick a Grant Option",grant)
-    program_area_choice = st.selectbox("Pick a Program Area",program_area)
-    age_choice = st.selectbox("Pick a Age group",age)
-    budget_fund_choice = st.selectbox("Pick a Budget Fund",budget_fund)
+    with charity_metric_column2:
+        grant_choice = st.selectbox("Pick a Grant Option",grant)
+    with charity_metric_column3:
+        program_area_choice = st.selectbox("Pick a Program Area",program_area)
+    with charity_metric_column4:
+        age_choice = st.selectbox("Pick a Age group",age)
+    with charity_metric_column5:
+        budget_fund_choice = st.selectbox("Pick a Budget Fund",budget_fund)
+
+    
+    
+    
+    
 
     
     
