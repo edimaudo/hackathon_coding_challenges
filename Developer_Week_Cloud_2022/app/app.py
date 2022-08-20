@@ -161,6 +161,7 @@ with st.expander("Charity Insights"):
 # Charity Prediction
 st.header("Charity Prediction")
 with st.expander("Charity Prediction"):
+    charity_metric_column1, charity_metric_column2,charity_metric_column3,charity_metric_column4,harity_metric_column5 = st.columns(5)
     charity_data = df[['Fiscal_year_update','Recipient_org_city_update','Grant_program',
                  'Program_area_update','Age_group_update','Budget_fund_update','Amount_awarded']]
     
@@ -183,8 +184,8 @@ with st.expander("Charity Prediction"):
     budget_fund = charity_data['Budget_fund_update'].unique()
     budget_fund  = budget_fund.astype('str')
     budget_fund.sort()
-
-    city_choice = st.selectbox("Pick a City",city)
+    with charity_metric_column1:
+        city_choice = st.selectbox("Pick a City",city)
     grant_choice = st.selectbox("Pick a Grant Option",grant)
     program_area_choice = st.selectbox("Pick a Program Area",program_area)
     age_choice = st.selectbox("Pick a Age group",age)
