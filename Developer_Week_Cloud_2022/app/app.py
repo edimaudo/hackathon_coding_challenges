@@ -4,6 +4,20 @@ import pandas as pd
 import plotly.express as px
 import os, os.path
 import geopandas
+import sklearn
+from sklearn import preprocessing
+from sklearn import model_selection
+from sklearn.metrics import mean_absolute_error, mean_squared_error,r2_score
+from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler, OneHotEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import TimeSeriesSplit, GridSearchCV, RandomizedSearchCV
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn import ensemble
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import VotingRegressor
+from sklearn.neighbors import KNeighborsRegressor
 
 @st.cache
 def load_data():
@@ -195,10 +209,53 @@ with st.expander("Charity Prediction"):
         age_choice = st.selectbox("Pick a Age group",age)
     with charity_metric_column5:
         budget_fund_choice = st.selectbox("Pick a Budget Fund",budget_fund)
+    #button to run prediction
+    clicked = st.button("Run Prediction")
+   
+    
+    # ML     
+    model_data = df[['Fiscal_year_update','Recipient_org_city_update','Grant_program',
+                 'Program_area_update','Age_group_update','Budget_fund_update','Amount_awarded']]
+    #Label encoding
+    categ = ['Recipient_org_city_update','Grant_program','Program_area_update','Age_group_update','Budget_fund_update']
+
+    # Encode Categorical Columns
+    le = LabelEncoder()
+    model_data[categ] = model_data[categ].apply(le.fit_transform)
+    # Sort data by year
+    model_data_df = model_data.sort_values(by=['Fiscal_year_update'], ascending=True)
+    # Create train and test data
+    X = model_data[['Recipient_org_city_update','Grant_program','Program_area_update','Age_group_update','Budget_fund_update']]
+    Y = model_data['Amount_awarded']
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.8, random_state=0)
+    
+    # Regression Models
+    import warnings
+    warnings.simplefilter(action='ignore', category=FutureWarning)
+    model2=GradientBoostingRegressor()
+    r2=[]
+    rmse = []
+    mae = []
+    # R^2
+    regressor = model2.fit(X_train, y_train)
+    score = regressor.score(X_test, y_test)
+    r2.append(score)
+    y_pred = regressor.predict(X_test)
+    score = mean_absolute_error(y_pred, y_test)
+    mae.append(score)
+    score = np.sqrt(mean_squared_error(y_pred, y_test))
+    rmse.append(score)
+
+    # ML logic from dropdowns
+
+    # ML output
+    #if clicked:
+        
+    
 
     
     
-    
+# Classifying Charities
     
 
     
