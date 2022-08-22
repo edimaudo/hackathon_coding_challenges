@@ -242,8 +242,10 @@ with st.expander("Charity Prediction"):
     r2.append(score)
     y_pred = regressor.predict(X_test)
     score = mean_absolute_error(y_pred, y_test)
+     # MAE
     mae.append(score)
     score = np.sqrt(mean_squared_error(y_pred, y_test))
+     # RMSE
     rmse.append(score)
 
     # ML logic from dropdowns
@@ -253,9 +255,6 @@ with st.expander("Charity Prediction"):
         
     
 
-    
-    
-# Classifying Charities
     
 
     
