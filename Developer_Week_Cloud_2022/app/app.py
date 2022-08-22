@@ -209,10 +209,11 @@ with st.expander("Charity Prediction"):
         age_choice = st.selectbox("Pick a Age group",age)
     with charity_metric_column5:
         budget_fund_choice = st.selectbox("Pick a Budget Fund",budget_fund)
+    year_choice = 2022
+    
     #button to run prediction
     clicked = st.button("Run Prediction")
    
-    
     # ML     
     model_data = df[['Fiscal_year_update','Recipient_org_city_update','Grant_program',
                  'Program_area_update','Age_group_update','Budget_fund_update','Amount_awarded']]
