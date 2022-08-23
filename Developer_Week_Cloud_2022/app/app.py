@@ -8,15 +8,11 @@ import sklearn
 from sklearn import preprocessing
 from sklearn import model_selection
 from sklearn.metrics import mean_absolute_error, mean_squared_error,r2_score
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score,train_test_split, TimeSeriesSplit, GridSearchCV, RandomizedSearchCV
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler, OneHotEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import TimeSeriesSplit, GridSearchCV, RandomizedSearchCV
 from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
 from sklearn import ensemble
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.ensemble import VotingRegressor
+from sklearn.ensemble import RandomForestRegressor,GradientBoostingRegressor, VotingRegressor
 from sklearn.neighbors import KNeighborsRegressor
 
 @st.cache
@@ -165,7 +161,7 @@ with st.expander("Charity Insights"):
 # Charity Prediction
 st.header("Charity Prediction")
 with st.expander("Charity Prediction"):
-    charity_metric_column1, charity_metric_column2,charity_metric_column3,charity_metric_column4,harity_metric_column5 = st.columns(5)
+    charity_metric_column1, charity_metric_column2,charity_metric_column3,charity_metric_column4,charity_metric_column5 = st.columns(5)
     charity_data = df[['Fiscal_year_update','Recipient_org_city_update','Grant_program',
                  'Program_area_update','Age_group_update','Budget_fund_update','Amount_awarded']]
     
@@ -204,7 +200,7 @@ with st.expander("Charity Prediction"):
     # Regression Model
     import warnings
     warnings.simplefilter(action='ignore', category=FutureWarning)
-    model2=GradientBoostingRegressor()
+    model=GradientBoostingRegressor()
     # Data 
     model_data = df[['Fiscal_year_update','Recipient_org_city_update','Grant_program',
                  'Program_area_update','Age_group_update','Budget_fund_update','Amount_awarded']]
@@ -214,7 +210,6 @@ with st.expander("Charity Prediction"):
     model_data["Program_area_update"] = model_data["Program_area_update"].astype('category')
     model_data["Age_group_update"] = model_data["Recipient_org_city_update"].astype('category')
     model_data["Budget_fund_update"] = model_data["Budget_fund_update"].astype('category')
-
 
     model_data["Recipient_org_city_update_cat"] = model_data["Recipient_org_city_update"].cat.codes
     model_data["Grant_program_cat"] = model_data["Grant_program"].cat.codes
@@ -231,20 +226,23 @@ with st.expander("Charity Prediction"):
     regressor = model.fit(X_train, y_train)
     y_pred = regressor.predict(X_test)
 
-    #button to run prediction
+    
     clicked = st.button("Run Prediction")
 
+    # Run Prediction
     if clicked:
         newdf = df[(df.origin == "JFK") & (df.carrier == "B6")]
         info_df = pd.DataFrame(columns = ['Fiscal_year_update','Recipient_org_city_update','Grant_program',
                              'Program_area_update','Age_group_update','Budget_fund_update'],
         index = ['a'])
+        info_df['Fiscal_year_update'][0]
         info_df.loc['a'] = [2022, 907, 1,5,10,7]
         y_pred_test = regressor.predict(info_df)
-        y_pred_test[0]
-        output = float("{:.2f}".format(x))
+        
+        output = float("{:.2f}".format(y_pred_test[0]))
+        output = str(output) + " CAD"
         st.write("Based on the metrics selected the amount below is what is predicted for next year")
-        st.metric("Amount Awarded",str(output))
+        st.metric("Amount Awarded",output)
 
    
   
