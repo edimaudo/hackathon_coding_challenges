@@ -24,19 +24,9 @@ def load_data():
     data = pd.read_excel(DATA_URL)
     return data
 
-
-@st.cache
-def load_shp():
-    data = geopandas.read_file(SHP_URL)
-    return data
-
 # Load data
 DATA_URL = "otf.xlsx"
 df = load_data()
-#SHP_URL = "gpr_000b11a_e.shp"
-#shp = load_shp()
-#ontario = canada[canada['PRUID'] == '35']
-
 
 st.title('OTF Charity Insights')
 # About
@@ -210,49 +200,58 @@ with st.expander("Charity Prediction"):
     with charity_metric_column5:
         budget_fund_choice = st.selectbox("Pick a Budget Fund",budget_fund)
     year_choice = 2022
-    
-    #button to run prediction
-    clicked = st.button("Run Prediction")
-   
-    # ML     
-    model_data = df[['Fiscal_year_update','Recipient_org_city_update','Grant_program',
-                 'Program_area_update','Age_group_update','Budget_fund_update','Amount_awarded']]
-    #Label encoding
-    categ = ['Recipient_org_city_update','Grant_program','Program_area_update','Age_group_update','Budget_fund_update']
 
-    # Encode Categorical Columns
-    le = LabelEncoder()
-    model_data[categ] = model_data[categ].apply(le.fit_transform)
-    # Sort data by year
-    model_data_df = model_data.sort_values(by=['Fiscal_year_update'], ascending=True)
-    # Create train and test data
-    X = model_data[['Recipient_org_city_update','Grant_program','Program_area_update','Age_group_update','Budget_fund_update']]
-    Y = model_data['Amount_awarded']
-    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.8, random_state=0)
-    
-    # Regression Models
+    # Regression Model
     import warnings
     warnings.simplefilter(action='ignore', category=FutureWarning)
     model2=GradientBoostingRegressor()
-    r2=[]
-    rmse = []
-    mae = []
-    # R^2
-    regressor = model2.fit(X_train, y_train)
-    score = regressor.score(X_test, y_test)
-    r2.append(score)
+    # Data 
+    model_data = df[['Fiscal_year_update','Recipient_org_city_update','Grant_program',
+                 'Program_area_update','Age_group_update','Budget_fund_update','Amount_awarded']]
+    #Recode data
+    model_data["Recipient_org_city_update"] = model_data["Recipient_org_city_update"].astype('category')
+    model_data["Grant_program"] = model_data["Grant_program"].astype('category')
+    model_data["Program_area_update"] = model_data["Program_area_update"].astype('category')
+    model_data["Age_group_update"] = model_data["Recipient_org_city_update"].astype('category')
+    model_data["Budget_fund_update"] = model_data["Budget_fund_update"].astype('category')
+
+
+    model_data["Recipient_org_city_update_cat"] = model_data["Recipient_org_city_update"].cat.codes
+    model_data["Grant_program_cat"] = model_data["Grant_program"].cat.codes
+    model_data["Program_area_update_cat"] = model_data["Program_area_update"].cat.codes
+    model_data["Age_group_update_cat"] = model_data["Age_group_update"].cat.codes
+    model_data["Budget_fund_update_cat"] = model_data["Budget_fund_update"].cat.codes
+
+    # Create train and test data
+    X = model_data[['Fiscal_year_update','Recipient_org_city_update_cat','Grant_program_cat',
+                    'Program_area_update_cat','Age_group_update_cat','Budget_fund_update_cat']]
+    Y = model_data['Amount_awarded']
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.8, random_state=0)
+
+    regressor = model.fit(X_train, y_train)
     y_pred = regressor.predict(X_test)
-    score = mean_absolute_error(y_pred, y_test)
-     # MAE
-    mae.append(score)
-    score = np.sqrt(mean_squared_error(y_pred, y_test))
-     # RMSE
-    rmse.append(score)
 
-    # ML logic from dropdowns
+    #button to run prediction
+    clicked = st.button("Run Prediction")
 
-    # ML output
-    #if clicked:
+    if clicked:
+        newdf = df[(df.origin == "JFK") & (df.carrier == "B6")]
+        info_df = pd.DataFrame(columns = ['Fiscal_year_update','Recipient_org_city_update','Grant_program',
+                             'Program_area_update','Age_group_update','Budget_fund_update'],
+        index = ['a'])
+        info_df.loc['a'] = [2022, 907, 1,5,10,7]
+        y_pred_test = regressor.predict(info_df)
+        y_pred_test[0]
+        output = float("{:.2f}".format(x))
+        st.write("Based on the metrics selected the amount below is what is predicted for next year")
+        st.metric("Amount Awarded",str(output))
+
+   
+  
+    
+
+
+
         
     
 
