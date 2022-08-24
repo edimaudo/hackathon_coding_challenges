@@ -192,7 +192,7 @@ with st.expander("Charity Prediction"):
     with charity_metric_column3:
         program_area_choice = st.selectbox("Pick a Program Area",program_area)
     with charity_metric_column4:
-        age_choice = st.selectbox("Pick a Age group",age)
+        age_choice = st.selectbox("Pick an Age group",age)
     with charity_metric_column5:
         budget_fund_choice = st.selectbox("Pick a Budget Fund",budget_fund)
     year_choice = 2022
@@ -226,23 +226,24 @@ with st.expander("Charity Prediction"):
     regressor = model.fit(X_train, y_train)
     y_pred = regressor.predict(X_test)
 
-    
     clicked = st.button("Run Prediction")
 
     # Run Prediction
     if clicked:
-        newdf = df[(df.origin == "JFK") & (df.carrier == "B6")]
-        info_df = pd.DataFrame(columns = ['Fiscal_year_update','Recipient_org_city_update','Grant_program',
-                             'Program_area_update','Age_group_update','Budget_fund_update'],
-        index = ['a'])
-        info_df['Fiscal_year_update'][0]
-        info_df.loc['a'] = [2022, 907, 1,5,10,7]
-        y_pred_test = regressor.predict(info_df)
-        
-        output = float("{:.2f}".format(y_pred_test[0]))
-        output = str(output) + " CAD"
-        st.write("Based on the metrics selected the amount below is what is predicted for next year")
-        st.metric("Amount Awarded",output)
+        prediction_df = model_data[(model_data.Recipient_org_city_update == city_choice) & (model_data.Grant_program == grant_choice) & (model_data.Program_area_update == program_area_choice) & (model_data.Age_group_update == age_choice) & (model_data.Budget_fund_update == budget_fund_choice)]
+        if prediction_df.empty:
+            output = str(0) + " CAD"
+            st.write("Based on the metrics selected the amount below is what is predicted for next year")
+            st.metric("Amount Awarded",output)
+        else:
+            info_df = pd.DataFrame(columns = ['Fiscal_year_update','Recipient_org_city_update','Grant_program','Program_area_update','Age_group_update','Budget_fund_update'],
+            index = ['a'])
+            info_df.loc['a'] = [2022, prediction_df[0], prediction_df[1],prediction_df[2],prediction_df[3],prediction_df[4]]
+            y_pred_test = regressor.predict(info_df)
+            output = float("{:.2f}".format(y_pred_test[0]))
+            output = str(output) + " CAD"
+            st.write("Based on the metrics selected the amount below is what is predicted for next year")
+            st.metric("Amount Awarded",output)
 
    
   
