@@ -21,7 +21,7 @@ st.header("About")
 with st.expander("About"):
     st.write("Printers! We all have a love-hate relationship with them.  When things are going well it is perfect.  Just one glitch or driver issue and all hell breaks lose")
     st.write("There has been a proliferation of printer companion apps to make the printing process easier.  These apps are what someone might use to print remotely or scan on the go")
-    st.write("The goal is analyze printer app information scraped from the Google Play store.  The apps analyzed are Epson SmartPanel, Epson iPrint, HP Smart and Canon Print")
+    st.write("The goal is perform text analysis on companion app reviews.  The data was scraped from the Google Play store.  The apps analyzed are Epson SmartPanel, Epson iPrint, HP Smart and Canon Print")
 
 # Overview
 st.header("Overview")
@@ -37,13 +37,17 @@ with st.expander("Data summary"):
     metric_column3.metric("No. of reviews",str(len(df['reviewId'].unique())))
     metric_column4.metric("Average Score",str(float("{:.2f}".format(df['score'].mean()))))
     
-
 # Analysis
 st.header("Analysis")
 with st.expander("analysis"):
-    st.write("")
-    st.write("")
-    st.write("")
+    df_analysis = df
+    
+    st.subheader("")
+    st.subheader("")
+    st.subheader("")
+    st.subheader("")
+    st.subheader("")
+
 
 # NLP
 st.header("NLP")
