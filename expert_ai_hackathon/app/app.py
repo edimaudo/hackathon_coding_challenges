@@ -14,7 +14,7 @@ def load_data():
 DATA_URL = "reviews.csv"
 df = load_data()
 
-st.title('Google Play Printer Insights')
+st.title('Google Play Printer Apps Insights')
 
 # About
 st.header("About")
