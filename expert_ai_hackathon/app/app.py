@@ -29,9 +29,9 @@ st.title('Printer Insights')
 # About
 st.header("About")
 with st.expander("About"):
-    st.write("")
-    st.write("")
-    st.write("")
+    st.write("Printers! We all have a love-hate relationship with them.  When things are going well it is perfect.  Just one glitch or driver issue and all hell breaks lose")
+    st.write("There has been a proliferation of printer apps to make the printing process easier.")
+    st.write("The goal is analyze printer app information scraped from the Google Play store")
 
 # Overview
 st.header("Overview")
