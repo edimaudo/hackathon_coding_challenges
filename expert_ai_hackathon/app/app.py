@@ -3,17 +3,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import os, os.path
-import geopandas
-import sklearn
-from sklearn import preprocessing
-from sklearn import model_selection
-from sklearn.metrics import mean_absolute_error, mean_squared_error,r2_score
-from sklearn.model_selection import cross_val_score,train_test_split, TimeSeriesSplit, GridSearchCV, RandomizedSearchCV
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler, OneHotEncoder
-from sklearn.linear_model import LinearRegression
-from sklearn import ensemble
-from sklearn.ensemble import RandomForestRegressor,GradientBoostingRegressor, VotingRegressor
-from sklearn.neighbors import KNeighborsRegressor
+
 
 @st.cache
 def load_data():
@@ -24,7 +14,7 @@ def load_data():
 DATA_URL = "reviews.csv"
 df = load_data()
 
-st.title('Printer Insights')
+st.title('Google Play Printer Insights')
 
 # About
 st.header("About")
@@ -36,10 +26,13 @@ with st.expander("About"):
 # Overview
 st.header("Overview")
 with st.expander("overview"):
-    st.write("")
-    st.write("")
-    st.write("")
+    st.write("Here is a preview of the data")
+    st.dataframe(df.head(100))
 
+st.header("Summary")
+with st.expander("Data summary"):
+    st.write("Overview of the data")
+    
 
 # Analysis
 st.header("Analysis")
