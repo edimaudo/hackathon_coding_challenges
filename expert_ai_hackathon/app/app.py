@@ -24,12 +24,12 @@ with st.expander("About"):
     st.write("The goal is perform text analysis on companion app reviews.  The data was scraped from the Google Play store.  The apps analyzed are Epson SmartPanel, Epson iPrint, HP Smart and Canon Print")
 
 # Overview
-st.header("Overview")
+st.header("Data Overview")
 with st.expander("overview"):
     st.write("Here is a preview of the data")
     st.dataframe(df.head(100))
 
-st.header("Summary")
+st.header("Data Summary")
 with st.expander("Data summary"):
     metric_column1, metric_column2,metric_column3,metric_column4, metric_column5,metric_column6 = st.columns(6)
     metric_column1.metric("No. of apps",str( len(df['appId'].unique())))
@@ -51,7 +51,7 @@ df_analysis['app'] = df_analysis.apply (lambda row: companion_app_update(row), a
 
 # Analysis
 st.header("Analysis")
-with st.expander("analysis"):
+with st.expander("Analysis"):
     app_list = df_analysis['app'].unique()
     app_list.sort()
     app_choice = st.multiselect("Companion App",app_list,app_list)
@@ -93,10 +93,8 @@ with st.expander("analysis"):
     printer_thumbsup_agg = printer_thumbsup_agg.sort_values("Thumbs Up", ascending=True).reset_index()
     fig = px.bar(printer_thumbsup_agg, x="Thumbs Up", y="Companion App", orientation='h')
     st.plotly_chart(fig)
-    
-    
-    
+     
 # NLP
 st.header("NLP")
 with st.expander("NLP"):
-    st.write("")
+    st.subheader("")
