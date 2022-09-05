@@ -37,11 +37,24 @@ with st.expander("Data summary"):
     metric_column3.metric("No. of reviews",str(len(df['reviewId'].unique())))
     metric_column4.metric("Average Score",str(float("{:.2f}".format(df['score'].mean()))))
     
+df_analysis = df
+def companion_app_update (row):
+    if row['appId'] == 'com.hp.printercontrol':
+        return 'HP'
+    elif row['appId'] == 'jp.co.canon.bsd.ad.pixmaprint':
+        return 'Canon'
+    elif row['appId'] == 'epson.print':
+        return 'Epson'
+    else:
+        return 'Epson-Smart'
+df_analysis['app'] = df_analysis.apply (lambda row: companion_app_update(row), axis=1)
+
 # Analysis
 st.header("Analysis")
 with st.expander("analysis"):
-    df_analysis = df
-    
+    app_list = df_analysis['app'].unique()
+    app_list.sort()
+    app_choice = st.multiselect("App",app_list)
     st.subheader("")
     st.subheader("")
     st.subheader("")
