@@ -5,7 +5,7 @@ import plotly.express as px
 import os, os.path
 
 
-@st.cache
+#@st.cache
 def load_data():
     data = pd.read_csv(DATA_URL)
     return data
@@ -54,17 +54,49 @@ st.header("Analysis")
 with st.expander("analysis"):
     app_list = df_analysis['app'].unique()
     app_list.sort()
-    app_choice = st.multiselect("App",app_list)
-    st.subheader("")
-    st.subheader("")
-    st.subheader("")
-    st.subheader("")
-    st.subheader("")
+    app_choice = st.multiselect("Companion App",app_list,app_list)
+    analysis = df_analysis[df_analysis['app'].isin(app_choice)]
+    
+    #Average Printer Score
+    st.subheader("Average Printer Score")
+    printer_score = analysis[['app','score']]
+    printer_score_agg = printer_score.groupby('app').agg(Total = ('score', 'mean')).reset_index()
+    printer_score_agg.columns = ['Companion App', 'Score']
+    printer_score_agg = printer_score_agg.sort_values("Score", ascending=True).reset_index()
+    fig = px.bar(printer_score_agg, x="Score", y="Companion App", orientation='h')
+    st.plotly_chart(fig)
 
+    # Printer review count
+    st.subheader("App review count")
+    printer_count = analysis[['app', 'reviewId']]
+    printer_count_agg = printer_count.groupby(['app'])['reviewId'].agg('count').reset_index()
+    printer_count_agg.columns = ['Companion App', '# of Reviews']
+    printer_count_agg = printer_count_agg.sort_values("# of Reviews", ascending=True).reset_index()
+    fig = px.bar(printer_count_agg, x="# of Reviews", y="Companion App", orientation='h')
+    st.plotly_chart(fig)
 
+    #Printer Score over time
+    st.subheader("Average Printer Score over time")
+    analysis['Date'] = pd.to_datetime(analysis['at']).dt.date
+    printer_score_time = analysis[['app','score','Date']]
+    printer_score_time_agg = printer_score_time.groupby(['app','Date']).agg(Total = ('score', 'mean')).reset_index()
+    printer_score_time_agg.columns = ['Companion App', 'Date','Score']
+    printer_score_time_agg = printer_score_time_agg.sort_values("Date")
+    fig = px.line(printer_score_time_agg, x="Date", y="Score",color='Companion App')
+    st.plotly_chart(fig)
+    
+    #Average thumbs up by selected printer
+    st.subheader("Average Thumbs Up Count")
+    printer_thumbsup = analysis[['app','thumbsUpCount']]
+    printer_thumbsup_agg = printer_thumbsup.groupby('app').agg(Total = ('thumbsUpCount', 'mean')).reset_index()
+    printer_thumbsup_agg.columns = ['Companion App', 'Thumbs Up']
+    printer_thumbsup_agg = printer_thumbsup_agg.sort_values("Thumbs Up", ascending=True).reset_index()
+    fig = px.bar(printer_thumbsup_agg, x="Thumbs Up", y="Companion App", orientation='h')
+    st.plotly_chart(fig)
+    
+    
+    
 # NLP
 st.header("NLP")
 with st.expander("NLP"):
-    st.write("")
-    st.write("")
     st.write("")
