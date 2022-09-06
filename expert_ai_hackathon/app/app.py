@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import os, os.path
+import datetime
 
 
 #@st.cache
@@ -97,4 +98,11 @@ with st.expander("Analysis"):
 # NLP
 st.header("NLP")
 with st.expander("NLP"):
+    #metric_column1, metric_column2,metric_column3,metric_column4, metric_column5,metric_column6 = st.columns(6)
     st.subheader("")
+    nlp_app_list = df_analysis['app'].unique()
+    nlp_app_list.sort()
+    nlp_app_choice = st.multiselect("Companion App",nlp_app_list,nlp_app_list,key="nlp")
+    analysis = df_analysis[df_analysis['app'].isin(nlp_app_choice)]
+    data_choice = st.date_input("Date", min_value=datetime.date(2021, 4, 12))
+    
