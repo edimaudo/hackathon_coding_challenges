@@ -98,11 +98,14 @@ with st.expander("Analysis"):
 # NLP
 st.header("NLP")
 with st.expander("NLP"):
-    #metric_column1, metric_column2,metric_column3,metric_column4, metric_column5,metric_column6 = st.columns(6)
-    st.subheader("")
+    df_analysis['Year'] = pd.to_datetime(analysis['Date']).dt.year
+    nlp_year_list = df_analysis['Year'].unique()
+    nlp_year_list  = nlp_year_list.astype('int')
+    nlp_year_list.sort()
+    nlp_year_choice = st.multiselect("Year",nlp_year_list, nlp_year_list)
     nlp_app_list = df_analysis['app'].unique()
     nlp_app_list.sort()
     nlp_app_choice = st.multiselect("Companion App",nlp_app_list,nlp_app_list,key="nlp")
-    analysis = df_analysis[df_analysis['app'].isin(nlp_app_choice)]
-    data_choice = st.date_input("Date", min_value=datetime.date(2021, 4, 12))
+    analysis = df_analysis[df_analysis['app'].isin(nlp_app_choice) & df_analysis['app'].isin(nlp_year_list)]
+
     
