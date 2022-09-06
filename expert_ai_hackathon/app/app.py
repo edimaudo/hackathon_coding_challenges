@@ -117,12 +117,26 @@ with st.expander("NLP"):
     text = re.compile('[%s]' % re.escape(string.punctuation)).sub(' ', text) # Replace punctuation with space
     text = re.sub('\s+', ' ', text) # Remove extra space and tabs
 
-    #stop_words = ["a", "an", "the", "this", "that", "is", "it", "to", "and"]
-    #filtered_sentence = []
-    #words = text.split(" ")
-    #for w in words:
-    #    if w not in stop_words:
-    #        filtered_sentence.append(w)
-    #text = " ".join(filtered_sentence)
+    stop_words = ["a", "an", "the", "this", "that", "is", "it", "to", "and"]
+    filtered_sentence = []
+    words = text.split(" ")
+    for w in words:
+        if w not in stop_words:
+            filtered_sentence.append(w)
+    text = " ".join(filtered_sentence)
+
+    # Connect text to Expert AI 
+    
+    # Document analysis 
+    st.subheader("Document Analysis")
+    st.write("Kyephrase extraction")
+    st.write("Named Entity recognition")
+    st.write("Sentiment analysis")
+
+    # Document classification
+    st.subheader("Document Classification")
+    st.write("Emotional Traits")
+    st.write("Behavorial traits")
+    
 
     
