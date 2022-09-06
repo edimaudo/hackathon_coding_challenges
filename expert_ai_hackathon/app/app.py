@@ -6,7 +6,7 @@ import os, os.path
 import datetime
 import re, string
 
-#@st.cache
+@st.cache
 def load_data():
     data = pd.read_csv(DATA_URL)
     return data
@@ -20,9 +20,9 @@ st.title('Google Play Printer Apps Insights')
 # About
 st.header("About")
 with st.expander("About"):
-    st.write("Printers! We all have a love-hate relationship with them.  When things are going well it is perfect.  Just one glitch or driver issue and all hell breaks lose")
-    st.write("There has been a proliferation of printer companion apps to make the printing process easier.  These apps are what someone might use to print remotely or scan on the go")
-    st.write("The goal is perform text analysis on companion app reviews.  The data was scraped from the Google Play store.  The apps analyzed are Epson SmartPanel, Epson iPrint, HP Smart and Canon Print")
+    st.write("Printers! We all have a love-hate relationship with them.  When things are going well it is perfect.  Just one glitch or driver issue and all hell breaks lose.")
+    st.write("There has been a proliferation of printer companion apps to make the printing process easier.  These apps are what someone might use to print remotely or scan on the go.")
+    st.write("The goal is perform text analysis on companion app reviews.  The data was scraped from the Google Play store.  The apps analyzed are Epson SmartPanel, Epson iPrint, HP Smart and Canon Print.")
 
 # Overview
 st.header("Data Overview")
@@ -116,7 +116,7 @@ with st.expander("NLP"):
     text = re.compile('<.*?>').sub('', text) # Remove HTML tags/markups:
     text = re.compile('[%s]' % re.escape(string.punctuation)).sub(' ', text) # Replace punctuation with space
     text = re.sub('\s+', ' ', text) # Remove extra space and tabs
-
+    # remove stop words
     stop_words = ["a", "an", "the", "this", "that", "is", "it", "to", "and"]
     filtered_sentence = []
     words = text.split(" ")
