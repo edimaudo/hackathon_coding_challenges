@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.express as px
 import os, os.path
 import datetime
-
+import re, string
 
 #@st.cache
 def load_data():
@@ -106,6 +106,23 @@ with st.expander("NLP"):
     nlp_app_list = df_analysis['app'].unique()
     nlp_app_list.sort()
     nlp_app_choice = st.multiselect("Companion App",nlp_app_list,nlp_app_list,key="nlp")
-    analysis = df_analysis[df_analysis['app'].isin(nlp_app_choice) & df_analysis['app'].isin(nlp_year_list)]
+    nlp_analysis = df_analysis[df_analysis['app'].isin(nlp_app_choice) & df_analysis['app'].isin(nlp_year_list)]
+
+    ## convert review into one large paragraph
+    text = '. '.join(nlp_analysis['Review'])
+    # text cleanup
+    text = text.lower() # Lower case
+    text = text.strip() # rid of leading/trailing whitespace with the following
+    text = re.compile('<.*?>').sub('', text) # Remove HTML tags/markups:
+    text = re.compile('[%s]' % re.escape(string.punctuation)).sub(' ', text) # Replace punctuation with space
+    text = re.sub('\s+', ' ', text) # Remove extra space and tabs
+
+    #stop_words = ["a", "an", "the", "this", "that", "is", "it", "to", "and"]
+    #filtered_sentence = []
+    #words = text.split(" ")
+    #for w in words:
+    #    if w not in stop_words:
+    #        filtered_sentence.append(w)
+    #text = " ".join(filtered_sentence)
 
     
