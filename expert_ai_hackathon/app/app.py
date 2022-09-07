@@ -6,12 +6,12 @@ import os, os.path
 import datetime
 import re, string
 
+# Load data
 @st.cache
 def load_data():
     data = pd.read_csv(DATA_URL)
     return data
 
-# Load data
 DATA_URL = "reviews.csv"
 df = load_data()
 
@@ -26,10 +26,11 @@ with st.expander("About"):
 
 # Overview
 st.header("Data Overview")
-with st.expander("overview"):
+with st.expander("Overview"):
     st.write("Here is a preview of the data")
     st.dataframe(df.head(100))
 
+# Summary
 st.header("Data Summary")
 with st.expander("Data summary"):
     metric_column1, metric_column2,metric_column3,metric_column4, metric_column5,metric_column6 = st.columns(6)
@@ -58,7 +59,7 @@ with st.expander("Analysis"):
     app_choice = st.multiselect("Companion App",app_list,app_list)
     analysis = df_analysis[df_analysis['app'].isin(app_choice)]
     
-    #Average Printer Score
+    # Average Printer Score
     st.subheader("Average Printer Score")
     printer_score = analysis[['app','score']]
     printer_score_agg = printer_score.groupby('app').agg(Total = ('score', 'mean')).reset_index()
@@ -76,7 +77,7 @@ with st.expander("Analysis"):
     fig = px.bar(printer_count_agg, x="# of Reviews", y="Companion App", orientation='h')
     st.plotly_chart(fig)
 
-    #Printer Score over time
+    # Printer Score over time
     st.subheader("Average Printer Score over time")
     analysis['Date'] = pd.to_datetime(analysis['at']).dt.date
     printer_score_time = analysis[['app','score','Date']]
@@ -86,7 +87,7 @@ with st.expander("Analysis"):
     fig = px.line(printer_score_time_agg, x="Date", y="Score",color='Companion App')
     st.plotly_chart(fig)
     
-    #Average thumbs up by selected printer
+    # Average thumbs up by selected printer
     st.subheader("Average Thumbs Up Count")
     printer_thumbsup = analysis[['app','thumbsUpCount']]
     printer_thumbsup_agg = printer_thumbsup.groupby('app').agg(Total = ('thumbsUpCount', 'mean')).reset_index()
@@ -108,7 +109,7 @@ with st.expander("NLP"):
     nlp_app_choice = st.multiselect("Companion App",nlp_app_list,nlp_app_list,key="nlp")
     nlp_analysis = df_analysis[df_analysis['app'].isin(nlp_app_choice) & df_analysis['app'].isin(nlp_year_list)]
 
-    ## convert review into one large paragraph
+    # Convert review into one large paragraph
     text = '. '.join(nlp_analysis['Review'])
     # text cleanup
     text = text.lower() # Lower case
