@@ -126,8 +126,11 @@ with st.expander("NLP"):
         if nlp_analysis.empty:
             st.write("No data Available! Please try another combination from the dropdowns")
         else:
+            n = 30
+            if nlp_analysis.shape[0] < 30:
+                n = nlp_analysis.shape[0]
             # Convert review into one large paragraph
-            text = '. '.join(nlp_analysis['Review'])
+            text = '. '.join(nlp_analysis['Review'][:n])
             # text cleanup
             text = text.lower() # Lower case
             text = text.strip() # rid of leading/trailing whitespace with the following
@@ -149,20 +152,20 @@ with st.expander("NLP"):
             client = ExpertAiClient()
             language = 'en'
             try:
-                output_keyword = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'relevants'})
-                output_named_entity = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'entities'})
-                output_sentiment = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'sentiment'})
-                output_emotional_trait = client.classification(body={"document": {"text": text}}, params={'taxonomy': taxonomy, 'language': language})
-                output_behavior = client.classification(body={"document": {"text": text}}, params={'taxonomy': taxonomy, 'language': language})
+                ##output_keyword = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'relevants'})
+                ##output_named_entity = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'entities'})
+                ##output_sentiment = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'sentiment'})
+                # Issue #output_emotional_trait = client.classification(body={"document": {"text": text}}, params={'taxonomy': taxonomy, 'language': language})
+                # Issue #output_behavior = client.classification(body={"document": {"text": text}}, params={'taxonomy': taxonomy, 'language': language})
                 # Document analysis 
                 st.subheader("Document Analysis")
                 st.write("Keyphrase extraction")
                 st.write("Named Entity recognition")
                 st.write("Sentiment analysis")
                 # Document classification
-                st.subheader("Document Classification")
-                st.write("Emotional Traits")
-                st.write("Behavorial traits")   
+                #st.subheader("Document Classification")
+                #st.write("Emotional Traits")
+                #st.write("Behavorial traits")   
             except:
                 st.write("Issue with Retrieving data from the API")
 
