@@ -7,7 +7,7 @@ import datetime
 import re, string
 
 # Load data
-#@st.cache
+@st.cache(allow_output_mutation=True)
 def load_data():
     data = pd.read_csv(DATA_URL)
     return data
@@ -15,6 +15,7 @@ def load_data():
 DATA_URL = "reviews.csv"
 df = load_data()
 
+# Data munging
 df_analysis = df
 def companion_app_update (row):
     if row['appId'] == 'com.hp.printercontrol':
@@ -50,7 +51,8 @@ st.header("About")
 with st.expander("About"):
     st.write("Printers! We all have a love-hate relationship with them.  When things are going well it is perfect.  Just one glitch or driver issue and all hell breaks lose.")
     st.write("There has been a proliferation of printer companion apps to make the printing process easier.  These apps are what someone might use to print remotely or scan on the go.")
-    st.write("The goal is perform text analysis on companion app reviews.  The data was scraped from the Google Play store.  The apps analyzed are Epson SmartPanel, Epson iPrint, HP Smart and Canon Print.")
+    st.write("The goal is perform text analysis on companion app reviews.  The data was scraped from the Google Play store."  +
+    "The apps analyzed are Epson SmartPanel, Epson iPrint, HP Smart and Canon Print.")
 
 # Overview
 st.header("Data Overview")
@@ -67,7 +69,6 @@ with st.expander("Data summary"):
     metric_column3.metric("No. of reviews",str(len(df['reviewId'].unique())))
     metric_column4.metric("Average Score",str(float("{:.2f}".format(df['score'].mean()))))
     
-
 # Analysis
 st.header("Analysis")
 with st.expander("Analysis"):
@@ -152,22 +153,31 @@ with st.expander("NLP"):
             client = ExpertAiClient()
             language = 'en'
             try:
-                ##output_keyword = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'relevants'})
-                ##output_named_entity = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'entities'})
-                ##output_sentiment = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'sentiment'})
+                # Document analysis 
+                output_keyword = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'relevants'})
+                output_named_entity = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'entities'})
+                output_sentiment = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'sentiment'})
+                st.subheader("Document Analysis")
+                st.markdown("**Keyphrase extraction**")
+                for lemma in output_keyword.main_lemmas:
+                    st.write("- " + lemma.value)
+                st.write(" ")
+                st.markdown("**Named Entity recognition**")
+                for entity in output_named_entity.entities:
+                    st.write(f' - {entity.lemma:{50}} {entity.type_:{10}}')
+                st.write(" ")
+                st.markdown("**Sentiment analysis**")
+                if (output_sentiment.sentiment.overall > 0):
+                    st.write("Positive Sentiment: " + str(output_sentiment.sentiment.overall))
+                st.write("Negative sentiment: " + str(output_sentiment.sentiment.overall))
+                # Document classification
                 # Issue #output_emotional_trait = client.classification(body={"document": {"text": text}}, params={'taxonomy': taxonomy, 'language': language})
                 # Issue #output_behavior = client.classification(body={"document": {"text": text}}, params={'taxonomy': taxonomy, 'language': language})
-                # Document analysis 
-                st.subheader("Document Analysis")
-                st.write("Keyphrase extraction")
-                st.write("Named Entity recognition")
-                st.write("Sentiment analysis")
-                # Document classification
                 #st.subheader("Document Classification")
-                #st.write("Emotional Traits")
-                #st.write("Behavorial traits")   
+                #st.markdown("**Emotional Traits**")
+                #st.markdown("**Behavorial traits**")   
             except:
-                st.write("Issue with Retrieving data from the API")
+                st.write("Issue with retrieving data from the API")
 
 
     
