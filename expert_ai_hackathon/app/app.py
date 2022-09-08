@@ -12,8 +12,9 @@ def load_data():
     data = pd.read_csv(DATA_URL)
     return data
 
-path = os.path.dirname(__file__)
-DATA_URL = path + "reviews.csv"
+#path = os.path.dirname(__file__)
+#DATA_URL = path + "reviews.csv"
+DATA_URL = "reviews.csv"
 df = load_data()
 
 # Data munging
