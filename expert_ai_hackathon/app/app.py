@@ -30,7 +30,6 @@ df_analysis['app'] = df_analysis.apply (lambda row: companion_app_update(row), a
 df_analysis['Date'] = pd.to_datetime(df_analysis['at']).dt.date
 df_analysis['Year'] = pd.to_datetime(df_analysis['Date']).dt.year
 df_analysis['Month'] = pd.to_datetime(df_analysis['Date']).dt.month_name()
-
 nlp_year_list = df_analysis['Year'].unique()
 nlp_year_list  = nlp_year_list.astype('int')
 nlp_year_list.sort()
@@ -38,19 +37,21 @@ nlp_app_list = df_analysis['app'].unique()
 nlp_app_list.sort()
 nlp_month_list = df_analysis['Month'].unique()
 nlp_month_list = pd.DataFrame(nlp_month_list,columns = ['Month'])
-month_dict = {'January':1,'February':2,'March':3, 'April':4, 'May':5, 'June':6, 'July':7, 'August':8, 'September':9, 'October':10, 'November':11, 'December':12}
+month_dict = {'January':1,'February':2,'March':3, 'April':4, 'May':5, 'June':6, 'July':7, 
+'August':8, 'September':9, 'October':10, 'November':11, 'December':12}
 nlp_month_list = nlp_month_list.sort_values('Month', key = lambda x : x.apply (lambda x : month_dict[x]))
 nlp_score_list = df_analysis['score'].unique()
 nlp_score_list   = nlp_score_list .astype('int')
 nlp_score_list.sort()
 
-st.title('Google Play Printer Apps Insights')
-
+st.title('Printer Companion Apps Insights')
 # About
 st.header("About")
 with st.expander("About"):
-    st.write("Printers! We all have a love-hate relationship with them.  When things are going well it is perfect.  Just one glitch or driver issue and all hell breaks lose.")
-    st.write("There has been a proliferation of printer companion apps to make the printing process easier.  These apps are what someone might use to print remotely or scan on the go.")
+    st.write("Printers! We all have a love-hate relationship with them.  When things are going well it is perfect." 
+    +  " Just one glitch or driver issue and all hell breaks lose.")
+    st.write("There has been a proliferation of printer companion apps to make the printing process easier." 
+    + " These apps are what someone might use to print remotely or scan on the go.")
     st.write("The goal is perform text analysis on companion app reviews.  The data was scraped from the Google Play store."  +
     "The apps analyzed are Epson SmartPanel, Epson iPrint, HP Smart and Canon Print.")
 
@@ -69,8 +70,8 @@ with st.expander("Data summary"):
     metric_column3.metric("No. of reviews",str(len(df['reviewId'].unique())))
     metric_column4.metric("Average Score",str(float("{:.2f}".format(df['score'].mean()))))
     
-# Analysis
-st.header("Analysis")
+# Data Analysis
+st.header("Data Analysis")
 with st.expander("Analysis"):
     app_list = df_analysis['app'].unique()
     app_list.sort()
@@ -114,31 +115,33 @@ with st.expander("Analysis"):
     st.plotly_chart(fig)
      
 # NLP
-st.header("NLP")
-with st.expander("NLP"):
+st.header("Reviews Analysis using NLP")
+with st.expander("Text analysis"):
     nlp_month_choice = st.selectbox("Month",nlp_month_list, index=5)
     nlp_year_choice = st.selectbox("Year",nlp_year_list,index=3)
     nlp_app_choice = st.selectbox("Companion App",nlp_app_list,key="nlp",index=3)
     nlp_score_choice = st.selectbox("Score",nlp_score_list, index=0)
     nlp_analysis = df_analysis[(df_analysis.app == nlp_app_choice) & (df_analysis.Year == nlp_year_choice) 
     & (df_analysis.Month == nlp_month_choice) & (df_analysis.score == nlp_score_choice)]
+    st.write("Reviews")
+    if nlp_analysis.empty:
+        st.write("No data Available! Please try another combination from the dropdowns")
+    else:
+        n = 30
+        if nlp_analysis.shape[0] < 30:
+            n = nlp_analysis.shape[0]
+        st.dataframe(nlp_analysis['Review'][:n])
     run_nlp = st.button("Run NLP Analysis")
-    if run_nlp:
-        if nlp_analysis.empty:
-            st.write("No data Available! Please try another combination from the dropdowns")
-        else:
-            n = 30
-            if nlp_analysis.shape[0] < 30:
-                n = nlp_analysis.shape[0]
+    if run_nlp and not nlp_analysis.empty:
             # Convert review into one large paragraph
             text = '. '.join(nlp_analysis['Review'][:n])
-            # text cleanup
+            # Text cleanup
             text = text.lower() # Lower case
             text = text.strip() # rid of leading/trailing whitespace with the following
             text = re.compile('<.*?>').sub('', text) # Remove HTML tags/markups:
             text = re.compile('[%s]' % re.escape(string.punctuation)).sub(' ', text) # Replace punctuation with space
             text = re.sub('\s+', ' ', text) # Remove extra space and tabs
-            # remove stop words
+            # Remove stop words
             stop_words = ["a", "an", "the", "this", "that", "is", "it", "to", "and"]
             filtered_sentence = []
             words = text.split(" ")
@@ -146,7 +149,7 @@ with st.expander("NLP"):
                 if w not in stop_words:
                     filtered_sentence.append(w)
             text = " ".join(filtered_sentence)
-            # Credentials & setup
+            # ExpertAI Credentials
             os.environ["EAI_USERNAME"] = 'edimaudo@gmail.com'
             os.environ["EAI_PASSWORD"] = '3XpeRtA!L0g1n'
             from expertai.nlapi.cloud.client import ExpertAiClient
@@ -154,11 +157,16 @@ with st.expander("NLP"):
             language = 'en'
             try:
                 # Document analysis 
-                output_keyword = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'relevants'})
-                output_named_entity = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'entities'})
-                output_sentiment = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'sentiment'})
-                output_emotional_trait = client.classification(body={"document": {"text": text}}, params={'taxonomy': 'emotional-traits', 'language': language})
-                output_behavior = client.classification(body={"document": {"text": text}}, params={'taxonomy': 'behavioral-traits', 'language': language})
+                output_keyword = client.specific_resource_analysis(body={"document": {"text": text}}, 
+                params={'language': language, 'resource': 'relevants'})
+                output_named_entity = client.specific_resource_analysis(body={"document": {"text": text}},
+                params={'language': language, 'resource': 'entities'})
+                output_sentiment = client.specific_resource_analysis(body={"document": {"text": text}}, 
+                params={'language': language, 'resource': 'sentiment'})
+                output_emotional_trait = client.classification(body={"document": {"text": text}}, 
+                params={'taxonomy': 'emotional-traits', 'language': language})
+                output_behavior = client.classification(body={"document": {"text": text}}, 
+                params={'taxonomy': 'behavioral-traits', 'language': language})
                 st.subheader("Document Analysis")
                 st.markdown("**Keyphrase extraction**")
                 for lemma in output_keyword.main_lemmas:
@@ -176,13 +184,14 @@ with st.expander("NLP"):
                 st.subheader("Document Classification")
                 st.markdown("**Emotional Traits**")
                 for category in output_emotional_trait.categories:
-                    st.write("- ", category.hierarchy[0], " => ", category.hierarchy[1])
+                    st.write("- ", category.hierarchy[0], " -> ", category.hierarchy[1])
                 st.write(" ")
                 st.markdown("**Behavorial traits**")   
                 for category in output_behavior.categories:
-                    st.write("- ", category.hierarchy[0], " => ", category.hierarchy[1]," => ", category.hierarchy[2])
+                    st.write("- ", category.hierarchy[0], ": ", category.hierarchy[1]," -> ", category.hierarchy[2])
             except:
-                st.write("Issue with retrieving data from the API")
+                st.write(" ")
+                st.error("Issue retrieving data from the API", icon="🚨")
 
 
     
