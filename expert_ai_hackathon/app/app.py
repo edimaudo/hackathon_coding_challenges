@@ -157,6 +157,8 @@ with st.expander("NLP"):
                 output_keyword = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'relevants'})
                 output_named_entity = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'entities'})
                 output_sentiment = client.specific_resource_analysis(body={"document": {"text": text}}, params={'language': language, 'resource': 'sentiment'})
+                output_emotional_trait = client.classification(body={"document": {"text": text}}, params={'taxonomy': 'emotional-traits', 'language': language})
+                output_behavior = client.classification(body={"document": {"text": text}}, params={'taxonomy': 'behavioral-traits', 'language': language})
                 st.subheader("Document Analysis")
                 st.markdown("**Keyphrase extraction**")
                 for lemma in output_keyword.main_lemmas:
@@ -171,11 +173,14 @@ with st.expander("NLP"):
                     st.write("Positive Sentiment: " + str(output_sentiment.sentiment.overall))
                 st.write("Negative sentiment: " + str(output_sentiment.sentiment.overall))
                 # Document classification
-                # Issue #output_emotional_trait = client.classification(body={"document": {"text": text}}, params={'taxonomy': taxonomy, 'language': language})
-                # Issue #output_behavior = client.classification(body={"document": {"text": text}}, params={'taxonomy': taxonomy, 'language': language})
-                #st.subheader("Document Classification")
-                #st.markdown("**Emotional Traits**")
-                #st.markdown("**Behavorial traits**")   
+                st.subheader("Document Classification")
+                st.markdown("**Emotional Traits**")
+                for category in output_emotional_trait.categories:
+                    st.write("- ", category.hierarchy[0], " => ", category.hierarchy[1])
+                st.write(" ")
+                st.markdown("**Behavorial traits**")   
+                for category in output_behavior.categories:
+                    st.write("- ", category.hierarchy[0], " => ", category.hierarchy[1]," => ", category.hierarchy[2])
             except:
                 st.write("Issue with retrieving data from the API")
 
