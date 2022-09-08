@@ -14,4 +14,4 @@ Learn more about the potential of NLP and test your development skills. Build or
 
 ### Application
 The application analyzes printer companion review data scraped from the Google Play store.  It looks at 4 companion apps: Epson SmartPanel, Epson iPrint, HP Smart and Canon Print.  It is built using streamlit.
-The analysis focuses on **Emotional traits & Sentiment analysis**. It uses the expertAI Natural Language API: Document analysis (keyphrase extraction, Named entity recognition, sentiment analysis) and Document classification (emotional traits, behavorial traits).
+The analysis focuses on generating visualization based on the data and performing text analysis which focuses on **Emotional traits & Sentiment analysis**. The text analysis uses the expertAI Natural Language API: Document analysis (keyphrase extraction, Named entity recognition, sentiment analysis) and Document classification (emotional traits, behavorial traits).
