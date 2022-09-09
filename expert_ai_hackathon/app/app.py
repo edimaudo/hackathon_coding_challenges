@@ -13,7 +13,7 @@ def load_data():
     return data
 
 path = os.path.dirname(__file__)
-DATA_URL = path + "reviews.csv"
+DATA_URL = path + "/reviews.csv"
 #DATA_URL = "reviews.csv"
 df = load_data()
 
