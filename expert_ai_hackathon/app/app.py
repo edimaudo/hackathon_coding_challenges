@@ -14,7 +14,6 @@ def load_data():
 
 path = os.path.dirname(__file__)
 DATA_URL = path + "/reviews.csv"
-#DATA_URL = "reviews.csv"
 df = load_data()
 
 # Data munging
@@ -117,7 +116,7 @@ with st.expander("Analysis"):
     st.plotly_chart(fig)
      
 # NLP
-st.header("Reviews Analysis using NLP")
+st.header("Analysis of reviews using NLP")
 with st.expander("Text analysis"):
     nlp_month_choice = st.selectbox("Month",nlp_month_list, index=5)
     nlp_year_choice = st.selectbox("Year",nlp_year_list,index=3)
