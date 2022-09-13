@@ -6,6 +6,10 @@ import os, os.path
 import datetime
 import re, string
 
+st.set_page_config( 
+    page_title="Printer Companion Apps Insights",
+)
+
 # Load data
 @st.cache(allow_output_mutation=True)
 def load_data():
