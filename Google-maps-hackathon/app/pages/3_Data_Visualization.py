@@ -7,11 +7,13 @@ st.title('OTF Charity Insights')
 st.header("Year Insights")
 df = st.session_state['df']
 
+year_list = df['Fiscal Year'].unique()
+year_list  = year_list.astype('int')
+year_list.sort()
+year_choice = st.selectbox("Year",year_list)
+
 with st.expander(" "): 
-    year_list = df['Fiscal Year'].unique()
-    year_list  = year_list.astype('int')
-    year_list.sort()
-    year_choice = st.selectbox("Year",year_list)
+
     
     charity_year = df[(df['Fiscal Year'] == year_choice)]
 
@@ -77,11 +79,11 @@ with st.expander(" "):
     st.plotly_chart(fig) 
 
     # Geographical Area Served
-    St.subheader("Geographical area served")
+    st.subheader("Geographical area served")
     geo_area_update = charity_year[['Amount Awarded','Geographical Area Served']]
     geo_area_update_agg = geo_area_update.groupby('Geographical Area Served').agg(Total_Amount_Awarded = 
                                                                         ('Amount Awarded', 'sum')).reset_index()
     geo_area_update_agg.columns = ['Geographical Area Served', 'Amount Awarded (CAD)']
-    geo_area_update_agg = geo_area_update.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
+    geo_area_update_agg = geo_area_update_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
     fig = px.bar(geo_area_update_agg, x="Amount Awarded (CAD)", y="Geographical Area Served", orientation='h')
     st.plotly_chart(fig) 
