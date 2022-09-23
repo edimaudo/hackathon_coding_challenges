@@ -11,15 +11,15 @@ with st.expander(" "):
     st.dataframe(df.head(10))
 # Data Summary
 st.header("Data Summary")
-top_container = st.container()
+main_container = st.container()
 metric_column1, metric_column2,metric_column3,metric_column4, metric_column5,metric_column6 = st.columns(6)
-with top_container:
-    metric_column1.metric("Charities",str( len(df['Identifier'].unique()))) #len(pd.unique(df['height'])
+with main_container:
+    metric_column1.metric("Charities",str( len(df['Identifier'].unique())))
     metric_column2.metric("No. of Years",str(len(df['Fiscal Year'].unique())))
     metric_column3.metric("Cities",str(len(df['City'].unique())))
     metric_column4.metric("Grant Programs",str(len(df['Grant Programme'].unique())))
     metric_column5.metric("Program Areas",str(len(df['Program Area'].unique())))
-    metric_column6.metric("Age Groups",str(len(df['Age Group'].unique())))#
+    metric_column6.metric("Age Groups",str(len(df['Age Group'].unique())))
 # Funding Trend
 st.subheader("Funding Trend")
 df_total_grants = df[['Amount Awarded','Fiscal Year']]
