@@ -7,11 +7,12 @@ import datetime
 import re, string
 
 
+
 st.set_page_config( 
-    page_title="OTF Charity Mapper",
+    page_title="OTF Charity Insights",
 )
 
-st.title('OTF Charity Mapper')
+st.title('OTF Charity Insights')
 # About
 st.header("About")
 st.subheader("Challenge Information")
