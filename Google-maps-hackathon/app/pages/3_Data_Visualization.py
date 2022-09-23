@@ -24,11 +24,20 @@ with st.expander(" "):
     st.plotly_chart(fig)
 
 
-    # program area
+    # Program area
     program_area = charity_year[['Amount Awarded','Program Area']]
     program_area_agg = program_area.groupby('Program Area').agg(Total_Amount_Awarded = 
                                                                         ('Amount Awarded', 'sum')).reset_index()
     program_area_agg.columns = ['Program Area', 'Amount Awarded (CAD)']
     program_area_agg = program_area_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
     fig = px.bar(program_area_agg, x="Amount Awarded (CAD)", y="Program Area", orientation='h')
+    st.plotly_chart(fig)
+
+    # Population served
+    population_served = charity_year[['Amount Awarded','Population Served']]
+    population_served_agg = population_served.groupby('Population Served').agg(Total_Amount_Awarded = 
+                                                                        ('Amount Awarded', 'sum')).reset_index()
+    population_served_agg.columns = ['Population Served', 'Amount Awarded (CAD)']
+    population_served_agg = population_served_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
+    fig = px.bar(population_served_agg, x="Amount Awarded (CAD)", y="Population Served", orientation='h')
     st.plotly_chart(fig)
