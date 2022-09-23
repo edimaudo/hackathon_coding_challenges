@@ -14,6 +14,8 @@ with st.expander(" "):
     year_choice = st.selectbox("Year",year_list)
     
     charity_year = df[(df['Fiscal Year'] == year_choice)]
+
+    st.subheader("Age Breakdown")
     # Age breakdown
     age_group = charity_year[['Amount Awarded','Age Group']]
     age_group_agg = age_group.groupby('Age Group').agg(Total_Amount_Awarded = 
@@ -25,6 +27,7 @@ with st.expander(" "):
 
 
     # Program area
+    st.subheader("Program Area")
     program_area = charity_year[['Amount Awarded','Program Area']]
     program_area_agg = program_area.groupby('Program Area').agg(Total_Amount_Awarded = 
                                                                         ('Amount Awarded', 'sum')).reset_index()
@@ -34,6 +37,7 @@ with st.expander(" "):
     st.plotly_chart(fig)
 
     # Population served
+    st.subheader("Population Served")
     population_served = charity_year[['Amount Awarded','Population Served']]
     population_served_agg = population_served.groupby('Population Served').agg(Total_Amount_Awarded = 
                                                                         ('Amount Awarded', 'sum')).reset_index()
