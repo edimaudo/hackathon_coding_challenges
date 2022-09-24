@@ -2,13 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-
 st.title('OTF Charity Insights')
-
 df = st.session_state['df']
-
-
-
 st.header("Year Insights")
 year_list = df['Fiscal Year'].unique()
 year_list  = year_list.astype('int')
@@ -66,16 +61,6 @@ with st.expander(" "):
     fig = px.bar(budget_fund_agg, x="Amount Awarded (CAD)", y="Budget Fund", orientation='h')
     st.plotly_chart(fig)
 
-    # Cities
-    #st.subheader("Cities")
-    #recipient_org_city_update = charity_year[['Amount Awarded','City']]
-    #recipient_org_city_update_agg = recipient_org_city_update.groupby('City').agg(Total_Amount_Awarded = 
-    #                                                                    ('Amount Awarded', 'sum')).reset_index()
-    #recipient_org_city_update_agg.columns = ['City', 'Amount Awarded (CAD)']
-    #recipient_org_city_update_agg = recipient_org_city_update_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
-    #fig = px.bar(recipient_org_city_update_agg, x="Amount Awarded (CAD)", y="City", orientation='h')
-    #st.plotly_chart(fig) 
-
     # Geographical Area Served
     st.subheader("Geographical area served")
     geo_area_update = charity_year[['Amount Awarded','Geographical Area Served']]
@@ -120,7 +105,7 @@ with st.expander(" "):
     age_group_agg = age_group.groupby(['Grant Programme','Fiscal Year']).agg(Total_Amount_Awarded = 
                                                                         ('Amount Awarded', 'sum')).reset_index()
     age_group_agg.columns = ['Grant Programme','Fiscal Year', 'Amount Awarded (CAD)']
-    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Grant Programme")
+    fig = px.bar(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Grant Programme")
     st.plotly_chart(fig)
     # budget fund
     st.subheader("Budget Fund")
@@ -128,7 +113,7 @@ with st.expander(" "):
     age_group_agg = age_group.groupby(['Budget Fund','Fiscal Year']).agg(Total_Amount_Awarded = 
                                                                         ('Amount Awarded', 'sum')).reset_index()
     age_group_agg.columns = ['Budget Fund','Fiscal Year', 'Amount Awarded (CAD)']
-    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Budget Fund")
+    fig = px.bar(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Budget Fund")
     st.plotly_chart(fig)
     # Geographical Area Served
     st.subheader("Geographical Area Served")
