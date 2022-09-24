@@ -7,12 +7,13 @@ st.title('OTF Charity Insights')
 
 df = st.session_state['df']
 
+
+
+st.header("Year Insights")
 year_list = df['Fiscal Year'].unique()
 year_list  = year_list.astype('int')
 year_list.sort()
 year_choice = st.selectbox("Year",year_list)
-
-st.header("Year Insights")
 with st.expander(" "): 
     charity_year = df[(df['Fiscal Year'] == year_choice)]
     st.subheader("Age Breakdown")
@@ -88,13 +89,52 @@ with st.expander(" "):
 st.header("Trend Insights")
 with st.expander(" "): 
     # Age breakdown
+    st.subheader("Age Breakdown")
+    age_group = df[['Fiscal Year','Amount Awarded','Age Group']]
+    age_group_agg = age_group.groupby(['Age Group','Fiscal Year']).agg(Total_Amount_Awarded = 
+                                                                        ('Amount Awarded', 'sum')).reset_index()
+    age_group_agg.columns = ['Age Group','Fiscal Year', 'Amount Awarded (CAD)']
+    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Age Group")
+    st.plotly_chart(fig)
 
     # Program area
+    st.subheader("Program Area")
+    age_group = df[['Fiscal Year','Amount Awarded','Program Area']]
+    age_group_agg = age_group.groupby(['Program Area','Fiscal Year']).agg(Total_Amount_Awarded = 
+                                                                        ('Amount Awarded', 'sum')).reset_index()
+    age_group_agg.columns = ['Program Area','Fiscal Year', 'Amount Awarded (CAD)']
+    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Program Area")
+    st.plotly_chart(fig)
 
     # Population served
-
+    st.subheader("Population Served")
+    age_group = df[['Fiscal Year','Amount Awarded','Population Served']]
+    age_group_agg = age_group.groupby(['Population Served','Fiscal Year']).agg(Total_Amount_Awarded = 
+                                                                        ('Amount Awarded', 'sum')).reset_index()
+    age_group_agg.columns = ['Population Served','Fiscal Year', 'Amount Awarded (CAD)']
+    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Population Served")
+    st.plotly_chart(fig)
     # Grant Program
-
+    st.subheader("Grant Programme")
+    age_group = df[['Fiscal Year','Amount Awarded','Grant Programme']]
+    age_group_agg = age_group.groupby(['Grant Programme','Fiscal Year']).agg(Total_Amount_Awarded = 
+                                                                        ('Amount Awarded', 'sum')).reset_index()
+    age_group_agg.columns = ['Grant Programme','Fiscal Year', 'Amount Awarded (CAD)']
+    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Grant Programme")
+    st.plotly_chart(fig)
     # budget fund
-
-    # # Geographical Area Served
+    st.subheader("Budget Fund")
+    age_group = df[['Fiscal Year','Amount Awarded','Budget Fund']]
+    age_group_agg = age_group.groupby(['Budget Fund','Fiscal Year']).agg(Total_Amount_Awarded = 
+                                                                        ('Amount Awarded', 'sum')).reset_index()
+    age_group_agg.columns = ['Budget Fund','Fiscal Year', 'Amount Awarded (CAD)']
+    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Budget Fund")
+    st.plotly_chart(fig)
+    # Geographical Area Served
+    st.subheader("Geographical Area Served")
+    age_group = df[['Fiscal Year','Amount Awarded','Geographical Area Served']]
+    age_group_agg = age_group.groupby(['Geographical Area Served','Fiscal Year']).agg(Total_Amount_Awarded = 
+                                                                        ('Amount Awarded', 'sum')).reset_index()
+    age_group_agg.columns = ['Geographical Area Served','Fiscal Year', 'Amount Awarded (CAD)']
+    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Geographical Area Served")
+    st.plotly_chart(fig)
