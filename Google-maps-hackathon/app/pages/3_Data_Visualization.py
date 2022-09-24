@@ -4,7 +4,7 @@ import plotly.express as px
 
 
 st.title('OTF Charity Insights')
-st.header("Year Insights")
+
 df = st.session_state['df']
 
 year_list = df['Fiscal Year'].unique()
@@ -12,11 +12,9 @@ year_list  = year_list.astype('int')
 year_list.sort()
 year_choice = st.selectbox("Year",year_list)
 
+st.header("Year Insights")
 with st.expander(" "): 
-
-    
     charity_year = df[(df['Fiscal Year'] == year_choice)]
-
     st.subheader("Age Breakdown")
     # Age breakdown
     age_group = charity_year[['Amount Awarded','Age Group']]
@@ -26,7 +24,6 @@ with st.expander(" "):
     age_group_agg = age_group_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
     fig = px.bar(age_group_agg, x="Amount Awarded (CAD)", y="Age Group", orientation='h')
     st.plotly_chart(fig)
-
 
     # Program area
     st.subheader("Program Area")
@@ -69,14 +66,14 @@ with st.expander(" "):
     st.plotly_chart(fig)
 
     # Cities
-    st.subheader("Cities")
-    recipient_org_city_update = charity_year[['Amount Awarded','City']]
-    recipient_org_city_update_agg = recipient_org_city_update.groupby('City').agg(Total_Amount_Awarded = 
-                                                                        ('Amount Awarded', 'sum')).reset_index()
-    recipient_org_city_update_agg.columns = ['City', 'Amount Awarded (CAD)']
-    recipient_org_city_update_agg = recipient_org_city_update_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
-    fig = px.bar(recipient_org_city_update_agg, x="Amount Awarded (CAD)", y="City", orientation='h')
-    st.plotly_chart(fig) 
+    #st.subheader("Cities")
+    #recipient_org_city_update = charity_year[['Amount Awarded','City']]
+    #recipient_org_city_update_agg = recipient_org_city_update.groupby('City').agg(Total_Amount_Awarded = 
+    #                                                                    ('Amount Awarded', 'sum')).reset_index()
+    #recipient_org_city_update_agg.columns = ['City', 'Amount Awarded (CAD)']
+    #recipient_org_city_update_agg = recipient_org_city_update_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
+    #fig = px.bar(recipient_org_city_update_agg, x="Amount Awarded (CAD)", y="City", orientation='h')
+    #st.plotly_chart(fig) 
 
     # Geographical Area Served
     st.subheader("Geographical area served")
@@ -87,3 +84,17 @@ with st.expander(" "):
     geo_area_update_agg = geo_area_update_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
     fig = px.bar(geo_area_update_agg, x="Amount Awarded (CAD)", y="Geographical Area Served", orientation='h')
     st.plotly_chart(fig) 
+
+st.header("Trend Insights")
+with st.expander(" "): 
+    # Age breakdown
+
+    # Program area
+
+    # Population served
+
+    # Grant Program
+
+    # budget fund
+
+    # # Geographical Area Served
