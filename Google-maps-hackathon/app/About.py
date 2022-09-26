@@ -10,8 +10,11 @@ st.set_page_config(
     page_title="About"
 )
 
+<<<<<<< Updated upstream
 #st.session_state['df'] = df
 
+=======
+>>>>>>> Stashed changes
 st.title('OTF Charity Insights')
 # About
 st.subheader("About Challenge Information")
