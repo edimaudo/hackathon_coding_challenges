@@ -3,14 +3,16 @@ import pandas as pd
 import plotly.express as px
 
 st.title('OTF Charity Insights')
+
+# Load data
 @st.cache
 def load_data():
     data = pd.read_excel(DATA_URL)
     return data
 
-# Load data
 DATA_URL = "OTF.xlsx"
 df = load_data()
+
 st.header("Year Insights")
 year_list = df['Fiscal Year'].unique()
 year_list  = year_list.astype('int')
