@@ -4,18 +4,11 @@ import plotly.express as px
 
 st.title('OTF Charity Insights')
 
-
 # Load data
-=======
-
 @st.cache
 def load_data():
     data = pd.read_excel(DATA_URL)
     return data
-
-
-
-# Load data
 DATA_URL = "OTF.xlsx"
 df = load_data()
 
@@ -35,7 +28,6 @@ with st.expander(" "):
     age_group_agg = age_group_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
     fig = px.bar(age_group_agg, x="Amount Awarded (CAD)", y="Age Group", orientation='h')
     st.plotly_chart(fig)
-
     # Program area
     st.subheader("Program Area")
     program_area = charity_year[['Amount Awarded','Program Area']]
@@ -45,17 +37,6 @@ with st.expander(" "):
     program_area_agg = program_area_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
     fig = px.bar(program_area_agg, x="Amount Awarded (CAD)", y="Program Area", orientation='h')
     st.plotly_chart(fig)
-
-    # Population served
-    st.subheader("Population Served")
-    population_served = charity_year[['Amount Awarded','Population Served']]
-    population_served_agg = population_served.groupby('Population Served').agg(Total_Amount_Awarded = 
-                                                                        ('Amount Awarded', 'sum')).reset_index()
-    population_served_agg.columns = ['Population Served', 'Amount Awarded (CAD)']
-    population_served_agg = population_served_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
-    fig = px.bar(population_served_agg, x="Amount Awarded (CAD)", y="Population Served", orientation='h')
-    st.plotly_chart(fig)
-
     # Grant programs
     st.subheader("Grant Programme")
     grant_program = charity_year[['Amount Awarded','Grant Programme']]
@@ -65,8 +46,7 @@ with st.expander(" "):
     grant_program_agg = grant_program_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
     fig = px.bar(grant_program_agg, x="Amount Awarded (CAD)", y="Grant Programme", orientation='h')
     st.plotly_chart(fig)
-
-    # budget fund
+    # Budget fund
     st.subheader("Budget Fund")
     budget_fund = charity_year[['Amount Awarded','Budget Fund']]
     budget_fund_agg = budget_fund.groupby('Budget Fund').agg(Total_Amount_Awarded = 
@@ -75,7 +55,6 @@ with st.expander(" "):
     budget_fund_agg = budget_fund_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
     fig = px.bar(budget_fund_agg, x="Amount Awarded (CAD)", y="Budget Fund", orientation='h')
     st.plotly_chart(fig)
-
     # Geographical Area Served
     st.subheader("Geographical area served")
     geo_area_update = charity_year[['Amount Awarded','Geographical Area Served']]
@@ -94,25 +73,17 @@ with st.expander(" "):
     age_group_agg = age_group.groupby(['Age Group','Fiscal Year']).agg(Total_Amount_Awarded = 
                                                                         ('Amount Awarded', 'sum')).reset_index()
     age_group_agg.columns = ['Age Group','Fiscal Year', 'Amount Awarded (CAD)']
-    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Age Group")
+    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", 
+    color_discrete_sequence=px.colors.qualitative.Alphabet,color="Age Group")
     st.plotly_chart(fig)
-
     # Program area
     st.subheader("Program Area")
     age_group = df[['Fiscal Year','Amount Awarded','Program Area']]
     age_group_agg = age_group.groupby(['Program Area','Fiscal Year']).agg(Total_Amount_Awarded = 
                                                                         ('Amount Awarded', 'sum')).reset_index()
     age_group_agg.columns = ['Program Area','Fiscal Year', 'Amount Awarded (CAD)']
-    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Program Area")
-    st.plotly_chart(fig)
-
-    # Population served
-    st.subheader("Population Served")
-    age_group = df[['Fiscal Year','Amount Awarded','Population Served']]
-    age_group_agg = age_group.groupby(['Population Served','Fiscal Year']).agg(Total_Amount_Awarded = 
-                                                                        ('Amount Awarded', 'sum')).reset_index()
-    age_group_agg.columns = ['Population Served','Fiscal Year', 'Amount Awarded (CAD)']
-    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Population Served")
+    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", 
+    color_discrete_sequence=px.colors.qualitative.Alphabet,color="Program Area")
     st.plotly_chart(fig)
     # Grant Program
     st.subheader("Grant Programme")
@@ -122,19 +93,13 @@ with st.expander(" "):
     age_group_agg.columns = ['Grant Programme','Fiscal Year', 'Amount Awarded (CAD)']
     fig = px.bar(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Grant Programme")
     st.plotly_chart(fig)
-    # budget fund
+    # Budget fund
     st.subheader("Budget Fund")
     age_group = df[['Fiscal Year','Amount Awarded','Budget Fund']]
     age_group_agg = age_group.groupby(['Budget Fund','Fiscal Year']).agg(Total_Amount_Awarded = 
                                                                         ('Amount Awarded', 'sum')).reset_index()
     age_group_agg.columns = ['Budget Fund','Fiscal Year', 'Amount Awarded (CAD)']
-    fig = px.bar(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Budget Fund")
+    fig = px.bar(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", 
+    color_discrete_sequence=px.colors.qualitative.Alphabet,color="Budget Fund")
     st.plotly_chart(fig)
-    # Geographical Area Served
-    st.subheader("Geographical Area Served")
-    age_group = df[['Fiscal Year','Amount Awarded','Geographical Area Served']]
-    age_group_agg = age_group.groupby(['Geographical Area Served','Fiscal Year']).agg(Total_Amount_Awarded = 
-                                                                        ('Amount Awarded', 'sum')).reset_index()
-    age_group_agg.columns = ['Geographical Area Served','Fiscal Year', 'Amount Awarded (CAD)']
-    fig = px.line(age_group_agg, x="Fiscal Year", y="Amount Awarded (CAD)", color="Geographical Area Served")
-    st.plotly_chart(fig)
+
