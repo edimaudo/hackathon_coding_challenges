@@ -1,8 +1,14 @@
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 
 st.title('OTF Charity Insights')
+<<<<<<< Updated upstream
 df = st.session_state['df']
 st.header("Map Insights")
 
@@ -12,6 +18,17 @@ st.header("Map Insights")
     program_area_agg = program_area.groupby(['City','Program Area']).agg(Total_Amount_Awarded = 
                                                                         ('Amount Awarded', 'sum')).reset_index()
     program_area_agg.columns = ['City','Program Area', 'Amount Awarded (CAD)']
+=======
+
+st.header("Map Insights")
+
+    # Program area
+    #st.subheader("Program Area")
+    #program_area = df[['Amount Awarded','Program Area'.'City']]
+    #program_area_agg = program_area.groupby(['City','Program Area']).agg(Total_Amount_Awarded = 
+    #                                                                    ('Amount Awarded', 'sum')).reset_index()
+    #program_area_agg.columns = ['City','Program Area', 'Amount Awarded (CAD)']
+>>>>>>> Stashed changes
     #program_area_agg = program_area_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
    
     
@@ -36,4 +53,9 @@ st.header("Map Insights")
     # budget_fund_agg.columns = ['Budget Fund', 'Amount Awarded (CAD)']
     # budget_fund_agg = budget_fund_agg.sort_values("Amount Awarded (CAD)", ascending=True).reset_index()
     # fig = px.bar(budget_fund_agg, x="Amount Awarded (CAD)", y="Budget Fund", orientation='h')
+<<<<<<< Updated upstream
     # st.plotly_chart(fig)
+=======
+    # st.plotly_chart(fig)
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
