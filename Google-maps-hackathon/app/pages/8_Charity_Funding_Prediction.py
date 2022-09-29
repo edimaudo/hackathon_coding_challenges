@@ -19,38 +19,51 @@ DATA_URL = "OTF.xlsx"
 df = load_data()
 
 st.header("Charity Funding Prediction")
-charity_data = df[['Fiscal Year','City','Grant programme','Planned Dates','Program Area','Age Group','Budget Fund','Amount Awarded']]
-    
-    # city = charity_data['Recipient_org_city_update'].unique()
-    # city  = city.astype('str')
-    # city.sort()
+charity_data = df[['Fiscal Year','City','Grant Programme','Planned Dates','Program Area','Age Group','Budget Fund','Amount Awarded']]
 
-    # grant = charity_data['Grant_program'].unique()
-    # grant  = grant.astype('str')
-    # grant.sort()
+fiscal_year = [2022,2023,2024,2025]
 
-    # program_area = charity_data['Program_area_update'].unique()
-    # program_area  = program_area.astype('str')
-    # program_area.sort()
+city = charity_data['City'].unique()
+city  = city.astype('str')
+city.sort()
 
-    # age = charity_data['Age_group_update'].unique()
-    # age  = age.astype('str')
-    # age.sort()
+grant = charity_data['Grant Programme'].unique()
+grant  = grant.astype('str')
+grant.sort()
 
-    # budget_fund = charity_data['Budget_fund_update'].unique()
-    # budget_fund  = budget_fund.astype('str')
-    # budget_fund.sort()
+program_area = charity_data['Program Area'].unique()
+program_area  = program_area.astype('str')
+program_area.sort()
 
-    # #with charity_metric_column1:
-    # city_choice = st.selectbox("Pick a City",city)
-    # #with charity_metric_column2:
-    # grant_choice = st.selectbox("Pick a Grant Option",grant)
-    # #with charity_metric_column3:
-    # program_area_choice = st.selectbox("Pick a Program Area",program_area)
-    # #with charity_metric_column4:
-    # age_choice = st.selectbox("Pick an Age group",age)
-    # #with charity_metric_column5:
-    # budget_fund_choice = st.selectbox("Pick a Budget Fund",budget_fund)
+age = charity_data['Age Group'].unique()
+age  = age.astype('str')
+age.sort()
+
+planned_dates = charity_data['Planned Dates'].unique()
+planned_dates  = planned_dates.astype('int')
+planned_dates.sort()
+
+budget_fund = charity_data['Budget Fund'].unique()
+budget_fund  = budget_fund.astype('str')
+budget_fund.sort()
+
+col1, col2 = st.columns(2)
+with col1:
+    year_choice = st.selectbox("Pick a Year",fiscal_year)
+    city_choice = st.selectbox("Pick a City",city)
+    grant_choice = st.selectbox("Pick a Grant Option",grant)
+    program_area_choice = st.selectbox("Pick a Program Area",program_area)
+    age_choice = st.selectbox("Pick an Age group",age)
+    budget_fund_choice = st.selectbox("Pick a Budget Fund",budget_fund)
+    planned_date_choice = st.selectbox("Pick a Planned Date",planned_dates)
+    #clicked = st.button("Run Prediction")
+
+with col2:
+    output = 0##float("{:.2f}".format(y_pred_test[0]))
+    output = str(output) + " CAD"
+    st.write("Based on the metrics selected, the predicted funding amount will be: ")
+    st.metric("Amount Awarded",output)
+
     
 
     # # Regression Model
