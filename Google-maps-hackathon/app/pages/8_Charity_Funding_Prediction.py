@@ -16,6 +16,7 @@ from sklearn.neighbors import KNeighborsRegressor
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import random
+import pickle
 
 st.title('OTF Charity Insights')
 # Load data
@@ -56,7 +57,6 @@ budget_fund = charity_data['Budget Fund'].unique()
 budget_fund  = budget_fund.astype('str')
 budget_fund.sort()
 
-
 year_choice = st.selectbox("Pick a Year",fiscal_year)
 city_choice = st.selectbox("Pick a City",city)
 grant_choice = st.selectbox("Pick a Grant Option",grant)
@@ -66,12 +66,13 @@ budget_fund_choice = st.selectbox("Pick a Budget Fund",budget_fund)
 planned_date_choice = st.selectbox("Pick a Plan Date",planned_dates)
 clicked = st.button("Run Prediction")
 
-# Regression Model
-model=GradientBoostingRegressor()
-# Data 
+# Loading model to compare the results
+model = pickle.load(open('model.pkl','rb'))
+
+
+# Data munging
 model_data = df[['Fiscal Year','City','Grant Programme','Planned Dates',
     'Program Area','Age Group','Budget Fund','Amount Awarded']]
-#Recode data
 model_data["City"] = model_data["City"].astype('category')
 model_data["Grant Programme"] = model_data["Grant Programme"].astype('category')
 model_data["Program Area"] = model_data["Program Area"].astype('category')
@@ -83,17 +84,8 @@ model_data["Program_area_cat"] = model_data["Program Area"].cat.codes
 model_data["Age_group_cat"] = model_data["Age Group"].cat.codes
 model_data["Budget_fund_cat"] = model_data["Budget Fund"].cat.codes
 
-# Create train and test data
-X = model_data[['Fiscal Year','City_cat','Grant_program_cat','Planned Dates',
-                        'Program_area_cat','Age_group_cat','Budget_fund_cat']]
-Y = model_data['Amount Awarded']
-X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.8, random_state=random.seed(10))
 
-regressor = model.fit(X_train, y_train)
-y_pred = regressor.predict(X_test)
-
-# run model
-        
+# Run model
 year = year_choice
 prediction_df = model_data[(model_data.City == city_choice)]
 prediction_df.reset_index(drop=True, inplace=True)
@@ -117,13 +109,13 @@ info_df = pd.DataFrame(columns = ['Fiscal Year','City','Grant Programme','Planne
     'Program Area','Age Group','Budget Fund'],
 index = ['a'])
 info_df.loc['a'] = [year, city, grant,planned_date,program_area,age_group,budget_fund]
-y_pred_test = regressor.predict(info_df)
+y_pred_test = model.predict(info_df)
 
 if clicked:
     output = float("{:.2f}".format(y_pred_test[0]))
     output = str(output) + " CAD"
-    st.write("Based on the metrics selected, the estimated funding amount could be: ")
-    st.metric("Amount Awarded",output)
+    st.markdown("Based on the metrics selected, the estimated **Amount Awarded** could be: ")
+    st.metric(" ",output)
         
 
 
