@@ -65,6 +65,10 @@ with st.expander(" "):
     fig = px.bar(geo_area_update_agg, x="Amount Awarded (CAD)", y="Geographical Area Served", orientation='h')
     st.plotly_chart(fig) 
 
+    # Map
+    st.subheader("Cities")
+
+
 st.header("Trend Insights")
 with st.expander(" "): 
     # Age breakdown
@@ -103,3 +107,5 @@ with st.expander(" "):
     color_discrete_sequence=px.colors.qualitative.Alphabet,color="Budget Fund")
     st.plotly_chart(fig)
 
+    # Map
+    st.subheader("Cities")
