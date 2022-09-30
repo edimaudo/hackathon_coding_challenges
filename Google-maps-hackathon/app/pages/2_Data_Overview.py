@@ -36,5 +36,5 @@ df_total_grants_agg.columns = ['Year', 'Amount Awarded (CAD)']
 df_total_grants_agg.sort_values("Amount Awarded (CAD)", ascending=True)
 fig = px.bar(df_total_grants_agg, x="Year", y="Amount Awarded (CAD)")
 st.plotly_chart(fig)
-
-# Add map for funding
+# City Funding Map
+st.subheader("City Funding Map")
