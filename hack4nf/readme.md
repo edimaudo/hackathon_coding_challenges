@@ -1,10 +1,8 @@
 # Hack4NF
 
-Do you have a passion for Genomic Data and want to make an impact in a rare disease? Hack with us for Neurofibromatosis (NF), a rare disease that affects 1 in 3,000 people globally each year. Ideate and develop viable solutions to help create awareness and medical advancements surrounding NF and other rare genetic disorders at Hack4NF 2022. 
-
-Gather your team and get ready to compete 1 of 4 provided challenges for a variety of cash prizes with a total value of $25,000 in. Utilize datasets, engage with patients, and receive mentorship from experts in the field. Join us and patients all over the world in the hack to end NF.
-
-Interested in attending an in person kickoff event? Join us in NYC or Seattle on October 15, 2022 at 1:00pm ET to celebrate the beginning of Hack4NF! Get the chance to learn more about the challenges, meet mentors, and start forming teams.
+## About
+Do you have a passion for computational biology, predictive AI, or genomics and want to make an impact in a rare disease? Do you know that one out of 10 people globally is affected by a rare disease? Hack with us for neurofibromatosis (NF), a rare genetic disorder that affects 1 in 3,000 people globally each year. 
+Gather your team and get ready to compete for a variety of cash prizes with a total value of $25,000 in 1 of 4 provided challenges. Use datasets, engage with patients, and receive mentorship from experts in the field. Join us and patients all over the world in the hack to #EndNF.
 
 ## The Challenges
 **Challenge #1**
