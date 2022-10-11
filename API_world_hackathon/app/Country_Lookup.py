@@ -22,6 +22,7 @@ DATA_URL = "country_list.xlsx"
 df = load_data()
 
 st.title('CountryXM')
+st.image("world_map2.jpeg")
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 st.header("About")
