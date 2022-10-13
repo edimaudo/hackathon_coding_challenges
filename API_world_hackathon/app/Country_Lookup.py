@@ -53,27 +53,48 @@ if clicked:
         third_container = st.container()
         fourth_container = st.container()
         with first_container:
-            metric_column1, metric_column2,metric_column3 = st.columns(3)
-            metric_column1.st.image(output[0]['flag'])# flag
-            metric_column1.st.write(output[0]['alpha2code'])#alpha2code
-            metric_column1.st.image(output[0]['alpha3code'])#alpha3code
+            metric_column1, metric_column2,metric_column3,metric_column4 = st.columns(4)
+            with metric_column1:
+                st.metric("Top Level domain",output[0]['top_level_domains'][0])# top level domain
+            with metric_column2: 
+                st.metric("Alpha2Code",output[0]['alpha2code'])#alpha2code
+            with metric_column3: 
+                st.metric("Alpha3Code",output[0]['alpha3code'])#alpha3code
+            with metric_column4: 
+                st.metric("Population",output[0]['population']) #population - metric
         with second_container:
             metric_column1, metric_column2,metric_column3,metric_column4 = st.columns(4)
-            metric_column1.metric("Capital",output[0]['capital']) #capital - metric
-            metric_column2.metric("Region",output[0]['region']) #region - metric
-            metric_column3.metric("Sub Region",output[0]['subregion']) #region - metric
-            metric_column4.metric("Population",output[0]['population']) #population - metric
+            with metric_column1:
+                st.metric("Capital",output[0]['capital']) #capital - metric
+            with metric_column2: 
+                st.metric("Region",output[0]['region']) #region - metric
+            with metric_column3:
+                st.metric("Sub Region",output[0]['subregion']) #region - metric
+            with metric_column4:
+                st.metric("Area",output[0]['area']) #area
+
         with third_container:
             metric_column1, metric_column2,metric_column3,metric_column4 = st.columns(4)
-            metric_column1.metric("Currency",output[0]['currencies']['name']) #currency - metric
-            metric_column2.metric("Calling Code",output[0]['calling_codes']) #calling code - metric
-            metric_column3.metric("Latitude and Longitude",output[0]['latitude']  + " " + output[0]['longitude']) #longitude and latitude - metric
-            metric_column2.metric("Area",output[0]['area']) #area
+            #with metric_column1:
+            #    st.metric("Currency",output[0]['currencies']) #currency - metric
+            #with metric_column2: 
+            #    st.metric("Calling Code",output[0]['calling_codes']) #calling code - metric
+            #with metric_column3:
+            #    st.metric("Latitude and Longitude",soutput[0]['latitude']  + " " + output[0]['longitude']) #longitude and latitude - metric
+            
         with fourth_container:
             metric_column1, metric_column2,metric_column3, metric_column4 = st.columns(4)
-            metric_column1.st.write(output[0]['languages'])#languages list - list
-            metric_column2.st.write(output[0]['timezones'])#timezones - list
-            metric_column3.st.write(output[0]['regional_blocs'])#regional block - list
-            metric_column4.st.write(output[0]['borders'])# borders - list
+            with metric_column1:
+                st.write("Languages")
+                st.write(output[0]['languages'])#languages list - list
+            with metric_column2:
+                st.write("Timezones")
+                st.write(output[0]['timezones'])#timezones - list
+            with metric_column3: 
+                st.write("Regional blocks")
+                st.write(output[0]['regional_blocs'])#regional block - list
+            with metric_column4:
+                st.write("Borders")
+                st.write(output[0]['borders'])# borders - list
     except:
         st.error('There is an error getting the country data')
