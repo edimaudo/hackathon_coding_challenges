@@ -57,16 +57,13 @@ if clicked:
     saved_final_lgbm = load_model('Final LGBM')
     # Prediction
     new_prediction = predict_model(saved_final_lgbm, data=info_df)
-    
-    #st.markdown("Based on the metrics selected, the client is: ")
-    ## a choice information
-    #if btn_predict:
-    #    pred = model.predict_proba(user_input)[:, 1]
-
-    #if pred[0] < 0.78:
-    #    st.error('Warning! The applicant has a high risk to not pay the loan back!')
-    #else:
-    #    st.success('It is green! The aplicant has a high probability to pay the loan back!')
+    score = new_prediction['Score'][0]
+    st.metric("Users score: ",score)
+    st.write(" ")
+    if score < 0.78:
+        st.error('Warning! The applicant has a high risk to not pay the loan back!')
+    else:
+        st.success('It is green! The aplicant has a high probability to pay the loan back!')
 
     			
 
