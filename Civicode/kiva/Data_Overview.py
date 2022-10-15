@@ -29,10 +29,6 @@ st.header("Data Summary")
 top_container = st.container()
 middle_container = st.container()
 bottom_container = st.container()
-with top_container:
-    metric_column1, metric_column2,metric_column3 = st.columns(3)
-    with metric_column1:
-        st.metric("","")
 #STATUS
 #ORIGINAL_LANGUAGE
 #LOAN_AMOUNT #avg
@@ -41,6 +37,29 @@ with top_container:
 #CURRENCY_POLICY
 #LENDER_TERM
 #CURRENCY
+with top_container:
+    metric_column1, metric_column2 = st.columns(2)
+    with metric_column1:
+        st.metric("","")
+    with metric_column2:
+        st.metric("","")
+with middle_container:
+    metric_column1, metric_column2,metric_column3 = st.columns(3)
+    with metric_column1:
+        st.metric("","")
+    with metric_column2:
+        st.metric("","")
+    with metric_column3:
+        st.metric("","")
+with bottom_container:
+    metric_column1, metric_column2,metric_column3 = st.columns(3)
+    with metric_column1:
+        st.metric("","")
+    with metric_column2:
+        st.metric("","")
+    with metric_column3:
+        st.metric("","")
+
 
 
 
