@@ -24,41 +24,30 @@ st.header("Data Overview")
 with st.expander(" "):
     st.subheader("Here is a preview of the data")
     st.dataframe(df.head(35))
-
 st.header("Data Summary")
 top_container = st.container()
 middle_container = st.container()
 bottom_container = st.container()
-#STATUS
-#ORIGINAL_LANGUAGE
-#LOAN_AMOUNT #avg
-#SECTOR_NAME
-#COUNTRY_NAME
-#CURRENCY_POLICY
-#LENDER_TERM
-#CURRENCY
+metric_column1, metric_column2,metric_column3 = st.columns(3)
 with top_container:
-    metric_column1, metric_column2 = st.columns(2)
     with metric_column1:
-        st.metric("","")
+        st.metric("Status",str(len(df['STATUS'].unique())))
     with metric_column2:
-        st.metric("","")
+        st.metric("# of Languages",str(len(df['ORIGINAL_LANGUAGE'].unique())))
 with middle_container:
-    metric_column1, metric_column2,metric_column3 = st.columns(3)
     with metric_column1:
-        st.metric("","")
+        st.metric("# of Sectors",str(len(df['SECTOR_NAME'].unique())))
     with metric_column2:
-        st.metric("","")
+        st.metric("# of Countries",str(len(df['COUNTRY_NAME'].unique())))
     with metric_column3:
-        st.metric("","")
+        st.metric("# of Currencies",str(len(df['CURRENCY'].unique())))
 with bottom_container:
-    metric_column1, metric_column2,metric_column3 = st.columns(3)
     with metric_column1:
-        st.metric("","")
+        st.metric("Average Loan Amount",str(df['LOAN_AMOUNT'].mean()))
     with metric_column2:
-        st.metric("","")
+        st.metric("# of Lender Terms",str(len(df['LENDER_TERM'].unique())))
     with metric_column3:
-        st.metric("","")
+        st.metric("# of Currency Policies",str(len(df['CURRENCY_POLICY'].unique())))
 
 
 
