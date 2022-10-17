@@ -4,7 +4,9 @@
 [Kiva](https://www.kiva.org) is a social impact organization with a mission to expand financial access to help under-served individuals and communities thrive.
 
 ### About The Application
-The application leverages Kiva's data snapshot to build financial tools that would help further poverty alleviation and financial inclusion.  The application focuses on two key areas:
+The application leverages Kiva's data snapshot to build financial tool that would help improve poverty alleviation and financial inclusion.  
+
+The application focuses on two key areas:
 - **Fund distribution**: How might we optimize fund distribution to borrowers?
 - **Loan impact**: How might we show the impact of the loans?
  
