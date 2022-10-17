@@ -42,7 +42,6 @@ if clicked:
     activity_df_agg.columns = ['ACTIVITY NAME', 'FUNDED AMOUNT']
 
     sroi = 0
-  
     activity_info = []
     loan_info = []
     npv_data = []
