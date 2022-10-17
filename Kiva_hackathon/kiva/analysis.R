@@ -283,7 +283,7 @@ dropoff <- 0.1
 discount_rate <- 0.035
 reduction_rate <- 0.1
 
-loan_df2 <- loans2 %>%
+loan_df2 <- loans %>%
    filter(STATUS %in%c('funded','fundRaising'), COUNTRY_NAME == "Belize") %>%
    na.omit() %>%
    dplyr::group_by(ACTIVITY_NAME) %>%
