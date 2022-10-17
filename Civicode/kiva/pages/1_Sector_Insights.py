@@ -22,7 +22,7 @@ st.header('Kiva Sector Insights')
 country = df['COUNTRY_NAME'].unique()
 country  = country.astype('str')
 country.sort()
-country_choice = st.selectbox("Pick a Year",country)
+country_choice = st.selectbox("Pick a Country",country)
 
 funding_status = ['funded','fundRaising']
 sector_df = df[(df['COUNTRY_NAME'] == country_choice) & df['STATUS'].isin(funding_status)]
