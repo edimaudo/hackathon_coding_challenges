@@ -29,6 +29,10 @@ country.sort()
 
 country_choice = st.multiselect("Countries",country,['United States','Costa Rica'])
 
+#clicked = st.button("Calculate Portfolio Returns")
+
+#if clicked:
+
 fund_df = df[(df['COUNTRY_NAME'].isin(country_choice)) & (df['STATUS'].isin(funding_status))] #& (df['SECTOR_NAME'].isin(sector))
 fund_df['DISBURSE_TIME'] = pd.to_datetime(fund_df['DISBURSE_TIME']).dt.date
 fund_df_agg = fund_df.groupby(['SECTOR_NAME', 'DISBURSE_TIME']).agg(TOTAL_FUNDED_AMOUNT = ('FUNDED_AMOUNT', 'sum')).reset_index()
@@ -62,7 +66,25 @@ sim_data = list(range(1,num_port+1))
 #for value in sim_data:
 wts = np.random.uniform(0,1,sector_count)
 wts = wts/sum(wts)
-st.write(sum(wts))
+# Storing weight
+all_wts.append(wts)
+
+# Portfolio returns
+port_ret <- sum(wts * mean_ret)
+port_ret = ((port_ret + 1)^252) - 1
+
+# Storing Portfolio Returns values
+port_returns.append(port_ret)
+
+# Creating and storing portfolio risk
+#port_sd <- sqrt(t(wts) %*% (cov_mat  %*% wts))
+#port_risk[i] <- port_sd
+
+# Creating and storing Portfolio Sharpe Ratios
+# Assuming 0% Risk free rate
+#sr <- port_ret/port_sd
+#sharpe_ratio.append(sr)
+
 
 st.subheader("Minimum Variance Portfolio")
 
