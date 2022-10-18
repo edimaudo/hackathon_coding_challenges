@@ -27,11 +27,6 @@ country = df['COUNTRY_NAME'].unique()
 country  = country.astype('str')
 country.sort()
 
-# sector
-sector = df['SECTOR_NAME'].unique()
-sector  = sector.astype('str')
-sector.sort()
-
 country_choice = st.multiselect("Countries",country,['United States','Costa Rica'])
 
 fund_df = df[(df['COUNTRY_NAME'].isin(country_choice)) & (df['STATUS'].isin(funding_status))] #& (df['SECTOR_NAME'].isin(sector))
@@ -39,7 +34,8 @@ fund_df['DISBURSE_TIME'] = pd.to_datetime(fund_df['DISBURSE_TIME']).dt.date
 fund_df_agg = fund_df.groupby(['SECTOR_NAME', 'DISBURSE_TIME']).agg(TOTAL_FUNDED_AMOUNT = ('FUNDED_AMOUNT', 'sum')).reset_index()
 fund_df_agg.columns = ['SECTOR NAME', 'DISBURSE TIME', 'TOTAL FUNDED AMOUNT']
 
-
+# sector
+sector_count = len(fund_df_agg['SECTOR NAME'].unique())
 
 # CREATE Pivot data
 fund_df_agg_pivot = pd.pivot_table(data=fund_df_agg,values ='TOTAL FUNDED AMOUNT',columns=['SECTOR NAME'] ,index=['DISBURSE TIME'])
@@ -62,7 +58,11 @@ sharpe_ratio = []
 
 random.seed(10)
 # Simulation
-
+sim_data = list(range(1,num_port+1))
+#for value in sim_data:
+wts = np.random.uniform(0,1,sector_count)
+wts = wts/sum(wts)
+st.write(sum(wts))
 
 st.subheader("Minimum Variance Portfolio")
 
