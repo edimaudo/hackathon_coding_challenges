@@ -22,10 +22,10 @@ st.header('Kiva Sector Insights')
 country = df['COUNTRY_NAME'].unique()
 country  = country.astype('str')
 country.sort()
-country_choice = st.selectbox("Pick a Country",country)
+country_choice = st.multiselect("Countries",country,['United States','Costa Rica'])
 
 funding_status = ['funded','fundRaising']
-sector_df = df[(df['COUNTRY_NAME'] == country_choice) & df['STATUS'].isin(funding_status)]
+sector_df = df[(df['COUNTRY_NAME'].isin(country_choice)) & df['STATUS'].isin(funding_status)]
 sector_df['year'] = pd.DatetimeIndex(sector_df['DISBURSE_TIME']).year
 
 # Sector Count
