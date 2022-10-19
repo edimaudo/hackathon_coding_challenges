@@ -98,16 +98,33 @@ all_weights = pd.DataFrame (all_wts, columns = column_info)
 
 # Combing all the values together
 portfolio_values = pd.concat([all_weights, portfolio_values], axis = 1)
-st.write(portfolio_values)
+
+# Next lets look at the portfolios that matter the most.
+# - The minimum variance portfolio
+# - The tangency portfolio (the portfolio with highest sharpe ratio)
+min_var_index = portfolio_values[['Risk']].idxmin()
+max_sr_index = portfolio_values[['SharpeRatio']].idxmax()
+max_col = len(column_info)
+col_range = list(range(max_col))
+min_var = portfolio_values.iloc[min_var_index,col_range]
+max_sr = portfolio_values.iloc[max_sr_index,col_range]
 
 st.subheader("Minimum Variance Portfolio")
-
+min_var2 = pd.melt(min_var, value_vars=column_info)
+min_var2.columns = ["Sector","Weights"]
+min_var2 = min_var2.sort_values("Weights", ascending=True).reset_index()
+fig = px.bar(min_var2, x="Weights", y="Sector", orientation='h')
+st.plotly_chart(fig)
 st.write("""
-A minimum variance portfolio is an investing method that helps you maximize returns and minimize risk. It involves diversifying your holdings to reduce volatility.
+Focuses on maximize returns and minimize risk by reducing volatility.
 """)
 
 st.subheader("Efficient Portfolio")
-
+max_sr2 = pd.melt(max_sr, value_vars=column_info)
+max_sr2.columns = ["Sector","Weights"]
+max_sr2 = max_sr2.sort_values("Weights", ascending=True).reset_index()
+fig = px.bar(max_sr2, x="Weights", y="Sector", orientation='h')
+st.plotly_chart(fig)
 st.write("""
-investable assets are combined in a way that produces the best possible expected level of return for their level of risk—or the lowest risk for a target return.
+Provides best possible expected level of return for their level of risk
 """)
