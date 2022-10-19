@@ -29,7 +29,7 @@ loans$DISBURSE_TIME <- as.Date(loans$DISBURSE_TIME)
 #=============
 
 funds_df2 <- loans %>% 
-  filter(STATUS %in% c('funded','fundRaising'),COUNTRY_NAME == "Afghanistan") %>%
+  filter(STATUS %in% c('funded','fundRaising'),COUNTRY_NAME %in% c('United States','Costa Rica')) %>%
   group_by(SECTOR_NAME, DISBURSE_TIME) %>%
   dplyr::summarise(TOTAL_FUNDED_AMOUNT = sum(FUNDED_AMOUNT)) %>%
   na.omit() %>%
