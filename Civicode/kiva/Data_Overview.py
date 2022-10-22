@@ -15,9 +15,11 @@ df = load_data()
 st.header("About")
 with st.expander(" "):
     st.write("""
-    The application leverages Kiva's data snapshot to build financial tools that would help further poverty alleviation and financial inclusion.  The application focuses on two key areas:
-    - Fund distribution: How might we optimize fund distribution to borrowers?
-    - Loan impact: How might we show the impact of the loans?
+The application leverages Kiva's data snapshot to build financial tool that analyzes loan information and helps the analyst find the which sectors are providing the best return on investment for the users.
+The application focuses on three key areas:
+- **Sector Insights**: Attribtutes by sectors.  This is done by country
+- **Fund distribution**: How might we optimize fund distribution to borrowers? This is done by country
+- **Loan impact**: How might we show the impact of the loans? This leverages the SROI framework
     """)
 
 st.header("Data Overview")
