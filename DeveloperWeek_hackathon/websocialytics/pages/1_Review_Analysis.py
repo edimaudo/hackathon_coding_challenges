@@ -9,6 +9,7 @@ from datetime import datetime
 import random
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import math 
+import re, string
 
 st.title('WebSocialytics Insights')
 
@@ -20,16 +21,41 @@ def load_data():
 DATA_URL = "CustomerReviews2000.csv"
 df = load_data()
 
-ProductModelName	ProductCategory	ProductPrice	RetailerName	RetailerZip	RetailerCity	RetailerState	ProductOnSale	ManufacturerName	ManufacturerRebate	UserID	UserAge	UserGender	UserOccupation	ReviewRating	ReviewDate	ReviewText	
+nlp_retailer_list = df['RetailerName'].unique()
+nlp_retailer_list  = nlp_retailer_list.astype('str')
+nlp_retailer_list.sort()
+
+nlp_manufacturer_list = df['ManufacturerName'].unique()
+nlp_manufacturer_list = nlp_manufacturer_list.astype('str')
+nlp_manufacturer_list.sort()
+
+nlp_product_cat_list = df['ProductCategory'].unique()
+nlp_product_cat_list  = nlp_product_cat_list.astype('str')
+nlp_product_cat_list.sort()
+
+nlp_retailer_city_list = df['RetailerCity'].unique()
+nlp_retailer_city_list  = nlp_retailer_city_list.astype('str')
+nlp_retailer_city_list.sort()
+
+nlp_rating_list = df['ReviewRating'].unique()
+nlp_rating_list  = nlp_rating_list.astype('int')
+nlp_rating_list.sort()
 
 st.header("Text Analysis of Reviews")
-nlp_month_choice = st.selectbox("Month",nlp_month_list, index=5)
-nlp_year_choice = st.selectbox("Year",nlp_year_list,index=3)
-nlp_app_choice = st.selectbox("Companion App",nlp_app_list,key="nlp",index=3)
-nlp_score_choice = st.selectbox("Score",nlp_score_list, index=0)
+nlp_manufacturer_choice = st.multiselect("Manufacturer",nlp_manufacturer_list,['Samsung','Microsoft'])
+nlp_retailer_choice = st.multiselect("RetailerName",nlp_retailer_list, ['Bestbuy','Walmart'])
+nlp_city_choice = st.multiselect("City",nlp_retailer_city_list, ['Los Angeles','San Francisco'])
+nlp_product_cat_choice = st.multiselect("Product Category",nlp_product_cat_list , ['Tablet'])
+nlp_rating_choice = st.multiselect("Ratings",nlp_rating_list, [4,5])
 
-nlp_analysis = df_analysis[(df_analysis.app == nlp_app_choice) & (df_analysis.Year == nlp_year_choice) 
-    & (df_analysis.Month == nlp_month_choice) & (df_analysis.score == nlp_score_choice)]
+# ProductModelName	ProductCategory	ProductPrice	RetailerName	RetailerZip	RetailerCity	RetailerState	ProductOnSale	ManufacturerName	ManufacturerRebate	UserID	UserAge	UserGender	UserOccupation	ReviewRating	ReviewDate	ReviewText	
+
+nlp_analysis = df[(df.ManufacturerName.isin(nlp_manufacturer_choice)) & 
+                (df.RetailerName.isin(nlp_retailer_choice)) & 
+                (df.RetailerCity.isin(nlp_city_choice)) & 
+                (df.ProductCategory.isin(nlp_product_cat_choice)) &
+                (df.ReviewRating.isin(nlp_rating_choice))]
+
 st.write("Reviews")
 if nlp_analysis.empty:
     st.write("No data Available! Please try another combination from the dropdowns")
@@ -37,11 +63,11 @@ else:
     n = 30
     if nlp_analysis.shape[0] < 30:
         n = nlp_analysis.shape[0]
-        st.dataframe(nlp_analysis['Review'][:n])
+        st.dataframe(nlp_analysis['ReviewText'][:n])
     run_nlp = st.button("Run Text Analysis")
     if run_nlp and not nlp_analysis.empty:
         # Convert review into one large paragraph
-        text = '. '.join(nlp_analysis['Review'][:n])
+        text = '. '.join(nlp_analysis['ReviewText'][:n])
         # Text cleanup
         text = text.lower() # Lower case
         text = text.strip() # rid of leading/trailing whitespace with the following
