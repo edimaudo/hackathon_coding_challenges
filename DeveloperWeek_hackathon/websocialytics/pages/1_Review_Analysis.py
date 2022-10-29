@@ -42,13 +42,13 @@ nlp_rating_list  = nlp_rating_list.astype('int')
 nlp_rating_list.sort()
 
 st.header("Text Analysis of Reviews")
-nlp_manufacturer_choice = st.multiselect("Manufacturer",nlp_manufacturer_list,['Samsung','Microsoft'])
-nlp_retailer_choice = st.multiselect("RetailerName",nlp_retailer_list, ['Bestbuy','Walmart'])
-nlp_city_choice = st.multiselect("City",nlp_retailer_city_list, ['Los Angeles','San Francisco'])
-nlp_product_cat_choice = st.multiselect("Product Category",nlp_product_cat_list , ['Tablet'])
-nlp_rating_choice = st.multiselect("Ratings",nlp_rating_list, [4,5])
-
-# ProductModelName	ProductCategory	ProductPrice	RetailerName	RetailerZip	RetailerCity	RetailerState	ProductOnSale	ManufacturerName	ManufacturerRebate	UserID	UserAge	UserGender	UserOccupation	ReviewRating	ReviewDate	ReviewText	
+with st.sidebar:
+    run_nlp = st.button("Run Text Analysis")
+    nlp_manufacturer_choice = st.multiselect("Manufacturer",nlp_manufacturer_list,['Samsung','Microsoft'])
+    nlp_retailer_choice = st.multiselect("RetailerName",nlp_retailer_list, ['Bestbuy','Walmart'])
+    nlp_city_choice = st.multiselect("City",nlp_retailer_city_list, ['Los Angeles','San Francisco'])
+    nlp_product_cat_choice = st.multiselect("Product Category",nlp_product_cat_list , ['Tablet'])
+    nlp_rating_choice = st.multiselect("Ratings",nlp_rating_list, [4,5])
 
 nlp_analysis = df[(df.ManufacturerName.isin(nlp_manufacturer_choice)) & 
                 (df.RetailerName.isin(nlp_retailer_choice)) & 
@@ -56,7 +56,6 @@ nlp_analysis = df[(df.ManufacturerName.isin(nlp_manufacturer_choice)) &
                 (df.ProductCategory.isin(nlp_product_cat_choice)) &
                 (df.ReviewRating.isin(nlp_rating_choice))]
 
-st.write("Reviews")
 if nlp_analysis.empty:
     st.write("No data Available! Please try another combination from the dropdowns")
 else:
@@ -64,7 +63,6 @@ else:
     if nlp_analysis.shape[0] < 30:
         n = nlp_analysis.shape[0]
         st.dataframe(nlp_analysis['ReviewText'][:n])
-    run_nlp = st.button("Run Text Analysis")
     if run_nlp and not nlp_analysis.empty:
         # Convert review into one large paragraph
         text = '. '.join(nlp_analysis['ReviewText'][:n])
@@ -89,7 +87,6 @@ else:
         client = ExpertAiClient()
         language = 'en'
         try:
-            # Document analysis 
             output_keyword = client.specific_resource_analysis(body={"document": {"text": text}}, 
             params={'language': language, 'resource': 'relevants'})
             output_named_entity = client.specific_resource_analysis(body={"document": {"text": text}},
@@ -100,28 +97,41 @@ else:
             params={'taxonomy': 'emotional-traits', 'language': language})
             output_behavior = client.classification(body={"document": {"text": text}}, 
             params={'taxonomy': 'behavioral-traits', 'language': language})
+
+            # Document analysis 
             st.subheader("Document Analysis")
-            st.markdown("**Keyphrase extraction**")
-            for lemma in output_keyword.main_lemmas:
-                st.write("- " + lemma.value)
-                st.write(" ")
-            st.markdown("**Named Entity recognition**")
-            for entity in output_named_entity.entities:
-                st.write(f' - {entity.lemma:{50}} {entity.type_:{10}}')
-                st.write(" ")
-            st.markdown("**Sentiment analysis**")
-            if (output_sentiment.sentiment.overall > 0):
-                st.write("Positive Sentiment: " + str(output_sentiment.sentiment.overall))
-                st.write("Negative sentiment: " + str(output_sentiment.sentiment.overall))
-            # Document classification
+            metric_column1, metric_column2,metric_column3 = st.columns(3)
+            with st.container():
+                with metric_column1:
+                    st.markdown("**Keyphrase extraction**")
+                    for lemma in output_keyword.main_lemmas:
+                        st.write("- " + lemma.value)
+                        st.write(" ")
+                with metric_column2:
+                    st.markdown("**Named Entity recognition**")
+                    for entity in output_named_entity.entities:
+                        st.write(f' - {entity.lemma:{50}} {entity.type_:{10}}')
+                        st.write(" ")
+                with metric_column3:
+                    st.markdown("**Sentiment analysis**")
+                    if (output_sentiment.sentiment.overall > 0):
+                        st.write("Positive Sentiment: " + str(output_sentiment.sentiment.overall))
+                    st.write("Negative sentiment: " + str(output_sentiment.sentiment.overall))
+            
+
+            # Document classification 
             st.subheader("Document Classification")
-            st.markdown("**Emotional Traits**")
-            for category in output_emotional_trait.categories:
-                st.write("- ", category.hierarchy[0], " -> ", category.hierarchy[1])
-                st.write(" ")
-            st.markdown("**Behavorial traits**")   
-            for category in output_behavior.categories:
-                st.write("- ", category.hierarchy[0], ": ", category.hierarchy[1]," -> ", category.hierarchy[2])
+            metric_column1, metric_column2 = st.columns(2)
+            with st.container():
+                with metric_column1:
+                    st.markdown("**Emotional Traits**")
+                    for category in output_emotional_trait.categories:
+                        st.write("- ", category.hierarchy[0], " -> ", category.hierarchy[1])
+                        st.write(" ")
+                with metric_column2:
+                    st.markdown("**Behavorial traits**")   
+                    for category in output_behavior.categories:
+                        st.write("- ", category.hierarchy[0], ": ", category.hierarchy[1]," -> ", category.hierarchy[2])
         except:
             st.write(" ")
-            st.error("Issue retrieving data from the API", icon="🚨")
+            st.error("Issue retrieving data from the API")
