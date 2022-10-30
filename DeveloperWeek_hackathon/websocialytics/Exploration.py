@@ -33,7 +33,7 @@ maintained by WebSocialytics has the fields listed below and stored in its
 database in the CustomerReviews table.
 Reviews can be used by retailers, manufacturers, and consulting firms
 to create effective output report in order to support the decision
-making process for analytical scenarios
+making process for analytical scenarios.
     """)
 
 st.header('Data Exploration')
