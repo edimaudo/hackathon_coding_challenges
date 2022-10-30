@@ -31,65 +31,83 @@ rfm_score = load_data_excel("rfm_score.xlsx")
 
 st.header("Product segmentation")
 
-NOW = dt.datetime(2022,12,1)
-df['ReviewDate'] = pd.to_datetime(df['ReviewDate'])
-# RFM model
-rfmTable = df.groupby('ProductModelName').agg({'ReviewDate': lambda x: (NOW - x.max()).days,
-                                                'ReviewText': lambda x: len(x), 
-                                                'ProductPrice': lambda x: x.sum()})
+nlp_product_cat_list = df['ProductCategory'].unique()
+nlp_product_cat_list  = nlp_product_cat_list.astype('str')
+nlp_product_cat_list.sort()
 
-rfmTable['ReviewDate'] = rfmTable['ReviewDate'].astype(int)
-rfmTable.rename(columns={'ReviewDate': 'recency', 
-                         'ReviewText': 'frequency', 
-                         'ProductPrice': 'monetary_value'}, inplace=True)
+nlp_retailer_city_list = df['RetailerCity'].unique()
+nlp_retailer_city_list  = nlp_retailer_city_list.astype('str')
+nlp_retailer_city_list.sort()
 
-# Split quantiles
-quantiles = rfmTable.quantile(q=[0.2,0.4,0.6,0.8])
-quantiles = quantiles.to_dict()
-segmented_rfm = rfmTable
+nlp_rating_list = df['ReviewRating'].unique()
+nlp_rating_list  = nlp_rating_list.astype('int')
+nlp_rating_list.sort()
 
-def RScore(x,p,d):
-    if x <= d[p][0.20]:
-        return 1
-    elif x <= d[p][0.40]:
-        return 2
-    elif x <= d[p][0.60]: 
-        return 3
-    elif x <= d[p][0.80]: 
-        return 4
-    else:
-        return 5
-    
-def FMScore(x,p,d):
-    if x <= d[p][0.20]:
-        return 5
-    elif x <= d[p][0.40]:
-        return 4
-    elif x <= d[p][0.60]: 
-        return 3
-    elif x <= d[p][0.80]: 
-        return 2
-    else:
-        return 1
+nlp_city_choice = st.multiselect("City",nlp_retailer_city_list, ['Los Angeles','San Francisco'])
+nlp_product_cat_choice = st.multiselect("Product Category",nlp_product_cat_list , ['Tablet'])
+nlp_rating_choice = st.multiselect("Ratings",nlp_rating_list, [4,5])
+segment_df = df[(df.RetailerCity.isin(nlp_city_choice)) & 
+                (df.ProductCategory.isin(nlp_product_cat_choice)) &
+                (df.ReviewRating.isin(nlp_rating_choice))]
+clicked = st.button("Generate Segment")
 
-# Segment the data
-segmented_rfm['r_quartile'] = segmented_rfm['recency'].apply(RScore, args=('recency',quantiles,))
-segmented_rfm['f_quartile'] = segmented_rfm['frequency'].apply(FMScore, args=('frequency',quantiles,))
-segmented_rfm['m_quartile'] = segmented_rfm['monetary_value'].apply(FMScore, args=('monetary_value',quantiles,))
+if clicked:
 
-# Add rfm
-segmented_rfm['RFMScore'] = segmented_rfm.r_quartile.map(str) + segmented_rfm.f_quartile.map(str) + segmented_rfm.m_quartile.map(str)
-st.dataframe(segmented_rfm)
+    NOW = dt.datetime(2022,12,1)
+    segment_df['ReviewDate'] = pd.to_datetime(df['ReviewDate'])
+    # RFM model
+    rfmTable = segment_df.groupby('ProductModelName').agg({'ReviewDate': lambda x: (NOW - x.max()).days,
+                                                    'ReviewText': lambda x: len(x), 
+                                                    'ProductPrice': lambda x: x.sum()})
 
-rfm_final = pd.concat(segmented_rfm, rfm_score, how='inner')
-st.dataframe(frm_final)
+    rfmTable['ReviewDate'] = rfmTable['ReviewDate'].astype(int)
+    rfmTable.rename(columns={'ReviewDate': 'recency', 
+                            'ReviewText': 'frequency', 
+                            'ProductPrice': 'monetary_value'}, inplace=True)
+
+    # Split quantiles
+    quantiles = rfmTable.quantile(q=[0.2,0.4,0.6,0.8])
+    quantiles = quantiles.to_dict()
+    segmented_rfm = rfmTable
+
+    def RScore(x,p,d):
+        if x <= d[p][0.20]:
+            return 1
+        elif x <= d[p][0.40]:
+            return 2
+        elif x <= d[p][0.60]: 
+            return 3
+        elif x <= d[p][0.80]: 
+            return 4
+        else:
+            return 5
+        
+    def FMScore(x,p,d):
+        if x <= d[p][0.20]:
+            return 5
+        elif x <= d[p][0.40]:
+            return 4
+        elif x <= d[p][0.60]: 
+            return 3
+        elif x <= d[p][0.80]: 
+            return 2
+        else:
+            return 1
+
+    # Segment the data
+    segmented_rfm['r_quartile'] = segmented_rfm['recency'].apply(RScore, args=('recency',quantiles,))
+    segmented_rfm['f_quartile'] = segmented_rfm['frequency'].apply(FMScore, args=('frequency',quantiles,))
+    segmented_rfm['m_quartile'] = segmented_rfm['monetary_value'].apply(FMScore, args=('monetary_value',quantiles,))
+    segmented_rfm = segmented_rfm.reset_index(level=['ProductModelName'])
+
+    # Add rfm
+    segmented_rfm['RFMScore'] = segmented_rfm.r_quartile.map(str) + segmented_rfm.f_quartile.map(str) + segmented_rfm.m_quartile.map(str)
+    segmented_rfm['RFMScore'] = segmented_rfm['RFMScore'].astype(int)
+    rfm_final = pd.merge(segmented_rfm, rfm_score, on='RFMScore', how='left')
+    rfm_final= rfm_final[['ProductModelName','segment']]
+    rfm_final.columns = ['Product', 'Segment']
+    st.table(rfm_final)
 
 
-
-#divisions<-rfm_segment(report, segment_titles, r_low, r_high, f_low, f_high, m_low, m_high)
-
-#division_count <- divisions %>% count(segment) %>% arrange(desc(n)) %>% rename(Segment = segment, Count = n)
-
-#ProductModelName	ProductCategory	ProductPrice	RetailerName	RetailerZip	RetailerCity	RetailerState	ProductOnSale	ManufacturerName	ManufacturerRebate	UserID	UserAge	UserGender	UserOccupation	ReviewRating	ReviewDate	ReviewText
 
 
