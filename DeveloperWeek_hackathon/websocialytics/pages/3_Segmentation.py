@@ -30,6 +30,10 @@ def load_data_excel(filename):
 rfm_score = load_data_excel("rfm_score.xlsx")
 
 st.header("Product segmentation")
+nlp_manufacturer_list = df['ManufacturerName'].unique()
+nlp_manufacturer_list = nlp_manufacturer_list.astype('str')
+nlp_manufacturer_list.sort()
+
 
 nlp_product_cat_list = df['ProductCategory'].unique()
 nlp_product_cat_list  = nlp_product_cat_list.astype('str')
@@ -43,14 +47,18 @@ nlp_rating_list = df['ReviewRating'].unique()
 nlp_rating_list  = nlp_rating_list.astype('int')
 nlp_rating_list.sort()
 
-nlp_city_choice = st.multiselect("City",nlp_retailer_city_list, ['Los Angeles','San Francisco'])
-nlp_product_cat_choice = st.multiselect("Product Category",nlp_product_cat_list , ['Tablet'])
-nlp_rating_choice = st.multiselect("Ratings",nlp_rating_list, [4,5])
-segment_df = df[(df.RetailerCity.isin(nlp_city_choice)) & 
+with st.sidebar:
+    nlp_manufacturer_choice = st.multiselect("Manufacturer",nlp_manufacturer_list,['Samsung','Microsoft'])
+    nlp_city_choice = st.multiselect("City",nlp_retailer_city_list, ['Los Angeles','San Francisco'])
+    nlp_product_cat_choice = st.multiselect("Product Category",nlp_product_cat_list , ['Tablet'])
+    nlp_rating_choice = st.multiselect("Ratings",nlp_rating_list, [4,5])
+
+st.write(" ")
+clicked = st.button("Generate Segment")
+segment_df = df[(df.ManufacturerName.isin(nlp_manufacturer_choice)) & 
+                (df.RetailerCity.isin(nlp_city_choice)) & 
                 (df.ProductCategory.isin(nlp_product_cat_choice)) &
                 (df.ReviewRating.isin(nlp_rating_choice))]
-clicked = st.button("Generate Segment")
-
 if clicked:
 
     NOW = dt.datetime(2022,12,1)
