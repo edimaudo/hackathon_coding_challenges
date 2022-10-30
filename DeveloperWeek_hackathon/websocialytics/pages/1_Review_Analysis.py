@@ -14,7 +14,7 @@ import re, string
 st.title('WebSocialytics Insights')
 
 # Load data
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_data():
     data = pd.read_csv(DATA_URL)
     return data
@@ -43,7 +43,7 @@ nlp_rating_list.sort()
 
 st.header("Text Analysis of Reviews")
 with st.sidebar:
-    run_nlp = st.button("Run Text Analysis")
+    
     nlp_manufacturer_choice = st.multiselect("Manufacturer",nlp_manufacturer_list,['Samsung','Microsoft'])
     nlp_retailer_choice = st.multiselect("RetailerName",nlp_retailer_list, ['Bestbuy','Walmart'])
     nlp_city_choice = st.multiselect("City",nlp_retailer_city_list, ['Los Angeles','San Francisco'])
@@ -56,6 +56,8 @@ nlp_analysis = df[(df.ManufacturerName.isin(nlp_manufacturer_choice)) &
                 (df.ProductCategory.isin(nlp_product_cat_choice)) &
                 (df.ReviewRating.isin(nlp_rating_choice))]
 
+st.write(" ")
+run_nlp = st.button("Run Text Analysis")
 if nlp_analysis.empty:
     st.write("No data Available! Please try another combination from the dropdowns")
 else:
