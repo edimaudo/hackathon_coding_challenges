@@ -66,10 +66,30 @@ if clicked:
                 (df.RetailerName.isin(nlp_retailer_choice)) & 
                 (df.RetailerCity.isin(nlp_city_choice))]
 
-    #- top 10 products, bottom 10 products by ratings
-    #- top 10 products, bottom 10 products by # of reviews
-    #- top 10 products, bottom 10 products by city
-    # cateogry
-    #- sales trend
-
+    st.subheader("Product Ratings")
+    graph_df = df[['ProductModelName','ReviewRating']]
+    graph_df_agg = graph_df.groupby('ProductModelName').agg(Total_Amount_Awarded = 
+                                                                        ('ReviewRating', 'mean')).reset_index()
+    graph_df_agg.columns = ['Product', 'Avg Rating']
+    graph_df_agg = graph_df_agg.sort_values("Avg Rating", ascending=True).reset_index()
+    fig = px.bar(graph_df_agg, x="Avg Rating", y="Product", orientation='h')
+    st.plotly_chart(fig)
+    # cateogry Ratings
+    st.subheader("Category Ratings")
+    graph_df = df[['ProductCategory','ReviewRating']]
+    graph_df_agg = graph_df.groupby('ProductCategory').agg(Total_Amount_Awarded = 
+                                                                        ('ReviewRating', 'mean')).reset_index()
+    graph_df_agg.columns = ['Category', 'Avg Rating']
+    graph_df_agg = graph_df_agg.sort_values("Avg Rating", ascending=True).reset_index()
+    fig = px.bar(graph_df_agg, x="Avg Rating", y="Category", orientation='h')
+    st.plotly_chart(fig)  
+    # City Reviews
+    st.subheader("# of City Reviews")
+    graph_df = df[['RetailerCity','ReviewText']]
+    graph_df_agg = graph_df.groupby('RetailerCity').agg(Total_Amount_Awarded = 
+                                                                        ('ReviewText', 'count')).reset_index()
+    graph_df_agg.columns = ['City', 'Review Count']
+    graph_df_agg = graph_df_agg.sort_values("Review Count", ascending=True).reset_index()
+    fig = px.bar(graph_df_agg, x="Review Count", y="City", orientation='h')
+    st.plotly_chart(fig)
 
