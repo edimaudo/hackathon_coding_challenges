@@ -92,7 +92,6 @@ model_data["UserGender_cat"] = model_data["UserGender"].cat.codes
 model_data["UserOccupation_cat"] = model_data["UserOccupation"].cat.codes
 model_data["Month_cat"] = model_data["Month"].cat.codes
 
-
 with st.sidebar:
     nlp_month_choice = st.selectbox("Month",nlp_month_list)
     nlp_year_choice = st.selectbox('Year', [2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022])
@@ -112,7 +111,7 @@ if clicked:
     model_info.reset_index(drop=True, inplace=True)
     product_category = model_info['ProductCategory_cat'][0]
 
-    model_info = model_data[(model_data.RetailerName == nlp_category_choice)]
+    model_info = model_data[(model_data.RetailerName == nlp_retailer_choice)]
     model_info.reset_index(drop=True, inplace=True)
     retailer = model_info['RetailerName_cat'][0]
 
@@ -136,14 +135,13 @@ if clicked:
     model_info.reset_index(drop=True, inplace=True)
     month = model_info['Month_cat'][0]
     
-
     info_df = pd.DataFrame(columns = ['ProductCategory_cat','ProductPrice','RetailerName_cat','RetailerCity_cat',
     'ManufacturerName_cat','UserAge','UserGender_cat','UserOccupation_cat','Month_cat','Year'],index = ['a'])
-    info_df.loc['a'] = [product_category,nlp_price_choice,retailer,city,manufacturer,
-    nlp_age_choice,gender,occupation,month,nlp_year_choice]
+    info_df.loc['a'] = [product_category,nlp_price_choice,retailer,city,
+    manufacturer,nlp_age_choice,gender,occupation,month,nlp_year_choice]
     # load model
     saved_final_ridge = load_model('Final ridge')
     # Prediction
     new_prediction = predict_model(saved_final_ridge, data=info_df)
-    rating = new_prediction['ReviewRating'][0]
-    st.metric("Predicted Rating: ",rating)
+    rating = new_prediction['Label'][0]
+    st.metric("Predicted Rating is : ",rating)
