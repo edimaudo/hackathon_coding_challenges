@@ -83,18 +83,17 @@ with st.sidebar:
     nlp_city_choice = st.selectbox("City",nlp_retailer_city_list)
     nlp_occupation_choice = st.selectbox("Occupation",nlp_occupation_list)
     nlp_gender_choice = st.selectbox("Gender",nlp_gender_list)
+    nlp_age_choice = st.slider('Age', 18,70 , 1)
 
 clicked = st.button("Generate Rating")
-#if clicked:
-    #info_df = pd.DataFrame(columns = ['RevolvingUtilizationOfUnsecuredLines','age','NumberOfTime30-59DaysPastDueNotWorse',
-    #'DebtRatio','MonthlyIncome','NumberOfOpenCreditLinesAndLoans','NumberOfTimes90DaysLate','NumberRealEstateLoansOrLines',
-    #'NumberOfTime60-89DaysPastDueNotWorse','NumberOfDependents'],index = ['a'])
-    #info_df.loc['a'] = [revolving_credit_choice,age_choice,past_due_30_choice,debt_ratio_choice,monthly_income_choice,
-    #open_credit_choice,past_due_90_choice,real_estate_choice,past_due_60_choice,number_dependent_choice]
+if clicked:
+    info_df = pd.DataFrame(columns = ['ProductCategory','ProductPrice','RetailerName','RetailerCity',
+    'ManufacturerName','UserAge','UserGender','UserOccupation', 'Month','Year'],index = ['a'])
+    info_df.loc['a'] = [nlp_category_choice,nlp_price_choice,nlp_retailer_choice,nlp_city_choice,
+    nlp_manufacturer_choice,nlp_age_choice,nlp_gender_choice,nlp_occupation_choice,nlp_month_choice,nlp_year_choice]
     # load model
-    #saved_final_lgbm = load_model('Final LGBM')
+    saved_final_lr = load_model('Final lr')
     # Prediction
-    #new_prediction = predict_model(saved_final_lgbm, data=info_df)
-    #score = new_prediction['Score'][0]
-    #st.metric("Users score: ",score)
-    #st.write(" ")
+    new_prediction = predict_model(saved_final_lr, data=info_df)
+    rating = new_prediction['ReviewRating'][0]
+    st.metric("Predicted Rating: ",rating)
