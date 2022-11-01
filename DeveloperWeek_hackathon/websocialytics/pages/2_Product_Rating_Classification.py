@@ -30,7 +30,8 @@ def load_data():
 DATA_URL = "CustomerReviews2000.csv"
 df = load_data()
 
-st.header("Product Classification")
+st.header("Product Category Ratings")
+st.write("User can predict the predicted rating of a category")
 
 model_df = df[['ProductCategory','ProductPrice',
                'RetailerName','RetailerCity','RetailerState',
