@@ -1,14 +1,12 @@
-# DeveloperWeek Enterprise 2022 Hackathon
+# About
 
-The world’s largest enterprise challenge-driven based hackathon.
-Join the largest enterprise challenge-driven virtual hackathon, co-located with DeveloperWeek Enterprise 2022! Our hackathons regularly attract over 300+ participants, and we are inviting the international developer community to converge in person & online this year for the DeveloperWeek Enterprise 2022 Hackathon!
-
-October 31 - November 17, 2022
-
-## JUDGING CRITERIA
-**Progress**
-How much progress did you make?
-**Concept**
-Does it solve a real problem?
-**Feasibility**
-Could this become a startup or company?
+WebSocialytics is your fast-growing social media company that
+has a business model similar to yelp. The company focuses on collecting
+customer reviews of different products manufactured by different vendors
+and sold by different retailers in different cities.
+Every review filled out by the customer online and collected and
+maintained by WebSocialytics has the fields listed below and stored in its
+database in the CustomerReviews table.
+Reviews can be used by retailers, manufacturers, and consulting firms
+to create effective output report in order to support the decision
+making process for analytical scenarios similar to the following
