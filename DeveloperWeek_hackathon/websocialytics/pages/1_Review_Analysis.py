@@ -118,7 +118,8 @@ else:
                     st.markdown("**Sentiment analysis**")
                     if (output_sentiment.sentiment.overall > 0):
                         st.write("Positive Sentiment: " + str(output_sentiment.sentiment.overall))
-                    st.write("Negative sentiment: " + str(output_sentiment.sentiment.overall))
+                    else:
+                        st.write("Negative sentiment: " + str(output_sentiment.sentiment.overall))
             
 
             # Document classification 
