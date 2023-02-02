@@ -10,9 +10,11 @@ We cannot wait to see what you come up with and how it will help your fellow dev
 ** REQUIREMENTS **
 
 ** WHAT TO DO **
+
 Submit feedback about hackathons! As a bonus, submit an idea for a new tool or resource to help participants of hackathons. Projects do not have to be working applications! 
 
 ** WHAT TO SUBMIT **
+
 Complete the submission form with your valuable feedback.
 
 ** BONUS **
