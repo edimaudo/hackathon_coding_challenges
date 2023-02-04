@@ -1,4 +1,4 @@
-## Hack Devpost - The hackathon
+## Hack Devpost
 
 Help hackathons get better for everyone
 
