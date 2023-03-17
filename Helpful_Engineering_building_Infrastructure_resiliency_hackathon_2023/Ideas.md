@@ -1,0 +1,144 @@
+# Overview
+Over the last four decades, the prevalence of billion-dollar disasters has increased by a factor of four. Single natural disasters such as Winter Storm Uri in Texas in 2021 can cost almost US$200 billion.
+
+In North America, physical infrastructure resiliency has become a major issue, affecting almost all industries. In the past four decades, 273 natural disasters costing over a billion dollars of damage hit the United States alone. In recent years, cold snaps and winter storms have become increasingly common. Since 2013, the United States has seen over a billion dollars of insured losses come from winter storms alone. Winter storm damages also directly hamper medical and community services, ranging from nursing homes and dialysis centers to hospitals, and thus destroy homes and entire communities in their wake. These cold snaps and winter storms’ impact is most concentrated in the Great Plains area.
+
+North American physical infrastructure resiliency is a significant issue in several industries from water and electricity distribution to telecommunication and transportation. Thus, disadvantaged populations are often disproportionately impacted by these disasters since they are already susceptible to issues in these areas; a winter storm-induced disruption often leaves such people completely without such necessities.
+
+# Challenge
+How can technological solutions improve physical infrastructure challenges caused by winter storms in the Great Plains? Please choose from the following focus areas:
+
+- Utilities distribution, including water and electricity
+- Telecommunication
+- Transportation
+- Healthcare services
+- Emergency facilities
+
+# Judging Criteria
+- Affordability: Meet system needs at minimal costs
+- Efficiency: Optimize assets and reduce delivery losses 
+- Flexibility: Handle dynamic supply and demand and accommodate diverse technologies 
+- Reliability: Consistently deliver high-quality power 
+- Resiliency: Maintain critical functions/quick recovery
+
+# PROJECT AND SUBMISSION REQUIREMENTS
+Submissions may take the form of a 3-5 minute video and a link to a slide deck. All code and project files must be committed to Github.
+
+### What are the Great Plains of the United States?
+The definition of the Great Plains is debated. Typically, it refers to the territory from Montana to Minnesota and down to New Mexico and Texas. In this study, a 12-state area is used, including Colorado, Iowa, Kansas, Minnesota, Montana, Nebraska, New Mexico, North Dakota, Oklahoma, South Dakota, Texas, and Wyoming.
+
+### Project URL
+- https://helpful-q1-2023-infra.devpost.com/?ref_feature=challenge&ref_medium=your-open-hackathons&ref_content=Upcoming
+
+### Ideas
+- Transportation for people in need
+ - E.g. People who have an emergency, groceries
+  - A app that people can log into and select the type of help they need
+- Improving bridge inspection using using camera
+ - 
+- Ability to see if there is a power outage in an area for a utility provider
+- Lack of data and good information for people in need
+
+### Useful links
+- https://planningforhazards.com/severe-winter-storm
+- https://www.preventionweb.net/news/converging-toward-solutions-grand-challenges
+- https://www.c2es.org/2021/02/winter-weather-in-texas-and-the-importance-of-infrastructure-resilience-investment/
+- https://www.npstc.org/download.jsp?tableId=37&column=217&id=3277&file=OCIA_Winter_Storms_and_Critical_Infrastructure_141215.pdf
+- https://oklahomawatch.org/2023/02/02/are-oklahomas-utilities-ready-for-the-next-major-winter-storm/
+- https://www.scientificamerican.com/article/a-better-eye-on-the-storm/
+- https://www.asce.org/publications-and-news/civil-engineering-source/article/2022/02/15/how-to-get-electric-reliability-and-resilience-back-in-balance-in-texas
+- https://www.c2es.org/document/resilience-strategies-for-power-outages/
+https://www.dallasfed.org/research/economics/2021/0415
+https://www.forbes.com/sites/thebakersinstitute/2021/02/19/winterization-and-the-texas-blackout-fail-to-prepare-prepare-to-fail/?sh=5980d5717c83
+https://www.elementalcoatings.com/news/improving-grid-resiliency-through-effective-asset-winterization
+https://www.sparkcognition.com/how-to-winterize-your-power-plant-with-ai/
+https://www.bv.com/perspectives/five-steps-to-affordable-grid-resiliency
+https://sustainabilitycommunity.springernature.com/posts/risk-of-winterization-cost-explains-unpreparedness-of-texan-power-system-during-winter-storm-uri
+
+### Notes from Elaine
+Bridge Monitoring
+Per U.S. Department of Transportation, there are 600,000 highway bridges in the U.S.A.;  1 in 13 are rated as being in poor condition
+Project Idea #1 - Affordable Cameras on Bridges to Monitor Cracks/Damage
+- Currently, some highway bridges have tools that are used to measure cracks; could cameras be added to these tools to make them more efficient?
+- Cost of cameras (and the power they require) has dropped over the years, likely making this more feasible now than it would have been 10 years ago
+- Possible Challenge - Frame Rate of Camera  
+	- One study had a camera set-up to measure structure movement, but because the frame-rate of the camera was relatively slow, there were concerns that movement/measurements were being missed
+- Possible Challenge - Cost Combined with Amount of Cameras
+	- A bridge would require multiple cameras in order to be accurately monitored, which would increase the price
+
+Project Idea #2 - Technical Solution to Make Using Sensors on Bridges (to Measure Temperature Changes) More Efficient
+This is important because drastic temperature changes (like those that may occur in a blizzard) negatively impact the structure of a bridge
+Current situation includes
+Being able to accurately measure the temperature on all sides of a bridge (north facing side will often differ from south facing side)
+Temperature sensors may not be able to be drilled into bridge (one bridge had to use adhesive sensors) and this resulted in less accurate measurements
+Possible Challenge - Figuring out a solution that is scalable and more nuanced than simply getting more expensive sensors
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7916380/
+https://highways.dot.gov/public-roads/winter-2019/toward-self-diagnosing-bridges
+https://www.transportation.gov/testimony/highway-bridge-inspections
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8271940/
+https://journals.sagepub.com/doi/10.1177/1461348418815406
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7916380/
+https://www.encardio.com/bridge-monitoring
+https://www.hbm.com/en/6826/bridge-monitoring-an-example-from-hbm/
+https://www.mistrasgroup.com/how-we-help/monitoring/bridges/
+https://www.fprimec.com/structural-health-monitoring-for-bridge-structures/
+https://www.tandfonline.com/doi/full/10.1080/15732479.2019.1670215
+https://www.johnweeks.com/river_missouri/pages/nd_mo_09.html
+https://en.wikipedia.org/wiki/I-35W_Mississippi_River_bridge
+
+
+
+Bridge Project
+ETD Bridge over Green River
+https://en.wikipedia.org/wiki/ETD_Bridge_over_Green_River
+
+Studies reference Wisconsin Highway 35 Bridge, which was a steel girder bridge
+Similar bridge in Great Plains is Lewis and Clark Bridge in North Dakota
+https://www.johnweeks.com/river_missouri/pages/nd_mo_09.html
+https://www.dot.nd.gov/projects/williston/lc/
+https://highways.dot.gov/public-roads/winter-2021/improving-bridge-preservation-uhpc
+
+
+
+### Focus areas
+- Ability to see if there is a power outage in an area for a utility provider
+- Improving bridge inspection using using camera
+
+### Deck Design
+
+Agenda
+Overview
+Team
+
+Problem 
+Objective
+
+Recommendations
+Benefits
+
+Next Steps
+Summary
+
+Issue/Analysis - Elaine + me supporting
+Solution + Resolution + How it meets judging criteria Elaine + me suupporting
+
+
+Done
+Title
+
+
+### Devpost submission
+
+Project Name
+
+Elevator pitch
+
+Project Detail
+
+Built With
+Design Thinking
+
+Try it out link - Google slides link
+
+Video demo link
+
