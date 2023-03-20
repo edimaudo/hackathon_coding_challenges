@@ -8,18 +8,17 @@ North American physical infrastructure resiliency is a significant issue in seve
 # Challenge
 How can technological solutions improve physical infrastructure challenges caused by winter storms in the Great Plains? Please choose from the following focus areas:
 
-- Utilities distribution, including water and electricity
-- Telecommunication
-- Transportation
-- Healthcare services
-- Emergency facilities
+- Repurposing Batteries
+- Island Grid Resilience
+- Survival Kit 
 
 # Judging Criteria
-- Affordability: Meet system needs at minimal costs
-- Efficiency: Optimize assets and reduce delivery losses 
-- Flexibility: Handle dynamic supply and demand and accommodate diverse technologies 
-- Reliability: Consistently deliver high-quality power 
-- Resiliency: Maintain critical functions/quick recovery
+Accessibility
+Should be made from easily/readily available materials and affordable to make
+Versatility
+Usability in a multitude of situations and in combination with other devices or technologies
+Reproducibility
+Quality of documentation so that the design and concept can be easily sent to areas in need and improved as needed
 
 # PROJECT AND SUBMISSION REQUIREMENTS
 Submissions may take the form of a 3-5 minute video and a link to a slide deck. All code and project files must be committed to Github.
@@ -38,22 +37,6 @@ The definition of the Great Plains is debated. Typically, it refers to the terri
  - 
 - Ability to see if there is a power outage in an area for a utility provider
 - Lack of data and good information for people in need
-
-### Useful links
-- https://planningforhazards.com/severe-winter-storm
-- https://www.preventionweb.net/news/converging-toward-solutions-grand-challenges
-- https://www.c2es.org/2021/02/winter-weather-in-texas-and-the-importance-of-infrastructure-resilience-investment/
-- https://www.npstc.org/download.jsp?tableId=37&column=217&id=3277&file=OCIA_Winter_Storms_and_Critical_Infrastructure_141215.pdf
-- https://oklahomawatch.org/2023/02/02/are-oklahomas-utilities-ready-for-the-next-major-winter-storm/
-- https://www.scientificamerican.com/article/a-better-eye-on-the-storm/
-- https://www.asce.org/publications-and-news/civil-engineering-source/article/2022/02/15/how-to-get-electric-reliability-and-resilience-back-in-balance-in-texas
-- https://www.c2es.org/document/resilience-strategies-for-power-outages/
-https://www.dallasfed.org/research/economics/2021/0415
-https://www.forbes.com/sites/thebakersinstitute/2021/02/19/winterization-and-the-texas-blackout-fail-to-prepare-prepare-to-fail/?sh=5980d5717c83
-https://www.elementalcoatings.com/news/improving-grid-resiliency-through-effective-asset-winterization
-https://www.sparkcognition.com/how-to-winterize-your-power-plant-with-ai/
-https://www.bv.com/perspectives/five-steps-to-affordable-grid-resiliency
-https://sustainabilitycommunity.springernature.com/posts/risk-of-winterization-cost-explains-unpreparedness-of-texan-power-system-during-winter-storm-uri
 
 ### Notes from Elaine
 Bridge Monitoring
@@ -86,8 +69,6 @@ https://www.tandfonline.com/doi/full/10.1080/15732479.2019.1670215
 https://www.johnweeks.com/river_missouri/pages/nd_mo_09.html
 https://en.wikipedia.org/wiki/I-35W_Mississippi_River_bridge
 
-
-
 Bridge Project
 ETD Bridge over Green River
 https://en.wikipedia.org/wiki/ETD_Bridge_over_Green_River
@@ -98,21 +79,63 @@ https://www.johnweeks.com/river_missouri/pages/nd_mo_09.html
 https://www.dot.nd.gov/projects/williston/lc/
 https://highways.dot.gov/public-roads/winter-2021/improving-bridge-preservation-uhpc
 
+### Useful links
+- https://planningforhazards.com/severe-winter-storm
+- https://www.preventionweb.net/news/converging-toward-solutions-grand-challenges
+- https://www.c2es.org/2021/02/winter-weather-in-texas-and-the-importance-of-infrastructure-resilience-investment/
+- https://www.npstc.org/download.jsp?tableId=37&column=217&id=3277&file=OCIA_Winter_Storms_and_Critical_Infrastructure_141215.pdf
+- https://oklahomawatch.org/2023/02/02/are-oklahomas-utilities-ready-for-the-next-major-winter-storm/
+- https://www.scientificamerican.com/article/a-better-eye-on-the-storm/
+- https://www.asce.org/publications-and-news/civil-engineering-source/article/2022/02/15/how-to-get-electric-reliability-and-resilience-back-in-balance-in-texas
+- https://www.c2es.org/document/resilience-strategies-for-power-outages/
+https://www.dallasfed.org/research/economics/2021/0415
+https://www.forbes.com/sites/thebakersinstitute/2021/02/19/winterization-and-the-texas-blackout-fail-to-prepare-prepare-to-fail/?sh=5980d5717c83
+https://www.elementalcoatings.com/news/improving-grid-resiliency-through-effective-asset-winterization
+https://www.sparkcognition.com/how-to-winterize-your-power-plant-with-ai/
+https://www.bv.com/perspectives/five-steps-to-affordable-grid-resiliency
+https://sustainabilitycommunity.springernature.com/posts/risk-of-winterization-cost-explains-unpreparedness-of-texan-power-system-during-winter-storm-uri
+
+
+
 
 
 ### Focus areas
 - Ability to see if there is a power outage in an area for a utility provider
 - Improving bridge inspection using using camera
+- micro grid
+
+### MicroGrid
+https://rmi.org/how-the-storm-ravaged-bahamas-can-be-a-model-for-resilient-energy/
+https://barbaraiot.com/blog/digital-twins-of-a-smart-grid
+https://blog.bentley.com/digital-twins-for-a-sustainable-grid/
+https://ieeexplore.ieee.org/document/9663369
+https://www.microgridknowledge.com/resources/microgrid-perspectives/article/11428082/is-digital-twin-technology-a-game-changer-for-community-microgrids
+
+Using chatGPT3
+
+Prompt
+How can digital twins be used in microgrids?
+
+
+Output
+Digital twins can be used in microgrids to improve their design, operation, and maintenance. A digital twin is a virtual representation of a physical asset, such as a microgrid. It can be used to simulate the behavior of the microgrid in real-time, enabling operators to optimize its performance and make informed decisions.
+Here are some ways digital twins can be used in microgrids:
+Design optimization: Digital twins can be used to optimize the design of a microgrid before it is built. By simulating different configurations and operating scenarios, designers can identify the best combination of components and control strategies to achieve the desired performance.
+Real-time monitoring and control: Once a microgrid is in operation, a digital twin can be used to monitor its performance in real-time. This enables operators to identify and diagnose issues quickly and make adjustments to optimize the microgrid's performance.
+Predictive maintenance: Digital twins can be used to predict when maintenance is required on the components of a microgrid. By monitoring the performance of the components in real-time, the digital twin can identify when they are likely to fail, allowing maintenance to be scheduled before a failure occurs.
+Testing and validation: Digital twins can be used to test and validate new control strategies and technologies before they are implemented in a real microgrid. This reduces the risk of failures and improves the overall performance of the microgrid.
+Overall, digital twins can help improve the efficiency, reliability, and performance of microgrids, making them an important tool for the development and operation of distributed energy systems.
 
 ### Deck Design
 
+Title
 Agenda
-Overview
 Team
-
+Overview
 Problem 
 Objective
 
+to-do
 Recommendations
 Benefits
 
@@ -122,9 +145,8 @@ Summary
 Issue/Analysis - Elaine + me supporting
 Solution + Resolution + How it meets judging criteria Elaine + me suupporting
 
+Smart grid technology: Implementing smart grid technology can help utilities detect and respond to power outages more quickly, minimizing the impact of heavy winds on the electrical grid.
 
-Done
-Title
 
 
 ### Devpost submission
@@ -141,4 +163,6 @@ Design Thinking
 Try it out link - Google slides link
 
 Video demo link
+
+Key links
 
