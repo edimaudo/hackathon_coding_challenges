@@ -134,20 +134,12 @@ Team
 Overview
 Problem 
 Objective
-
-to-do
-Recommendations
 Benefits
-
+Recommendations
 Next Steps
 Summary
-
 Issue/Analysis - Elaine + me supporting
 Solution + Resolution + How it meets judging criteria Elaine + me suupporting
-
-Smart grid technology: Implementing smart grid technology can help utilities detect and respond to power outages more quickly, minimizing the impact of heavy winds on the electrical grid.
-
-
 
 ### Devpost submission
 
@@ -166,3 +158,50 @@ Video demo link
 
 Key links
 
+#3-5 mins
+Write script for the deck - Tue - done
+Do deck voice-over - Tue/Wed
+
+Hello, 
+
+I would like to walk you through our project for the 2023 Helpful Engineering Hackathon.
+
+My name is Edima and my team-mate is Elaine.
+
+Let start with the overview
+The caribbean region is grappling with a number of challenges
+- Effects of Covid-19 on the economy 
+  Negatively impact the tourism market
+- Impacts of more frequent and adverse weather conditions (Dorian 2019 in the Bahamas)
+  - Caused wide spread damage
+- Ineffective grid infrastructure 
+Very low electrification rates in places like rural Haiti
+
+Key area we are focusing on 
+Focusing on grid infrastructure as it is highly impacted by climate change
+
+The objective of the challenge is 
+How caribbean islands can build resilient grid infrastructure and what other approach can improve it 
+
+Analysis
+Countries like the Bahamas are moving to microgrids to decentralize their power supply and make them less vulnerable to hurricanes. 
+
+Solution
+Incorporating microgrids with digital twins allows for better economical analysis of the grid, operations management, grid configuration simulation and predicting maintenance needs.
+
+Recommendations
+Deploying micro-grids
+Ensuring stakeholder collaboration
+Leveraging digital twins
+
+Benefits
+The key benefits of deploying this solution are
+cost savings
+increased grid efficiency
+Reduced downtime
+
+Next steps
+Shows a tenative timeline for deploying a micro grid built with digital twins
+
+End
+If there are questions we will be happy to answer them.  Thank you very much.
