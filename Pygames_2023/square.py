@@ -16,11 +16,39 @@ from pygame.locals import (
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
+# Define a Player object by extending pygame.sprite.Sprite
+# The surface drawn on the screen is now an attribute of 'player'
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Player, self).__init__()
+        self.surf = pygame.Surface((75, 25))
+        self.surf.fill((0, 0, 0))
+        self.rect = self.surf.get_rect()
+
+# Initialize pygame
+pygame.init()
+
 # Create the screen object
 # The size is determined by the constant SCREEN_WIDTH and SCREEN_HEIGHT
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-pygame.init()
+# Instantiate player. Right now, this is just a rectangle.
+player = Player()
+
+# set the pygame window name
+pygame.display.set_caption('The Square')
+ 
+# create a font object.
+# 1st parameter is the font file
+# which is present in pygame.
+# 2nd parameter is size of the font
+font = pygame.font.Font('freesansbold.ttf', 32)
+ 
+# create a text surface object,
+# on which text is drawn on it.
+text = font.render('Use the arrow key to get the gold coin', True, green, blue) # update
+ 
+
 
 # Variable to keep the main loop running
 running = True
@@ -46,10 +74,6 @@ while running:
         # Create a surface to pass in a
         surf = pygame.Surface((50,50)) # this will be randomely generated
 
-        # Give the surface a color to separate it fromt he background
-        surf.fill((0,0,0))
-        rect=surf.get_rect()
-        # This line says "Draw surf onto the screen at the center"
         # Put the center of surf at the center of the display
         surf_center = (
             (SCREEN_WIDTH-surf.get_width())/2,
@@ -57,8 +81,9 @@ while running:
         ) ## change this to randomely generate a position with a certain range
 
         # Draw surf at the new coordinates
-        screen.blit(surf, surf_center)
+        screen.blit(player.surf, surf_center)
         pygame.display.flip()
+        #screen.blit(text, textRect)
 
 
 pygame.quit()
