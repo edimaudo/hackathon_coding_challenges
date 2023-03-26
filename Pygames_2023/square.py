@@ -40,5 +40,25 @@ while running:
         elif event.type == QUIT:
             running = False
 
+        ## Fill the screen with color white
+        screen.fill((255,255,255)) ## change this to a shade of blu
+
+        # Create a surface to pass in a
+        surf = pygame.Surface((50,50)) # this will be randomely generated
+
+        # Give the surface a color to separate it fromt he background
+        surf.fill((0,0,0))
+        rect=surf.get_rect()
+        # This line says "Draw surf onto the screen at the center"
+        # Put the center of surf at the center of the display
+        surf_center = (
+            (SCREEN_WIDTH-surf.get_width())/2,
+            (SCREEN_HEIGHT-surf.get_height())/2
+        ) ## change this to randomely generate a position with a certain range
+
+        # Draw surf at the new coordinates
+        screen.blit(surf, surf_center)
+        pygame.display.flip()
+
 
 pygame.quit()
