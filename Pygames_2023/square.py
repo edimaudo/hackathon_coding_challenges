@@ -38,17 +38,17 @@ player = Player()
 # set the pygame window name
 pygame.display.set_caption('The Square')
  
-# create a font object.
-# 1st parameter is the font file
-# which is present in pygame.
-# 2nd parameter is size of the font
-font = pygame.font.Font('freesansbold.ttf', 32)
- 
-# create a text surface object,
-# on which text is drawn on it.
-text = font.render('Use the arrow key to get the gold coin', True, green, blue) # update
- 
+# Create game text font object.
+game_text_font = pygame.font.Font('freesansbold.ttf', 32)
 
+# game font color
+game_text_font_color = (0, 0, 128)
+ 
+# create a game text surface object,
+game_text = game_text_font.render('Use the arrow key to get the gold coin', True,game_text_font_color) # update
+
+# game text position
+game_font_position = (20,20)
 
 # Variable to keep the main loop running
 running = True
@@ -82,8 +82,9 @@ while running:
 
         # Draw surf at the new coordinates
         screen.blit(player.surf, surf_center)
+        screen.blit(game_text,game_font_position)
         pygame.display.flip()
-        #screen.blit(text, textRect)
+        
 
 
 pygame.quit()
