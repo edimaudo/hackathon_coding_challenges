@@ -47,4 +47,12 @@ gold_box_color = (255, 215, 0)
 gold_box_x = random.randint(border_thickness, screen_width - border_thickness - gold_box_size)
 gold_box_y = random.randint(screen_height - border_height + border_thickness, screen_height - gold_box_size)
 
+# Set up the black box
+black_box_size = 10
+black_box_color = (0, 0, 0)
+black_box_x = random.randint(border_thickness, screen_width - border_thickness - black_box_size)
+black_box_y = random.randint(screen_height - border_height + border_thickness, screen_height - black_box_size)
+black_box_direction = random.choice(["left", "right", "up", "down"])
+black_box_speed = 2
+
 pygame.quit()
