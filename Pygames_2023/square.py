@@ -35,10 +35,16 @@ border_height = 150
 border_thickness = 10
 border_color = (0, 0, 0)
 
-# Set the dimensions for the white rectangular block
+# Set the dimensions for the white rectangular block & initial position
 white_box_size = 10
 white_box_color = (255, 255, 255)
 white_box_x = border_thickness
 white_box_y = screen_height - border_height + border_thickness
+
+# Set up the gold box
+gold_box_size = 10
+gold_box_color = (255, 215, 0)
+gold_box_x = random.randint(border_thickness, screen_width - border_thickness - gold_box_size)
+gold_box_y = random.randint(screen_height - border_height + border_thickness, screen_height - gold_box_size)
 
 pygame.quit()
