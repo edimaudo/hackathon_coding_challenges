@@ -59,4 +59,11 @@ black_box_speed = 2
 pygame.mixer.music.load("background_music.mp3")
 collision_sound = pygame.mixer.Sound("collision_sound.wav")
 
+# Start the game
+#pygame.mixer.music.play(-1)
+#game_started = False
+
+# Set up the clock
+#clock = pygame.time.Clock()
+
 pygame.quit()
