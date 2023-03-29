@@ -55,4 +55,8 @@ black_box_y = random.randint(screen_height - border_height + border_thickness, s
 black_box_direction = random.choice(["left", "right", "up", "down"])
 black_box_speed = 2
 
+# Load the sounds
+pygame.mixer.music.load("background_music.mp3")
+collision_sound = pygame.mixer.Sound("collision_sound.wav")
+
 pygame.quit()
