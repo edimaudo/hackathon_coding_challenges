@@ -58,10 +58,17 @@ black_box_speed = 2
 generate_box_interval = 3000
 last_generated_time = pygame.time.get_ticks()
 
+# Set up the score
+score = 0
+score_font = pygame.font.Font(None, 36)
+score_color = (0, 0, 0)
+score_x = screen_width - 100
+score_y = 10
+
 # Load the sounds
-background_sound = pygame.mixer.music.load("background_music.mp3")
-collision_sound = pygame.mixer.Sound("collision_sound.wav")
-# Load the sounds
+#background_sound = pygame.mixer.music.load("background_music.mp3")
+#collision_sound = pygame.mixer.Sound("collision_sound.wav")
+
 #background_sound = pygame.mixer.Sound("background.wav")
 #collision_sound = pygame.mixer.Sound("collision.wav")
 
