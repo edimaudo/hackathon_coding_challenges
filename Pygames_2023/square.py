@@ -20,14 +20,14 @@ screen.fill(WHITE)
 score_x = screen_width - 100
 score_y = 50
 # Create the score text
-score_text = font.render("Score: 0", True, (0, 0, 0))
+#score_text = pygame.font.render("Score: 0", True, (0, 0, 0))
 
 # Set up the instructions
-instruction_font = pygame.font.Font(None, 24)
-instruction_color = (0, 0, 0)
-instruction_text = "Use the arrow keys to get the gold coin"
-instruction_x = (screen_width - instruction_font.size(instruction_text)[0]) // 2
-instruction_y = screen_height - instruction_font.size(instruction_text)[1] - 10
+#instruction_text = "Use the arrow keys to get the gold coin"
+#instruction_color = (0, 0, 0)
+#instruction_font = font.render(instruction_text, True, instruction_color)
+#instruction_x = (screen_width - instruction_font.size(instruction_text)[0]) // 2
+#instruction_y = screen_height - instruction_font.size(instruction_text)[1] - 10
 
 # Set the dimensions for the black rectangular border
 border_width = 200
@@ -54,10 +54,16 @@ black_box_x = random.randint(border_thickness, screen_width - border_thickness -
 black_box_y = random.randint(screen_height - border_height + border_thickness, screen_height - black_box_size)
 black_box_direction = random.choice(["left", "right", "up", "down"])
 black_box_speed = 2
+# Set the time interval for generating the black box
+generate_box_interval = 3000
+last_generated_time = pygame.time.get_ticks()
 
 # Load the sounds
-pygame.mixer.music.load("background_music.mp3")
+background_sound = pygame.mixer.music.load("background_music.mp3")
 collision_sound = pygame.mixer.Sound("collision_sound.wav")
+# Load the sounds
+#background_sound = pygame.mixer.Sound("background.wav")
+#collision_sound = pygame.mixer.Sound("collision.wav")
 
 # Start the game
 #pygame.mixer.music.play(-1)
