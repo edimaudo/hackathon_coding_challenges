@@ -5,21 +5,24 @@ import plotly.express as px
 import datetime
 import os, os.path
 import warnings
+from utils import * 
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 st.set_page_config( 
-    page_title="Toronto Crime Analysis App",
+    page_title=APP_NAME,
 )
-st.title("Toronto Crime Analysis App")
+st.title(APP_NAME)
 
 st.header("Overview")
 
 # Load data
-@st.cache(allow_output_mutation=True)
-def load_data():
-    DATA_URL = "Major_Crime_Indicators_Open_Data.xlsx"
-    data = pd.read_excel(DATA_URL)
+@st.cache_data
+def load_data(DATA_URL):
+    data = pd.read_csv(DATA_URL)
     return data
-df = load_data()
+
+DATA_URL = "Major_Crime_Indicators_Open_Data.csv"    
+df = load_data(DATA_URL)
 
 
 # Data munging
@@ -52,7 +55,7 @@ PREMISES_TYPE.sort()
 
 
 with st.container():
-    col1, col2 = col1, col2 = st.columns([1, 3])
+    col1, col2 = st.columns([1, 3])
     # with col1:
     #     year_options = st.multiselect('Year',YEAR)
     # with col2:
