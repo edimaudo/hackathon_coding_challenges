@@ -8,6 +8,6 @@ The application has 4 sections:
 - **Crime Overview**
 - **Crime Exploration**
 - **Neighborhood Crime Exploration**
-- **Neighborhood Crime Comparison** 
+- **Neighborhood Crime Predictor** 
 """)
 st.markdown('It was inspired by this application [TPS Crime Statistics - Major Crime Indicators](https://data.torontopolice.on.ca/pages/major-crime-indicators)')
