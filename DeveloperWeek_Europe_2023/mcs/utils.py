@@ -50,6 +50,10 @@ dow_dict = {'Monday':1,'Tuesday':2,'Wednesday':3, 'Thursday':4, 'Friday':5, 'Sat
 DAY_OF_WEEK = DAY_OF_WEEK.sort_values('DOW', key = lambda x : x.apply (lambda x : dow_dict[x]))
 DAY_OF_WEEK = DAY_OF_WEEK['DOW'].values.tolist()
 
+HOUR=  df['OCC_HOUR'].unique()
+HOUR  = HOUR.astype('int')
+HOUR.sort()
+
 MCI_CATEGORY = df['MCI_CATEGORY'].unique()
 MCI_CATEGORY  = MCI_CATEGORY.astype('str')
 MCI_CATEGORY.sort()
@@ -61,3 +65,5 @@ NEIGHBORHOOD.sort()
 PREMISES_TYPE = df['PREMISES_TYPE'].unique()
 PREMISES_TYPE  = PREMISES_TYPE.astype('str')
 PREMISES_TYPE.sort()
+
+ 
