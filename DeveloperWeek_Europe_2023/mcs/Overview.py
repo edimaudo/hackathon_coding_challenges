@@ -1,28 +1,16 @@
-# Libraries
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-import datetime
-import os, os.path
-import warnings
 from utils import * 
 
-warnings.simplefilter(action='ignore', category=FutureWarning)
-st.set_page_config( 
-    page_title=APP_NAME,
-)
 st.title(APP_NAME)
+st.header(OVERVIEW_HEADER )
 
-st.header("Overview")
+#MONTH
+#YEAR
+#DAY OF WEEK
+#MCI CATEGORY
+#NEIGHBORHOOD
+#PREMISE TYPE
 
-# Load data
-@st.cache_data
-def load_data(DATA_URL):
-    data = pd.read_csv(DATA_URL)
-    return data
 
-DATA_URL = "Major_Crime_Indicators_Open_Data.csv"    
-df = load_data(DATA_URL)
 
 
 # Data munging
@@ -65,7 +53,7 @@ with st.expander("Filters"):
     mci_options = st.multiselect('Crime Type',MCI_CATEGORY,default=MCI_CATEGORY)
     premise_options = st.multiselect('Premises Type',PREMISES_TYPE,default =PREMISES_TYPE)
         
-with container():
+#with container():
     
 
 
@@ -75,3 +63,4 @@ with container():
 #Total MCI BY HOUR GRAPH
 # Crime type heatmap
 #Properties heatmap
+
