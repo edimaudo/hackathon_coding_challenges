@@ -10,9 +10,11 @@ import pickle
 from pycaret.classification import *
 import datetime
 
+# Dashboard text
 APP_NAME = 'Toronto Crime Analysis App'
 OVERVIEW_HEADER = 'Overview'
 PREDICTION_NAME = 'Crime Type Prediction'
+APP_FILTERS = 'Filters'
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 st.set_page_config( 
