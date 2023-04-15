@@ -1,4 +1,18 @@
 # Libraries
-import streamlit as st
+from utils import * 
 
-st.title("Toronto Crime Analysis App")
+st.title(APP_NAME)
+
+
+# Year drop down
+# neighboorhood dropdown
+# Month dropdown
+# day of week dropdown
+# crime type dropdown
+
+# MCI crime breakdown 
+# premise trend
+# HEAT MAP BY CRIME TYPE table
+# HEAT MAP FOR MCI 
+# better than worse than avg in Toronto
+# socio-economic profile
