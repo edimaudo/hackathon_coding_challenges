@@ -15,6 +15,7 @@ APP_NAME = 'Toronto Crime Analysis App'
 OVERVIEW_HEADER = 'Overview'
 PREDICTION_NAME_HEADER = 'Crime Type Prediction'
 CRIME_NAME_HEADER = 'Crime Exploration'
+NEIGHBOUR_NAME_HEADER = 'Neighbourhood Exploration'
 APP_FILTERS = 'Filters'
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
