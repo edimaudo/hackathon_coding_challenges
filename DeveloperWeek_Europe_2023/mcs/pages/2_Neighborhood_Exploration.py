@@ -25,21 +25,32 @@ with st.expander(APP_FILTERS):
 col1, col2 = st.columns([3, 1]) 
 with col2:
     overview_df = df[(df['OCC_YEAR'].isin(year_options)) & (df['OCC_MONTH'].isin(month_options)) & (df['OCC_DOW'].isin(dow_options)) & (df['MCI_CATEGORY'].isin(mci_options)) & (df['PREMISES_TYPE'].isin(premises_options)) & (df['NEIGHBOURHOOD_158'] == neighourhood_options)] 
-
-with col1:
-    neighour_df = neighbourhood_df[(df['Neighbourhood'] == neighourhood_options)]
-
-    # Socio economic profile
-    # Neighborhood Name
-    #Businesses	
-    #Child Care Spaces	
-    #Debt Risk Score	
-    #Home Prices	
-    #Local Employment	
-    #Social Assistance Recipients
-
-# MCI crime breakdown 
+    # MCI crime breakdown 
 # premise trend
 # HEAT MAP BY CRIME TYPE table
 # HEAT MAP FOR MCI 
-# socio-economic profile
+
+with col1:
+    top_container = st.container()
+    bottom_container = st.container()
+    neighour_df = neighbourhood_df[(neighbourhood_df['Neighbourhood'] == neighourhood_options)]
+    st.subheader("Socio economic Profile")
+    st.metric("Neighborhood Name",0)
+    col3, col4,col5 = st.columns(3)
+    with top_container:
+        with col3:
+            st.metric("No. of Businesses",0)
+        with col4:
+            st.metric("No. of Child Care Spaces",0)
+        with col5:
+            st.metric("Debt Risk Score",0)
+    col6,col7, col8 = st.columns(3)
+    with bottom_container:
+        with col6:
+            st.metric("Home Prices",0)
+        with col7:
+            st.metric("Local Employment",0)
+        with col8:
+            st.metric("No. of Social Assistance Recipients",0)
+
+
