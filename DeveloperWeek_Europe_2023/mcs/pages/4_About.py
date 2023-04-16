@@ -6,8 +6,7 @@ st.markdown('This app provides insights into crime trends occurring in Toronto, 
 st.markdown("""
 The application has 4 sections:
 - **Crime Overview**
-- **Crime Exploration**
-- **Neighbourhood Crime Exploration**
-- **Neighbourhood Crime Predictor** 
+- **Crime Type Exploration**
+- **Neighbourhood Exploration**
+- **Crime Predictor** 
 """)
-st.markdown('It was inspired by this application [TPS Crime Statistics - Major Crime Indicators](https://data.torontopolice.on.ca/pages/major-crime-indicators)')
