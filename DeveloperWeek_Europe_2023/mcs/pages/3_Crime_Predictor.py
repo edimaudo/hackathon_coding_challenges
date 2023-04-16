@@ -1,8 +1,7 @@
 # Libraries
 from utils import * 
 st.title(APP_NAME)
-
-st.header("Crime Type Prediction")
+st.header(PREDICTION_NAME)
 
 col1, col2 = st.columns([3, 1]) 
 with col2:
