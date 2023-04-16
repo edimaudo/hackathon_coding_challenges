@@ -14,6 +14,7 @@ import datetime
 APP_NAME = 'Toronto Crime Analysis App'
 OVERVIEW_HEADER = 'Overview'
 PREDICTION_NAME_HEADER = 'Crime Type Prediction'
+CRIME_NAME_HEADER = 'Crime Exploration'
 APP_FILTERS = 'Filters'
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -53,6 +54,10 @@ DAY_OF_WEEK = DAY_OF_WEEK['DOW'].values.tolist()
 HOUR=  df['OCC_HOUR'].unique()
 HOUR  = HOUR.astype('int')
 HOUR.sort()
+
+DAY =  df['OCC_DAY'].unique()
+DAY  = DAY.astype('int')
+DAY.sort()
 
 MCI_CATEGORY = df['MCI_CATEGORY'].unique()
 MCI_CATEGORY  = MCI_CATEGORY.astype('str')
