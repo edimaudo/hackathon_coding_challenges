@@ -21,13 +21,25 @@ with st.expander(APP_FILTERS):
     dow_options = st.multiselect('Day of Week',DAY_OF_WEEK,default=DAY_OF_WEEK)
     mci_options = st.multiselect('Crime Type',MCI_CATEGORY,default=MCI_CATEGORY)
     premises_options = st.multiselect('Premises Type',PREMISES_TYPE,default=PREMISES_TYPE)
-    
-    overview_df = df[(df['OCC_YEAR'].isin(year_options)) & (df['OCC_MONTH'].isin(month_options)) & (df['OCC_DOW'].isin(dow_options)) & 
-    (df['MCI_CATEGORY'].isin(mci_options)) & (df['PREMISES_TYPE'].isin(premises_options))] 
+
+col1, col2 = st.columns([3, 1]) 
+with col2:
+    overview_df = df[(df['OCC_YEAR'].isin(year_options)) & (df['OCC_MONTH'].isin(month_options)) & (df['OCC_DOW'].isin(dow_options)) & (df['MCI_CATEGORY'].isin(mci_options)) & (df['PREMISES_TYPE'].isin(premises_options)) & (df['NEIGHBOURHOOD_158'] == neighourhood_options)] 
+
+with col1:
+    neighour_df = neighbourhood_df[(df['Neighbourhood'] == neighourhood_options)]
+
+    # Socio economic profile
+    # Neighborhood Name
+    #Businesses	
+    #Child Care Spaces	
+    #Debt Risk Score	
+    #Home Prices	
+    #Local Employment	
+    #Social Assistance Recipients
 
 # MCI crime breakdown 
 # premise trend
 # HEAT MAP BY CRIME TYPE table
 # HEAT MAP FOR MCI 
-# better than worse than avg in Toronto
 # socio-economic profile
