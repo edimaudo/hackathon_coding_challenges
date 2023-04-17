@@ -26,7 +26,7 @@ with st.container():
     top_container = st.container()
     bottom_container = st.container()
     neighour_df = neighbourhood_df[(neighbourhood_df['Neighbourhood'] == neighourhood_options)]
-    st.subheader("Socio economic Profile")
+    st.subheader("Socio economic Profile*")
     st.metric("Neighborhood Name",neighourhood_options)
     col3, col4,col5 = st.columns(3)
     with top_container:
@@ -44,6 +44,7 @@ with st.container():
             st.metric("Local Employment",neighour_df['Local Employment'])
         with col8:
             st.metric("No. of Social Assistance Recipients",neighour_df['Social Assistance Recipients'])
+    st.markdown("*" "Information as of 2011")
 
 with st.container():
     overview_df = df[(df['OCC_YEAR'].isin(year_options)) & (df['OCC_MONTH'].isin(month_options)) & (df['OCC_DOW'].isin(dow_options)) & (df['MCI_CATEGORY'].isin(mci_options)) & (df['PREMISES_TYPE'].isin(premises_options)) & (df['NEIGHBOURHOOD_158'] == neighourhood_options)] 
