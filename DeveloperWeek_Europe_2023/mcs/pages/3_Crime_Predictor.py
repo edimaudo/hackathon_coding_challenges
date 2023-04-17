@@ -1,7 +1,6 @@
 # Libraries
 from utils import * 
 st.title(APP_NAME)
-st.header(PREDICTION_NAME_HEADER)
 
 col1, col2 = st.columns([3, 1]) 
 with col2:
@@ -11,10 +10,10 @@ with col2:
         dow_options = st.selectbox('Day of Week',DAY_OF_WEEK)
         hour_options = st.selectbox('Hour',HOUR)
         premises_options = st.selectbox('Premises Type',PREMISES_TYPE)
-        neighbourhood_options = st.selectbox('Neighborhoods',NEIGHBORHOOD)
-    
+        neighbourhood_options = st.selectbox('Neighborhood',NEIGHBORHOOD)
 
 with col1:
+    st.header(PREDICTION_NAME_HEADER)
     # Model information
     model_data = df[['OCC_MONTH','OCC_DOW','OCC_HOUR','PREMISES_TYPE','NEIGHBOURHOOD_158','MCI_CATEGORY']]
 
@@ -51,8 +50,6 @@ with col1:
     model_info.reset_index(drop=True, inplace=True)
     neighbourhood = model_info['NEIGHBOURHOOD_158_cat'][0]
 
-
-
     if clicked:
         info_df = pd.DataFrame(columns = ['OCC_MONTH_cat','OCC_DOW_cat','OCC_HOUR','PREMISES_TYPE_cat','NEIGHBOURHOOD_158_cat'],index = ['a'])
         info_df.loc['a'] = [month,dow,hour, premise, neighbourhood]
@@ -72,6 +69,6 @@ with col1:
         else:
             crime_output = 'Theft Over'
 
-        st.write("Based on the metrics selected")
+        st.write("Based on the your selection")
         st.metric("The Predicted Crime is : ",crime_output)
 
