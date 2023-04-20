@@ -31,6 +31,7 @@ For all solutions submit a working application link with login details, as well 
 # Judging Criteria
 
 **Technological Implementation**
+
 Does the interaction with the Pangea API demonstrate quality software development? Is the user experience and design of the project well thought out?
 
 **Design**
