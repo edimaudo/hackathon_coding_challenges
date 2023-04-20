@@ -35,10 +35,13 @@ For all solutions submit a working application link with login details, as well 
 Does the interaction with the Pangea API demonstrate quality software development? Is the user experience and design of the project well thought out?
 
 **Design**
+
 Is the user experience and design of the project well thought out?
 
 **Potential Impact**
+
 How big of an impact could the project have on the Pangea community?
 
 **Quality of the Idea**
+
 How creative and unique is the project?
