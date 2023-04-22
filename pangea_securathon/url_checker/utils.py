@@ -6,8 +6,9 @@ import datetime
 import os, os.path
 import warnings
 import random
-import validators
 import whois
+import validators
+from validators import ValidationFailure
 
 # Text
 APP_NAME = 'URL Classifier'
