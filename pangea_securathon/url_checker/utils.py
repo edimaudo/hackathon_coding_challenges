@@ -12,7 +12,7 @@ from validators import ValidationFailure
 
 # Text
 APP_NAME = 'URL Classifier'
-URL_TEXT = 'Enter a URL'
+URL_TEXT = 'Enter a URL, press enter and then click the Check URL button'
 
 
 st.set_page_config( 
