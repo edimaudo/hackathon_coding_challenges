@@ -12,19 +12,28 @@ def is_string_an_url(url_string):
 def check_api(URL):
     pass
 
-def check_whois(URL):
-    pass
+def generate_whois(URL):
+    w = whois.whois(URL)
+    return w
 
 def url_option():
-    url_text = st.text_input(URL_TEXT, '') 
+    url_text = st.text_input(URL_TEXT, '', placeholder = 'Enter a url like this -> http://www.example.com') 
     url_option_button = st.button('Check URL')
     if url_option_button:
-        # check if a URL is entered
-        #if len(url_text) < 1:
-        #    st.error('Please enter a URL', icon="🚨")
-        # check for valid URL
         if is_string_an_url(url_text):
             check_api(url_text)
+            output = generate_whois(url_text)
+            st.write("URL Stats.")
+            st.write(" ")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric("Creation Date",str(output['creation_date']) )
+                st.metric("Expiration Date",str(output['expiration_date']))
+            with col2:
+                st.metric("Domain Name",str(output['domain_name']))
+                st.write("Name Servers")
+                for server in output['name_servers']:
+                        st.write("- ", str(server))
         else:
             st.error('Please enter a valid URL', icon="🚨")
 
