@@ -6,14 +6,15 @@ import datetime
 import os, os.path
 import warnings
 import random
+import validators
+import whois
 
-# Dashboard text
+# Text
 APP_NAME = 'URL Classifier'
+URL_TEXT = 'Enter a URL'
 
-warnings.simplefilter(action='ignore', category=FutureWarning)
+
 st.set_page_config( 
     page_title=APP_NAME,
 )
 
-# Text
-URL_TEXT = 'Enter a URL'
