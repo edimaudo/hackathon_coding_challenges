@@ -6,16 +6,14 @@ import datetime
 import os, os.path
 import warnings
 import random
-import pickle
-from pycaret.classification import *
-import datetime
 
 # Dashboard text
-APP_NAME = 'Check the URL!'
-
+APP_NAME = 'URL Classifier'
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 st.set_page_config( 
     page_title=APP_NAME,
 )
 
+# Text
+URL_TEXT = 'Enter a URL'
