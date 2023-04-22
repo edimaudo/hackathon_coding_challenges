@@ -1,9 +1,15 @@
-import streamlit as st
 from utils import * 
 
 st.title(APP_NAME)
 
-st.header("")
+def check_api(URL):
+    pass
+
+def check_url(URL):
+    pass
+
+def check_whois(URL):
+    pass
 
 def url_option():
     url_text = st.text_input(URL_TEXT, '') 
@@ -13,7 +19,7 @@ def url_option():
         # check if a URL is entered
         if len(url_text) < 1:
             st.error('Please enter a URL', icon="🚨")
-        # check 
+        # check for valid URL
 
 
 def main():
