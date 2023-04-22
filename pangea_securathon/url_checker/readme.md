@@ -45,3 +45,7 @@ How big of an impact could the project have on the Pangea community?
 **Quality of the Idea**
 
 How creative and unique is the project?
+
+# Solution
+
+# Pangea API Usage
