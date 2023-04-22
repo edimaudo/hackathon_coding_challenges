@@ -2,17 +2,17 @@ from utils import *
 
 st.title(APP_NAME)
 
-def is_string_an_url(url_string):
+def is_string_a_url(url_string):
     url_string.strip()
     result = validators.url(url_string)
     if isinstance(result, ValidationFailure):
         return False
     return result
 
-def check_api(URL):
+def generate_api_result(URL):
     pass
 
-def generate_whois(URL):
+def generate_whois_result(URL):
     w = whois.whois(URL)
     return w
 
@@ -20,9 +20,9 @@ def url_option():
     url_text = st.text_input(URL_TEXT, '', placeholder = 'Enter a url like this -> http://www.example.com') 
     url_option_button = st.button('Check URL')
     if url_option_button:
-        if is_string_an_url(url_text):
+        if is_string_a_url(url_text):
             check_api(url_text)
-            output = generate_whois(url_text)
+            output = generate_whois_result(url_text)
             st.write("URL Stats.")
             st.write(" ")
             col1, col2 = st.columns(2)
