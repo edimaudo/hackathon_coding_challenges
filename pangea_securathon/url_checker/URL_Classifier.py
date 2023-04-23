@@ -40,7 +40,7 @@ def url_option():
     if url_button:
         if is_string_a_url(url_text):
             api_output = generate_api_result(url_text)
-            st.header("URL Stats.")
+            st.header("URL Statistics")
             with st.container():
                 col1, col2 = st.columns(2)
                 output_data = api_output.json()
