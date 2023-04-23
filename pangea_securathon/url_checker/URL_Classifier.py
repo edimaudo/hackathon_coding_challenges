@@ -17,7 +17,8 @@ def generate_whois_result(URL):
     return w
 
 def url_option():
-    url_text = st.text_input(URL_TEXT, '', placeholder = 'Enter a url like this -> http://www.example.com') 
+    url_text = st.text_input('Enter a URL, press enter and then click the Check URL button', '', 
+    placeholder = 'Enter a url like this -> http://www.example.com') 
     url_option_button = st.button('Check URL')
     if url_option_button:
         if is_string_a_url(url_text):
