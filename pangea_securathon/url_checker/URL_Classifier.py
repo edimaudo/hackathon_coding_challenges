@@ -3,6 +3,7 @@ from config import *
 
 st.title(APP_NAME)
 
+@st.cache_resource
 def is_string_a_url(url_string):
     url_string.strip()
     result = validators.url(url_string)
@@ -39,14 +40,14 @@ def url_option():
     if url_button:
         if is_string_a_url(url_text):
             api_output = generate_api_result(url_text)
+            st.header("URL Stats.")
             with st.container():
                 col1, col2 = st.columns(2)
                 output_data = api_output.json()
                 with col1:
                     st.metric("Status",str(output_data['status']))
-                    st.metric("Outcome",str(output_data['result']['data']['verdict']))
-            
-            st.write("URL Stats.")
+                with col2:
+                    st.metric("Malicious Intent",str(output_data['result']['data']['verdict']))
             st.write(" ")
             whois_output = generate_whois_result(url_text)
             col3, col4 = st.columns(2)
