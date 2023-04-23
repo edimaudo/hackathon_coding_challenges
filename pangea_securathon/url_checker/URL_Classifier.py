@@ -22,11 +22,11 @@ def generate_api_result(URL):
     }
 
     response = requests.post(
-        'https://url-intel.' + os.getenv(DOMAIN, '') + '/v1/reputation',
+        'https://url-intel.' + DOMAIN + '/v1/reputation', 
         headers=headers,
         json=json_data,
     )
-    output = response
+    return response
 
 def generate_whois_result(URL):
     w = whois.whois(URL)
@@ -39,16 +39,21 @@ def url_option():
     if url_button:
         if is_string_a_url(url_text):
             api_output = generate_api_result(url_text)
-            api_output = json.load(api_output)
-            st.write(api_output)
-            whois_output = generate_whois_result(url_text)
+            with st.container():
+                col1, col2 = st.columns(2)
+                output_data = api_output.json()
+                with col1:
+                    st.metric("Status",str(output_data['status']))
+                    st.metric("Outcome",str(output_data['result']['data']['verdict']))
+            
             st.write("URL Stats.")
             st.write(" ")
-            col1, col2 = st.columns(2)
-            with col1:
+            whois_output = generate_whois_result(url_text)
+            col3, col4 = st.columns(2)
+            with col3:
                 st.metric("Creation Date",str(whois_output['creation_date']) )
                 st.metric("Expiration Date",str(whois_output['expiration_date']))
-            with col2:
+            with col4:
                 st.metric("Domain Name",str(whois_output['domain_name']))
                 st.write("Name Servers")
                 for server in whois_output['name_servers']:
