@@ -47,4 +47,4 @@ How big of an impact could the project have on the Pangea community?
 How creative and unique is the project?
 
 # Solution
-Built a [Web app](https://github.com/edimaudo/hackathon_coding_challenges/tree/master/pangea_securathon/url_checker) that checks if a URL is malicious.  It uses the [pangea URL Intel API](https://pangea.cloud/docs/api/url-intel/?focus=url-intel)
+Built a [Web app](https://github.com/edimaudo/hackathon_coding_challenges/tree/master/pangea_securathon/url_checker) that checks if a URL is malicious.  It uses the [pangea URL Intel API](https://pangea.cloud/docs/api/url-intel/?focus=url-intel) and used in the url_option function.
