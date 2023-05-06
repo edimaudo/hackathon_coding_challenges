@@ -8,14 +8,14 @@ With the increased rate of producing parental lines comes new challenges—incre
 
 Erratic weekly harvest quantities create logistical and productivity issues. How can we optimally schedule the planting of our seeds to ensure that when ears are harvested, facilities are not over capacity, and that there is a consistent number of ears each week? This issue is the basis for the 2021 Syngenta Crop Challenge in Analytics. Figure 1 provides diagram for this process.
 
-
+https://www.ideaconnection.com/syngenta-crop-challenge/images/about/process.svg
 Figure 1: Process Diagram
 
 
 ## RESEARCH QUESTION
 Can an optimal scheduling model be created to ensure consistent weekly harvest quantities that are below the maximum capacity? Figure 2 illustrates a representation of this problem.
 
-
+https://www.ideaconnection.com/syngenta-crop-challenge/images/about/weekly_harvest.png
 Figure 2: Illustration of research question
 
 ## OBJECTIVE
