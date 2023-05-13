@@ -12,6 +12,7 @@ import os
 
 # Text
 APP_NAME = 'Mesh Intelligence'
+URL_NAME = "URL & Domain Insights"
 
 st.set_page_config( 
     page_title=APP_NAME,
