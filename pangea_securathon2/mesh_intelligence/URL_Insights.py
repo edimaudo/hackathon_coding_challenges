@@ -2,8 +2,8 @@ from utils import *
 from config import *
 
 st.title(APP_NAME)
+st.subheader(URL_NAME)
 
-@st.cache_resource
 def is_string_a_url(url_string):
     url_string.strip()
     result = validators.url(url_string)
@@ -11,6 +11,7 @@ def is_string_a_url(url_string):
         return False
     return result
 
+@st.cache_resource
 def generate_api_url_result(URL):
     headers = {
         'Authorization': AUTHORIZATION,
@@ -36,7 +37,7 @@ def generate_api_domain_result(URL):
     }
 
     json_data = {
-        'provider': 'crowdstrike',
+        'provider': 'domaintools',
         'url': URL,
     }
 
@@ -47,18 +48,18 @@ def generate_api_domain_result(URL):
     )
     return response
 
+@st.cache_resource
 def generate_whois_result(URL):
     w = whois.whois(URL)
     return w
 
-def url_option():
+def url_analysis():
     url_text = st.text_input('Enter a URL, press enter and then click the Check URL button', '', 
     placeholder = 'Enter a url like this -> http://www.example.com') 
     url_button = st.button('Check URL')
     if url_button:
         if is_string_a_url(url_text):
             api_output = generate_api_url_result(url_text)
-            st.header("URL & Domain Insights")
             with st.container():
                 col1, col2 = st.columns(2)
                 output_data = api_output.json()
@@ -87,8 +88,7 @@ def url_option():
 
 
 def main():
-    url_option()
-
+    url_analysis()
 
 if __name__ == main():
     main()
