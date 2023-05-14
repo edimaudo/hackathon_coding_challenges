@@ -9,6 +9,7 @@ import pangea.exceptions as pe
 from pangea.config import PangeaConfig
 from pangea.services import DomainIntel
 import os
+from urllib.parse import urlparse
 
 # Text
 APP_NAME = 'Mesh Intelligence'
