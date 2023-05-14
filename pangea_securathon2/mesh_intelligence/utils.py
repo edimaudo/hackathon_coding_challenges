@@ -12,7 +12,8 @@ import os
 
 # Text
 APP_NAME = 'Mesh Intelligence'
-URL_NAME = "URL & Domain Insights"
+URL_NAME = "URL Insights"
+DOMAIN_NAME = "Domain Insights"
 IP_NAME = "IP Inisghts"
 
 st.set_page_config( 
