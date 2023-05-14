@@ -42,11 +42,12 @@ def domain_analysis():
 
 
 def main():
-    choice = st.radio("Select the analysis",('URL', 'Domain'))
-    if choice == 'URL':
-        pass
-    else:
-        pass
+    with st.sidebar:
+        choice = st.radio("Select an option",('URL', 'Domain'))
+        if choice == 'URL':
+            pass
+        else:
+            pass
 
     
 
