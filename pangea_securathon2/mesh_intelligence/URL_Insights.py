@@ -12,40 +12,16 @@ def is_string_a_url(url_string):
     return result
 
 @st.cache_resource
-def generate_api_url_result(URL):
-    headers = {
-        'Authorization': AUTHORIZATION,
-        'Content-Type': 'application/json',
-    }
+def generate_api_result(link_type, input_type):
+    headers = {'Authorization': AUTHORIZATION,'Content-Type': 'application/json',}
 
-    json_data = {
-        'provider': 'crowdstrike',
-        'url': URL,
-    }
+    if input_type == 'URL':
+        json_data = {'provider': 'crowdstrike','url': link_type,}
+        response = requests.post(URL_LINK, headers=headers,json=json_data,)
+    else:
+        json_data = {'provider': 'domaintools','domain': link_type,}
+        response = requests.post(DOMAIN_LINK, headers=headers,json=json_data,)
 
-    response = requests.post(
-        'https://url-intel.' + DOMAIN + '/v1/reputation', 
-        headers=headers,
-        json=json_data,
-    )
-    return response
-
-def generate_api_domain_result(URL):
-    headers = {
-        'Authorization': AUTHORIZATION,
-        'Content-Type': 'application/json',
-    }
-
-    json_data = {
-        'provider': 'domaintools',
-        'url': URL,
-    }
-
-    response = requests.post(
-        'https://url-intel.' + DOMAIN + '/v1/reputation', 
-        headers=headers,
-        json=json_data,
-    )
     return response
 
 @st.cache_resource
@@ -59,22 +35,24 @@ def url_analysis():
     url_button = st.button('Check URL')
     if url_button:
         if is_string_a_url(url_text):
-            api_output = generate_api_url_result(url_text)
+            url_output = generate_api_result(url_text,'URL')
             with st.container():
                 col1, col2 = st.columns(2)
-                output_data = api_output.json()
+                url_output_data = url_output.json()
                 with col1:
                     st.metric("Status",str(output_data['status']))
                 with col2:
-                    st.metric("Malicious Intent",str(output_data['result']['data']['verdict']))
+                    st.metric("URL Malicious Intent",str(url_output_data['result']['data']['verdict']))
             st.write(" ")
             whois_output = generate_whois_result(url_text)
+            domain_output = generate_api_result(str(whois_output['domain_name']),'Domain')
             col3, col4 = st.columns(2)
             with col3:
-                st.metric("Creation Date",str(whois_output['creation_date']) )
-                st.metric("Expiration Date",str(whois_output['expiration_date']))
+                st.metric("URL Creation Date",str(whois_output['creation_date']) )
+                st.metric("URL Expiration Date",str(whois_output['expiration_date']))
             with col4:
                 st.metric("Domain Name",str(whois_output['domain_name']))
+                st.metric("Domain Malicious Intent", )
                 st.write("Name Servers")
                 if whois_output['name_servers'] is None:
                     st.write("None")
