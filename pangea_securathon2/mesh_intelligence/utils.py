@@ -11,7 +11,6 @@ from pangea.services import DomainIntel
 import os
 from config import *
 
-# Text
 APP_NAME = 'Mesh Intelligence'
 URL_NAME = "URL Insights"
 DOMAIN_NAME = "Domain Insights"
@@ -21,6 +20,7 @@ st.set_page_config(
     page_title=APP_NAME,
 )
 
+@st.cache_resource
 def generate_api_result(link, link_type):
     headers = {'Authorization': AUTHORIZATION,'Content-Type': 'application/json',}
     if link_type == 'URL':
