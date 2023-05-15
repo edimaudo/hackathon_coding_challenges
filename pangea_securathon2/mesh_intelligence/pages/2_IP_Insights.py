@@ -24,7 +24,7 @@ def ip_analysis():
                 with col1:
                     st.metric("Status",str(ip_output_data['status']))
                 with col2:
-                    st.metric("URL Malicious Intent",str(ip_output_data['result']['data']['verdict']))
+                    st.metric("IP Malicious Intent",str(ip_output_data['result']['data']['verdict']))
         else:
             st.error('Please enter a valid IP', icon="🚨")
 
