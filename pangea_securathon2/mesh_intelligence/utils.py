@@ -10,6 +10,7 @@ from pangea.config import PangeaConfig
 from pangea.services import DomainIntel
 import os
 from config import *
+from ipaddress import ip_address, IPv4Address
 
 APP_NAME = 'Mesh Intelligence'
 URL_NAME = "URL Insights"
