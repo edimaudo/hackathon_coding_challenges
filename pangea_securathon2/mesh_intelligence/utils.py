@@ -14,6 +14,7 @@ from ipaddress import ip_address, IPv4Address
 import pangea.exceptions as pe
 from pangea.config import PangeaConfig
 from pangea.services import Audit
+from pangea.services import UrlIntel
 
 APP_NAME = 'Mesh Intelligence'
 URL_NAME = "URL Insights"
@@ -23,6 +24,12 @@ IP_NAME = "IP Inisghts"
 st.set_page_config( 
     page_title=APP_NAME,
 )
+
+
+domain = DOMAIN
+token = ACCESS_TOKEN
+config = PangeaConfig(domain=domain)
+intel = UrlIntel(token, config=config)
 
 @st.cache_resource
 def generate_api_result(link, link_type):
