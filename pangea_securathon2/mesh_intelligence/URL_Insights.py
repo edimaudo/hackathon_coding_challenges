@@ -22,8 +22,10 @@ def url_analysis():
 
     if url_button:
         if is_string_a_url(url_text):
+            #url_output = intel.reputation(url=url_text, provider="crowdstrike")
             url_output = generate_api_result(url_text,'URL')
             url_output_data = url_output.json()
+            #st.write(url_output_data.result)
             whois_output = generate_whois_result(url_text)
             with st.container():
                 col1, col2 = st.columns(2)
