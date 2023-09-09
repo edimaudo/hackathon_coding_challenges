@@ -13,7 +13,7 @@ st.subheader("Data Snapshot")
 with st.expander(" "):
     st.dataframe(df.head(10))
 
-st.subheader("Average Printer Score over time")
+st.subheader("Printer Companion App Score Trend")
 printer_score_time = df_analysis[['app','score','Date']]
 printer_score_time_agg = printer_score_time.groupby(['app','Date']).agg(Total = ('score', 'mean')).reset_index()
 printer_score_time_agg.columns = ['Companion App', 'Date','Score']
