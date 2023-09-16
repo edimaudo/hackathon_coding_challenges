@@ -1,4 +1,6 @@
-# Libraries
+"""
+Libraries
+"""
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -10,8 +12,10 @@ import pickle
 from pycaret.classification import *
 import datetime
 
-# Dashboard text
-APP_NAME = 'Toronto Crime Analysis App'
+"""
+Dashboard Text
+"""
+APP_NAME = 'Toronto Wellbeing Insights'
 OVERVIEW_HEADER = 'Overview'
 PREDICTION_NAME_HEADER = 'Crime Type Prediction'
 CRIME_NAME_HEADER = 'Crime Exploration'
@@ -25,12 +29,28 @@ st.set_page_config(
 
 # Load data
 @st.cache_data
-def load_data(DATA_URL):
-    data = pd.read_csv(DATA_URL)
+def load_data(filetype,data_file):
+    if filetype = "csv":
+        data = pd.read_csv(data_file)
+    else:
+        data = pd.read_csv(data_file)
     return data
 
-DATA_URL = "Major_Crime_Indicators_Open_Data.csv"    
-df = load_data(DATA_URL)
+
+
+crime_data = "Major_Crime_Indicators_Open_Data.csv"    
+df = load_csv_data("csv",crime_data)
+
+
+wellbeing_economics_data = "wellbeing-toronto-economics.csv"    
+wellbeing_economics = load_data("csv",wellbeing_economics_data)
+
+
+wellbeing-toronto-culture
+wellbeing-toronto-education
+wellbeing-toronto-health
+wellbeing-toronto-transportation
+
 
 # Data munging
 YEAR =  df['OCC_YEAR'].unique()
@@ -71,5 +91,3 @@ NEIGHBORHOOD.sort()
 PREMISES_TYPE = df['PREMISES_TYPE'].unique()
 PREMISES_TYPE  = PREMISES_TYPE.astype('str')
 PREMISES_TYPE.sort()
-
- 
