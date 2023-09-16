@@ -17,9 +17,11 @@ Dashboard Text
 """
 APP_NAME = 'Toronto Wellbeing Insights'
 OVERVIEW_HEADER = 'Overview'
+ABOUT_HEADER = 'About'
 PREDICTION_NAME_HEADER = 'Crime Type Prediction'
 CRIME_NAME_HEADER = 'Crime Exploration'
-NEIGHBOUR_NAME_HEADER = 'Neighbourhood Exploration'
+NEIGHBOUR_EXPLORATION_HEADER = 'Neighbourhood Exploration'
+NEIGHBOUR_COMPARISON_HEADER = 'Neighbourhood Wellbeing Comparison'
 APP_FILTERS = 'Filters'
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -33,24 +35,15 @@ def load_data(filetype,data_file):
     if filetype = "csv":
         data = pd.read_csv(data_file)
     else:
-        data = pd.read_csv(data_file)
+        data = pd.read_excel(data_file)
     return data
 
-
-
-crime_data = "Major_Crime_Indicators_Open_Data.csv"    
-df = load_csv_data("csv",crime_data)
-
-
-wellbeing_economics_data = "wellbeing-toronto-economics.csv"    
-wellbeing_economics = load_data("csv",wellbeing_economics_data)
-
-
-wellbeing-toronto-culture
-wellbeing-toronto-education
-wellbeing-toronto-health
-wellbeing-toronto-transportation
-
+df = load_data("csv","Major_Crime_Indicators_Open_Data.csv" )
+wellbeing_economics = load_data("csv","wellbeing-toronto-economics.csv")
+wellbeing_culture = load_data("excel","wellbeing-toronto-culture.xlsx")
+wellbeing_health = load_data("excel","wellbeing-toronto-health.xlsx")
+wellbeing_transportation = load_data("excel","wellbeing-toronto-transportation.xlsx")
+wellbeing_education = load_data("excel","wellbeing-toronto-education.xlsx")
 
 # Data munging
 YEAR =  df['OCC_YEAR'].unique()
