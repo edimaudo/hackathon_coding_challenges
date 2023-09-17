@@ -1,4 +1,3 @@
-# Libraries
 from utils import * 
 st.title(APP_NAME)
 
