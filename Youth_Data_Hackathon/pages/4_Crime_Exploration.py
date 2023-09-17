@@ -1,7 +1,7 @@
 from utils import * 
 
 st.title(APP_NAME)
-st.header(CRIME_NAME_HEADER)
+st.header(CRIME_EXPLORATION_HEADER)
 
 with st.expander(APP_FILTERS):
     year_options = st.multiselect('Year',YEAR,default=YEAR)
