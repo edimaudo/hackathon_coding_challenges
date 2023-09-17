@@ -19,7 +19,7 @@ APP_NAME = 'Toronto Wellbeing Insights'
 OVERVIEW_HEADER = 'Overview'
 ABOUT_HEADER = 'About'
 PREDICTION_NAME_HEADER = 'Crime Type Prediction'
-CRIME_NAME_HEADER = 'Crime Exploration'
+CRIME_EXPLORATION_HEADER = 'Crime Exploration'
 NEIGHBOUR_EXPLORATION_HEADER = 'Neighbourhood Exploration'
 NEIGHBOUR_COMPARISON_HEADER = 'Neighbourhood Wellbeing Comparison'
 APP_FILTERS = 'Filters'
@@ -32,7 +32,7 @@ st.set_page_config(
 # Load data
 @st.cache_data
 def load_data(filetype,data_file):
-    if filetype = "csv":
+    if filetype == "csv":
         data = pd.read_csv(data_file)
     else:
         data = pd.read_excel(data_file)
@@ -46,6 +46,8 @@ wellbeing_transportation = load_data("excel","wellbeing-toronto-transportation.x
 wellbeing_education = load_data("excel","wellbeing-toronto-education.xlsx")
 
 # Data munging
+
+# Crime Data
 YEAR =  df['OCC_YEAR'].unique()
 YEAR  = YEAR.astype('int')
 YEAR.sort()
