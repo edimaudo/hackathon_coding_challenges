@@ -15,7 +15,7 @@ import datetime
 """
 Dashboard Text
 """
-APP_NAME = 'Toronto Wellbeing Insights'
+APP_NAME = 'Toronto Wellbeing & Crime Insights'
 OVERVIEW_HEADER = 'Overview'
 ABOUT_HEADER = 'About'
 PREDICTION_NAME_HEADER = 'Crime Type Prediction'
@@ -40,10 +40,10 @@ def load_data(filetype,data_file):
 
 df = load_data("csv","Major_Crime_Indicators_Open_Data.csv" )
 wellbeing_economics = load_data("csv","wellbeing-toronto-economics.csv")
-wellbeing_culture = load_data("excel","wellbeing-toronto-culture.xlsx")
-wellbeing_health = load_data("excel","wellbeing-toronto-health.xlsx")
-wellbeing_transportation = load_data("excel","wellbeing-toronto-transportation.xlsx")
-wellbeing_education = load_data("excel","wellbeing-toronto-education.xlsx")
+wellbeing_culture = load_data("csv","wellbeing-toronto-culture.csv")
+wellbeing_health = load_data("csv","wellbeing-toronto-health.csv")
+wellbeing_transportation = load_data("csv","wellbeing-toronto-transportation.csv")
+wellbeing_education = load_data("csv","wellbeing-toronto-education.csv")
 
 # Data munging
 
