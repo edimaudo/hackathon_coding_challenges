@@ -1,5 +1,4 @@
 # Library Overview
-
 from utils import *
 
 st.image(img)
@@ -12,7 +11,7 @@ with st.container():
     col1, col2,col3,col4 = st.columns(4)
     with top_metric_container:
         with col1:
-            st.metric("No of libraries",general_info_branch.shape[0])
+            st.metric("No of Branches",100)
         with col2:
             st.metric("No of computer learning centres",computer_learning_centre.shape[0])
         with col3:
