@@ -26,7 +26,7 @@ with top_container:
         st.write("Telephone"+ " : " +branch_df['Telephone'][0])
         st.write("Website"+ " : " +branch_df['Website'][0])
         st.write("Ward Name" + " : " + branch_df['WardName'][0])
-        st.write("Present Site Year",int(branch_df['PresentSiteYear'][0]))    
+        st.write("Site Year" + " : " + str(int(branch_df['PresentSiteYear'][0])))  
 #branch location
 #Add geojson data + #Lat	Long
 
