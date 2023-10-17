@@ -5,48 +5,44 @@ st.title(APP_NAME)
 st.header(LIBRARY_PROFILE_HEADER)
 
 #side bar library name dropdown
-branch_option = st.sidebar.selectbox('Branches',branches)
-
+branch_option = st.sidebar.selectbox('Branches',branch_list)
 
 st.subheader("Branch Profile")
-branch_df =  general_info_branch[(general_info_branch.BranchName == branch_option)]   #general_info_branch[(general_info_branch['BranchName']==(branch_option))]
-top_metric_container = st.container()
-middle_metric_container = st.container()
-bottom_metric_container = st.container()
-col1, col2,col3 = st.columns(3)
+branch_df = general_info_branch[(general_info_branch['BranchName'] == branch_option)].reset_index()
+
+col1, col2 = st.columns(2)
 with st.container():
     with col1:
-        st.metric("Branch Name",branch_df['BranchName'])
-        st.metric("Address",branch_df['Address'])
-        st.metric("Present Site Year",branch_df['PresentSiteYear'])
+        st.write("Branch Name" + " : " + str(branch_df['BranchName'][0]))
+        st.write("Branch Code"+ " : " +branch_df['BranchCode'][0])
+        st.write("Address" + " : " + branch_df['Address'][0])
+        st.write("Postal Code"+ " : " +branch_df['PostalCode'][0])
     with col2:
-        st.metric("Branch Name",branch_df['BranchName'])
-        st.metric("Address",branch_df['Address'])
-        st.metric("Present Site Year",branch_df['PresentSiteYear'])
-    with col3:
-        st.metric("Branch Name",branch_df['BranchName'])
-        st.metric("Address",branch_df['Address'])
-        st.metric("Present Site Year",branch_df['PresentSiteYear'])
-
-#branch profile
-#BranchName BranchCode # PhysicalBranch
-#Address	PostalCode	WardName
-#PresentSiteYear #Website	Telephone		
-
+        st.write("Telephone"+ " : " +branch_df['Telephone'][0])
+        st.write("Website"+ " : " +branch_df['Website'][0])
+        st.write("Ward Name" + " : " + branch_df['WardName'][0])
+        st.write("Present Site Year",int(branch_df['PresentSiteYear'][0]))    
 #branch location
 #Add geojson data + #Lat	Long
 
 st.subheader("Branch Features")
-##branch features
-#SquareFootage	PublicParking
-# Workstations
-#ServiceTier
-#AdultLiteracyProgram	
-#computer learning centre available
-#digital innovation hub 
-#kid stop early learning centre
-#Youth advisory
-#youth hub
+with col1:
+    st.write("Square Footage")
+    st.write("# of workstations")
+    st.write("Public Parking Available")
+    st.write("Service Tier")
+with col2:
+    st.write("Adult literacy Program Avilable")
+    st.write("Computer learning centre Avilable")
+    st.write("Digital Innovation Hub Avilable")
+    st.write("Youth Hub Avilable")
+
+
+    
+
+
+
+
 
 st.subheader("Branch Trends")
 # annual visits
