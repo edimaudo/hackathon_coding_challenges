@@ -61,6 +61,7 @@ youth_hubs = load_data("data/Youth_Hubs_Locations.csv")
 #Data 
 
 # List of Branches
-branches = general_info_branch['BranchName'].unique()
-branches  = branches.astype('str')
-branches.sort()
+branch_list = general_info_branch['BranchName'].unique()
+branch_list = branch_list.astype('str')
+branch_list.sort()
+
