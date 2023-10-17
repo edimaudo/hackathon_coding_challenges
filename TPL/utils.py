@@ -58,4 +58,9 @@ workstation_usage_branch = load_data("data/tpl-workstation-usage-annual-by-branc
 youth_advisory = load_data("data/Youth_Advisory_Groups_Locations.csv")
 youth_hubs = load_data("data/Youth_Hubs_Locations.csv")
 
-# Data munging
+#Data 
+
+# List of Branches
+branches = general_info_branch['BranchName'].unique()
+branches  = branches.astype('str')
+branches.sort()
