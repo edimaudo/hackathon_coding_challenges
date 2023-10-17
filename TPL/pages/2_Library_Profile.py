@@ -7,11 +7,15 @@ st.header(LIBRARY_PROFILE_HEADER)
 #side bar library name dropdown
 branch_option = st.sidebar.selectbox('Branches',branch_list)
 
-st.subheader("Branch Profile")
-branch_df = general_info_branch[(general_info_branch['BranchName'] == branch_option)].reset_index()
 
-col1, col2 = st.columns(2)
-with st.container():
+branch_df = general_info_branch[(general_info_branch['BranchName'] == branch_option)].reset_index()
+top_container = st.container()
+middle_container = st.container()
+bottom_container = st.container()
+
+with top_container:
+    st.subheader("Branch Profile")
+    col1, col2 = st.columns(2)
     with col1:
         st.write("Branch Name" + " : " + str(branch_df['BranchName'][0]))
         st.write("Branch Code"+ " : " +branch_df['BranchCode'][0])
@@ -25,17 +29,19 @@ with st.container():
 #branch location
 #Add geojson data + #Lat	Long
 
-st.subheader("Branch Features")
-with col1:
-    st.write("Square Footage")
-    st.write("# of workstations")
-    st.write("Public Parking Available")
-    st.write("Service Tier")
-with col2:
-    st.write("Adult literacy Program Avilable")
-    st.write("Computer learning centre Avilable")
-    st.write("Digital Innovation Hub Avilable")
-    st.write("Youth Hub Avilable")
+with middle_container:
+    st.subheader("Branch Features")
+    col3, col4 = st.columns(2)
+    with col3:
+        st.write("Square Footage")
+        st.write("No of workstations")
+        st.write("Public Parking Available")
+        st.write("Service Tier")
+    with col4:
+        st.write("Adult literacy Program Avilable")
+        st.write("Computer learning centre Avilable")
+        st.write("Digital Innovation Hub Avilable")
+        st.write("Youth Hub Avilable")
 
 
     
