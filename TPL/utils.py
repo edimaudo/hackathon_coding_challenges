@@ -55,8 +55,6 @@ card_registration_branch = load_data("data/tpl-card-registrations-annual-by-bran
 circulation_branch = load_data("data/tpl-circulation-annual-by-branch-2012-2022.csv")
 visits_branch = load_data("data/tpl-visits-annual-by-branch-2012-2022.csv")
 workstation_usage_branch = load_data("data/tpl-workstation-usage-annual-by-branch-2012-2022.csv")
-workstation_users = load_data("data/Workstation_Users.csv")
-workstations = load_data("data/Workstations.csv")
 youth_advisory = load_data("data/Youth_Advisory_Groups_Locations.csv")
 youth_hubs = load_data("data/Youth_Hubs_Locations.csv")
 
