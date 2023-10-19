@@ -75,38 +75,31 @@ with bottom_container:
     df = card_registration_branch[['Year','BranchCode','Registrations']]
     df = df[(df['BranchCode'].isin(branch_df1['BranchCode'][0],branch_df2['BranchCode'][0]))]
     df = df[['Year','Registrations']]
-    df= df.groupby(['Year']).agg(Total_registrations = ('Registrations', 'sum')).reset_index()
-    df.columns = ['Year','Total Registrations']
+    df= df.groupby(['Year','BranchCode']).agg(Total_registrations = ('Registrations', 'sum')).reset_index()
+    df.columns = ['Year','Branch Code','Total Registrations']
     df = df.sort_values("Year", ascending=True).reset_index()
-    fig = px.bar(df, x="Year", y="Total Registrations")
+    fig = px.bar(df, x="Year", y="Total Registrations",color = 'Branch Code')
     st.plotly_chart(fig)
 
     st.markdown("**Annual Circulations**")
     df = circulation_branch[['Year','BranchCode','Circulation']]
     df = df[(df['BranchCode'].isin(branch_df1['BranchCode'][0],branch_df2['BranchCode'][0]))]
     df = df[['Year','Circulation']]
-    df= df.groupby(['Year']).agg(Total_circulations = ('Circulation', 'sum')).reset_index()
-    df.columns = ['Year','Total Circulations']
+    df= df.groupby(['Year','BranchCode']).agg(Total_circulations = ('Circulation', 'sum')).reset_index()
+    df.columns = ['Year','BranchCode','Total Circulations']
     df = df.sort_values("Year", ascending=True).reset_index()
-    fig = px.bar(df, x="Year", y="Total Circulations")
+    fig = px.bar(df, x="Year", y="Total Circulations",color='Branch Code')
     st.plotly_chart(fig)
 
     st.markdown("**Annual Workstation Usage**")
     df = workstation_usage_branch[['Year','BranchCode','Sessions']]
     df = df[(df['BranchCode'].isin(branch_df1['BranchCode'][0],branch_df2['BranchCode'][0]))]
     df = df[['Year','BranchCode','Sessions']]
-    df= df.groupby(['Year']).agg(Total_sessions = ('Sessions', 'sum')).reset_index()
-    df.columns = ['Year','Total Sessions']
+    df= df.groupby(['Year','BranchCode']).agg(Total_sessions = ('Sessions', 'sum')).reset_index()
+    df.columns = ['Year','Branch Code','Total Sessions']
     df = df.sort_values("Year", ascending=True).reset_index()
-    fig = px.bar(df, x="Year", y="Total Sessions")
+    fig = px.bar(df, x="Year", y="Total Sessions",color='Branch Code')
     st.plotly_chart(fig)
-
-
-#Trends
-# annual visits
-# registrations
-# Annual Circulation
-# Annual Workstation Usage
 
 #wellbeing index#
 
