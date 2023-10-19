@@ -37,13 +37,6 @@ def load_data(data_file):
     data = pd.read_csv(data_file)
     return data
 
-# Wellbeing data
-wellbeing_economics = load_data("data/wellbeing-toronto-economics.csv")
-wellbeing_culture = load_data("data/wellbeing-toronto-culture.csv")
-wellbeing_health = load_data("data/wellbeing-toronto-health.csv")
-wellbeing_transportation = load_data("data/wellbeing-toronto-transportation.csv")
-wellbeing_education = load_data("data/wellbeing-toronto-education.csv")
-
 # library data
 #Neighbourhoods.geojson
 computer_learning_centre = load_data("data/Computer_Learning_Centres.csv")
