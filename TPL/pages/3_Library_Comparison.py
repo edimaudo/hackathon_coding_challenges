@@ -101,7 +101,7 @@ with bottom_container:
     fig = px.bar(df, x="Year", y="Total Sessions",color='Branch Code')
     st.plotly_chart(fig)
 
-#wellbeing index#
+
 
 # Data Q&A
 #Add LLM using Langchain —> https://python.langchain.com/docs/modules/agents/toolkits/pandas.html
