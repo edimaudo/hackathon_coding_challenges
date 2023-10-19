@@ -34,26 +34,73 @@ with top_container:
         st.write("Website"+ " : " +branch_df2['Website'][0])
         st.write("Ward Name" + " : " + branch_df2['WardName'][0])
         st.write("Site Year" + " : " + str(int(branch_df2['PresentSiteYear'][0])))  
-
-##branch profile
-#branch profile
-#BranchName BranchCode # PhysicalBranch
-#Address	PostalCode	PresentSiteYear
-#WardNo	WardName
-#Website	Telephone		
-#Lat	Long
+    #Lat	Long
 #branch location - #Add geojson data
 
-##branch features
-#SquareFootage	PublicParking
-# Workstations
-#ServiceTier
-#AdultLiteracyProgram	
-#computer learning centre available
-#digital innovation hub 
-#kid stop early learning centre
-#Youth advisory
-#youth hub
+with middle_container:
+    st.subheader("Branch Features")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write("Square Footage")
+        st.write("No of workstations")
+        st.write("Public Parking Available")
+        st.write("Service Tier")
+        st.write("Adult literacy Program Avilable")
+        st.write("Computer learning centre Avilable")
+        st.write("Digital Innovation Hub Avilable")
+        st.write("Youth Hub Avilable")	
+    with col2:
+        st.write("Square Footage")
+        st.write("No of workstations")
+        st.write("Public Parking Available")
+        st.write("Service Tier")
+        st.write("Adult literacy Program Avilable")
+        st.write("Computer learning centre Avilable")
+        st.write("Digital Innovation Hub Avilable")
+        st.write("Youth Hub Avilable")	
+
+with bottom_container:
+    st.subheader("Branch Trends")
+    st.markdown("**Annual Vists**")
+    df = visits_branch[['Year','BranchCode','Visits']]
+    df = df[(df['BranchCode'].isin(branch_df1['BranchCode'][0],branch_df2['BranchCode'][0]))]
+    df = df[['Year','BranchCode','Visits']]
+    df= df.groupby(['Year','BranchCode']).agg(Total_visits = ('Visits', 'sum')).reset_index()
+    df.columns = ['Year','Branch Code','Total Visits']
+    df = df.sort_values("Year", ascending=True).reset_index()
+    fig = px.bar(df, x="Year", y="Total Visits", color='Branch Code')
+    st.plotly_chart(fig)
+
+    st.markdown("**Annual Registrations**")
+    df = card_registration_branch[['Year','BranchCode','Registrations']]
+    df = df[(df['BranchCode'].isin(branch_df1['BranchCode'][0],branch_df2['BranchCode'][0]))]
+    df = df[['Year','Registrations']]
+    df= df.groupby(['Year']).agg(Total_registrations = ('Registrations', 'sum')).reset_index()
+    df.columns = ['Year','Total Registrations']
+    df = df.sort_values("Year", ascending=True).reset_index()
+    fig = px.bar(df, x="Year", y="Total Registrations")
+    st.plotly_chart(fig)
+
+    st.markdown("**Annual Circulations**")
+    df = circulation_branch[['Year','BranchCode','Circulation']]
+    df = df[(df['BranchCode'].isin(branch_df1['BranchCode'][0],branch_df2['BranchCode'][0]))]
+    df = df[['Year','Circulation']]
+    df= df.groupby(['Year']).agg(Total_circulations = ('Circulation', 'sum')).reset_index()
+    df.columns = ['Year','Total Circulations']
+    df = df.sort_values("Year", ascending=True).reset_index()
+    fig = px.bar(df, x="Year", y="Total Circulations")
+    st.plotly_chart(fig)
+
+    st.markdown("**Annual Workstation Usage**")
+    df = workstation_usage_branch[['Year','BranchCode','Sessions']]
+    df = df[(df['BranchCode'].isin(branch_df1['BranchCode'][0],branch_df2['BranchCode'][0]))]
+    df = df[['Year','BranchCode','Sessions']]
+    df= df.groupby(['Year']).agg(Total_sessions = ('Sessions', 'sum')).reset_index()
+    df.columns = ['Year','Total Sessions']
+    df = df.sort_values("Year", ascending=True).reset_index()
+    fig = px.bar(df, x="Year", y="Total Sessions")
+    st.plotly_chart(fig)
+
 
 #Trends
 # annual visits
@@ -62,4 +109,6 @@ with top_container:
 # Annual Workstation Usage
 
 #wellbeing index#
+
+# Data Q&A
 #Add LLM using Langchain —> https://python.langchain.com/docs/modules/agents/toolkits/pandas.html
