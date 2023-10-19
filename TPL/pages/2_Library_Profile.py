@@ -12,6 +12,7 @@ branch_df = general_info_branch[(general_info_branch['BranchName'] == branch_opt
 top_container = st.container()
 middle_container = st.container()
 bottom_container = st.container()
+wellbeing_container = st.container()
 
 
 with top_container:
