@@ -3,18 +3,27 @@ from utils import *
 st.title(APP_NAME)
 st.header(NEIGHBOUR_NAME_HEADER)
 
-with st.expander(APP_FILTERS):
+# with st.expander(APP_FILTERS):
+#     neighourhood_options = st.selectbox('Neighbourhood',NEIGHBORHOOD)
+#     year_options = st.multiselect('Year',YEAR,default=YEAR)
+#     month_options = st.multiselect('Month',MONTH,default=MONTH)
+#     dow_options = st.multiselect('Day of Week',DAY_OF_WEEK,default=DAY_OF_WEEK)
+#     mci_options = st.multiselect('Crime Type',MCI_CATEGORY,default=MCI_CATEGORY)
+#     premises_options = st.multiselect('Premises Type',PREMISES_TYPE,default=PREMISES_TYPE)
+
+with st.sidebar:
     neighourhood_options = st.selectbox('Neighbourhood',NEIGHBORHOOD)
     year_options = st.multiselect('Year',YEAR,default=YEAR)
     month_options = st.multiselect('Month',MONTH,default=MONTH)
     dow_options = st.multiselect('Day of Week',DAY_OF_WEEK,default=DAY_OF_WEEK)
     mci_options = st.multiselect('Crime Type',MCI_CATEGORY,default=MCI_CATEGORY)
-    premises_options = st.multiselect('Premises Type',PREMISES_TYPE,default=PREMISES_TYPE)
+    premises_options = st.multiselect('Premises Type',PREMISES_TYPE,default=PREMISES_TYPE)   
 
 with st.container():
     top_container = st.container()
+    middle_container = st.container()
     bottom_container = st.container()
-    neighour_df = neighbourhood_df[(neighbourhood_df['Neighbourhood'] == neighourhood_options)]
+    neighour_df = NEIGHBORHOOD [(NEIGHBORHOOD ['Neighbourhood'] == neighourhood_options)]
     st.subheader("Socio economic Profile*")
     st.metric("Neighborhood Name",neighourhood_options)
     col3, col4,col5 = st.columns(3)
