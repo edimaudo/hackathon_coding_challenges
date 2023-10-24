@@ -1,18 +1,7 @@
-# Libraries
 from utils import * 
-import streamlit as st
 
 st.title(APP_NAME)
 st.header(NEIGHBOUR_NAME_HEADER)
-
-#Load neighbourhood data
-@st.cache_data
-def load_data(DATA_URL):
-    data = pd.read_csv(DATA_URL)
-    return data
-
-DATA_URL = "wellbeing-toronto-economics.csv"    
-neighbourhood_df = load_data(DATA_URL)
 
 with st.expander(APP_FILTERS):
     neighourhood_options = st.selectbox('Neighbourhood',NEIGHBORHOOD)
