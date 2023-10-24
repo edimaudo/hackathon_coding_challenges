@@ -4,7 +4,7 @@ from utils import *
 st.title(APP_NAME)
 st.header(CRIME_NAME_HEADER)
 
-with st.expander(APP_FILTERS):
+with st.sidebar:
     year_options = st.multiselect('Year',YEAR,default=YEAR)
     month_options = st.multiselect('Month',MONTH,default=MONTH)
     dow_options = st.multiselect('Day of Week',DAY_OF_WEEK,default=DAY_OF_WEEK)
