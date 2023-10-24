@@ -11,7 +11,7 @@ from pycaret.classification import *
 import datetime
 
 # Dashboard text
-APP_NAME = 'Toronto Crime Analysis App'
+APP_NAME = 'Toronto Wellbeing and Crime Insights'
 OVERVIEW_HEADER = 'Overview'
 PREDICTION_NAME_HEADER = 'Crime Type Prediction'
 CRIME_NAME_HEADER = 'Crime Exploration'
@@ -29,7 +29,7 @@ def load_data(DATA_URL):
     data = pd.read_csv(DATA_URL)
     return data
 
-DATA_URL = "Major_Crime_Indicators_Open_Data.csv"    
+DATA_URL = "data/Major_Crime_Indicators_Open_Data.csv"    
 df = load_data(DATA_URL)
 
 # Data munging
