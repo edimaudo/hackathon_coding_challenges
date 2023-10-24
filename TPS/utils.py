@@ -13,9 +13,9 @@ import datetime
 # Dashboard text
 APP_NAME = 'Toronto Wellbeing and Crime Insights'
 OVERVIEW_HEADER = 'Overview'
-PREDICTION_NAME_HEADER = 'Crime Type Prediction'
-CRIME_NAME_HEADER = 'Crime Exploration'
-NEIGHBOUR_NAME_HEADER = 'Neighbourhood Exploration'
+#PREDICTION_NAME_HEADER = 'Crime Type Prediction'
+CRIME_NAME_HEADER = 'Crime Only Exploration'
+NEIGHBOUR_NAME_HEADER = 'Neighbourhood Wellbeing & Crime Exploration'
 APP_FILTERS = 'Filters'
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
