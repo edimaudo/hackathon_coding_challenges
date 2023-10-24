@@ -29,8 +29,16 @@ def load_data(DATA_URL):
     data = pd.read_csv(DATA_URL)
     return data
 
-DATA_URL = "data/Major_Crime_Indicators_Open_Data.csv"    
-df = load_data(DATA_URL)
+# crime data
+df = load_data("data/Major_Crime_Indicators_Open_Data.csv")
+
+# wellbeing data
+wellbeing_indicators = load_data("data/wellbeing-toronto-civics-equity-indicators.csv")
+wellbeing_culture = load_data("data/wellbeing-toronto-culture.csv")
+wellbeing_economics = load_data("data/wellbeing-toronto-economics.csv")
+wellbeing_education = load_data("data/wellbeing-toronto-education.csv")
+wellbeing_health = load_data("data/wellbeing-toronto-health.csv")
+wellbeing_transportation = load_data("data/wellbeing-toronto-transportation.csv")
 
 # Data munging
 YEAR =  df['OCC_YEAR'].unique()
