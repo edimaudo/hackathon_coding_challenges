@@ -3,14 +3,6 @@ from utils import *
 st.title(APP_NAME)
 st.header(NEIGHBOUR_NAME_HEADER)
 
-# with st.expander(APP_FILTERS):
-#     neighourhood_options = st.selectbox('Neighbourhood',NEIGHBORHOOD)
-#     year_options = st.multiselect('Year',YEAR,default=YEAR)
-#     month_options = st.multiselect('Month',MONTH,default=MONTH)
-#     dow_options = st.multiselect('Day of Week',DAY_OF_WEEK,default=DAY_OF_WEEK)
-#     mci_options = st.multiselect('Crime Type',MCI_CATEGORY,default=MCI_CATEGORY)
-#     premises_options = st.multiselect('Premises Type',PREMISES_TYPE,default=PREMISES_TYPE)
-
 with st.sidebar:
     neighourhood_options = st.selectbox('Neighbourhood',NEIGHBORHOOD)
     year_options = st.multiselect('Year',YEAR,default=YEAR)
@@ -23,26 +15,32 @@ with st.container():
     top_container = st.container()
     middle_container = st.container()
     bottom_container = st.container()
-    neighour_df = NEIGHBORHOOD [(NEIGHBORHOOD ['Neighbourhood'] == neighourhood_options)]
-    st.subheader("Socio economic Profile*")
-    st.metric("Neighborhood Name",neighourhood_options)
-    col3, col4,col5 = st.columns(3)
-    with top_container:
-        with col3:
-            st.metric("No. of Businesses",neighour_df['Businesses'])
-        with col4:
-            st.metric("No. of Child Care Spaces",neighour_df['Child Care Spaces'])
-        with col5:
-            st.metric("Debt Risk Score",neighour_df['Debt Risk Score'])
-    col6,col7, col8 = st.columns(3)
-    with bottom_container:
-        with col6:
-            st.metric("Home Prices",neighour_df['Home Prices'])
-        with col7:
-            st.metric("Local Employment",neighour_df['Local Employment'])
-        with col8:
-            st.metric("No. of Social Assistance Recipients",neighour_df['Social Assistance Recipients'])
-    st.markdown("*" "Information as of 2011")
+    #economics #Businesses	Child Care Spaces	Debt Risk Score	Home Prices	Local Employment	Social Assistance Recipients
+    #equity #City Grants Funding $	Neighbourhood Equity Score	Salvation Army Donors	Walk Score	Watermain Breaks
+    #health #Breast Cancer Screenings	Cervical Cancer Screenings	DineSafe Inspections	Female Fertility	Health Providers	Premature Mortality	Student Nutrition
+    #Transport #TTC Stops	TTC Overcrowded Routes	Pedestrian/Other Collisions	Traffic Collisions	Road Kilometres	Road Volume
+    #culture #Linguistic Diversity Index
+
+    # neighour_df = NEIGHBORHOOD[(NEIGHBORHOOD['Neighbourhood'] == neighourhood_options)]
+    # st.subheader("Socio economic Profile*")
+    # st.metric("Neighborhood Name",neighourhood_options)
+    # col3, col4,col5 = st.columns(3)
+    # with top_container:
+    #     with col3:
+    #         st.metric("No. of Businesses",neighour_df['Businesses'])
+    #     with col4:
+    #         st.metric("No. of Child Care Spaces",neighour_df['Child Care Spaces'])
+    #     with col5:
+    #         st.metric("Debt Risk Score",neighour_df['Debt Risk Score'])
+    # col6,col7, col8 = st.columns(3)
+    # with bottom_container:
+    #     with col6:
+    #         st.metric("Home Prices",neighour_df['Home Prices'])
+    #     with col7:
+    #         st.metric("Local Employment",neighour_df['Local Employment'])
+    #     with col8:
+    #         st.metric("No. of Social Assistance Recipients",neighour_df['Social Assistance Recipients'])
+    # st.markdown("*" "Information as of 2011")
 
 with st.container():
     overview_df = df[(df['OCC_YEAR'].isin(year_options)) & (df['OCC_MONTH'].isin(month_options)) & (df['OCC_DOW'].isin(dow_options)) & (df['MCI_CATEGORY'].isin(mci_options)) & (df['PREMISES_TYPE'].isin(premises_options)) & (df['NEIGHBOURHOOD_158'] == neighourhood_options)] 
