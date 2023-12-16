@@ -35,29 +35,25 @@ st.set_page_config(
 def load_data():
     data = pd.read_csv(DATA_URL)
     return data
-DATA_URL = "loans.csv"
+DATA_URL = "spotify_data.csv"
 df = load_data()
 
-year = pd.DatetimeIndex(df['DISBURSE_TIME']).year
-year  = year.astype('int')
-df = df.assign(Year=year)
+# year = pd.DatetimeIndex(df['DISBURSE_TIME']).year
+# year  = year.astype('int')
+# df = df.assign(Year=year)
 
-
-country_list = ['Costa Rica','Columbia','Bolivia','Chile',
-'Dominican Republic','Ecuador','El Salvador','Guatemala',
-'Honduras','Mexico','Nicaragua','Paraguay','Peru']
 
 """
 # Dropdowns
 """
-country_data = df[(df['COUNTRY_NAME'].isin(country_list))]  
-country = country_data['COUNTRY_NAME'].unique()
-country  = country.astype('str')
-country.sort()
+# country_data = df[(df['COUNTRY_NAME'].isin(country_list))]  
+# country = country_data['COUNTRY_NAME'].unique()
+# country  = country.astype('str')
+# country.sort()
 
-sector = df['SECTOR_NAME'].unique()
-sector  = sector.astype('str')
-sector.sort()
+# sector = df['SECTOR_NAME'].unique()
+# sector  = sector.astype('str')
+# sector.sort()
 
 
 
