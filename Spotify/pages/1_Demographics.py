@@ -1,7 +1,7 @@
 from utils import * 
 
 st.title(APP_NAME)
-#st.header(APP_LOAN)
+st.header(APP_DEMOGRAPHICS)
 
 # country_choice = st.multiselect("Countries",country,['Costa Rica','Chile'])
 # funding_status = ['funded','fundRaising']
