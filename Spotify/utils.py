@@ -17,7 +17,7 @@ Application Text
 APP_NAME = 'Spotify Insights'
 APP_ABOUT = 'About'
 APP_MUSIC = 'Music'
-APP_PODCAST = 'Podcast'
+APP_PODCAST = 'Podcasts'
 APP_DEMOGRAPHICS = 'Demographics'
 APP_PREDICTION = 'Predictions'
 
