@@ -14,7 +14,7 @@ import math
 """
 Application Text
 """
-APP_NAME = 'Spotify Insights'
+APP_NAME = 'Spotified'
 APP_ABOUT = 'About'
 APP_MUSIC = 'Music'
 APP_PODCAST = 'Podcasts'
@@ -38,17 +38,13 @@ df = load_data()
 """
 Dropdown lists
 """
-age = df['Age'].unique()	
-age = age.astype('str')
-age.sort()
+age = ['6-12','12-20','20-35','35-60','60+']	
 
 gender = df['Gender'].unique()
 gender = gender.astype('str')
 gender.sort()
 
-usage = df['spotify_usage_period'].unique()
-usage = usage.astype('str')
-usage.sort()
+usage = ['Less than 6 months','6 months to 1 year','1 year to 2 years','More than 2 years']
 
 subscription = df['spotify_subscription_plan'].unique()
 subscription = subscription.astype('str')
