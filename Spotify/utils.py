@@ -36,7 +36,7 @@ DATA_URL = "spotify_data.csv"
 df = load_data()
 
 """
-Dropdown lists
+Dropdowns
 """
 age = ['6-12','12-20','20-35','35-60','60+']	
 
