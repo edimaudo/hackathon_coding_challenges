@@ -23,7 +23,7 @@ with st.container():
     st.subheader("Listening Frequency")
     output_df = podcast_df[['pod_lis_frequency']]
     output_df = output_df.groupby(['pod_lis_frequency']).agg(Count = ('pod_lis_frequency', 'count')).reset_index()
-    output_df.columns = ['Listening Frequency, 'Count']
+    output_df.columns = ['Listening Frequency', 'Count']
     output_df.sort_values("Count", ascending=True,inplace=True)
     fig = px.bar(output_df, x="Count", y="Listening Frequency",orientation='h')
     st.plotly_chart(fig)
@@ -31,7 +31,7 @@ with st.container():
     st.subheader("Genre")
     output_df = podcast_df[['fav_pod_genre']]
     output_df = output_df.groupby(['fav_pod_genre']).agg(Count = ('fav_pod_genre', 'count')).reset_index()
-    output_df.columns = ['Genre, 'Count']
+    output_df.columns = ['Genre', 'Count']
     output_df.sort_values("Count", ascending=True,inplace=True)
     fig = px.bar(output_df, x="Count", y="Genre",orientation='h')
     st.plotly_chart(fig)
@@ -39,7 +39,7 @@ with st.container():
     st.subheader("Format")
     output_df = podcast_df[['preffered_pod_format']]
     output_df = output_df.groupby(['preffered_pod_format']).agg(Count = ('preffered_pod_format', 'count')).reset_index()
-    output_df.columns = ['Format, 'Count']
+    output_df.columns = ['Format', 'Count']
     output_df.sort_values("Count", ascending=True,inplace=True)
     fig = px.bar(output_df, x="Count", y="Format",orientation='h')
     st.plotly_chart(fig)
@@ -47,7 +47,7 @@ with st.container():
     st.subheader("Host Preference")
     output_df = podcast_df[['pod_host_preference']]
     output_df = output_df.groupby(['pod_host_preference']).agg(Count = ('pod_host_preference', 'count')).reset_index()
-    output_df.columns = ['Host Preference, 'Count']
+    output_df.columns = ['Host Preference', 'Count']
     output_df.sort_values("Count", ascending=True,inplace=True)
     fig = px.bar(output_df, x="Count", y="Host Preference",orientation='h')
     st.plotly_chart(fig)
@@ -55,7 +55,7 @@ with st.container():
     st.subheader("Podcast Duration")
     output_df = podcast_df[['preffered_pod_duration']]
     output_df = output_df.groupby(['preffered_pod_duration']).agg(Count = ('preffered_pod_duration', 'count')).reset_index()
-    output_df.columns = ['Podcast Duration, 'Count']
+    output_df.columns = ['Podcast Duration', 'Count']
     output_df.sort_values("Count", ascending=True,inplace=True)
     fig = px.bar(output_df, x="Count", y="Podcast Duration",orientation='h')
     st.plotly_chart(fig)
