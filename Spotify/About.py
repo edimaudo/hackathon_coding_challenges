@@ -9,6 +9,5 @@ st.markdown(
 The application leverages Spotify data snapshot that focuses on the areas listed below
 - **Music**
 - **Podcasts**
-- **Subscription Prediction**
 
 """)
