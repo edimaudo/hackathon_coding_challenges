@@ -32,7 +32,38 @@ with st.container():
     output_df = music_df[['music_time_slot']]
     output_df = output_df.groupby(['music_time_slot']).agg(Count = ('music_time_slot', 'count')).reset_index()
     output_df.columns = ['Music Time slot', 'Count']
-    output_df.sort_values("Count", ascending=False, inplace=True)
+    output_df.sort_values("Count", ascending=True, inplace=True)
     fig = px.pie(output_df, values='Count', names='Music Time slot')
     st.plotly_chart(fig)
 
+    st.subheader('Music Mood')
+    output_df = music_df[['music_Influencial_mood']]
+    output_df = output_df.groupby(['music_Influencial_mood']).agg(Count = ('music_Influencial_mood', 'count')).reset_index()
+    output_df.columns = ['Music Mood', 'Count']
+    output_df.sort_values("Count", ascending=True,inplace=True)
+    fig = px.bar(output_df, x="Count", y="Music Mood",orientation='h')
+    st.plotly_chart(fig)
+
+    st.subheader('Music Listening Frequency')
+    output_df = music_df[['music_lis_frequency']]
+    output_df = output_df.groupby(['music_lis_frequency']).agg(Count = ('music_lis_frequency', 'count')).reset_index()
+    output_df.columns = ['Listening Frequency', 'Count']
+    output_df.sort_values("Count", ascending=True,inplace=True)
+    fig = px.bar(output_df, x="Count", y="Listening Frequency",orientation='h')
+    st.plotly_chart(fig)
+
+    st.subheader('Music Exploration Method')
+    output_df = music_df[['music_expl_method']]
+    output_df = output_df.groupby(['music_expl_method']).agg(Count = ('music_expl_method', 'count')).reset_index()
+    output_df.columns = ['Music Exploration', 'Count']
+    output_df.sort_values("Count", ascending=True,inplace=True)
+    fig = px.bar(output_df, x="Count", y="Music Exploration",orientation='h')
+    st.plotly_chart(fig)
+
+    st.subheader('Music Recommendation Rating')
+    output_df = music_df[['music_recc_rating']]
+    output_df = output_df.groupby(['music_recc_rating']).agg(Count = ('music_recc_rating', 'count')).reset_index()
+    output_df.columns = ['Recommendation Rating', 'Count']
+    output_df.sort_values("Recommendation Rating", ascending=True,inplace=True)
+    fig = px.bar(output_df, x="Count", y="Recommendation Rating",orientation='h')
+    st.plotly_chart(fig)
