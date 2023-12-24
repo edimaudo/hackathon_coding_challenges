@@ -5,9 +5,8 @@
 
 ### About The Application
 The application leverages Spotify data snapshot that focuses on the areas listed below
-- **Demographic Insights**
 - **Music**
 - **Podcasts**
-- **Subscription Prediction**
+
 
 
