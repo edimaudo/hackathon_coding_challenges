@@ -9,8 +9,8 @@ packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
   'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
   'caret','dummies','tidyr','Matrix','lubridate','plotly',
-  'data.table','scales','stopwords','tidytext',
-  'stringr', 'textmineR','topicmodels','textclean'
+  'data.table','scales','stopwords','tidytext','stringr', 
+  'textmineR','topicmodels','textclean'
 )
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
