@@ -56,7 +56,7 @@ ui <- dashboardPage(
   ),
   dashboardBody(
     tabItems(
-      tabItem(tabName = "about",includeMarkdown("about.md"),hr()),
+      tabItem(tabName = "about",includeMarkdown("about.md"),hr())
     )
   )
 )
