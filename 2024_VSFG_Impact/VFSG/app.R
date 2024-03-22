@@ -44,6 +44,23 @@ project_who <- read_excel("projects/Who submissions.xlsx")
 ################
 # UI
 ################
+ui <- dashboardPage(
+  dashboardHeader(title = "Ocean Discord Data Challenge"),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("About", tabName = "about", icon = icon("th")),
+      menuItem("Partners", tabName = "partner", icon = icon("th")),
+      menuItem("Social Media", tabName = "social", icon = icon("th")),
+      menuItem("Projects", tabName = "project", icon = icon("th"))
+    )
+  ),
+  dashboardBody(
+    tabItems(
+      tabItem(tabName = "about",includeMarkdown("about.md"),hr()),
+    )
+  )
+)
+
 
 
 ################
