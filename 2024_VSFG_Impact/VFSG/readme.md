@@ -37,7 +37,3 @@ Visualizations and stories shared will be showcased on our social media platform
 - Submission Deadline: 12 April 2024
 
 - Live Presentations: 19 April 2024
-
-## Solution
-- Appliation built using R Shiny and uses different datasets
-- It has 3 sections: Partners, Social Media and Linkedin
