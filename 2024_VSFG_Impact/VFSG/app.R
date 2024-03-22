@@ -26,14 +26,14 @@ for (package in packages) {
 charity_sdg <- read_excel("Charity - SDG.xlsx",sheet="SDG Goals")
 charity_impact <- read_excel("Charity - SDG.xlsx",sheet="Impact Data")
 partner_quotes <- read_excel("partner_quotes.xlsx")
-linkedin <- read_excel("Linkedin Stats.xlsx",sheet="LI metrics")
+linkedin <- read_excel("Linkedin Stats.xlsx",sheet="LI Metrics")
 linkedin_posts <- read_excel("Linkedin Stats.xlsx",sheet="All posts")
-project_nepal <- read_excel("Build Up Nepal.xlsx")
-project_india <- read_excel("India Water Portal submissions.xlsx")
-project_sunny <- read_excel("Sunny Street Submissions.xlsx")
-project_tap <- read_excel("Tap Elderly Women_s Wisdom for Youth (TEWWY) Submissions.xlsx")
-project_video <- read_excel("Video Volunteers Submissions.xlsx")
-project_who <- read_excel("Who submissions.xlsx")
+project_nepal <- read_excel("projects/Build Up Nepal.xlsx")
+project_india <- read_excel("projects/India Water Portal submissions.xlsx")
+project_sunny <- read_excel("projects/Sunny Street Submissions.xlsx")
+project_tap <- read_excel("projects/Tap Elderly Women_s Wisdom for Youth (TEWWY) Submissions.xlsx")
+project_video <- read_excel("projects/Video Volunteers Submissions.xlsx")
+project_who <- read_excel("projects/Who submissions.xlsx")
 
 
 ################
