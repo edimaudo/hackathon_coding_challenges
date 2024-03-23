@@ -49,21 +49,19 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
-      menuItem("Partners", tabName = "partner", icon = icon("th")),
+      menuItem("Partners", tabName = "partner", icon = icon("list")),
         menuSubItem("Partner Feedback", tabName = "partner_quotes"),
         menuSubItem("Partner Insights", tabName = "partner_insights"),
-      menuItem("Social Media", tabName = "social", icon = icon("th")),
-      menuItem("Projects", tabName = "project", icon = icon("th"))
+      menuItem("Social Media", tabName = "social", icon = icon("list")),
+      menuSubItem("Social Media Insights", tabName = "social_insights"),
+      menuItem("Projects", tabName = "project", icon = icon("list"))
     )
   ),
   dashboardBody(
-    tabItems(
-      tabItem(tabName = "about",includeMarkdown("about.md"),hr())
-    ), 
-    tabItem(tabName = "partner",
-            
-      
-    )
+    tabItems(tabItem(tabName = "about",includeMarkdown("about.md"),hr())), 
+    tabItem(tabName = "partner","Widgets tab content"), 
+    tabItem(tabName = "partner_quotes","Widgets tab content"),
+    tabItem(tabName = "partner_insights","Widgets tab content")
   )
 )
 
