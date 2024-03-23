@@ -45,11 +45,13 @@ project_who <- read_excel("projects/Who submissions.xlsx")
 # UI
 ################
 ui <- dashboardPage(
-  dashboardHeader(title = "Ocean Discord Data Challenge"),
+  dashboardHeader(title = "VSFG Data Challenge"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Partners", tabName = "partner", icon = icon("th")),
+        menuSubItem("Partner Feedback", tabName = "partner_quotes"),
+        menuSubItem("Partner Insights", tabName = "partner_insights"),
       menuItem("Social Media", tabName = "social", icon = icon("th")),
       menuItem("Projects", tabName = "project", icon = icon("th"))
     )
@@ -57,6 +59,10 @@ ui <- dashboardPage(
   dashboardBody(
     tabItems(
       tabItem(tabName = "about",includeMarkdown("about.md"),hr())
+    ), 
+    tabItem(tabName = "partner",
+            
+      
     )
   )
 )
