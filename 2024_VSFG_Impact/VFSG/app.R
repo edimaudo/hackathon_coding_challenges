@@ -95,7 +95,10 @@ ui <- dashboardPage(
           ),
     tabItem(tabName = "partner_quotes",
             fluidRow(
+              h4("Sentiment Analysis",style="text-align: center;"),
               plotOutput("sentimentPlot"),
+              h4("Word Cloud",style="text-align: center;"),
+              wordcloud2Output("wordCloudPlot",width = "150%", height = "400px"),
             ),
           ),
     tabItem(tabName = "partner_insights","Widgets tab content")
@@ -191,6 +194,31 @@ server <- function(input, output,session) {
       labs(y = "Contribution to sentiment", x = NULL) +
       coord_flip()
     
+  })
+  
+  output$wordCloudPlot <- renderWordcloud2({
+    # word cloud
+    #Create a vector containing only the text
+    text <- partner_quotes$Quote
+    # Create a corpus  
+    docs <- Corpus(VectorSource(text))
+    docs <- docs %>%
+      tm_map(removeNumbers) %>%
+      tm_map(removePunctuation) %>%
+      tm_map(stripWhitespace)
+    docs <- tm_map(docs, content_transformer(tolower))
+    docs <- tm_map(docs, removeWords, stopwords("english"))
+    
+    dtm <- TermDocumentMatrix(docs) 
+    matrix <- as.matrix(dtm) 
+    words <- sort(rowSums(matrix),decreasing=TRUE) 
+    df <- data.frame(word = names(words),freq=words)
+    
+    set.seed(1234) # for reproducibility 
+    #wordcloud(words = df$word, freq = df$freq, min.freq = 1,
+    #          max.words=200, random.order=FALSE, 
+    #          rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+    wordcloud2(data=df, size=1.6, color='random-dark')
   })
     
   
