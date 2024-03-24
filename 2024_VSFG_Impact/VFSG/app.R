@@ -8,9 +8,9 @@ rm(list = ls())
 packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
   'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
-  'caret','dummies','tidyr','Matrix','lubridate','plotly',
-  'data.table','scales','stopwords','tidytext','stringr', 
-  'textmineR','topicmodels','textclean'
+  'caret','dummies','tidyr','Matrix','lubridate','plotly','RColorBrewer',
+  'data.table','scales','stopwords','tidytext','stringr','wordcloud','wordcloud2',
+  'SnowballC','textmineR','topicmodels','textclean','tm'
 )
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
@@ -58,11 +58,23 @@ ui <- dashboardPage(
     )
   ),
   dashboardBody(
-    tabItems(tabItem(tabName = "about",includeMarkdown("about.md"),hr())), 
-    tabItem(tabName = "partner","Widgets tab content"), 
+    tabItems(
+      tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
+      tabItem(tabName = "partner",
+            fluidRow(
+              valueBoxOutput("charityBox"),
+              valueBoxOutput("countryBox"),
+              valueBoxOutput("cityBox"),
+              valueBoxOutput("topicBox"),
+              valueBoxOutput("sdgBox"),
+              valueBoxOutput("submissionBox"),
+              plotOutput("submissionOutput"),
+            ),
+          ),
     tabItem(tabName = "partner_quotes","Widgets tab content"),
     tabItem(tabName = "partner_insights","Widgets tab content")
   )
+ )
 )
 
 
@@ -70,7 +82,68 @@ ui <- dashboardPage(
 ################
 # Server logic 
 ################
-server <- function(input, output,session) {}
+server <- function(input, output,session) {
+  
+  #================
+  # Charity Overview
+  #================
+  output$charityBox <- renderValueBox({
+    valueBox(
+      "Charities", paste0(length(unique(charity_impact$`Name of charity/Project`))), icon = icon("list"),
+      color = "aqua"
+    )
+  })
+
+  output$countryBox <- renderValueBox({
+    valueBox(
+      "Countries", paste0(length(unique(charity_impact$`Charity Country`))), icon = icon("list"),
+      color = "aqua"
+    )
+  })  
+  
+  output$cityBox <- renderValueBox({
+    valueBox(
+      "Cities", paste0(length(unique(charity_impact$`Charity City`))), icon = icon("list"),
+      color = "aqua"
+    )
+  }) 
+  
+  output$topicBox <- renderValueBox({
+    valueBox(
+      "Topics", paste0(length(unique(charity_impact$Topic))), icon = icon("thumbs-up"),
+      color = "aqua"
+    )
+  }) 
+
+  output$sdgBox <- renderValueBox({
+      valueBox(
+        "SDGs", paste0(length(unique(charity_sdg$`SDG Goals`))), icon = icon("thumbs-up"),
+        color = "aqua"
+      )
+    })     
+  
+  output$submissionBox <- renderValueBox({
+    valueBox(
+      "Submissions", paste0(sum(charity_impact$`Number of Submissions`)), icon = icon("thumbs-up"),
+      color = "aqua"
+    )
+  }) 
+
+  output$submissionOutput <- renderPlot({
+    charity_impact %>% 
+      group_by(`Date of project`) %>%
+      summarize(total_submissions = sum(`Number of Submissions`)) %>%
+      select(`Date of project`,total_submissions) %>%
+      ggplot( aes(x=`Date of project`, y=total_submissions)) +
+      geom_line() + theme_classic() + 
+      labs(x ="Dates", y = "# of Submissions") +
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))  
+  })
+  
+}
 
 shinyApp(ui, server)
 
