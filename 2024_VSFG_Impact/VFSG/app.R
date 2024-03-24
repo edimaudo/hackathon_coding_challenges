@@ -40,6 +40,28 @@ project_who <- read_excel("projects/Who submissions.xlsx")
 # Data Setup
 ################
 
+#=============
+# Text analytics
+#=============
+# function to expand contractions in an English-language source
+fix_contractions <- function(doc) {
+  # "won't" is a special case as it does not expand to "wo not"
+  doc <- gsub("won't", "will not", doc)
+  doc <- gsub("can't", "can not", doc)
+  doc <- gsub("n't", " not", doc)
+  doc <- gsub("'ll", " will", doc)
+  doc <- gsub("'re", " are", doc)
+  doc <- gsub("'ve", " have", doc)
+  doc <- gsub("'m", " am", doc)
+  doc <- gsub("'d", " would", doc)
+  # 's could be 'is' or could be possessive: it has no expansion
+  doc <- gsub("'s", "", doc)
+  return(doc)
+}
+
+# function to remove special characters 
+remove_special_characters <- function(x) gsub("[^a-zA-Z0-9 ]", " ", x)
+
 
 ################
 # UI
@@ -71,7 +93,11 @@ ui <- dashboardPage(
               plotOutput("submissionOutput"),
             ),
           ),
-    tabItem(tabName = "partner_quotes","Widgets tab content"),
+    tabItem(tabName = "partner_quotes",
+            fluidRow(
+              plotOutput("sentimentPlot"),
+            ),
+          ),
     tabItem(tabName = "partner_insights","Widgets tab content")
   )
  )
@@ -142,6 +168,31 @@ server <- function(input, output,session) {
             axis.title = element_text(size = 14),
             axis.text = element_text(size = 12))  
   })
+  
+  output$sentimentPlot <- renderPlot({
+    
+    review_words <- partner_quotes %>%
+      unnest_tokens(word, Quote) %>%
+      anti_join(stop_words) %>%
+      distinct() %>%
+      filter(nchar(word) > 3) 
+    
+    bing_word_counts <- review_words %>%
+      inner_join(get_sentiments("bing")) %>%
+      count(word, sentiment, sort = TRUE) %>%
+      ungroup()
+    
+    bing_word_counts %>%
+      group_by(sentiment) %>%
+      top_n(10) %>%
+      ggplot(aes(reorder(word, n), n, fill = sentiment)) +
+      geom_bar(alpha = 0.9, stat = "identity", show.legend = FALSE) +
+      facet_wrap(~sentiment, scales = "free_y") +
+      labs(y = "Contribution to sentiment", x = NULL) +
+      coord_flip()
+    
+  })
+    
   
 }
 
