@@ -99,6 +99,8 @@ ui <- dashboardPage(
               plotOutput("sentimentPlot"),
               h4("Word Cloud",style="text-align: center;"),
               wordcloud2Output("wordCloudPlot",width = "150%", height = "400px"),
+              h4("Partner Quotes",style="text-align: center;"),
+              dataTableOutput("quoteTable"),
             ),
           ),
     tabItem(tabName = "partner_insights","Widgets tab content")
@@ -215,12 +217,12 @@ server <- function(input, output,session) {
     df <- data.frame(word = names(words),freq=words)
     
     set.seed(1234) # for reproducibility 
-    #wordcloud(words = df$word, freq = df$freq, min.freq = 1,
-    #          max.words=200, random.order=FALSE, 
-    #          rot.per=0.35, colors=brewer.pal(8, "Dark2"))
     wordcloud2(data=df, size=1.6, color='random-dark')
   })
     
+  output$quoteTable <- renderDataTable({
+    partner_quotes
+  })
   
 }
 
