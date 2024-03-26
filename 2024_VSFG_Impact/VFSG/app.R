@@ -39,6 +39,7 @@ project_who <- read_excel("projects/Who submissions.xlsx")
 ################
 # Data Setup
 ################
+charity <- sort(unique(charity_impact$`Name of charity/Project`))
 
 #=============
 # Text analytics
@@ -103,10 +104,24 @@ ui <- dashboardPage(
               dataTableOutput("quoteTable"),
             ),
           ),
-    tabItem(tabName = "partner_insights","Widgets tab content")
-  )
+    tabItem(tabName = "partner_insights",
+            sidebarLayout(
+                sidebarPanel(
+                  selectInput("charityInput", label = "Charity/Project",choices =charity ),
+                ),
+            
+              mainPanel (
+                h4("Charity Insights",style="text-align: center;"),
+                
+                fluidRow(
+                  dataTableOutput("charityTable")
+                )
+              )
+            )
+       )
+     )
+   )
  )
-)
 
 
 
@@ -222,6 +237,13 @@ server <- function(input, output,session) {
     
   output$quoteTable <- renderDataTable({
     partner_quotes
+  })
+  
+  
+  output$charityTable <- renderDataTable({
+    charity_impact %>%
+      filter(`Name of charity/Project` == input$charityInput) %>%
+      select(`Name of charity/Project`,`Mission Statement`,`Charity City`, `Charity Country`,Topic, `Date of project`, `Number of Submissions`)
   })
   
 }
