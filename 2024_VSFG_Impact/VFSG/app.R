@@ -65,11 +65,40 @@ remove_special_characters <- function(x) gsub("[^a-zA-Z0-9 ]", " ", x)
 
 
 word_cloud <- function(x) {
+  text <- x
+  # Create a corpus  
+  docs <- Corpus(VectorSource(text))
+  docs <- docs %>%
+    tm_map(removeNumbers) %>%
+    tm_map(removePunctuation) %>%
+    tm_map(stripWhitespace)
+  docs <- tm_map(docs, content_transformer(tolower))
+  docs <- tm_map(docs, removeWords, stopwords("english"))
+  
+  dtm <- TermDocumentMatrix(docs) 
+  matrix <- as.matrix(dtm) 
+  words <- sort(rowSums(matrix),decreasing=TRUE) 
+  df <- data.frame(word = names(words),freq=words)
+  
+  set.seed(1234) # for reproducibility 
+  wordcloud2(data=df, size=1.6, color='random-dark')
   
 }
 
 sentiment_analysis <- function(x) {
+  bing_word_counts <- x %>%
+    inner_join(get_sentiments("bing")) %>%
+    count(word, sentiment, sort = TRUE) %>%
+    ungroup()
   
+  bing_word_counts %>%
+    group_by(sentiment) %>%
+    top_n(10) %>%
+    ggplot(aes(reorder(word, n), n, fill = sentiment)) +
+    geom_bar(alpha = 0.9, stat = "identity", show.legend = FALSE) +
+    facet_wrap(~sentiment, scales = "free_y") +
+    labs(y = "Contribution to sentiment", x = NULL) +
+    coord_flip()
 }
 
 
@@ -215,42 +244,14 @@ server <- function(input, output,session) {
       distinct() %>%
       filter(nchar(word) > 3) 
     
-    bing_word_counts <- review_words %>%
-      inner_join(get_sentiments("bing")) %>%
-      count(word, sentiment, sort = TRUE) %>%
-      ungroup()
+    sentiment_analysis(review_words)
     
-    bing_word_counts %>%
-      group_by(sentiment) %>%
-      top_n(10) %>%
-      ggplot(aes(reorder(word, n), n, fill = sentiment)) +
-      geom_bar(alpha = 0.9, stat = "identity", show.legend = FALSE) +
-      facet_wrap(~sentiment, scales = "free_y") +
-      labs(y = "Contribution to sentiment", x = NULL) +
-      coord_flip()
+
     
   })
   
   output$wordCloudPlot <- renderWordcloud2({
-    # word cloud
-    #Create a vector containing only the text
-    text <- partner_quotes$Quote
-    # Create a corpus  
-    docs <- Corpus(VectorSource(text))
-    docs <- docs %>%
-      tm_map(removeNumbers) %>%
-      tm_map(removePunctuation) %>%
-      tm_map(stripWhitespace)
-    docs <- tm_map(docs, content_transformer(tolower))
-    docs <- tm_map(docs, removeWords, stopwords("english"))
-    
-    dtm <- TermDocumentMatrix(docs) 
-    matrix <- as.matrix(dtm) 
-    words <- sort(rowSums(matrix),decreasing=TRUE) 
-    df <- data.frame(word = names(words),freq=words)
-    
-    set.seed(1234) # for reproducibility 
-    wordcloud2(data=df, size=1.6, color='random-dark')
+    word_cloud(partner_quotes$Quote)
   })
     
   output$quoteTable <- renderDataTable({
