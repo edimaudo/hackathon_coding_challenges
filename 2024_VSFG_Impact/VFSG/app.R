@@ -349,48 +349,66 @@ server <- function(input, output,session) {
   
   output$impressionBox <- renderValueBox({
     valueBox(
-      
+      "Impressions", paste0(median(linkedin$`Impressions (total)`)), icon = icon("list"),
+      color = "aqua"
     )
     
   })
   
-  output$clickBox <- renderValueBox({
+  output$clicksBox <- renderValueBox({
     valueBox(
-      
+      "Clicks", paste0(median(linkedin$`Clicks (total)`)), icon = icon("list"),
+      color = "aqua"
     )
     
   })
   
   output$engagementBox <- renderValueBox({
     valueBox(
-      
+      "Engagement", paste0(scales::percent(round(median(linkedin$`Engagement rate (total)`),2))), icon = icon("list"),
+      color = "aqua"
     )
     
   })
   
   output$reactionBox <- renderValueBox({
     valueBox(
-      
+      "Reactions", paste0(median(linkedin$`Reactions (total)`)), icon = icon("list"),
+      color = "aqua"
     )
     
   })
   
   output$repostsBox <- renderValueBox({
     valueBox(
-      
+      "Reposts", paste0(median(linkedin$`Reposts (total)`)), icon = icon("list"),
+      color = "aqua"
     )
     
   })
   
   output$commentsBox <- renderValueBox({
     valueBox(
-      
+      "Impressions", paste0(median(linkedin$`Comments (total)`)), icon = icon("list"),
+      color = "aqua"
     )
     
   })
   
   
   output$linkedinPlot <- renderPlot({
+    
+    df <- linkedin %>%
+      group_by(Date) %>%
+      summarise(
+        Impressions = sum(`Impressions (total)`),
+        Clicks = sum(`Clicks (total)`),
+        Reactions = sum(`Reactions (total)`),
+        Comments = sum(`Comments (total)`),
+        Reposts = sum(`Reposts (total)`),
+        Engagment = sum(`Engagement rate (total)`)
+      ) %>%
+      select(Date, Impressions, Clicks, Reactions, Comments, Reposts, Engagement)
     
   })
 
