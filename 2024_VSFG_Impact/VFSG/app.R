@@ -44,7 +44,6 @@ charity <- sort(unique(charity_impact$`Name of charity/Project`))
 #=============
 # Text analytics
 #=============
-# function to expand contractions in an English-language source
 fix_contractions <- function(doc) {
   # "won't" is a special case as it does not expand to "wo not"
   doc <- gsub("won't", "will not", doc)
@@ -60,9 +59,8 @@ fix_contractions <- function(doc) {
   return(doc)
 }
 
-# function to remove special characters 
-remove_special_characters <- function(x) gsub("[^a-zA-Z0-9 ]", " ", x)
 
+remove_special_characters <- function(x) gsub("[^a-zA-Z0-9 ]", " ", x)
 
 word_cloud <- function(x) {
   text <- x
@@ -95,7 +93,7 @@ sentiment_analysis <- function(x) {
     group_by(sentiment) %>%
     top_n(10) %>%
     ggplot(aes(reorder(word, n), n, fill = sentiment)) +
-    geom_bar(alpha = 0.9, stat = "identity", show.legend = FALSE) +
+    geom_bar(alpha = 0.9, stat = "identity", show.legend = FALSE) + theme_classic() +
     facet_wrap(~sentiment, scales = "free_y") +
     labs(y = "Contribution to sentiment", x = NULL) +
     coord_flip()
@@ -121,6 +119,9 @@ ui <- dashboardPage(
   dashboardBody(
     tabItems(
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
+    #========  
+    # Partners
+    #========
       tabItem(tabName = "partner",
             fluidRow(
               valueBoxOutput("charityBox"),
@@ -165,10 +166,31 @@ ui <- dashboardPage(
                 )
               )
             )
-       )
+       ), 
+    #========
+    # social media
+    #========
+    tabItem(tabName = "social",
+            h4("Linkedin Overview",style="text-align: center;"),
+            fluidRow(
+              valueBoxOutput("impressionBox"),
+              valueBoxOutput("clicksBox"),
+              valueBoxOutput("engagementBox"),
+            ),
+            fluidRow(
+              valueBoxOutput("reactionBox"),
+              valueBoxOutput("repostsBox"),
+              valueBoxOutput("commentsBox"),
+            ),
+            fluidRow(
+              plotOutput("linkedinPlot"),
+            )
+        )
+      )
      )
    )
- )
+
+
 
 
 
@@ -178,7 +200,7 @@ ui <- dashboardPage(
 server <- function(input, output,session) {
   
   #================
-  # Charity/Partner Overview
+  # Partner
   #================
   output$charityBox <- renderValueBox({
     valueBox(
@@ -320,6 +342,59 @@ server <- function(input, output,session) {
       select(`Name of charity/Project`,`Mission Statement`,`Charity City`, `Charity Country`,Topic, `Date of project`, `Number of Submissions`)
   })
   
+  
+  #================
+  # Social Media
+  #================
+  
+  output$impressionBox <- renderValueBox({
+    valueBox(
+      
+    )
+    
+  })
+  
+  output$clickBox <- renderValueBox({
+    valueBox(
+      
+    )
+    
+  })
+  
+  output$engagementBox <- renderValueBox({
+    valueBox(
+      
+    )
+    
+  })
+  
+  output$reactionBox <- renderValueBox({
+    valueBox(
+      
+    )
+    
+  })
+  
+  output$repostsBox <- renderValueBox({
+    valueBox(
+      
+    )
+    
+  })
+  
+  output$commentsBox <- renderValueBox({
+    valueBox(
+      
+    )
+    
+  })
+  
+  
+  output$linkedinPlot <- renderPlot({
+    
+  })
+
+
 }
 
 shinyApp(ui, server)
