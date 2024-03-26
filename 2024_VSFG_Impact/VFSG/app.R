@@ -64,6 +64,15 @@ fix_contractions <- function(doc) {
 remove_special_characters <- function(x) gsub("[^a-zA-Z0-9 ]", " ", x)
 
 
+word_cloud <- function(x) {
+  
+}
+
+sentiment_analysis <- function(x) {
+  
+}
+
+
 ################
 # UI
 ################
@@ -112,7 +121,16 @@ ui <- dashboardPage(
             
               mainPanel (
                 h4("Charity Insights",style="text-align: center;"),
-                
+                fluidRow(
+                  valueBoxOutput("cityInsightBox"),
+                  valueBoxOutput("countryInsightBox"),
+                  valueBoxOutput("sdgInsightBox"), 
+                ),
+                fluidRow(
+                  valueBoxOutput("submissionInsightBox"),
+                  valueBoxOutput("topicInsightBox"),
+                                 
+                ),
                 fluidRow(
                   dataTableOutput("charityTable")
                 )
@@ -131,7 +149,7 @@ ui <- dashboardPage(
 server <- function(input, output,session) {
   
   #================
-  # Charity Overview
+  # Charity/Partner Overview
   #================
   output$charityBox <- renderValueBox({
     valueBox(
@@ -163,7 +181,7 @@ server <- function(input, output,session) {
 
   output$sdgBox <- renderValueBox({
       valueBox(
-        "SDGs", paste0(length(unique(charity_sdg$`SDG Goals`))), icon = icon("thumbs-up"),
+        "SDG", paste0(length(unique(charity_sdg$`SDG Goals`))), icon = icon("thumbs-up"),
         color = "aqua"
       )
     })     
@@ -240,9 +258,64 @@ server <- function(input, output,session) {
   })
   
   
-  output$charityTable <- renderDataTable({
+  df <- reactive({
     charity_impact %>%
-      filter(`Name of charity/Project` == input$charityInput) %>%
+      filter(`Name of charity/Project` == input$charityInput)
+  }) 
+  
+  df_sdg <- reactive({
+    charity_sdg %>%
+      filter(`Name of charity/Project` == input$charityInput)
+  })
+  
+  output$countryInsightBox <- renderValueBox({
+    valueBox(
+      "Country", paste0( df()$`Charity Country`), icon = icon("list"),
+      color = "aqua"
+    )
+  })  
+  
+  output$cityInsightBox <- renderValueBox({
+    valueBox(
+      "City", paste0(df()$`Charity City` ), icon = icon("list"),
+      color = "aqua"
+    )
+  }) 
+  
+  output$topicInsightBox <- renderValueBox({
+    valueBox(
+      "Topic", paste0(df()$Topic), icon = icon("thumbs-up"),
+      color = "aqua"
+    )
+  }) 
+  
+  output$sdgInsightBox <- renderValueBox({
+    
+    
+    if (!is.null( length(df_sdg()$`SDG Goals`))) {
+      output <- length(df_sdg()$`SDG Goals`)
+    } else {
+      output <- 0
+    }
+    
+    valueBox(
+      "SDGs", paste0(output), icon = icon("thumbs-up"),
+      color = "aqua"
+    )
+  })     
+  
+  output$submissionInsightBox <- renderValueBox({
+    valueBox(
+      "Submissions", paste0(sum(df()$`Number of Submissions`)), icon = icon("thumbs-up"),
+      color = "aqua"
+    )
+  })
+  
+  
+  
+  output$charityTable <- renderDataTable({
+    df() %>%
+      mutate(`Date of project` = lubridate::ymd(`Date of project`)) %>%
       select(`Name of charity/Project`,`Mission Statement`,`Charity City`, `Charity Country`,Topic, `Date of project`, `Number of Submissions`)
   })
   
