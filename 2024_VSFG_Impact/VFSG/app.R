@@ -398,17 +398,28 @@ server <- function(input, output,session) {
   
   output$linkedinPlot <- renderPlot({
     
-    df <- linkedin %>%
+    temp_df <- linkedin %>%
+      mutate(year_month = as.yearmon(Date, "%m/%Y"))
       group_by(Date) %>%
       summarise(
         Impressions = sum(`Impressions (total)`),
         Clicks = sum(`Clicks (total)`),
         Reactions = sum(`Reactions (total)`),
         Comments = sum(`Comments (total)`),
-        Reposts = sum(`Reposts (total)`),
-        Engagment = sum(`Engagement rate (total)`)
+        Reposts = sum(`Reposts (total)`)
       ) %>%
-      select(Date, Impressions, Clicks, Reactions, Comments, Reposts, Engagement)
+      select(Date, Impressions, Clicks, Reactions, Comments, Reposts)
+    
+    d <- melt(temp_df, id.vars="Date")
+    
+    # Everything on the same plot
+    ggplot(d, aes(Date,value, col=variable)) + 
+      geom_line()  + 
+      labs(x ="Date", y = "Count",col='Linkedin Metrics') + 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12)) 
     
   })
 
