@@ -40,6 +40,7 @@ project_who <- read_excel("projects/Who submissions.xlsx")
 # Data Setup
 ################
 charity <- sort(unique(charity_impact$`Name of charity/Project`))
+linkedin$Date <- mdy(linkedin$Date)
 
 #=============
 # Text analytics
@@ -78,7 +79,7 @@ word_cloud <- function(x) {
   words <- sort(rowSums(matrix),decreasing=TRUE) 
   df <- data.frame(word = names(words),freq=words)
   
-  set.seed(1234) # for reproducibility 
+  set.seed(1234)
   wordcloud2(data=df, size=1.6, color='random-dark')
   
 }
@@ -185,6 +186,9 @@ ui <- dashboardPage(
             fluidRow(
               plotOutput("linkedinPlot"),
             )
+        ), 
+    tabItem(tabName = 'social_insights',
+            
         )
       )
      )
@@ -399,8 +403,7 @@ server <- function(input, output,session) {
   output$linkedinPlot <- renderPlot({
     
     temp_df <- linkedin %>%
-      mutate(year_month = as.yearmon(Date, "%m/%Y"))
-      group_by(Date) %>%
+      group_by(Date)%>%
       summarise(
         Impressions = sum(`Impressions (total)`),
         Clicks = sum(`Clicks (total)`),
@@ -410,12 +413,12 @@ server <- function(input, output,session) {
       ) %>%
       select(Date, Impressions, Clicks, Reactions, Comments, Reposts)
     
-    d <- melt(temp_df, id.vars="Date")
+    d <- reshape2::melt(temp_df, id.vars="Date")
     
     # Everything on the same plot
     ggplot(d, aes(Date,value, col=variable)) + 
       geom_line()  + 
-      labs(x ="Date", y = "Count",col='Linkedin Metrics') + 
+      labs(x ="Date", y = "Metric Count",col='Linkedin Metrics') + 
       theme(legend.text = element_text(size = 12),
             legend.title = element_text(size = 12),
             axis.title = element_text(size = 14),
