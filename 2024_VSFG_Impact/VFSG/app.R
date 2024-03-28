@@ -90,7 +90,7 @@ sentiment_analysis <- function(x) {
     count(word, sentiment, sort = TRUE) %>%
     ungroup()
   
-  bing_word_counts %>%
+  g <- bing_word_counts %>%
     group_by(sentiment) %>%
     top_n(10) %>%
     ggplot(aes(reorder(word, n), n, fill = sentiment)) +
@@ -98,6 +98,7 @@ sentiment_analysis <- function(x) {
     facet_wrap(~sentiment, scales = "free_y") +
     labs(y = "Contribution to sentiment", x = NULL) +
     coord_flip()
+  
 }
 
 
@@ -131,13 +132,13 @@ ui <- dashboardPage(
               valueBoxOutput("topicBox"),
               valueBoxOutput("sdgBox"),
               valueBoxOutput("submissionBox"),
-              plotOutput("submissionOutput"),
+              plotlyOutput("submissionOutput"),
             ),
           ),
     tabItem(tabName = "partner_quotes",
             fluidRow(
               h4("Sentiment Analysis",style="text-align: center;"),
-              plotOutput("sentimentPlot"),
+              plotlyOutput("sentimentPlot"),
               h4("Word Cloud",style="text-align: center;"),
               wordcloud2Output("wordCloudPlot",width = "150%", height = "400px"),
               h4("Partner Quotes",style="text-align: center;"),
@@ -188,6 +189,9 @@ ui <- dashboardPage(
             )
         ), 
     tabItem(tabName = 'social_insights',
+            fluidRow(
+              plotlyOutput("plottedbyOutput"),
+            )
             
         )
       )
@@ -248,8 +252,9 @@ server <- function(input, output,session) {
     )
   }) 
 
-  output$submissionOutput <- renderPlot({
-    charity_impact %>% 
+  output$submissionOutput <- renderPlotly({
+    
+    g<- charity_impact %>% 
       group_by(`Date of project`) %>%
       summarize(total_submissions = sum(`Number of Submissions`)) %>%
       select(`Date of project`,total_submissions) %>%
@@ -260,6 +265,8 @@ server <- function(input, output,session) {
             legend.title = element_text(size = 12),
             axis.title = element_text(size = 14),
             axis.text = element_text(size = 12))  
+    
+    ggplotly(g)
   })
   
   output$sentimentPlot <- renderPlot({
@@ -270,7 +277,7 @@ server <- function(input, output,session) {
       distinct() %>%
       filter(nchar(word) > 3) 
     
-    sentiment_analysis(review_words)
+    ggplotly(sentiment_analysis(review_words))
     
 
     
@@ -416,13 +423,19 @@ server <- function(input, output,session) {
     d <- reshape2::melt(temp_df, id.vars="Date")
     
     # Everything on the same plot
-    ggplot(d, aes(Date,value, col=variable)) + 
+    plot_output <- ggplot(d, aes(Date,value, col=variable)) + 
       geom_line()  + 
       labs(x ="Date", y = "Metric Count",col='Linkedin Metrics') + 
       theme(legend.text = element_text(size = 12),
             legend.title = element_text(size = 12),
             axis.title = element_text(size = 14),
             axis.text = element_text(size = 12)) 
+    
+    ggplotly(plot_output)
+    
+  })
+  
+  output$plottedbyOutput <- renderPlotly({
     
   })
 
