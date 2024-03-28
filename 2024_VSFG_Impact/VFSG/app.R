@@ -41,6 +41,7 @@ project_who <- read_excel("projects/Who submissions.xlsx")
 #=============
 charity <- sort(unique(charity_impact$`Name of charity/Project`))
 linkedin$Date <- mdy(linkedin$Date)
+linkedin_posts$`Created date` <- dmy(linkedin_posts$`Created date`)
 
 #=============
 # Text analytics
@@ -154,11 +155,11 @@ ui <- dashboardPage(
           ),
     tabItem(tabName = "partner_quotes",
             fluidRow(
-              h4("Sentiment Analysis",style="text-align: center;"),
+              #h4("Sentiment Analysis",style="text-align: center;"),
               plotlyOutput("sentimentPlot"),
-              h4("Word Cloud",style="text-align: center;"),
+              #h4("Word Cloud",style="text-align: center;"),
               wordcloud2Output("wordCloudPlot",width = "150%", height = "400px"),
-              h4("Partner Quotes",style="text-align: center;"),
+              #h4("Partner Quotes",style="text-align: center;"),
               dataTableOutput("quoteTable"),
             ),
           ),
@@ -207,9 +208,12 @@ ui <- dashboardPage(
         ), 
     tabItem(tabName = 'social_insights',
             fluidRow(
-              plotlyOutput("plottedbyOutput"),
-            )
-            
+              column(width = 12, 
+                     box(plotlyOutput("plottedbyOutput"),),
+                     box(plotOutput("corrPlotOutput")),
+              ),
+            ),
+           
         )
       )
      )
@@ -451,7 +455,7 @@ server <- function(input, output,session) {
     d <- reshape2::melt(temp_df, id.vars="Date")
     
     plot_output <- ggplot(d, aes(Date,value, col=variable)) + 
-      geom_line()  + 
+      geom_line()  + theme_classic() +
       labs(x ="Date", y = "Metric Count",col='Linkedin Metrics') + 
       theme(legend.text = element_text(size = 12),
             legend.title = element_text(size = 12),
@@ -466,10 +470,10 @@ server <- function(input, output,session) {
     
     df <- linkedin_posts %>%
       group_by(`Posted by`) %>%
-      summarise(total_count = n()) %>%
-      select(`Posted by`,total_count)
+      summarise(Total = n()) %>%
+      select(`Posted by`,Total)
     
-    g <- ggplot(df, aes(x = `Posted by`, ,y = total_count))  +
+    g <- ggplot(df, aes(x = `Posted by`, ,y = Total))  +
       geom_bar(stat = "identity",width = 0.5, fill='#00FFFF') + theme_classic() + 
       labs(x ="Posted By", y = "Total Posts") + coord_flip() +
       theme(legend.text = element_text(size = 12),
@@ -481,8 +485,43 @@ server <- function(input, output,session) {
     
     
   })
+  
+  output$corrPlotOutput <- renderPlot({
+    corr_df <- linkedin_posts %>%
+      select(Impressions,Clicks, Likes, Comments, Reposts, `Click through rate (CTR)`,`Engagement rate`)
+    
+    corrplot(cor(corr_df),method="number")
+  })
+  
+  output$linkedinPostPlot <- renderPlotly({
+    temp_df <- linkedin_posts %>%
+      group_by(`Created date`) %>%
+      summarise(
+        Impressions = sum(Impressions),
+        Clicks = sum(Clicks),
+        Follows = sum(Follows),
+        Likes = sum(Likes),
+        Comments = sum(Comments),
+        Reposts = sum(Reposts)
+      ) %>%
+      select(Date, Impressions, Clicks, Reactions, Comments, Reposts)
+    
+    d <- reshape2::melt(temp_df, id.vars="Date")
+    
+    plot_output <- ggplot(d, aes(Date,value, col=variable)) + 
+      geom_line()  + theme_classic() +
+      labs(x ="Date", y = "Metric Count",col='Linkedin Metrics') + 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12)) 
+    
+    ggplotly(plot_output)
+  })
 
+  
 
+  
 }
 
 shinyApp(ui, server)
