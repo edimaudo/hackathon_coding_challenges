@@ -41,7 +41,6 @@ project_who <- read_excel("projects/Who submissions.xlsx")
 #=============
 charity <- sort(unique(charity_impact$`Name of charity/Project`))
 linkedin$Date <- mdy(linkedin$Date)
-#linkedin_posts$`Created date` <- dmy(linkedin_posts$`Created date`)
 
 #=============
 # Text analytics
@@ -155,11 +154,11 @@ ui <- dashboardPage(
           ),
     tabItem(tabName = "partner_quotes",
             fluidRow(
-              #h4("Sentiment Analysis",style="text-align: center;"),
+              h4("Sentiment Analysis",style="text-align: center;"),
               plotlyOutput("sentimentPlot"),
-              #h4("Word Cloud",style="text-align: center;"),
+              h4("Word Cloud",style="text-align: center;"),
               wordcloud2Output("wordCloudPlot",width = "150%", height = "400px"),
-              #h4("Partner Quotes",style="text-align: center;"),
+              h4("Partner Quotes",style="text-align: center;"),
               dataTableOutput("quoteTable"),
             ),
           ),
@@ -209,12 +208,16 @@ ui <- dashboardPage(
     tabItem(tabName = 'social_insights',
             fluidRow(
               column(width = 12, 
-                     box(plotlyOutput("plottedbyOutput"),),
-                     box(plotOutput("corrPlotOutput")),
+                box(h4("Plotted by ",style="text-align: center;"),
+                    plotlyOutput("plottedbyOutput"),),
+                box(h4("Linkedin Metrics Correlation",style="text-align: center;"),
+                    plotOutput("corrPlotOutput")),
               ),
             ),
               fluidRow(
+                h4("Linkedin Metrics",style="text-align: center;"),
                 plotlyOutput("linkedinPostPlot"),
+                h4("Linkedin Engagement Metrics",style="text-align: center;"),
                 plotlyOutput("linkedinPostPlot2"),
               ),
            
@@ -412,7 +415,8 @@ server <- function(input, output,session) {
   
   output$engagementBox <- renderValueBox({
     valueBox(
-      "Engagement", paste0(scales::percent(round(median(linkedin$`Engagement rate (total)`),2))), icon = icon("list"),
+      "Engagement", paste0(scales::percent(round(median(linkedin$`Engagement rate (total)`),2))), 
+      icon = icon("list"),
       color = "aqua"
     )
     
