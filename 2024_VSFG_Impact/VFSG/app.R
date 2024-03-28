@@ -450,7 +450,6 @@ server <- function(input, output,session) {
     
     d <- reshape2::melt(temp_df, id.vars="Date")
     
-    # Everything on the same plot
     plot_output <- ggplot(d, aes(Date,value, col=variable)) + 
       geom_line()  + 
       labs(x ="Date", y = "Metric Count",col='Linkedin Metrics') + 
@@ -464,6 +463,22 @@ server <- function(input, output,session) {
   })
   
   output$plottedbyOutput <- renderPlotly({
+    
+    df <- linkedin_posts %>%
+      group_by(`Posted by`) %>%
+      summarise(total_count = n()) %>%
+      select(`Posted by`,total_count)
+    
+    g <- ggplot(df, aes(x = `Posted by`, ,y = total_count))  +
+      geom_bar(stat = "identity",width = 0.5, fill='#00FFFF') + theme_classic() + 
+      labs(x ="Posted By", y = "Total Posts") + coord_flip() +
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+    
+    ggplotly(g)
+    
     
   })
 
