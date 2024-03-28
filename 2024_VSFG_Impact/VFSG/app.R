@@ -2,9 +2,9 @@
 # Shiny web app which provides insights visualization for social good projects
 #================================================================================
 rm(list = ls())
-################
+#=============
 # Packages 
-################
+#=============
 packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
   'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
@@ -20,9 +20,9 @@ for (package in packages) {
 }
 
 
-################
+#=============
 # Load Data
-################
+#=============
 charity_sdg <- read_excel("Charity - SDG.xlsx",sheet="SDG Goals")
 charity_impact <- read_excel("Charity - SDG.xlsx",sheet="Impact Data")
 partner_quotes <- read_excel("partner_quotes.xlsx")
@@ -36,9 +36,9 @@ project_video <- read_excel("projects/Video Volunteers Submissions.xlsx")
 project_who <- read_excel("projects/Who submissions.xlsx")
 
 
-################
+#=============
 # Data Setup
-################
+#=============
 charity <- sort(unique(charity_impact$`Name of charity/Project`))
 linkedin$Date <- mdy(linkedin$Date)
 
@@ -113,9 +113,6 @@ sentiment_analysis <- function(x) {
     inner_join(get_sentiments("bing")) %>%
     count(word, sentiment, sort = TRUE) %>%
     ungroup()
-  
- 
-  
 }
 
 
