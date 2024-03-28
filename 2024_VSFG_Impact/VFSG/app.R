@@ -586,7 +586,7 @@ server <- function(input, output,session) {
   })
 
   output$wordCloudLinkedinPlot <- renderWordcloud2({
-    
+    word_cloud(linkedin_posts$`Post title`)
   })
 
   
