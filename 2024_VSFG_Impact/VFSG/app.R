@@ -41,7 +41,7 @@ project_who <- read_excel("projects/Who submissions.xlsx")
 #=============
 charity <- sort(unique(charity_impact$`Name of charity/Project`))
 linkedin$Date <- mdy(linkedin$Date)
-linkedin_posts$`Created date` <- dmy(linkedin_posts$`Created date`)
+#linkedin_posts$`Created date` <- dmy(linkedin_posts$`Created date`)
 
 #=============
 # Text analytics
@@ -215,6 +215,7 @@ ui <- dashboardPage(
             ),
               fluidRow(
                 plotlyOutput("linkedinPostPlot"),
+                plotlyOutput("linkedinPostPlot2"),
               ),
            
         )
@@ -498,6 +499,7 @@ server <- function(input, output,session) {
   
   output$linkedinPostPlot <- renderPlotly({
     
+    linkedin_posts$`Created date` <- dmy(linkedin_posts$`Created date`)
     temp_df <- linkedin_posts %>%
       group_by(`Created date`) %>%
       summarise(
@@ -507,7 +509,8 @@ server <- function(input, output,session) {
         Comments = sum(Comments),
         Reposts = sum(Reposts)
       ) %>%
-      select(`Created date`, Impressions, Clicks, Likes, Comments, Reposts)
+      select(`Created date`, Impressions, Clicks, Likes, Comments, Reposts) %>%
+      na.omit()
     
     d <- reshape2::melt(temp_df, id.vars="Created date")
     
@@ -518,6 +521,34 @@ server <- function(input, output,session) {
             legend.title = element_text(size = 12),
             axis.title = element_text(size = 14),
             axis.text = element_text(size = 12)) 
+    
+    ggplotly(plot_output)
+  })
+  
+  output$linkedinPostPlot2 <- renderPlotly({
+    
+    linkedin_posts$`Created date` <- dmy(linkedin_posts$`Created date`)
+    temp_df <- linkedin_posts %>%
+      group_by(`Created date`) %>%
+      summarise(
+        `Engagement Rate` = round(sum(`Engagement rate`) * 100,2),
+        `Click Through Rate` = round(sum(`Click through rate (CTR)`) * 100,2),
+        
+      ) %>%
+      select(`Created date`, `Engagement Rate`,`Click Through Rate`) %>%
+      na.omit()
+    
+    d <- reshape2::melt(temp_df, id.vars="Created date")
+    
+    
+    plot_output <- ggplot(d, aes(`Created date`,value, col=variable)) + 
+      geom_line()  + theme_classic() +
+      labs(x ="Date", y = "Engagement %",col='Linkedin Metrics') + 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12)) 
+    
     
     ggplotly(plot_output)
   })
