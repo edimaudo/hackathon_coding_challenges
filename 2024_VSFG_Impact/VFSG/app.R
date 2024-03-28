@@ -45,6 +45,30 @@ linkedin$Date <- mdy(linkedin$Date)
 #=============
 # Text analytics
 #=============
+textcleaner <- function(x){
+  x <- as.character(x)
+  
+  x <- x %>%
+    str_to_lower() %>%  # convert all the string to low alphabet
+    replace_contraction() %>% # replace contraction to their multi-word forms
+    replace_internet_slang() %>% # replace internet slang to normal words
+    #replace_emoji(replacement = " ") %>% # replace emoji to words
+    #replace_emoticon(replacement = " ") %>% # replace emoticon to words
+    replace_hash(replacement = "") %>% # remove hashtag
+    replace_word_elongation() %>% # replace informal writing with known semantic replacements
+    replace_number(remove = T) %>% # remove number
+    replace_date(replacement = "") %>% # remove date
+    #replace_time(replacement = "") %>% # remove time
+    str_remove_all(pattern = "[[:punct:]]") %>% # remove punctuation
+    str_remove_all(pattern = "[^\\s]*[0-9][^\\s]*") %>% # remove mixed string n number
+    str_squish() %>% # reduces repeated whitespace inside a string.
+    str_trim() # removes whitespace from start and end of string
+  
+  return(as.data.frame(x))
+  
+}
+
+
 fix_contractions <- function(doc) {
   # "won't" is a special case as it does not expand to "wo not"
   doc <- gsub("won't", "will not", doc)
@@ -90,14 +114,7 @@ sentiment_analysis <- function(x) {
     count(word, sentiment, sort = TRUE) %>%
     ungroup()
   
-  g <- bing_word_counts %>%
-    group_by(sentiment) %>%
-    top_n(10) %>%
-    ggplot(aes(reorder(word, n), n, fill = sentiment)) +
-    geom_bar(alpha = 0.9, stat = "identity", show.legend = FALSE) + theme_classic() +
-    facet_wrap(~sentiment, scales = "free_y") +
-    labs(y = "Contribution to sentiment", x = NULL) +
-    coord_flip()
+ 
   
 }
 
@@ -131,9 +148,12 @@ ui <- dashboardPage(
               valueBoxOutput("cityBox"),
               valueBoxOutput("topicBox"),
               valueBoxOutput("sdgBox"),
-              valueBoxOutput("submissionBox"),
-              plotlyOutput("submissionOutput"),
+              valueBoxOutput("submissionBox")
             ),
+            fluidRow(
+                plotlyOutput("submissionOutput"),  
+            ),
+              
           ),
     tabItem(tabName = "partner_quotes",
             fluidRow(
@@ -185,7 +205,7 @@ ui <- dashboardPage(
               valueBoxOutput("commentsBox"),
             ),
             fluidRow(
-              plotOutput("linkedinPlot"),
+              plotlyOutput("linkedinPlot"),
             )
         ), 
     tabItem(tabName = 'social_insights',
@@ -269,7 +289,7 @@ server <- function(input, output,session) {
     ggplotly(g)
   })
   
-  output$sentimentPlot <- renderPlot({
+  output$sentimentPlot <- renderPlotly({
     
     review_words <- partner_quotes %>%
       unnest_tokens(word, Quote) %>%
@@ -277,7 +297,18 @@ server <- function(input, output,session) {
       distinct() %>%
       filter(nchar(word) > 3) 
     
-    ggplotly(sentiment_analysis(review_words))
+    bing_word_counts <- sentiment_analysis(review_words)
+    
+    g <- bing_word_counts %>%
+      group_by(sentiment) %>%
+      top_n(10) %>%
+      ggplot(aes(reorder(word, n), n, fill = sentiment)) +
+      geom_bar(alpha = 0.9, stat = "identity", show.legend = FALSE) + theme_classic() +
+      facet_wrap(~sentiment, scales = "free_y") +
+      labs(y = "Contribution to sentiment", x = NULL) +
+      coord_flip()
+    
+    ggplotly(g)
     
 
     
@@ -407,7 +438,7 @@ server <- function(input, output,session) {
   })
   
   
-  output$linkedinPlot <- renderPlot({
+  output$linkedinPlot <- renderPlotly({
     
     temp_df <- linkedin %>%
       group_by(Date)%>%
