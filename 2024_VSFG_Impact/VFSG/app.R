@@ -220,6 +220,13 @@ ui <- dashboardPage(
                 h4("Linkedin Engagement Metrics",style="text-align: center;"),
                 plotlyOutput("linkedinPostPlot2"),
               ),
+            fluidRow(
+              h4("Sentiment Analysis",style="text-align: center;"),
+              plotlyOutput("sentimentLinkedinPlot"),
+              h4("Word Cloud",style="text-align: center;"),
+              wordcloud2Output("wordCloudLinkedinPlot",width = "150%", height = "400px"),
+            )
+            
            
         )
       )
@@ -556,8 +563,31 @@ server <- function(input, output,session) {
     
     ggplotly(plot_output)
   })
-
   
+  output$sentimentLinkedinPlot <- renderPlotly({
+    review_words <- linkedin_posts %>%
+      unnest_tokens(word, `Post title`) %>%
+      anti_join(stop_words) %>%
+      distinct() %>%
+      filter(nchar(word) > 3) 
+    
+    bing_word_counts <- sentiment_analysis(review_words)
+    
+    g <- bing_word_counts %>%
+      group_by(sentiment) %>%
+      top_n(10) %>%
+      ggplot(aes(reorder(word, n), n, fill = sentiment)) +
+      geom_bar(alpha = 0.9, stat = "identity", show.legend = FALSE) + theme_classic() +
+      facet_wrap(~sentiment, scales = "free_y") +
+      labs(y = "Contribution to sentiment", x = NULL) +
+      coord_flip()
+    
+    ggplotly(g)
+  })
+
+  output$wordCloudLinkedinPlot <- renderWordcloud2({
+    
+  })
 
   
 }
