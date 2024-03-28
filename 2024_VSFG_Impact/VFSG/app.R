@@ -213,6 +213,9 @@ ui <- dashboardPage(
                      box(plotOutput("corrPlotOutput")),
               ),
             ),
+              fluidRow(
+                plotlyOutput("linkedinPostPlot"),
+              ),
            
         )
       )
@@ -474,7 +477,7 @@ server <- function(input, output,session) {
       select(`Posted by`,Total)
     
     g <- ggplot(df, aes(x = `Posted by`, ,y = Total))  +
-      geom_bar(stat = "identity",width = 0.5, fill='#00FFFF') + theme_classic() + 
+      geom_bar(stat = "identity",width = 0.5, fill='blue') + theme_classic() + 
       labs(x ="Posted By", y = "Total Posts") + coord_flip() +
       theme(legend.text = element_text(size = 12),
             legend.title = element_text(size = 12),
@@ -494,21 +497,21 @@ server <- function(input, output,session) {
   })
   
   output$linkedinPostPlot <- renderPlotly({
+    
     temp_df <- linkedin_posts %>%
       group_by(`Created date`) %>%
       summarise(
         Impressions = sum(Impressions),
         Clicks = sum(Clicks),
-        Follows = sum(Follows),
         Likes = sum(Likes),
         Comments = sum(Comments),
         Reposts = sum(Reposts)
       ) %>%
-      select(Date, Impressions, Clicks, Reactions, Comments, Reposts)
+      select(`Created date`, Impressions, Clicks, Likes, Comments, Reposts)
     
-    d <- reshape2::melt(temp_df, id.vars="Date")
+    d <- reshape2::melt(temp_df, id.vars="Created date")
     
-    plot_output <- ggplot(d, aes(Date,value, col=variable)) + 
+    plot_output <- ggplot(d, aes(`Created date`,value, col=variable)) + 
       geom_line()  + theme_classic() +
       labs(x ="Date", y = "Metric Count",col='Linkedin Metrics') + 
       theme(legend.text = element_text(size = 12),
