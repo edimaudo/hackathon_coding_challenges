@@ -248,7 +248,7 @@ ui <- dashboardPage(
               mainPanel (
                 fluidRow(
                   valueBoxOutput("projectSubmissionBox"),
-                  valueBoxOutput("projctCountryBox"),
+                  valueBoxOutput("projectCountryBox"),
                   valueBoxOutput("projectCityBox"),
                 ), 
                 fluidRow(
@@ -257,7 +257,6 @@ ui <- dashboardPage(
                   valueBoxOutput("projectExpertiseBox"),
                 )
               )
-          
         )
       )
      )
@@ -685,13 +684,48 @@ server <- function(input, output,session) {
     }
   }) 
   
-  output$charityBox <- renderValueBox({
+  
+  output$projectSubmissionBox <- renderValueBox({
+    valueBox(
+      "Submissions", paste0(length(project_df()$Country)), icon = icon("list"),
+      color = "aqua"
+    )
+  })
+  
+  output$projectCountryBox <- renderValueBox({
+    valueBox(
+      "Country", paste0(length(unique(project_df()$Country))), icon = icon("list"),
+      color = "aqua"
+    )
+  })
+  
+  output$projectCityBox <- renderValueBox({
+    valueBox(
+      "City", paste0(length(unique(project_df()$City))), icon = icon("list"),
+      color = "aqua"
+    )
+  })
+  
+  output$projectOccupationBox <- renderValueBox({
+    valueBox(
+      "Occupation", paste0(length(unique(project_df()$`What is your occupation?`))), icon = icon("list"),
+      color = "aqua"
+    )
+  })
+  
+  output$projectToolBox <- renderValueBox({
+    valueBox(
+      "Tools", paste0(length(unique(project_df()$Tool))), icon = icon("list"),
+      color = "aqua"
+    )
+  })
+  
+  output$projectExpertiseBox <- renderValueBox({
     valueBox(
       "Charities", paste0(length(unique(charity_impact$`Name of charity/Project`))), icon = icon("list"),
       color = "aqua"
     )
   })
-  
   
   
   
