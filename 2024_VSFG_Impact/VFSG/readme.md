@@ -22,3 +22,9 @@ See screenshots of the application below.
 
 ### About
 ![About!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/About.png "About")
+
+### Partner
+![Partner!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/Partner.png "Partner")
+
+![About!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/Partner_Insights.png "Partner Insights")
+
