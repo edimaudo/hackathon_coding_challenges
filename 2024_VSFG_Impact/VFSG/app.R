@@ -678,6 +678,8 @@ server <- function(input, output,session) {
       project_sunny
     } else if (input$projectInput == 'Project-Tap'){
       project_tap
+    } else if (input$projectInput == 'Project-Video'){
+      project_video
     } else {
       project_who
     }
