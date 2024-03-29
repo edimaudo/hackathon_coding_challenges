@@ -1,10 +1,8 @@
 ## Data App for Viz for Social Good
 
-Application built using R Shiny and leverages the dataset to provide insights.  
+Application leverages viz for social good dataset to provide insights into Partners, Social Media and Projects.
 
-Looks at 3 areas: Partners, Social Media and Projects.
-
-- **Partners**: Reviews partner data and looks for insights
-- **Social Media**: Focus is on Linkedin Engagement
+- **Partners**: Review of partner data
+- **Social Media**: Focus is on Linkedin metrics
 - **Projects**: Looks at different project submissions
  
