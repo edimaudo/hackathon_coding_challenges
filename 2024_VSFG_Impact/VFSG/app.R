@@ -41,6 +41,7 @@ project_who <- read_excel("projects/Who submissions.xlsx")
 #=============
 charity <- sort(unique(charity_impact$`Name of charity/Project`))
 linkedin$Date <- mdy(linkedin$Date)
+projects <- sort(c('Project-Nepal', 'Project-India','Project-Sunny','Project-Tap','Project-WHO'))
 
 #=============
 # Text analytics
@@ -164,7 +165,7 @@ ui <- dashboardPage(
           ),
     tabItem(tabName = "partner_insights",
             sidebarLayout(
-                sidebarPanel(
+                sidebarPanel(width = 2,
                   selectInput("charityInput", label = "Charity/Project",choices =charity ),
                 ),
             
@@ -228,12 +229,28 @@ ui <- dashboardPage(
               h4("Topic modeling",style="text-align: center;"),
               dataTableOutput("topicTable")
             )
-            
-           
+        ),
+    #========
+    # Projects
+    #========
+    tabItem(tabName = "project",
+            sidebarLayout(
+              sidebarPanel(width = 2,
+                           selectInput("projectInput", label = "Charity/Project",choices =projects),
+              ),
+              
+              mainPanel (
+                h4("Project Insights",style="text-align: center;"),
+                fluidRow(
+                )
+              )
+          
         )
       )
      )
    )
+)
+
 
 
 
@@ -405,7 +422,6 @@ server <- function(input, output,session) {
   #================
   # Social Media
   #================
-  
   output$impressionBox <- renderValueBox({
     valueBox(
       "Impressions", paste0(median(linkedin$`Impressions (total)`)), icon = icon("list"),
@@ -643,6 +659,9 @@ server <- function(input, output,session) {
   })
 
   
+  #================
+  # Projects
+  #================
 }
 
 shinyApp(ui, server)
