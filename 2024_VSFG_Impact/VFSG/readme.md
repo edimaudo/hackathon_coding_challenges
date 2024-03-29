@@ -17,6 +17,7 @@ The aim of this project is to create a series of data visualizations that highli
 ## Solution
 
 A Shiny App that leverages viz for social good dataset to provide insights into Partners, Social Media and Projects.
+It provides insights into the different aspects by using visualization and natural language processing.
 
 See screenshots of the application below.
 
