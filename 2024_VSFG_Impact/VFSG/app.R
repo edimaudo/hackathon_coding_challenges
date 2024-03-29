@@ -135,7 +135,7 @@ ui <- dashboardPage(
       menuItem("Partners", tabName = "partner", icon = icon("list")),
         menuSubItem("Partner Feedback", tabName = "partner_quotes"),
         menuSubItem("Partner Insights", tabName = "partner_insights"),
-      menuItem("Social Media", tabName = "social", icon = icon("list")),
+      menuItem("Social Media - Linkedin", tabName = "social", icon = icon("list")),
       menuSubItem("Social Media Insights", tabName = "social_insights"),
       menuItem("Projects", tabName = "project", icon = icon("list"))
     )
@@ -162,11 +162,11 @@ ui <- dashboardPage(
           ),
     tabItem(tabName = "partner_quotes",
             fluidRow(
-              h4("Sentiment Analysis",style="text-align: center;"),
+              h2("Sentiment Analysis",style="text-align: center;text-style:bold"),
               plotlyOutput("sentimentPlot"),
-              h4("Word Cloud",style="text-align: center;"),
+              h2("Word Cloud",style="text-align: center;text-style:bold"),
               wordcloud2Output("wordCloudPlot",width = "150%", height = "400px"),
-              h4("Partner Quotes",style="text-align: center;"),
+              h2("Partner Quotes",style="text-align: center;text-style:bold"),
               dataTableOutput("quoteTable"),
             ),
           ),
@@ -177,7 +177,6 @@ ui <- dashboardPage(
                 ),
             
               mainPanel (
-                h4("Charity Insights",style="text-align: center;"),
                 fluidRow(
                   valueBoxOutput("cityInsightBox"),
                   valueBoxOutput("countryInsightBox"),
@@ -198,7 +197,6 @@ ui <- dashboardPage(
     # social media
     #========
     tabItem(tabName = "social",
-            h4("Linkedin Overview",style="text-align: center;"),
             fluidRow(
               valueBoxOutput("impressionBox"),
               valueBoxOutput("clicksBox"),
@@ -216,24 +214,24 @@ ui <- dashboardPage(
     tabItem(tabName = 'social_insights',
             fluidRow(
               column(width = 12, 
-                box(h4("Plotted by ",style="text-align: center;"),
+                box(h3("Plotted by ",style="text-align: center;text-style:bold"),
                     plotlyOutput("plottedbyOutput"),),
-                box(h4("Linkedin Metrics Correlation",style="text-align: center;"),
+                box(h3("Linkedin Metrics Correlation",style="text-align: center;text-style:bold"),
                     plotOutput("corrPlotOutput")),
               ),
             ),
               fluidRow(
-                h4("Linkedin Metrics",style="text-align: center;"),
+                h3("Linkedin Metrics",style="text-align: center;text-style:bold"),
                 plotlyOutput("linkedinPostPlot"),
-                h4("Linkedin Engagement Metrics",style="text-align: center;"),
+                h3("Linkedin Engagement Metrics",style="text-align: center;"),
                 plotlyOutput("linkedinPostPlot2"),
               ),
             fluidRow(
-              h4("Sentiment Analysis",style="text-align: center;"),
+              h3("Sentiment Analysis",style="text-align: center;text-style:bold"),
               plotlyOutput("sentimentLinkedinPlot"),
-              h4("Word Cloud",style="text-align: center;"),
+              h3("Word Cloud",style="text-align: center;text-style:bold"),
               wordcloud2Output("wordCloudLinkedinPlot",width = "150%", height = "400px"),
-              h4("Topic modeling",style="text-align: center;"),
+              h3("Potential Topics",style="text-align: center;text-style:bold"),
               dataTableOutput("topicTable")
             )
         ),
@@ -259,17 +257,17 @@ ui <- dashboardPage(
                 ), 
                 fluidRow(
                   column(width = 12, 
-                         box(h4("Top Countries ",style="text-align: center;"),
+                         box(h3("Top Countries ",style="text-align: center;text-style:bold"),
                              plotlyOutput("projectCountryOutput"),),
-                         box(h4("Top Cities",style="text-align: center;"),
+                         box(h3("Top Cities",style="text-align: center;text-style:bold"),
                              plotlyOutput("projectCityOutput")),
                   ),
                 ),
                 fluidRow(
                   column(width = 12, 
-                         box(h4("Tools Used ",style="text-align: center;"),
+                         box(h3("Tools Used ",style="text-align: center;text-style:bold"),
                              plotlyOutput("projectToolOutput"),),
-                         box(h4("Data Fluency",style="text-align: center;"),
+                         box(h3("Data Fluency",style="text-align: center;text-style:bold"),
                              plotlyOutput("projectFluencyOutput")),
                   )
                 )
@@ -447,7 +445,7 @@ server <- function(input, output,session) {
   #================
   output$impressionBox <- renderValueBox({
     valueBox(
-      "Impressions", paste0(median(linkedin$`Impressions (total)`)), icon = icon("list"),
+      "Impressions", paste0(sum(linkedin$`Impressions (total)`)), icon = icon("list"),
       color = "aqua"
     )
     
@@ -455,7 +453,7 @@ server <- function(input, output,session) {
   
   output$clicksBox <- renderValueBox({
     valueBox(
-      "Clicks", paste0(median(linkedin$`Clicks (total)`)), icon = icon("list"),
+      "Clicks", paste0(sum(linkedin$`Clicks (total)`)), icon = icon("list"),
       color = "aqua"
     )
     
@@ -463,8 +461,8 @@ server <- function(input, output,session) {
   
   output$engagementBox <- renderValueBox({
     valueBox(
-      "Engagement", paste0(scales::percent(round(median(linkedin$`Engagement rate (total)`),2))), 
-      icon = icon("list"),
+      "Avg. Engagement", paste0(scales::percent(round(mean(linkedin$`Engagement rate (total)`),2))), 
+      icon = icon("thumbs-up"),
       color = "aqua"
     )
     
@@ -472,7 +470,7 @@ server <- function(input, output,session) {
   
   output$reactionBox <- renderValueBox({
     valueBox(
-      "Reactions", paste0(median(linkedin$`Reactions (total)`)), icon = icon("list"),
+      "Reactions", paste0(sum(linkedin$`Reactions (total)`)), icon = icon("list"),
       color = "aqua"
     )
     
@@ -480,7 +478,7 @@ server <- function(input, output,session) {
   
   output$repostsBox <- renderValueBox({
     valueBox(
-      "Reposts", paste0(median(linkedin$`Reposts (total)`)), icon = icon("list"),
+      "Reposts", paste0(sum(linkedin$`Reposts (total)`)), icon = icon("list"),
       color = "aqua"
     )
     
@@ -488,7 +486,7 @@ server <- function(input, output,session) {
   
   output$commentsBox <- renderValueBox({
     valueBox(
-      "Impressions", paste0(median(linkedin$`Comments (total)`)), icon = icon("list"),
+      "Impressions", paste0(sum(linkedin$`Comments (total)`)), icon = icon("list"),
       color = "aqua"
     )
     
