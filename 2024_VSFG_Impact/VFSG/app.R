@@ -245,9 +245,7 @@ ui <- dashboardPage(
                            selectInput("projectInput", 
                                        label = "Charity/Project",choices =projects),
               ),
-              
               mainPanel (
-                h4("Project Insights",style="text-align: center;"),
                 fluidRow(
                   valueBoxOutput("projectSubmissionBox"),
                   valueBoxOutput("projctCountryBox"),
@@ -265,12 +263,6 @@ ui <- dashboardPage(
      )
    )
 )
-
-
-
-
-
-
 ################
 # Server logic 
 ################
@@ -690,6 +682,13 @@ server <- function(input, output,session) {
       project_who
     }
   }) 
+  
+  output$charityBox <- renderValueBox({
+    valueBox(
+      "Charities", paste0(length(unique(charity_impact$`Name of charity/Project`))), icon = icon("list"),
+      color = "aqua"
+    )
+  })
   
   
   
