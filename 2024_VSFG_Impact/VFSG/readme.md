@@ -26,6 +26,15 @@ See screenshots of the application below.
 
 ### Partner
 ![Partner!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/Partner.png "Partner")
+### Partner Insights
+![Partner Insights!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/Partner_Insights.png "Partner Insights")
+### Partner Feedback
+![Partner Feedback!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/Partner_feedback.png "Partner Feedback")
 
-![About!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/Partner_Insights.png "Partner Insights")
+### Social Media
+![Social Media!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/Social_Media.png "Social Media")
+### Social Media Insights
+![Social_Media_Insights.png!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/Social_Media_Insights.png "Social Media Insights")
 
+### Projects
+![Projects!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/Projects.png "Projects")
