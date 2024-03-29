@@ -13,3 +13,12 @@ The aim of this project is to create a series of data visualizations that highli
 - Submission Deadline: 12 April 2024
 
 - Live Presentations: 19 April 2024
+
+## Solution
+
+A Shiny App that leverages viz for social good dataset to provide insights into Partners, Social Media and Projects.
+
+See screenshots of the application below.
+
+### About
+![About!](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/2024_VSFG_Impact/VFSG/About.png "About")
