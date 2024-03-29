@@ -255,6 +255,22 @@ ui <- dashboardPage(
                   valueBoxOutput("projectOccupationBox"),
                   valueBoxOutput("projectToolBox"),
                   valueBoxOutput("projectExpertiseBox"),
+                ), 
+                fluidRow(
+                  column(width = 12, 
+                         box(h4("Top Countries ",style="text-align: center;"),
+                             plotlyOutput("projectCountryOutput"),),
+                         box(h4("Top Cities",style="text-align: center;"),
+                             plotlyOutput("projectCityOutput")),
+                  ),
+                ),
+                fluidRow(
+                  column(width = 12, 
+                         box(h4("Tools Used ",style="text-align: center;"),
+                             plotlyOutput("projectToolOutput"),),
+                         box(h4("Data Fluency",style="text-align: center;"),
+                             plotlyOutput("projectFluencyOutput")),
+                  )
                 )
               )
         )
@@ -708,7 +724,8 @@ server <- function(input, output,session) {
   
   output$projectOccupationBox <- renderValueBox({
     valueBox(
-      "Occupation", paste0(length(unique(project_df()$`What is your occupation?`))), icon = icon("list"),
+      "Occupation", paste0(length(unique(project_df()$`What is your occupation?`))), 
+      icon = icon("list"),
       color = "aqua"
     )
   })
@@ -722,12 +739,91 @@ server <- function(input, output,session) {
   
   output$projectExpertiseBox <- renderValueBox({
     valueBox(
-      "Charities", paste0(length(unique(charity_impact$`Name of charity/Project`))), icon = icon("list"),
+      "Expertise", paste0(length(unique(project_df()$`What is your data visualisation expertise?`))), 
+      icon = icon("list"),
       color = "aqua"
     )
   })
   
+  output$projectCountryOutput <- renderPlotly({
+    
+    
+    g <- project_df() %>%
+      group_by(Country) %>%
+      summarise(Total = n()) %>%
+      select(Country,Total) %>% 
+      arrange(desc(Total)) %>%
+      na.omit() %>%
+      ggplot(aes(reorder(Country, Total),y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='blue') + theme_classic() + 
+      labs(x ="Country", y = "# of Submissions") + coord_flip() +
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+    
+    ggplotly(g)
+    
+  })
   
+  output$projectCityOutput <- renderPlotly({
+    g <- project_df() %>%
+      group_by(City) %>%
+      summarise(Total = n()) %>%
+      select(City,Total) %>% 
+      arrange(desc(Total)) %>%
+      top_n(10,City) %>%
+      na.omit() %>%
+      ggplot(aes(reorder(City, Total),y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='blue') + theme_classic() + 
+      labs(x ="City", y = "# of Submissions") + coord_flip() +
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+    
+    ggplotly(g)
+    
+  })
+  
+  output$projectFluencyOutput <- renderPlotly({
+    g <- project_df() %>%
+      group_by(`What is your data visualisation expertise?`) %>%
+      summarise(Total = n()) %>%
+      select(`What is your data visualisation expertise?`,Total) %>% 
+      arrange(desc(Total)) %>%
+      na.omit() %>%
+      ggplot(aes(reorder(`What is your data visualisation expertise?`, Total),y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='blue') + theme_classic() + 
+      labs(x ="Expertise", y = "# of Submissions") + coord_flip() +
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+    
+    ggplotly(g)
+    
+  })
+  
+  output$projectToolOutput <- renderPlotly({
+    
+    g <- project_df() %>%
+      group_by(Tool) %>%
+      summarise(Total = n()) %>%
+      select(Tool,Total) %>% 
+      arrange(desc(Total)) %>%
+      na.omit() %>%
+      ggplot(aes(reorder(Tool, Total),y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='blue') + theme_classic() + 
+      labs(x ="Tool", y = "# of Submissions") + coord_flip() +
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+    
+    ggplotly(g)
+    
+  })
   
 }
 
