@@ -249,6 +249,14 @@ ui <- dashboardPage(
               mainPanel (
                 h4("Project Insights",style="text-align: center;"),
                 fluidRow(
+                  valueBoxOutput("projectSubmissionBox"),
+                  valueBoxOutput("projctCountryBox"),
+                  valueBoxOutput("projectCityBox"),
+                ), 
+                fluidRow(
+                  valueBoxOutput("projectOccupationBox"),
+                  valueBoxOutput("projectToolBox"),
+                  valueBoxOutput("projectExpertiseBox"),
                 )
               )
           
