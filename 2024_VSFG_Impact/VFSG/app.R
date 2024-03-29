@@ -1,6 +1,7 @@
-#================================================================================
-# Shiny web app which provides insights visualization for social good projects
-#================================================================================
+#========================================
+# Shiny web app which provides insights 
+# for social good projects
+#=========================================
 rm(list = ls())
 #=============
 # Packages 
