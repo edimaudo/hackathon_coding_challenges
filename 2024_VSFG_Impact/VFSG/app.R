@@ -664,6 +664,21 @@ server <- function(input, output,session) {
   #================
   # Projects
   #================
+  project_df <- reactive({
+    if (input$projectInput == 'Project-India'){
+      project_india
+    } else if(input$projectInput == 'Project-Nepal') {
+      project_nepal
+    } else if (input$projectInput == 'Project-Sunny'){
+      project_sunny
+    } else if (input$projectInput == 'Project-Tap'){
+      project_tap
+    } else {
+      project_who
+    }
+  }) 
+  
+  
 }
 
 shinyApp(ui, server)
