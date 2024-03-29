@@ -122,7 +122,12 @@ sentiment_analysis <- function(x) {
 # UI
 ################
 ui <- dashboardPage(
-  dashboardHeader(title = "VSFG Data Challenge"),
+  dashboardHeader(title = "VSFG Data Challenge",
+                  tags$li(a(href = 'https://www.vizforsocialgood.com',
+                            img(src = 'VFSG Logo to include on viz - light background.png',
+                                title = "Company Home", height = "30px"),
+                            style = "padding-top:10px; padding-bottom:10px;"),
+                          class = "dropdown")),
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
@@ -677,6 +682,8 @@ server <- function(input, output,session) {
       project_who
     }
   }) 
+  
+  
   
   
 }
