@@ -41,7 +41,8 @@ project_who <- read_excel("projects/Who submissions.xlsx")
 #=============
 charity <- sort(unique(charity_impact$`Name of charity/Project`))
 linkedin$Date <- mdy(linkedin$Date)
-projects <- sort(c('Project-Nepal', 'Project-India','Project-Sunny','Project-Tap','Project-WHO'))
+projects <- sort(c('Project-Nepal', 'Project-India','Project-Sunny',
+                   'Project-Tap','Project-WHO','Project-Video'))
 
 #=============
 # Text analytics
@@ -236,7 +237,8 @@ ui <- dashboardPage(
     tabItem(tabName = "project",
             sidebarLayout(
               sidebarPanel(width = 2,
-                           selectInput("projectInput", label = "Charity/Project",choices =projects),
+                           selectInput("projectInput", 
+                                       label = "Charity/Project",choices =projects),
               ),
               
               mainPanel (
