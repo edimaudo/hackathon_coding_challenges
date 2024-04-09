@@ -10,8 +10,7 @@ packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
   'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
   'caret','dummies','tidyr','Matrix','lubridate','plotly','RColorBrewer',
-  'data.table','scales','stopwords','tidytext','stringr','wordcloud','wordcloud2',
-  'SnowballC','textmineR','topicmodels','textclean','tm'
+  'data.table','scales','rfm'
 )
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
@@ -19,3 +18,62 @@ for (package in packages) {
     library(package, character.only=T)
   }
 }
+#=============
+# Load Data
+#=============
+constituent <- read_csv("Apra Constituent Data.csv")
+transaction <- read_csv("Apra Gift Transactions Data.csv")
+interaction <- read_csv("Apra Interactions Data.csv")
+
+################
+# UI
+################
+ui <- dashboardPage(
+  dashboardHeader(title = "Apra Data Science Challenge",
+                  tags$li(a(href = 'https://www.aprahome.org',
+                            img(src = 'https://www.aprahome.org/Portals/_default/skins/siteskin/images/logo.png',
+                                title = "Home", height = "30px"),
+                            style = "padding-top:10px; padding-bottom:10px;"),
+                          class = "dropdown")),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("About", tabName = "about", icon = icon("th")),
+      menuItem("Overview", tabName = "overview", icon = icon("list")),
+      menuItem("Customer Segmentation", tabName = "segment", icon = icon("list")),
+      menuItem("Gift Prediction", tabName = "prediction", icon = icon("list")),
+      menuItem("Gift Forecasting", tabName = "forecast", icon = icon("list"))
+    )
+  ),
+  dashboardBody(
+    tabItems(
+      tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
+      #========  
+      # Partners
+      #========
+      tabItem(tabName = "partner",
+              fluidRow(
+                valueBoxOutput("charityBox"),
+                valueBoxOutput("countryBox"),
+                valueBoxOutput("cityBox"),
+                valueBoxOutput("topicBox"),
+                valueBoxOutput("sdgBox"),
+                valueBoxOutput("submissionBox")
+              ),
+              fluidRow(
+                plotlyOutput("submissionOutput"),  
+              )
+      )
+    )
+  )
+)
+                
+    #Apra gift transaction
+#dropdown --> campaign, appeal, primary unit, gift channel, payment type, gift type            
+
+server <- function(input, output,session) {}              
+                
+                
+                
+                
+                
+shinyApp(ui, server)
