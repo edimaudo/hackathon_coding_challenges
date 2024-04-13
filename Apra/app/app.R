@@ -38,7 +38,6 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
-      menuItem("Overview", tabName = "overview", icon = icon("list")),
       menuItem("Customer Segmentation", tabName = "segment", icon = icon("list")),
       menuItem("Gift Prediction", tabName = "prediction", icon = icon("list")),
       menuItem("Gift Forecasting", tabName = "forecast", icon = icon("list"))
@@ -48,20 +47,12 @@ ui <- dashboardPage(
     tabItems(
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
       #========  
-      # Partners
+      # Segment
       #========
-      tabItem(tabName = "partner",
+      tabItem(tabName = "segment",
               fluidRow(
-                valueBoxOutput("charityBox"),
-                valueBoxOutput("countryBox"),
-                valueBoxOutput("cityBox"),
-                valueBoxOutput("topicBox"),
-                valueBoxOutput("sdgBox"),
-                valueBoxOutput("submissionBox")
+
               ),
-              fluidRow(
-                plotlyOutput("submissionOutput"),  
-              )
       )
     )
   )
