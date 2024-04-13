@@ -25,6 +25,16 @@ constituent <- read_csv("Apra Constituent Data.csv")
 transaction <- read_csv("Apra Gift Transactions Data.csv")
 interaction <- read_csv("Apra Interactions Data.csv")
 
+#=============
+# Data munging
+#=============
+campaign <- sort(unique(na.omit(transaction$CAMPAIGN)))
+appeal <- sort(unique(na.omit(transaction$APPEAL)))
+primary_unit <- sort(unique(na.omit(transaction$PRIMARY_UNIT)))
+payment_type <- sort(unique(na.omit(transaction$PAYMENT_TYPE)))
+gift_type <- sort(unique(na.omit(transaction$GIFT_TYPE)))
+gift_designation <- sort(unique(na.omit(transaction$GIFT_DESIGNATION)))
+
 ################
 # UI
 ################
@@ -50,26 +60,37 @@ ui <- dashboardPage(
       # Segment
       #========
       tabItem(tabName = "segment",
-              fluidRow(
-                DT::datatable("rfmTable")
-              ),
-      )
-    )
-  )
-)
+              sidebarLayout(
+                sidebarPanel(
+                  selectInput("campaignInput", "Campaign", 
+                              choices = campaign, selected = campaign),
+                  selectInput("appealInput", "Appeal", 
+                              choices = appeal, selected = appeal),
+                  selectInput("primaryUnitInput", "Primary", 
+                              choices = primary_unit, selected = primary_unit),
+                  selectInput("paymentTypeInput", "Payment Type", 
+                              choices = payment_type, selected = payment_type),
+                  selectInput("giftTypeInput", "Gift Type", 
+                              choices = campaign, selected = gift_type),
+                  selectInput("giftDesignationInput", "Gift Designation", 
+                              choices = campaign, selected = gift_designation)
+                ),
+                mainPanel(
+                  
+                )
+              )
+            )   
+         )
+       )
+     )
 
 
-#========
-# Functions
-#========
+################
+# Server
+################
+server <- function(input, output,session) {
+  
 
-
-    #Apra gift transaction
-#dropdown --> campaign, appeal, primary unit, gift channel, payment type, gift type            
-
-server <- function(input, output,session) {}              
-
-              
 # RFM analysis
 output$rfmTable <- renderDataTable({
   
@@ -90,6 +111,6 @@ output$rfmTable <- renderDataTable({
   
 })           
                 
-                
+}             
                 
 shinyApp(ui, server)
