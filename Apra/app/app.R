@@ -51,7 +51,7 @@ ui <- dashboardPage(
       #========
       tabItem(tabName = "segment",
               fluidRow(
-
+                
               ),
       )
     )
@@ -62,7 +62,11 @@ ui <- dashboardPage(
 #dropdown --> campaign, appeal, primary unit, gift channel, payment type, gift type            
 
 server <- function(input, output,session) {}              
-                
+
+df <- reactive({
+  charity_impact %>%
+    filter(`Name of charity/Project` == input$charityInput)
+})               
                 
                 
                 
