@@ -61,7 +61,7 @@ ui <- dashboardPage(
       #========
       tabItem(tabName = "segment",
               sidebarLayout(
-                sidebarPanel(
+                sidebarPanel(width = 4,
                   selectInput("campaignInput", "Campaign", 
                               choices = campaign, selected = campaign),
                   selectInput("appealInput", "Appeal", 
@@ -71,12 +71,14 @@ ui <- dashboardPage(
                   selectInput("paymentTypeInput", "Payment Type", 
                               choices = payment_type, selected = payment_type),
                   selectInput("giftTypeInput", "Gift Type", 
-                              choices = campaign, selected = gift_type),
+                              choices = gift_type, selected = gift_type),
                   selectInput("giftDesignationInput", "Gift Designation", 
-                              choices = campaign, selected = gift_designation)
+                              choices = gift_designation, selected = gift_designation)
                 ),
                 mainPanel(
-                  
+                  fluidRow(
+                    DT::dataTableOutput("rfmTable")
+                  )
                 )
               )
             )   
