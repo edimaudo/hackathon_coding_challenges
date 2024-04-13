@@ -73,7 +73,8 @@ ui <- dashboardPage(
                   selectInput("giftTypeInput", "Gift Type", 
                               choices = gift_type, selected = gift_type),
                   selectInput("giftDesignationInput", "Gift Designation", 
-                              choices = gift_designation, selected = gift_designation)
+                              choices = gift_designation, selected = gift_designation),
+                  submitButton("Submit")
                 ),
                 mainPanel(
                   fluidRow(
@@ -97,7 +98,12 @@ server <- function(input, output,session) {
 output$rfmTable <- renderDataTable({
   
   rfm_data <- transaction %>%
-    filter() %>%
+    filter(CAMPAIGN == input$campaignInput,
+           APPEAL == input$appealInput,
+           PRIMARY_UNIT == input$primaryUnitInput,
+           PAYMENT_TYPE == input$paymentTypeInput,
+           GIFT_TYPE == input$giftTypeInput,
+           GIFT_DESIGNATION == input$gift_designation) %>%
     na.omit()
   
   #rfm_data <- na.omit(transaction)
