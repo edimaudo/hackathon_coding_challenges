@@ -51,23 +51,44 @@ ui <- dashboardPage(
       #========
       tabItem(tabName = "segment",
               fluidRow(
-                
+                DT::datatable("rfmTable")
               ),
       )
     )
   )
 )
-                
+
+
+#========
+# Functions
+#========
+
+
     #Apra gift transaction
 #dropdown --> campaign, appeal, primary unit, gift channel, payment type, gift type            
 
 server <- function(input, output,session) {}              
 
-df <- reactive({
-  charity_impact %>%
-    filter(`Name of charity/Project` == input$charityInput)
-})               
-                
+              
+# RFM analysis
+output$rfmTable <- renderDataTable({
+  
+  rfm_data <- transaction %>%
+    filter() %>%
+    na.omit()
+  
+  #rfm_data <- na.omit(transaction)
+  rfm_data_orders <- rfm_data %>%
+    mutate("customer_id" = CONTACT_ID, "order_date" = GIFT_DATE, "revenue" = GIFT_AMOUNT) %>%
+    select(customer_id, order_date, revenue) %>%
+    distinct()
+  
+  analysis_date <- lubridate::as_date(min(interaction$INTERACTION_DATE))
+  rfm_result <- rfm_table_order(rfm_data_orders, customer_id, order_date, revenue, analysis_date)
+  
+  rfm_segment(rfm_result)
+  
+})           
                 
                 
                 
