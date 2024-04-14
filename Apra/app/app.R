@@ -97,8 +97,6 @@ ui <- dashboardPage(
                                          choices = horizon_info, selected = 14),
                              selectInput("frequencyInput", "Frequency", 
                                          choices = frequency_info, selected = 7),
-                             sliderInput("traintestInput", "Train/Test Split",
-                                         min = 0, max = 1,value = 0.8),
                              submitButton("Submit")
                 ), 
                 mainPanel(
@@ -115,7 +113,6 @@ ui <- dashboardPage(
                   )
                 )
               )
-        
             )
          )
        )
@@ -157,7 +154,17 @@ output$rfmTable <- renderDataTable({
 #==================
 
 
+
+
+output$forecastPlot <- renderPlot({
+  
+})
+
 output$forecastOutput <- DT::renderDataTable({
+  
+})
+
+output$accuracyOutput <- DT::renderDataTable({
   
 })
                 
