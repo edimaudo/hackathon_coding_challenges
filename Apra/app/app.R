@@ -150,7 +150,16 @@ output$rfmTable <- renderDataTable({
   df_rfm_segment <-  right_join(rfm_score,rfm_segment(rfm_result),by="rfm_score") %>%
     select(customer_id, rfm_segment,rfm_score, transaction_count, recency_days, amount)
   
-})           
+})  
+
+#==================
+# Forecast Results/Output
+#==================
+
+
+output$forecastOutput <- DT::renderDataTable({
+  
+})
                 
 }             
                 
