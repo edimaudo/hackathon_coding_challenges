@@ -55,6 +55,9 @@ ui <- dashboardPage(
   ),
   dashboardBody(
     tabItems(
+      #======== 
+      # About
+      #======== 
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
       #========  
       # Segment
@@ -78,7 +81,25 @@ ui <- dashboardPage(
                   )
                 )
               )
-            )   
+            ),
+      #========  
+      # ML model
+      #======== 
+      tabItem(tabName = "prediction",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                  selectInput("campaignInput", "Campaign", 
+                            choices = campaign, selected = campaign, multiple = TRUE)
+                  
+                ), 
+                mainPanel(
+                  fluidRow(
+                    
+                  )
+                )
+              )
+        
+      )
          )
        )
      )
