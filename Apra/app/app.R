@@ -24,7 +24,7 @@ for (package in packages) {
 constituent <- read_csv("Apra Constituent Data.csv")
 transaction <- read_csv("Apra Gift Transactions Data.csv")
 interaction <- read_csv("Apra Interactions Data.csv")
-
+rfm_score <- read_excel("rfm_score.xlsx")
 #=============
 # Data munging
 #=============
@@ -61,19 +61,15 @@ ui <- dashboardPage(
       #========
       tabItem(tabName = "segment",
               sidebarLayout(
-                sidebarPanel(width = 4,
+                sidebarPanel(width = 3,
                   selectInput("campaignInput", "Campaign", 
-                              choices = campaign, selected = campaign),
-                  selectInput("appealInput", "Appeal", 
-                              choices = appeal, selected = appeal),
+                              choices = campaign, selected = campaign, multiple = TRUE),
                   selectInput("primaryUnitInput", "Primary", 
-                              choices = primary_unit, selected = primary_unit),
-                  selectInput("paymentTypeInput", "Payment Type", 
-                              choices = payment_type, selected = payment_type),
+                              choices = primary_unit, selected = primary_unit,multiple = TRUE),
                   selectInput("giftTypeInput", "Gift Type", 
-                              choices = gift_type, selected = gift_type),
-                  selectInput("giftDesignationInput", "Gift Designation", 
-                              choices = gift_designation, selected = gift_designation),
+                              choices = gift_type, selected = gift_type,multiple = TRUE),
+                  selectInput("paymentTypeInput", "Payment Type", 
+                              choices = payment_type, selected = payment_type,multiple = TRUE),
                   submitButton("Submit")
                 ),
                 mainPanel(
@@ -98,15 +94,13 @@ server <- function(input, output,session) {
 output$rfmTable <- renderDataTable({
   
   rfm_data <- transaction %>%
-    filter(CAMPAIGN == input$campaignInput,
-           APPEAL == input$appealInput,
-           PRIMARY_UNIT == input$primaryUnitInput,
-           PAYMENT_TYPE == input$paymentTypeInput,
-           GIFT_TYPE == input$giftTypeInput,
-           GIFT_DESIGNATION == input$gift_designation) %>%
+    filter(CAMPAIGN %in% input$campaignInput,
+           PRIMARY_UNIT %in% input$primaryUnitInput,
+           PAYMENT_TYPE %in%  input$paymentTypeInput,
+           GIFT_TYPE %in%  input$giftTypeInput#,
+           ) %>%
     na.omit()
-  
-  #rfm_data <- na.omit(transaction)
+
   rfm_data_orders <- rfm_data %>%
     mutate("customer_id" = CONTACT_ID, "order_date" = GIFT_DATE, "revenue" = GIFT_AMOUNT) %>%
     select(customer_id, order_date, revenue) %>%
@@ -115,7 +109,8 @@ output$rfmTable <- renderDataTable({
   analysis_date <- lubridate::as_date(min(interaction$INTERACTION_DATE))
   rfm_result <- rfm_table_order(rfm_data_orders, customer_id, order_date, revenue, analysis_date)
   
-  rfm_segment(rfm_result)
+  df_rfm_segment <-  right_join(rfm_score,rfm_segment(rfm_result),by="rfm_score") %>%
+    select(customer_id, rfm_segment,rfm_score, transaction_count, recency_days, amount)
   
 })           
                 
