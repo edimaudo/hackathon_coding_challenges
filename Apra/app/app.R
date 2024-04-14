@@ -152,7 +152,22 @@ output$rfmTable <- renderDataTable({
 #==================
 # Forecast Results/Output
 #==================
-
+filtered_df <- reactive({
+  df() %>%
+    filter(
+      fixed.acidity >= input$fixedAcidityInput[1],
+      volatile.acidity >= input$volatileAcidityInput[1],
+      citric.acid >= input$citricAcidInput[1],
+      residual.sugar >= input$residualSugarInput[1],
+      chlorides >= input$chloridesInput[1],
+      free.sulfur.dioxide >= input$freeSulfurDioxideInput[1],
+      total.sulfur.dioxide >= input$totalSulfurDioxideInput[1],
+      density  >= input$densityInput[1],
+      pH>= input$phInput[1],
+      sulphates >= input$sulphatesInput[1],
+      alcohol >= input$alcoholInput[1]
+    ) 
+}) 
 
 
 
