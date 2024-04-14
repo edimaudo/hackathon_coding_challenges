@@ -102,16 +102,24 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ), 
                 mainPanel(
-                
+                  h1("Forecasting",style="text-align: center;"), 
+                  tabsetPanel(type = "tabs",
+                              tabPanel(h4("Forecast Visualization",style="text-align: center;"), 
+                                       plotOutput("forecastPlot")),
+                              tabPanel(h4("Forecast Results",style="text-align: center;"), 
+                                       DT::dataTableOutput("forecastOutput")),
+                              tabPanel(h4("Forecast Accuracy",style="text-align: center;"), 
+                                       DT::dataTableOutput("accuracyOutput"))
+                  )
                     
                   )
                 )
               )
         
-      )
+            )
          )
        )
-     )
+     
 
 
 ################
