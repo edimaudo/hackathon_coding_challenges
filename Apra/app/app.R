@@ -10,7 +10,7 @@ packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
   'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
   'caret','dummies','tidyr','Matrix','lubridate','plotly','RColorBrewer',
-  'data.table','scales','rfm'
+  'data.table','scales','rfm','forecast','TTR','xts'
 )
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
@@ -34,6 +34,12 @@ primary_unit <- sort(unique(na.omit(transaction$PRIMARY_UNIT)))
 payment_type <- sort(unique(na.omit(transaction$PAYMENT_TYPE)))
 gift_type <- sort(unique(na.omit(transaction$GIFT_TYPE)))
 gift_designation <- sort(unique(na.omit(transaction$GIFT_DESIGNATION)))
+horizon_info <- c(1:50) #default 14
+frequency_info <- c(7, 12, 52, 365)
+difference_info <- c("Yes","No")
+log_info <- c("Yes","No")
+model_info <- c('auto-arima','auto-exponential','simple-exponential',
+                'double-exponential','triple-exponential', 'tbat')
 
 ################
 # UI
@@ -49,7 +55,6 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Customer Segmentation", tabName = "segment", icon = icon("list")),
-      menuItem("Gift Prediction", tabName = "prediction", icon = icon("list")),
       menuItem("Gift Forecasting", tabName = "forecast", icon = icon("list"))
     )
   ),
@@ -85,15 +90,19 @@ ui <- dashboardPage(
       #========  
       # ML model
       #======== 
-      tabItem(tabName = "prediction",
+      tabItem(tabName = "forecast",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                  selectInput("campaignInput", "Campaign", 
-                            choices = campaign, selected = campaign, multiple = TRUE)
-                  
+                             selectInput("horizonInput", "Horizon", 
+                                         choices = horizon_info, selected = 14),
+                             selectInput("frequencyInput", "Frequency", 
+                                         choices = frequency_info, selected = 7),
+                             sliderInput("traintestInput", "Train/Test Split",
+                                         min = 0, max = 1,value = 0.8),
+                             submitButton("Submit")
                 ), 
                 mainPanel(
-                  fluidRow(
+                
                     
                   )
                 )
