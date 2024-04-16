@@ -40,7 +40,7 @@ frequency_info <- c(7, 12, 52, 365)
 difference_info <- c("Yes","No")
 log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
-                'double-exponential','triple-exponential', 'tbat')
+                'double-exponential','triple-exponential', 'tbat','manual-arima')
 
 ################
 # UI
@@ -94,10 +94,22 @@ ui <- dashboardPage(
       tabItem(tabName = "forecast",
               sidebarLayout(
                 sidebarPanel(width = 3,
+                             selectInput("aggregateInput", "Aggregate", 
+                                         choices = aggregate_info, selected = 'daily'),
                              selectInput("horizonInput", "Horizon", 
                                          choices = horizon_info, selected = 14),
                              selectInput("frequencyInput", "Frequency", 
                                          choices = frequency_info, selected = 7),
+                             sliderInput("traintestInput", "Train/Test Split",
+                                         min = 0, max = 1,value = 0.8),
+                             selectInput("modelInput", "Models",choices = model_info, 
+                                                selected = model_info, multiple = TRUE),
+                             sliderInput("autoInput", "Auto-regression",
+                                         min = 0, max = 100,value = 0),
+                             sliderInput("difference2Input", "Difference",
+                                         min = 0, max = 52,value = 0),
+                             sliderInput("maInput", "Moving Average",
+                                         min = 0, max = 100,value = 0),
                              submitButton("Submit")
                 ), 
                 mainPanel(
