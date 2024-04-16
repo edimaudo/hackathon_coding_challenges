@@ -34,6 +34,7 @@ primary_unit <- sort(unique(na.omit(transaction$PRIMARY_UNIT)))
 payment_type <- sort(unique(na.omit(transaction$PAYMENT_TYPE)))
 gift_type <- sort(unique(na.omit(transaction$GIFT_TYPE)))
 gift_designation <- sort(unique(na.omit(transaction$GIFT_DESIGNATION)))
+aggregate_info <- c("daily",'weekly','monthly')
 horizon_info <- c(1:50) #default 14
 frequency_info <- c(7, 12, 52, 365)
 difference_info <- c("Yes","No")
@@ -88,7 +89,7 @@ ui <- dashboardPage(
               )
             ),
       #========  
-      # ML model
+      # forecasting
       #======== 
       tabItem(tabName = "forecast",
               sidebarLayout(
