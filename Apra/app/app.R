@@ -42,6 +42,46 @@ log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat','manual-arima')
 
+#=============
+# Functions
+#============
+
+forecast_data <- function(timeInput, sizeInput,frequencyInput, timeSeriesInput) {
+  if (timeInput == 'daily') {
+    gift.data <- apply.daily(timeSeriesInput,mean)
+    gift.end <- floor(as.numeric(sizeInput)*length(gift.data)) 
+    gift.train <- gift.data[1:gift.end,] 
+    gift.test <- gift.data[(gift.end+1):length(gift.data),]
+    gift.start <- c(year (start(gift.train)), month(start(gift.train)),
+                    week(start(gift.train)))
+    gift.end <- c(year(end(gift.train)), month(end(gift.train)), 
+                  day(end(gift.train)))
+  } else if (timeInput == 'weekly') {
+    gift.data <- apply.weekly(timeSeriesInput,mean)
+    gift.end <- floor(as.numeric(sizeInput)*length(gift.data)) 
+    gift.train <- gift.data[1:gift.end,] 
+    gift.test <- gift.data[(gift.end+1):length(gift.data),]
+    gift.start <- c(year (start(gift.train)), month(start(gift.train)),
+                    week(start(gift.train)))
+    gift.end <- c(year(end(gift.train)), month(end(gift.train)), 
+                  week(end(gift.train)))
+
+  } else {
+    gift.data <- apply.monthly(timeSeriesInput,mean)
+    gift.end <- floor(as.numeric(sizeInput)*length(gift.data)) 
+    gift.train <- gift.data[1:gift.end,] 
+    gift.test <- gift.data[(gift.end+1):length(gift.data),]
+    gift.start <- c(year (start(gift.train)), month(start(gift.train)),
+                    week(start(gift.train)))
+    gift.end <- c(year(end(gift.train)), month(end(gift.train)))
+   
+  }
+  gift.train <- ts(as.numeric(gift.train), start = gift.start, 
+                   end = gift.end, frequency = as.numeric(frequencyInput))
+ 
+}
+
+
 ################
 # UI
 ################
@@ -55,6 +95,7 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
+      menuItem("Overview", tabName = "overview", icon = icon("th")),
       menuItem("Customer Segmentation", tabName = "segment", icon = icon("list")),
       menuItem("Gift Forecasting", tabName = "forecast", icon = icon("list"))
     )
@@ -66,7 +107,7 @@ ui <- dashboardPage(
       #======== 
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
       #========  
-      # Segment
+      # Segmentation
       #========
       tabItem(tabName = "segment",
               sidebarLayout(
@@ -125,7 +166,42 @@ ui <- dashboardPage(
                     
                   )
                 )
+              ),
+      tabItem(tabName = "overview",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                             selectInput("aggregateInput", "Aggregate", 
+                                         choices = aggregate_info, selected = 'daily'),
+                             selectInput("horizonInput", "Horizon", 
+                                         choices = horizon_info, selected = 14),
+                             selectInput("frequencyInput", "Frequency", 
+                                         choices = frequency_info, selected = 7),
+                             sliderInput("traintestInput", "Train/Test Split",
+                                         min = 0, max = 1,value = 0.8),
+                             selectInput("modelInput", "Models",choices = model_info, 
+                                         selected = model_info, multiple = TRUE),
+                             sliderInput("autoInput", "Auto-regression",
+                                         min = 0, max = 100,value = 0),
+                             sliderInput("difference2Input", "Difference",
+                                         min = 0, max = 52,value = 0),
+                             sliderInput("maInput", "Moving Average",
+                                         min = 0, max = 100,value = 0),
+                             submitButton("Submit")
+                ), 
+                mainPanel(
+                  h1("Forecasting",style="text-align: center;"), 
+                  tabsetPanel(type = "tabs",
+                              tabPanel(h4("Forecast Visualization",style="text-align: center;"), 
+                                       plotOutput("forecastPlot")),
+                              tabPanel(h4("Forecast Results",style="text-align: center;"), 
+                                       DT::dataTableOutput("forecastOutput")),
+                              tabPanel(h4("Forecast Accuracy",style="text-align: center;"), 
+                                       DT::dataTableOutput("accuracyOutput"))
+                  )
+                  
+                )
               )
+      )
             )
          )
        )
@@ -137,8 +213,9 @@ ui <- dashboardPage(
 ################
 server <- function(input, output,session) {
   
-
+#=============
 # RFM analysis
+#=============
 output$rfmTable <- renderDataTable({
   
   rfm_data <- transaction %>%
@@ -163,24 +240,24 @@ output$rfmTable <- renderDataTable({
 })  
 
 #==================
-# Forecast Results/Output
+# Forecast Results
 #==================
-filtered_df <- reactive({
-  df() %>%
-    filter(
-      fixed.acidity >= input$fixedAcidityInput[1],
-      volatile.acidity >= input$volatileAcidityInput[1],
-      citric.acid >= input$citricAcidInput[1],
-      residual.sugar >= input$residualSugarInput[1],
-      chlorides >= input$chloridesInput[1],
-      free.sulfur.dioxide >= input$freeSulfurDioxideInput[1],
-      total.sulfur.dioxide >= input$totalSulfurDioxideInput[1],
-      density  >= input$densityInput[1],
-      pH>= input$phInput[1],
-      sulphates >= input$sulphatesInput[1],
-      alcohol >= input$alcoholInput[1]
-    ) 
-}) 
+gift_xts <- reactive({
+  
+  df_forecast <- transaction %>%
+    group_by(GIFT_DATE) %>%
+    summarise(Total = sum(GIFT_AMOUNT)) %>%
+    select(GIFT_DATE,Total)
+  gift.xts <- xts(x = df_forecast$Total, order.by = df_forecast$GIFT_DATE) 
+  
+})
+  
+  #gift.weekly <- apply.weekly(gift_xts(), mean) 
+  #gift.monthly <- apply.monthly(gift_xts(), mean) 
+  
+ 
+  
+
 
 
 
