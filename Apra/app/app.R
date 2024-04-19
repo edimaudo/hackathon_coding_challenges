@@ -101,8 +101,7 @@ ui <- dashboardPage(
                 fluidRow(
                   valueBoxOutput("interactionTypeBox"),
                   valueBoxOutput("interactionSummaryBox"),
-                  valueBoxOutput("campaignBox"),
-                  valueBoxOutput("giftAmtBox"),
+                  valueBoxOutput("campaignBox")
                 ),
                 fluidRow(
                   valueBoxOutput("appealBox"),
