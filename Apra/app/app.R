@@ -42,10 +42,6 @@ difference_info <- c("Yes","No")
 log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat','manual-arima')
-
-
-
-
 ################
 # UI
 ################
@@ -60,6 +56,8 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Overview", tabName = "overview", icon = icon("th")),
+      menuSubItem("Interaction", tabName = "interaction"),
+      menuSubItem("Gifts", tabName = "partner_insights"),
       menuItem("Customer Segmentation", tabName = "segment", icon = icon("list")),
       menuItem("Gift Forecasting", tabName = "forecast", icon = icon("list"))
     )
@@ -100,22 +98,27 @@ ui <- dashboardPage(
       # Overview
       #=========
       tabItem(tabName = "overview",
-                fluidRow(),
-              
-                  tabsetPanel(type = "tabs",
-                              tabPanel(h4("Gift",style="text-align: center;"), 
-                                       plotOutput("forecastPlot")),
-                              tabPanel(h4("Interaction",style="text-align: center;"), 
-                                       DT::dataTableOutput("forecastOutput"))
-                  )
-                  
-                )
+                fluidRow(
+                  valueBoxOutput("interactionTypeBox"),
+                  valueBoxOutput("interactionSummaryBox"),
+                  valueBoxOutput("campaignBox"),
+                  valueBoxOutput("giftAmtBox"),
+                ),
+                fluidRow(
+                  valueBoxOutput("appealBox"),
+                  valueBoxOutput("primaryUnitBox"),
+                  valueBoxOutput("giftChannelBox")
+                ),
+              fluidRow(
+                valueBoxOutput("paymentTypeBox"),
+                valueBoxOutput("giftDesgnationBox"),
+                valueBoxOutput("giftTypeBox")
+              ),
               )
+
+            )
          )
        )
-     
-
-
 ################
 # Server
 ################
@@ -123,7 +126,50 @@ server <- function(input, output,session) {
 
 #=============
 # EDA  
-#=============  
+#=============
+output$interactionTypeBox <- renderValueBox({
+  valueBox("Interaction Type", paste0(length(unique(interaction$INTERACTION_TYPE))), icon = icon("list"),color = "aqua")
+})  
+
+output$interactionSummaryBox <- renderValueBox({
+  valueBox("Interaction Summary", paste0(length(unique(interaction$INTERACTION_SUMMARY))), icon = icon("list"),color = "aqua")
+})
+
+output$giftAmtBox <- renderValueBox({
+  valueBox("Avg. Gift Amt.", paste0(round(mean(transaction$GIFT_AMOUNT)),2), icon = icon("thumbs-up"),color = "green")
+})  
+  
+output$campaignBox <- renderValueBox({
+  valueBox("Campaign", paste0(length(unique(transaction$CAMPAIGN))), icon = icon("list"),color = "aqua")
+})
+
+output$appealBox <- renderValueBox({
+  valueBox("Appeals", paste0(length(unique(transaction$APPEAL))), icon = icon("list"),color = "aqua")
+})
+
+output$primaryUnitBox <- renderValueBox({
+  valueBox("Primary Unit", paste0(length(unique(transaction$PRIMARY_UNIT))), icon = icon("list"),color = "aqua")
+})
+
+output$giftChannelBox <- renderValueBox({
+  valueBox("Gift Channel", paste0(length(unique(transaction$GIFT_CHANNEL))), icon = icon("list"),color = "aqua")
+})
+
+output$paymentTypeBox <- renderValueBox({
+  valueBox("Payment Type", paste0(length(unique(transaction$PAYMENT_TYPE))), icon = icon("list"),color = "aqua")
+})
+
+output$giftDesgnationBox <- renderValueBox({
+  valueBox("Gift Designation", paste0(length(unique(transaction$GIFT_DESIGNATION))), icon = icon("list"),color = "aqua")
+})
+
+output$giftTypeBox <- renderValueBox({
+  valueBox("Gift Type", paste0(length(unique(transaction$GIFT_TYPE))), icon = icon("list"),color = "aqua")
+})
+
+  
+  
+
 
 #=============
 # RFM analysis
@@ -155,28 +201,7 @@ output$rfmTable <- renderDataTable({
 #==================
 # Forecast Results
 #==================
-gift_xts <- reactive({
-  
-  df_forecast <- transaction %>%
-    group_by(GIFT_DATE) %>%
-    summarise(Total = sum(GIFT_AMOUNT)) %>%
-    select(GIFT_DATE,Total)
-  gift.xts <- xts(x = df_forecast$Total, order.by = df_forecast$GIFT_DATE) 
-  
-})
-  
-output$forecastPlot <- renderPlot({
-  
-})
 
-output$forecastOutput <- DT::renderDataTable({
-  
-})
-
-output$accuracyOutput <- DT::renderDataTable({
-  
-})
-                
 }             
                 
 shinyApp(ui, server)
