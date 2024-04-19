@@ -34,6 +34,7 @@ primary_unit <- sort(unique(na.omit(transaction$PRIMARY_UNIT)))
 payment_type <- sort(unique(na.omit(transaction$PAYMENT_TYPE)))
 gift_type <- sort(unique(na.omit(transaction$GIFT_TYPE)))
 gift_designation <- sort(unique(na.omit(transaction$GIFT_DESIGNATION)))
+gift_channel <- sort(unique(na.omit(transaction$GIFT_CHANNEL)))
 aggregate_info <- c("daily",'weekly','monthly')
 horizon_info <- c(1:50) #default 14
 frequency_info <- c(7, 12, 52, 365)
@@ -42,44 +43,7 @@ log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat','manual-arima')
 
-#=============
-# Functions
-#============
 
-forecast_data <- function(timeInput, sizeInput,frequencyInput, timeSeriesInput) {
-  if (timeInput == 'daily') {
-    gift.data <- apply.daily(timeSeriesInput,mean)
-    gift.end <- floor(as.numeric(sizeInput)*length(gift.data)) 
-    gift.train <- gift.data[1:gift.end,] 
-    gift.test <- gift.data[(gift.end+1):length(gift.data),]
-    gift.start <- c(year (start(gift.train)), month(start(gift.train)),
-                    week(start(gift.train)))
-    gift.end <- c(year(end(gift.train)), month(end(gift.train)), 
-                  day(end(gift.train)))
-  } else if (timeInput == 'weekly') {
-    gift.data <- apply.weekly(timeSeriesInput,mean)
-    gift.end <- floor(as.numeric(sizeInput)*length(gift.data)) 
-    gift.train <- gift.data[1:gift.end,] 
-    gift.test <- gift.data[(gift.end+1):length(gift.data),]
-    gift.start <- c(year (start(gift.train)), month(start(gift.train)),
-                    week(start(gift.train)))
-    gift.end <- c(year(end(gift.train)), month(end(gift.train)), 
-                  week(end(gift.train)))
-
-  } else {
-    gift.data <- apply.monthly(timeSeriesInput,mean)
-    gift.end <- floor(as.numeric(sizeInput)*length(gift.data)) 
-    gift.train <- gift.data[1:gift.end,] 
-    gift.test <- gift.data[(gift.end+1):length(gift.data),]
-    gift.start <- c(year (start(gift.train)), month(start(gift.train)),
-                    week(start(gift.train)))
-    gift.end <- c(year(end(gift.train)), month(end(gift.train)))
-   
-  }
-  gift.train <- ts(as.numeric(gift.train), start = gift.start, 
-                   end = gift.end, frequency = as.numeric(frequencyInput))
- 
-}
 
 
 ################
@@ -114,10 +78,12 @@ ui <- dashboardPage(
                 sidebarPanel(width = 3,
                   selectInput("campaignInput", "Campaign", 
                               choices = campaign, selected = campaign, multiple = TRUE),
-                  selectInput("primaryUnitInput", "Primary", 
+                  selectInput("primaryUnitInput", "Primary Unit", 
                               choices = primary_unit, selected = primary_unit,multiple = TRUE),
                   selectInput("giftTypeInput", "Gift Type", 
                               choices = gift_type, selected = gift_type,multiple = TRUE),
+                  selectInput("giftChannelInput", "Gift Channel", 
+                              choices = gift_channel, selected = gift_channel,multiple = TRUE),
                   selectInput("paymentTypeInput", "Payment Type", 
                               choices = payment_type, selected = payment_type,multiple = TRUE),
                   submitButton("Submit")
@@ -129,80 +95,22 @@ ui <- dashboardPage(
                 )
               )
             ),
-      #========  
-      # forecasting
-      #======== 
-      tabItem(tabName = "forecast",
-              sidebarLayout(
-                sidebarPanel(width = 3,
-                             selectInput("aggregateInput", "Aggregate", 
-                                         choices = aggregate_info, selected = 'daily'),
-                             selectInput("horizonInput", "Horizon", 
-                                         choices = horizon_info, selected = 14),
-                             selectInput("frequencyInput", "Frequency", 
-                                         choices = frequency_info, selected = 7),
-                             sliderInput("traintestInput", "Train/Test Split",
-                                         min = 0, max = 1,value = 0.8),
-                             selectInput("modelInput", "Models",choices = model_info, 
-                                                selected = model_info, multiple = TRUE),
-                             sliderInput("autoInput", "Auto-regression",
-                                         min = 0, max = 100,value = 0),
-                             sliderInput("difference2Input", "Difference",
-                                         min = 0, max = 52,value = 0),
-                             sliderInput("maInput", "Moving Average",
-                                         min = 0, max = 100,value = 0),
-                             submitButton("Submit")
-                ), 
-                mainPanel(
-                  h1("Forecasting",style="text-align: center;"), 
-                  tabsetPanel(type = "tabs",
-                              tabPanel(h4("Forecast Visualization",style="text-align: center;"), 
-                                       plotOutput("forecastPlot")),
-                              tabPanel(h4("Forecast Results",style="text-align: center;"), 
-                                       DT::dataTableOutput("forecastOutput")),
-                              tabPanel(h4("Forecast Accuracy",style="text-align: center;"), 
-                                       DT::dataTableOutput("accuracyOutput"))
-                  )
-                    
-                  )
-                )
-              ),
+
+      #=========
+      # Overview
+      #=========
       tabItem(tabName = "overview",
-              sidebarLayout(
-                sidebarPanel(width = 3,
-                             selectInput("aggregateInput", "Aggregate", 
-                                         choices = aggregate_info, selected = 'daily'),
-                             selectInput("horizonInput", "Horizon", 
-                                         choices = horizon_info, selected = 14),
-                             selectInput("frequencyInput", "Frequency", 
-                                         choices = frequency_info, selected = 7),
-                             sliderInput("traintestInput", "Train/Test Split",
-                                         min = 0, max = 1,value = 0.8),
-                             selectInput("modelInput", "Models",choices = model_info, 
-                                         selected = model_info, multiple = TRUE),
-                             sliderInput("autoInput", "Auto-regression",
-                                         min = 0, max = 100,value = 0),
-                             sliderInput("difference2Input", "Difference",
-                                         min = 0, max = 52,value = 0),
-                             sliderInput("maInput", "Moving Average",
-                                         min = 0, max = 100,value = 0),
-                             submitButton("Submit")
-                ), 
-                mainPanel(
-                  h1("Forecasting",style="text-align: center;"), 
+                fluidRow(),
+              
                   tabsetPanel(type = "tabs",
-                              tabPanel(h4("Forecast Visualization",style="text-align: center;"), 
+                              tabPanel(h4("Gift",style="text-align: center;"), 
                                        plotOutput("forecastPlot")),
-                              tabPanel(h4("Forecast Results",style="text-align: center;"), 
-                                       DT::dataTableOutput("forecastOutput")),
-                              tabPanel(h4("Forecast Accuracy",style="text-align: center;"), 
-                                       DT::dataTableOutput("accuracyOutput"))
+                              tabPanel(h4("Interaction",style="text-align: center;"), 
+                                       DT::dataTableOutput("forecastOutput"))
                   )
                   
                 )
               )
-      )
-            )
          )
        )
      
@@ -212,7 +120,11 @@ ui <- dashboardPage(
 # Server
 ################
 server <- function(input, output,session) {
-  
+
+#=============
+# EDA  
+#=============  
+
 #=============
 # RFM analysis
 #=============
@@ -222,7 +134,8 @@ output$rfmTable <- renderDataTable({
     filter(CAMPAIGN %in% input$campaignInput,
            PRIMARY_UNIT %in% input$primaryUnitInput,
            PAYMENT_TYPE %in%  input$paymentTypeInput,
-           GIFT_TYPE %in%  input$giftTypeInput#,
+           GIFT_TYPE %in%  input$giftTypeInput,
+           GIFT_CHANNEL %in% input$giftChannelInput
            ) %>%
     na.omit()
 
@@ -252,15 +165,6 @@ gift_xts <- reactive({
   
 })
   
-  #gift.weekly <- apply.weekly(gift_xts(), mean) 
-  #gift.monthly <- apply.monthly(gift_xts(), mean) 
-  
- 
-  
-
-
-
-
 output$forecastPlot <- renderPlot({
   
 })
