@@ -112,7 +112,14 @@ ui <- dashboardPage(
                 valueBoxOutput("paymentTypeBox"),
                 valueBoxOutput("giftDesgnationBox"),
                 valueBoxOutput("giftTypeBox")
+              ),
+              fluidRow(
+                h2("Interaction",style="text-align: center;"),
+                plotlyOutput("interactionOverviewOutput"),
+                h2("Gifts",style="text-align: center;"),
+                plotlyOutput("giftOverviewOutput")
               )
+              
               ), 
       tabItem(tabName = "interaction",
               tabsetPanel(type = "tabs",
@@ -176,19 +183,19 @@ output$giftTypeBox <- renderValueBox({
   valueBox("Gift Type", paste0(length(unique(transaction$GIFT_TYPE))), icon = icon("list"),color = "aqua")
 })
 
-output$interactionPlot <- renderPlotly({
+output$interactionOverviewOutput <- renderPlotly({
   
   g <- interaction %>%
-    group_by(INTERACTION_TYPE) %>%
+    group_by(INTERACTION_DATE) %>%
     summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
-    select(INTERACTION_TYPE, Total) %>%
-    ggplot(aes(x = reorder(INTERACTION_TYPE,Total) ,y = Total))  +
-    geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() + 
-    labs(x ="Interaction Type", y = "Total Interactions") + coord_flip() +
-    theme(legend.text = element_text(size = 12),
-          legend.title = element_text(size = 12),
-          axis.title = element_text(size = 14),
-          axis.text = element_text(size = 12))
+    select(INTERACTION_DATE, Total) %>%
+    ggplot(aes(x = INTERACTION_DATE ,y = Total))  +
+    geom_line() + theme_classic() + 
+    labs(x ="Interaction Type", y = "Total Interactions") 
+  theme(legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
   
   ggplotly(g)
   
