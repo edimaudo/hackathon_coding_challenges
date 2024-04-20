@@ -23,8 +23,57 @@ cadmium <- read_csv("Cadmium emissions to air by facility.csv")
 lead <- read_csv("Lead emissions to air by facility.csv")
 mecury <- read_csv("Mercury emissions to air by facility.csv")
 
+#=============
+# Exploratory analysis
+#=============
+
+group_by(INTERACTION_TYPE) %>%
+  summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
+  select(INTERACTION_TYPE, Total) %>%
+  ggplot(aes(x = reorder(INTERACTION_TYPE,Total) ,y = Total))  +
+  geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() + 
+  labs(x ="Interaction Type", y = "Total Interactions") + coord_flip() +
+  theme(legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
+
 # top 10 mecury emissions by facility
+df_mecury_facility <- mecury %>%
+  group_by(`Facility name`) %>%
+  summarise(Total = sum(as.double(Emissions))) %>%
+  select(`Facility name`, Total) %>%
+  arrange(desc(Total)) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(`Facility name`,Total) ,y = Total))  +
+  geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() + 
+  labs(x ="Facility Name", y = "Total Emissions(Kg)") + coord_flip() +
+  theme(legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
+  
+  
+ggplotly(df_mecury_facility)
+
+
 # top 10 mecury emissions by company
+df_mecury_company <- mecury %>%
+  group_by(`Company name`) %>%
+  summarise(Total = sum(as.double(Emissions))) %>%
+  select(`Company name`, Total) %>%
+  arrange(desc(Total)) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(`Company name`,Total) ,y = Total))  +
+  geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() + 
+  labs(x ="Company Name", y = "Total Emissions(Kg)") + coord_flip() +
+  theme(legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
+
+ggplotly(df_mecury_company)
+
 # top 10 mecury emissions by City
 # top 10 mecury emissions by Province
 # 
