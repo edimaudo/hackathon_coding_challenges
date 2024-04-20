@@ -57,7 +57,7 @@ ui <- dashboardPage(
       menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Overview", tabName = "overview", icon = icon("th")),
       menuSubItem("Interaction", tabName = "interaction"),
-      menuSubItem("Gifts", tabName = "partner_insights"),
+      menuSubItem("Gifts", tabName = "gift"),
       menuItem("Customer Segmentation", tabName = "segment", icon = icon("list")),
       menuItem("Gift Forecasting", tabName = "forecast", icon = icon("list"))
     )
@@ -123,14 +123,24 @@ ui <- dashboardPage(
               ), 
       tabItem(tabName = "interaction",
               tabsetPanel(type = "tabs",
+                          tabPanel(h4("Interaction Trends",style="text-align: center;"), 
+                                   plotlyOutput("interactionTrendPlot")),
                           tabPanel(h4("Interaction Insights",style="text-align: center;"), 
-                                   plotlyOutput("interactionPlot")),
+                                   DT::dataTableOutput("interactionInsightsOutput")),
                           tabPanel(h4("Interaction Flow",style="text-align: center;"), 
-                                   DT::dataTableOutput("forecastOutput")),
-                          tabPanel(h4("Interaction Trend",style="text-align: center;"), 
-                                   DT::dataTableOutput("accuracyOutput"))
+                                   DT::dataTableOutput("interactionFlowOutput"))
                 )
+              ),
+      tabItem(tabName = "gift",
+              tabsetPanel(type = "tabs",
+                          tabPanel(h4("Gift Trends",style="text-align: center;"), 
+                                   plotlyOutput("giftTrendPlot")),
+                          tabPanel(h4("Gift Insights",style="text-align: center;"), 
+                                   DT::dataTableOutput("giftInsightsOutput")),
+                          tabPanel(h4("Gift Flow",style="text-align: center;"), 
+                                   DT::dataTableOutput("giftFlowOutput"))
               )
+      )      
 
             )
          )
@@ -141,7 +151,7 @@ ui <- dashboardPage(
 server <- function(input, output,session) {
 
 #=============
-# EDA  
+# Overview
 #=============
 output$interactionTypeBox <- renderValueBox({
   valueBox("Interaction Type", paste0(length(unique(interaction$INTERACTION_TYPE))), icon = icon("list"),color = "aqua")
@@ -187,6 +197,7 @@ output$interactionOverviewOutput <- renderPlotly({
   
   g <- interaction %>%
     group_by(INTERACTION_DATE) %>%
+    filter(INTERACTION_DATE <= today()) %>%
     summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
     select(INTERACTION_DATE, Total) %>%
     ggplot(aes(x = INTERACTION_DATE ,y = Total))  +
@@ -196,6 +207,25 @@ output$interactionOverviewOutput <- renderPlotly({
         legend.title = element_text(size = 12),
         axis.title = element_text(size = 14),
         axis.text = element_text(size = 12))
+  
+  ggplotly(g)
+  
+})
+
+output$giftOverviewOutput <- renderPlotly({
+  
+  g <- transaction %>%
+    filter(GIFT_DATE <= today()) %>%
+    group_by(GIFT_DATE) %>%
+    summarise(Total = sum(GIFT_AMOUNT)) %>%
+    select(GIFT_DATE, Total) %>%
+    ggplot(aes(x = GIFT_DATE ,y = Total))  +
+    geom_line(stat ="identity") + theme_classic() + 
+    labs(x ="Gift Date", y = "Gift Amount") + scale_y_continuous(labels = scales::comma) + 
+    theme(legend.text = element_text(size = 12),
+          legend.title = element_text(size = 12),
+          axis.title = element_text(size = 14),
+          axis.text = element_text(size = 12))
   
   ggplotly(g)
   
