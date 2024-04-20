@@ -112,7 +112,17 @@ ui <- dashboardPage(
                 valueBoxOutput("paymentTypeBox"),
                 valueBoxOutput("giftDesgnationBox"),
                 valueBoxOutput("giftTypeBox")
-              ),
+              )
+              ), 
+      tabItem(tabName = "interaction",
+              tabsetPanel(type = "tabs",
+                          tabPanel(h4("Interaction Insights",style="text-align: center;"), 
+                                   plotlyOutput("interactionPlot")),
+                          tabPanel(h4("Interaction Flow",style="text-align: center;"), 
+                                   DT::dataTableOutput("forecastOutput")),
+                          tabPanel(h4("Interaction Trend",style="text-align: center;"), 
+                                   DT::dataTableOutput("accuracyOutput"))
+                )
               )
 
             )
@@ -166,6 +176,23 @@ output$giftTypeBox <- renderValueBox({
   valueBox("Gift Type", paste0(length(unique(transaction$GIFT_TYPE))), icon = icon("list"),color = "aqua")
 })
 
+output$interactionPlot <- renderPlotly({
+  
+  g <- interaction %>%
+    group_by(INTERACTION_TYPE) %>%
+    summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
+    select(INTERACTION_TYPE, Total) %>%
+    ggplot(aes(x = reorder(INTERACTION_TYPE,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() + 
+    labs(x ="Interaction Type", y = "Total Interactions") + coord_flip() +
+    theme(legend.text = element_text(size = 12),
+          legend.title = element_text(size = 12),
+          axis.title = element_text(size = 14),
+          axis.text = element_text(size = 12))
+  
+  ggplotly(g)
+  
+})
   
   
 
