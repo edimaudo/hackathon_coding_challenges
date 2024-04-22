@@ -114,9 +114,7 @@ ui <- dashboardPage(
                 valueBoxOutput("giftTypeBox")
               ),
               fluidRow(
-                h2("Interaction",style="text-align: center;"),
                 plotlyOutput("interactionOverviewOutput"),
-                h2("Gifts",style="text-align: center;"),
                 plotlyOutput("giftOverviewOutput")
               )
               
@@ -131,10 +129,9 @@ ui <- dashboardPage(
                                    plotlyOutput("interactionQuarterPlot"), 
                                    plotlyOutput("interactionMonthPlot"), 
                                    plotlyOutput("interactionDOWPlot"),
-                          )
-                          ,
+                          ),
                           tabPanel(h4("Interaction Insights",style="text-align: center;"), 
-                                            plotlyOutput("interactionInsightPlot")),
+                                   plotlyOutput("interactionInsightPlot")),
                           tabPanel(h4("Interaction Flow",style="text-align: center;")
                                             
                           )
