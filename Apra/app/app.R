@@ -150,8 +150,10 @@ ui <- dashboardPage(
                                            plotlyOutput("giftQuarterPlot"), 
                                            plotlyOutput("giftMonthPlot"), 
                                            plotlyOutput("giftDOWPlot")),
-                                  tabPanel(h4("Gift Insights",style="text-align: center;")), 
-                                           
+                                  tabPanel(h4("Gift Insights",style="text-align: center;"), 
+                                          plotlyOutput("giftchannelInsightPlot"), 
+                                          plotlyOutput("giftpaymentTypePlot"), 
+                                          plotlyOutput("giftTypePlot")),
                                   tabPanel(h4("Gift Flow",style="text-align: center;"))
                                            
                       
@@ -166,54 +168,10 @@ ui <- dashboardPage(
   # Server
   ################
   server <- function(input, output,session) {
-    
+   
     #=============
-    # Overview
-    #=============
-    output$interactionTypeBox <- renderValueBox({
-      valueBox("Interaction Type", paste0(length(unique(interaction$INTERACTION_TYPE))), icon = icon("list"),color = "aqua")
-    })  
-    
-    output$interactionSummaryBox <- renderValueBox({
-      valueBox("Interaction Summary", paste0(length(unique(interaction$INTERACTION_SUMMARY))), icon = icon("list"),color = "aqua")
-    })
-    
-    output$giftAmtBox <- renderValueBox({
-      valueBox("Avg. Gift Amt.", paste0(round(mean(transaction$GIFT_AMOUNT)),2), icon = icon("thumbs-up"),color = "green")
-    })  
-    
-    output$campaignBox <- renderValueBox({
-      valueBox("Campaign", paste0(length(unique(transaction$CAMPAIGN))), icon = icon("list"),color = "aqua")
-    })
-    
-    output$appealBox <- renderValueBox({
-      valueBox("Appeals", paste0(length(unique(transaction$APPEAL))), icon = icon("list"),color = "aqua")
-    })
-    
-    output$primaryUnitBox <- renderValueBox({
-      valueBox("Primary Unit", paste0(length(unique(transaction$PRIMARY_UNIT))), icon = icon("list"),color = "aqua")
-    })
-    
-    output$giftChannelBox <- renderValueBox({
-      valueBox("Gift Channel", paste0(length(unique(transaction$GIFT_CHANNEL))), icon = icon("list"),color = "aqua")
-    })
-    
-    output$paymentTypeBox <- renderValueBox({
-      valueBox("Payment Type", paste0(length(unique(transaction$PAYMENT_TYPE))), icon = icon("list"),color = "aqua")
-    })
-    
-    output$giftDesgnationBox <- renderValueBox({
-      valueBox("Gift Designation", paste0(length(unique(transaction$GIFT_DESIGNATION))), icon = icon("list"),color = "aqua")
-    })
-    
-    output$giftTypeBox <- renderValueBox({
-      valueBox("Gift Type", paste0(length(unique(transaction$GIFT_TYPE))), icon = icon("list"),color = "aqua")
-    })
-    
-    
-    #==========
-    # Interaction plots
-    #==========
+    # Data 
+    #============= 
     interaction_df <- reactive({
       interaction %>%
         mutate(Year = lubridate::year(INTERACTION_DATE),
@@ -223,6 +181,62 @@ ui <- dashboardPage(
       
     })
     
+    transaction_df <- reactive({
+      transaction %>%
+        filter(GIFT_DATE >= '2010-01-01',GIFT_DATE <= today()) %>%
+        mutate(Year = lubridate::year(GIFT_DATE),
+               Quarter = lubridate::quarter(GIFT_DATE),
+               Month = lubridate::month(GIFT_DATE, label = TRUE),
+               DOW = lubridate::wday(GIFT_DATE, label=TRUE))
+    })
+    
+    #=============
+    # Overview
+    #=============
+    output$interactionTypeBox <- renderValueBox({
+      valueBox("Interaction Type", paste0(length(unique(interaction_df()$INTERACTION_TYPE))), icon = icon("list"),color = "aqua")
+    })  
+    
+    output$interactionSummaryBox <- renderValueBox({
+      valueBox("Interaction Summary", paste0(length(unique(interaction_df()$INTERACTION_SUMMARY))), icon = icon("list"),color = "aqua")
+    })
+    
+    output$giftAmtBox <- renderValueBox({
+      valueBox("Avg. Gift Amt.", paste0(round(mean(transaction_df()$GIFT_AMOUNT)),2), icon = icon("thumbs-up"),color = "green")
+    })  
+    
+    output$campaignBox <- renderValueBox({
+      valueBox("Campaign", paste0(length(unique(transaction_df()$CAMPAIGN))), icon = icon("list"),color = "aqua")
+    })
+    
+    output$appealBox <- renderValueBox({
+      valueBox("Appeals", paste0(length(unique(transaction_df()$APPEAL))), icon = icon("list"),color = "aqua")
+    })
+    
+    output$primaryUnitBox <- renderValueBox({
+      valueBox("Primary Unit", paste0(length(unique(transaction_df()$PRIMARY_UNIT))), icon = icon("list"),color = "aqua")
+    })
+    
+    output$giftChannelBox <- renderValueBox({
+      valueBox("Gift Channel", paste0(length(unique(transaction_df()$GIFT_CHANNEL))), icon = icon("list"),color = "aqua")
+    })
+    
+    output$paymentTypeBox <- renderValueBox({
+      valueBox("Payment Type", paste0(length(unique(transaction_df()$PAYMENT_TYPE))), icon = icon("list"),color = "aqua")
+    })
+    
+    output$giftDesgnationBox <- renderValueBox({
+      valueBox("Gift Designation", paste0(length(unique(transaction_df()$GIFT_DESIGNATION))), icon = icon("list"),color = "aqua")
+    })
+    
+    output$giftTypeBox <- renderValueBox({
+      valueBox("Gift Type", paste0(length(unique(transaction_df()$GIFT_TYPE))), icon = icon("list"),color = "aqua")
+    })
+    
+    
+    #==========
+    # Interaction plots
+    #==========
     output$interactionOverviewOutput <- renderPlotly({
       
       g <- interaction_df() %>%
@@ -330,15 +344,6 @@ ui <- dashboardPage(
     #=============
     # Gift Plots
     #=============
-    transaction_df <- reactive({
-      transaction %>%
-        filter(GIFT_DATE >= '2010-01-01',GIFT_DATE <= today()) %>%
-        mutate(Year = lubridate::year(GIFT_DATE),
-               Quarter = lubridate::quarter(GIFT_DATE),
-               Month = lubridate::month(GIFT_DATE, label = TRUE),
-               DOW = lubridate::wday(GIFT_DATE, label=TRUE))
-    })
-    
     output$giftOverviewOutput <- renderPlotly({
       
       g <- transaction_df() %>%
@@ -417,7 +422,7 @@ ui <- dashboardPage(
         ggplot(aes(x = as.factor(DOW) ,y = Total))  +
         geom_bar(stat = "identity",width = 0.5, fill='black')  +
         scale_y_continuous(labels = scales::comma) + 
-        labs(x ="Day of Week", y = "Total Interactions") 
+        labs(x ="Day of Week", y = "Gift Amount") 
       theme(legend.text = element_text(size = 12),
             legend.title = element_text(size = 12),
             axis.title = element_text(size = 14),
@@ -426,6 +431,59 @@ ui <- dashboardPage(
       ggplotly(g)
       
     })
+
+    
+    output$giftchannelInsightPlot <- renderPlotly({
+      
+      g <- transaction_df() %>%
+        group_by(GIFT_CHANNEL) %>%
+        summarise(Total = sum(GIFT_AMOUNT)) %>%
+        select(GIFT_CHANNEL, Total) %>%
+        ggplot(aes(x = reorder(GIFT_CHANNEL,Total) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        scale_y_continuous(labels = scales::comma) +
+        labs(x ="Gift Channel", y = "Gift Amount") + coord_flip() +
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+      
+    })
+    output$giftpaymentTypePlot <- renderPlotly({
+      g <- transaction_df() %>%
+        group_by(PAYMENT_TYPE) %>%
+        summarise(Total = sum(GIFT_AMOUNT)) %>%
+        select(PAYMENT_TYPE, Total) %>%
+        ggplot(aes(x = reorder(PAYMENT_TYPE,Total) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        scale_y_continuous(labels = scales::comma) +
+        labs(x ="Gift Payment Type", y = "Gift Amount") + coord_flip() +
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+    })
+    output$giftTypePlot <- renderPlotly({
+      g <- transaction_df() %>%
+        group_by(GIFT_TYPE) %>%
+        summarise(Total = sum(GIFT_AMOUNT)) %>%
+        select(GIFT_TYPE, Total) %>%
+        ggplot(aes(x = reorder(GIFT_TYPE,Total) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        scale_y_continuous(labels = scales::comma) +
+        labs(x ="Gift Type", y = "Gift Amount") + coord_flip() +
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+    })
+
     
     
     
