@@ -283,6 +283,20 @@ ui <- dashboardPage(
       
     })
     output$interactionDOWPlot <- renderPlotly({
+      g <- interaction_df() %>%
+        filter(INTERACTION_DATE <= today()) %>%
+        group_by(DOW) %>%
+        summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
+        select(DOW, Total) %>%
+        ggplot(aes(x = as.factor(DOW) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        labs(x ="Day of Week", y = "Total Interactions") 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+      
+      ggplotly(g)
       
     })
     
