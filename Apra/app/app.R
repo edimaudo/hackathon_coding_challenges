@@ -121,35 +121,47 @@ ui <- dashboardPage(
               )
               
       ), 
+      #=========
+      # Interaction
+      #=========
       tabItem(tabName = "interaction",
               tabsetPanel(type = "tabs",
                           tabPanel(h4("Interaction Trends",style="text-align: center;"), 
-                                  # plotlyOutput("interactionOverviewOutput"),
                                    plotlyOutput("interactionYearPlot"),
                                    plotlyOutput("interactionQuarterPlot"), 
                                    plotlyOutput("interactionMonthPlot"), 
                                    plotlyOutput("interactionDOWPlot"),
-                          ),
+                          )
+                          ,
                           tabPanel(h4("Interaction Insights",style="text-align: center;"), 
                                             plotlyOutput("interactionInsightPlot")),
-                          tabPanel(h4("Interaction Flow",style="text-align: center;"), 
-                                            DT::dataTableOutput("interactionFlowOutput"))
+                          tabPanel(h4("Interaction Flow",style="text-align: center;")
+                                            
                           )
+                  )
               ),
+      #=========
+      # Gift
+      #=========
               tabItem(tabName = "gift",
                       tabsetPanel(type = "tabs",
                                   tabPanel(h4("Gift Trends",style="text-align: center;"), 
-                                           plotlyOutput("giftTrendPlot")),
-                                  tabPanel(h4("Gift Insights",style="text-align: center;"), 
-                                           DT::dataTableOutput("giftInsightsOutput")),
-                                  tabPanel(h4("Gift Flow",style="text-align: center;"), 
-                                           DT::dataTableOutput("giftFlowOutput"))
-                      )
+                                           plotlyOutput("giftYearPlot"),
+                                           plotlyOutput("giftQuarterPlot"), 
+                                           plotlyOutput("giftMonthPlot"), 
+                                           plotlyOutput("giftDOWPlot")),
+                                  tabPanel(h4("Gift Insights",style="text-align: center;")), 
+                                           
+                                  tabPanel(h4("Gift Flow",style="text-align: center;"))
+                                           
+                      
               )      
               
+            )
+          )
+        )
       )
-    )
-  )
+
   ################
   # Server
   ################
@@ -202,12 +214,18 @@ ui <- dashboardPage(
     #==========
     # Interaction plots
     #==========
-    
-    
+    interaction_df <- reactive({
+      interaction %>%
+        mutate(Year = lubridate::year(INTERACTION_DATE),
+               Quarter = lubridate::quarter(INTERACTION_DATE),
+               Month = lubridate::month(INTERACTION_DATE, label = TRUE),
+               DOW = lubridate::wday(INTERACTION_DATE, label=TRUE))
+      
+    })
     
     output$interactionOverviewOutput <- renderPlotly({
       
-      g <- interaction %>%
+      g <- interaction_df() %>%
         group_by(INTERACTION_DATE) %>%
         filter(INTERACTION_DATE <= today()) %>%
         summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
@@ -223,14 +241,6 @@ ui <- dashboardPage(
       ggplotly(g)
       
     })
-
-    interaction_df <- reactive({
-      interaction %>%
-        mutate(Year = lubridate::year(INTERACTION_DATE),
-               Quarter = lubridate::quarter(INTERACTION_DATE),
-               Month = lubridate::month(INTERACTION_DATE, label = TRUE),
-               DOW = lubridate::wday(INTERACTION_DATE, label=TRUE))
-    })    
 
     output$interactionYearPlot <- renderPlotly({
       g <- interaction_df() %>%
@@ -320,10 +330,18 @@ ui <- dashboardPage(
     #=============
     # Gift Plots
     #=============
+    transaction_df <- reactive({
+      transaction %>%
+        filter(GIFT_DATE >= '2010-01-01',GIFT_DATE <= today()) %>%
+        mutate(Year = lubridate::year(GIFT_DATE),
+               Quarter = lubridate::quarter(GIFT_DATE),
+               Month = lubridate::month(GIFT_DATE, label = TRUE),
+               DOW = lubridate::wday(GIFT_DATE, label=TRUE))
+    })
+    
     output$giftOverviewOutput <- renderPlotly({
       
-      g <- transaction %>%
-        filter(GIFT_DATE <= today()) %>%
+      g <- transaction_df() %>%
         group_by(GIFT_DATE) %>%
         summarise(Total = sum(GIFT_AMOUNT)) %>%
         select(GIFT_DATE, Total) %>%
@@ -338,12 +356,82 @@ ui <- dashboardPage(
       ggplotly(g)
       
     })
+
+    output$giftYearPlot <- renderPlotly({
+      g <- transaction_df() %>%
+        group_by(Year) %>%
+        summarise(Total = sum(GIFT_AMOUNT)) %>%
+        select(Year, Total) %>%
+        ggplot(aes(x = as.factor(Year) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black') + 
+        scale_y_continuous(labels = scales::comma) + 
+        labs(x ="Year", y = "Gift Amount") 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+    })
+    
+    output$giftQuarterPlot <- renderPlotly({
+      g <- transaction_df() %>%
+        group_by(Quarter) %>%
+        summarise(Total = sum(GIFT_AMOUNT)) %>%
+        select(Quarter, Total) %>%
+        ggplot(aes(x = as.factor(Quarter) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black') +
+        scale_y_continuous(labels = scales::comma) + 
+        labs(x ="Quarter", y = "Gift Amount") 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+      
+    })
+    output$giftMonthPlot <- renderPlotly({
+      g <- transaction_df() %>%
+        group_by(Month) %>%
+        summarise(Total = sum(GIFT_AMOUNT)) %>%
+        select(Month, Total) %>%
+        ggplot(aes(x = as.factor(Month) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black') +
+        scale_y_continuous(labels = scales::comma) + 
+        labs(x ="Month", y = "Gift Amount") 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+      
+    })
+    
+    output$giftDOWPlot <- renderPlotly({
+      g <- transaction_df() %>%
+        group_by(DOW) %>%
+        summarise(Total = sum(GIFT_AMOUNT)) %>%
+        select(DOW, Total) %>%
+        ggplot(aes(x = as.factor(DOW) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        scale_y_continuous(labels = scales::comma) + 
+        labs(x ="Day of Week", y = "Total Interactions") 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+      
+    })
     
     
     
     
     #=============
-    # RFM analysis
+    # RFM
     #=============
     output$rfmTable <- renderDataTable({
       
@@ -370,7 +458,7 @@ ui <- dashboardPage(
     })  
     
     #==================
-    # Forecast Results
+    # Forecasting
     #==================
     
   }             
