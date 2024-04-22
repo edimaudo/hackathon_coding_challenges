@@ -124,14 +124,14 @@ ui <- dashboardPage(
       tabItem(tabName = "interaction",
               tabsetPanel(type = "tabs",
                           tabPanel(h4("Interaction Trends",style="text-align: center;"), 
-                                   plotlyOutput("interactionOverviewPlot"),
+                                  # plotlyOutput("interactionOverviewOutput"),
                                    plotlyOutput("interactionYearPlot"),
                                    plotlyOutput("interactionQuarterPlot"), 
                                    plotlyOutput("interactionMonthPlot"), 
-                                   plotlyOutput("interactionDOWPlot")
+                                   plotlyOutput("interactionDOWPlot"),
                           ),
                           tabPanel(h4("Interaction Insights",style="text-align: center;"), 
-                                            DT::dataTableOutput("interactionInsightsOutput")),
+                                            plotlyOutput("interactionInsightPlot")),
                           tabPanel(h4("Interaction Flow",style="text-align: center;"), 
                                             DT::dataTableOutput("interactionFlowOutput"))
                           )
@@ -198,6 +198,13 @@ ui <- dashboardPage(
       valueBox("Gift Type", paste0(length(unique(transaction$GIFT_TYPE))), icon = icon("list"),color = "aqua")
     })
     
+    
+    #==========
+    # Interaction plots
+    #==========
+    
+    
+    
     output$interactionOverviewOutput <- renderPlotly({
       
       g <- interaction %>%
@@ -206,8 +213,8 @@ ui <- dashboardPage(
         summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
         select(INTERACTION_DATE, Total) %>%
         ggplot(aes(x = INTERACTION_DATE ,y = Total))  +
-        geom_line() + theme_classic() + 
-        labs(x ="Interaction Type", y = "Total Interactions") 
+        geom_line()  + 
+        labs(x ="Date", y = "Total Interactions") 
       theme(legend.text = element_text(size = 12),
             legend.title = element_text(size = 12),
             axis.title = element_text(size = 14),
@@ -216,7 +223,89 @@ ui <- dashboardPage(
       ggplotly(g)
       
     })
+
+    interaction_df <- reactive({
+      interaction %>%
+        mutate(Year = lubridate::year(INTERACTION_DATE),
+               Quarter = lubridate::quarter(INTERACTION_DATE),
+               Month = lubridate::month(INTERACTION_DATE, label = TRUE),
+               DOW = lubridate::wday(INTERACTION_DATE, label=TRUE))
+    })    
+
+    output$interactionYearPlot <- renderPlotly({
+      g <- interaction_df() %>%
+        filter(INTERACTION_DATE <= today()) %>%
+        group_by(Year) %>%
+        summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
+        select(Year, Total) %>%
+        ggplot(aes(x = as.factor(Year) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black') +
+        labs(x ="Years", y = "Total Interactions") 
+        theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+    })
+    output$interactionQuarterPlot <- renderPlotly({
+      g <- interaction_df() %>%
+        filter(INTERACTION_DATE <= today()) %>%
+        group_by(Quarter) %>%
+        summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
+        select(Quarter, Total) %>%
+        ggplot(aes(x = as.factor(Quarter) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        labs(x ="Quarter", y = "Total Interactions") 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+      
+    })
+    output$interactionMonthPlot <- renderPlotly({
+      g <- interaction_df() %>%
+        filter(INTERACTION_DATE <= today()) %>%
+        group_by(Month) %>%
+        summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
+        select(Month, Total) %>%
+        ggplot(aes(x = as.factor(Month) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        labs(x ="Month", y = "Total Interactions") 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+      
+    })
+    output$interactionDOWPlot <- renderPlotly({
+      
+    })
     
+    output$interactionInsightPlot <- renderPlotly({
+      g <- interaction_df() %>%
+        filter(INTERACTION_DATE <= today()) %>%
+        group_by(INTERACTION_TYPE) %>%
+        summarise(Total = sum(SUBSTANTIVE_INTERACTION)) %>%
+        select(INTERACTION_TYPE, Total) %>%
+        ggplot(aes(x = reorder(INTERACTION_TYPE,Total) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  + 
+        labs(x ="Interaction Type", y = "Total Interactions") + coord_flip() +
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+    })
+    
+    #=============
+    # Gift Plots
+    #=============
     output$giftOverviewOutput <- renderPlotly({
       
       g <- transaction %>%
@@ -225,7 +314,7 @@ ui <- dashboardPage(
         summarise(Total = sum(GIFT_AMOUNT)) %>%
         select(GIFT_DATE, Total) %>%
         ggplot(aes(x = GIFT_DATE ,y = Total))  +
-        geom_line(stat ="identity") + theme_classic() + 
+        geom_line(stat ="identity")  + 
         labs(x ="Gift Date", y = "Gift Amount") + scale_y_continuous(labels = scales::comma) + 
         theme(legend.text = element_text(size = 12),
               legend.title = element_text(size = 12),
@@ -235,20 +324,6 @@ ui <- dashboardPage(
       ggplotly(g)
       
     })
-    
-    #==========
-    # Interaction Trends
-    #==========
-    
-    interaction_df <- interaction %>%
-      mutate(year = lubridate::year(INTERACTION_DATE),
-             quarter = lubridate::quarter(INTERACTION_DATE),
-             month = lubridate::year(INTERACTION_DATE),
-             dow = lubridate::wday(INTERACTION_DATE, label=TRUE)
-      )
-    
-    
-    
     
     
     
