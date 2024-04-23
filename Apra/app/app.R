@@ -156,10 +156,7 @@ ui <- dashboardPage(
                                           plotlyOutput("giftpaymentTypePlot"), 
                                           plotlyOutput("giftTypePlot")),
                                   tabPanel(h4("Gift Flow",style="text-align: center;"))
-                                           
-                      
               )      
-              
             )
           )
         )
