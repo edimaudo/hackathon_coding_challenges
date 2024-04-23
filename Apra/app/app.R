@@ -148,7 +148,7 @@ ui <- dashboardPage(
                                            plotlyOutput("giftMonthPlot"), 
                                            plotlyOutput("giftDOWPlot"),
                                            plotlyOutput("giftAmtPaymentTypePlot"),
-                                           plotlyOutput("giftAmtPaymentChannelPlot"),
+                                           plotlyOutput("giftAmtGiftChannelPlot"),
                                            plotlyOutput("giftAmtGiftTypePlot")
                                            ),
                                   tabPanel(h4("Gift Insights",style="text-align: center;"), 
@@ -485,12 +485,42 @@ ui <- dashboardPage(
       ggplotly(g)
     })
     
-    ### gift date vs gift amt vs payment type
-    output$giftAmtPaymentTypePlot <- renderPlotly({})
-    ### gift date vs gift amt vs payment channel
-    output$giftAmtPaymentChannelPlot <- renderPlotly({})
-    ### gift date vs gift amt vs gift type
-    output$giftAmtGiftTypePlot <- renderPlotly({})
+   
+    output$giftAmtPaymentTypePlot <- renderPlotly({
+      g <- transaction_df() %>%
+        group_by(GIFT_DATE,PAYMENT_TYPE) %>%
+        summarise(Total = sum(GIFT_AMOUNT)) %>%
+        select(GIFT_DATE,PAYMENT_TYPE, Total) %>%
+        ggplot(aes(x = GIFT_DATE ,y = Total,col=PAYMENT_TYPE))  +
+        geom_line(stat ="identity")  + 
+        labs(x ="Gift Date", y = "Gift Amount",col="Payment Type") + scale_y_continuous(labels = scales::comma) + 
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+    })
+    
+    output$giftAmtGiftChannelPlot <- renderPlotly({
+      g <- transaction_df() %>%
+        group_by(GIFT_DATE,GIFT_CHANNEL) %>%
+        summarise(Total = sum(GIFT_AMOUNT)) %>%
+        select(GIFT_DATE,GIFT_CHANNEL, Total) %>%
+        ggplot(aes(x = GIFT_DATE ,y = Total,col=GIFT_CHANNEL))  +
+        geom_line(stat ="identity")  + 
+        labs(x ="Gift Date", y = "Gift Amount", col = "Gift Channel") + scale_y_continuous(labels = scales::comma) + 
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+    })
+ 
+    output$giftAmtGiftTypePlot <- renderPlotly({
+      
+    })
     
     
     
