@@ -493,7 +493,7 @@ ui <- dashboardPage(
         select(GIFT_DATE,PAYMENT_TYPE, Total) %>%
         ggplot(aes(x = GIFT_DATE ,y = Total,col=PAYMENT_TYPE))  +
         geom_line(stat ="identity")  + 
-        labs(x ="Gift Date", y = "Gift Amount",col="Payment Type") + scale_y_continuous(labels = scales::comma) + 
+        labs(x ="Date", y = "Gift Amount",col="Payment Type") + scale_y_continuous(labels = scales::comma) + 
         theme(legend.text = element_text(size = 12),
               legend.title = element_text(size = 12),
               axis.title = element_text(size = 14),
@@ -509,7 +509,7 @@ ui <- dashboardPage(
         select(GIFT_DATE,GIFT_CHANNEL, Total) %>%
         ggplot(aes(x = GIFT_DATE ,y = Total,col=GIFT_CHANNEL))  +
         geom_line(stat ="identity")  + 
-        labs(x ="Gift Date", y = "Gift Amount", col = "Gift Channel") + scale_y_continuous(labels = scales::comma) + 
+        labs(x ="Date", y = "Gift Amount", col = "Gift Channel") + scale_y_continuous(labels = scales::comma) + 
         theme(legend.text = element_text(size = 12),
               legend.title = element_text(size = 12),
               axis.title = element_text(size = 14),
@@ -519,7 +519,19 @@ ui <- dashboardPage(
     })
  
     output$giftAmtGiftTypePlot <- renderPlotly({
+      g <- transaction_df() %>%
+        group_by(GIFT_DATE,GIFT_TYPE) %>%
+        summarise(Total = sum(GIFT_AMOUNT)) %>%
+        select(GIFT_DATE,GIFT_TYPE, Total) %>%
+        ggplot(aes(x = GIFT_DATE ,y = Total,col=GIFT_TYPE))  +
+        geom_line(stat ="identity")  + 
+        labs(x ="Date", y = "Gift Amount", col = "Gift Type") + scale_y_continuous(labels = scales::comma) + 
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
       
+      ggplotly(g)      
     })
     
     
