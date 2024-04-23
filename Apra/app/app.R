@@ -128,7 +128,7 @@ ui <- dashboardPage(
                                    plotlyOutput("interactionYearPlot"),
                                    plotlyOutput("interactionQuarterPlot"), 
                                    plotlyOutput("interactionMonthPlot"), 
-                                   plotlyOutput("interactionDOWPlot"),
+                                   plotlyOutput("interactionDOWPlot")
                           ),
                           tabPanel(h4("Interaction Insights",style="text-align: center;"), 
                                    plotlyOutput("interactionInsightPlot")),
@@ -146,7 +146,11 @@ ui <- dashboardPage(
                                            plotlyOutput("giftYearPlot"),
                                            plotlyOutput("giftQuarterPlot"), 
                                            plotlyOutput("giftMonthPlot"), 
-                                           plotlyOutput("giftDOWPlot")),
+                                           plotlyOutput("giftDOWPlot"),
+                                           plotlyOutput("giftAmtPaymentTypePlot"),
+                                           plotlyOutput("giftAmtPaymentChannelPlot"),
+                                           plotlyOutput("giftAmtGiftTypePlot")
+                                           ),
                                   tabPanel(h4("Gift Insights",style="text-align: center;"), 
                                           plotlyOutput("giftchannelInsightPlot"), 
                                           plotlyOutput("giftpaymentTypePlot"), 
@@ -480,7 +484,13 @@ ui <- dashboardPage(
       
       ggplotly(g)
     })
-
+    
+    ### gift date vs gift amt vs payment type
+    output$giftAmtPaymentTypePlot <- renderPlotly({})
+    ### gift date vs gift amt vs payment channel
+    output$giftAmtPaymentChannelPlot <- renderPlotly({})
+    ### gift date vs gift amt vs gift type
+    output$giftAmtGiftTypePlot <- renderPlotly({})
     
     
     
