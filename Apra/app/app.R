@@ -133,17 +133,15 @@ ui <- dashboardPage(
                           tabPanel(h4("Interaction Insights",style="text-align: center;"), 
                                    plotlyOutput("interactionInsightPlot")),
                           tabPanel(h4("Interaction Flow",style="text-align: center;"),
-                                   plotlyOutput("interactionFlowPlot")
-                                            
-                          )
+                                   plotlyOutput("interactionFlowPlot"))
                   )
               ),
       #=========
       # Gift
       #=========
-              tabItem(tabName = "gift",
-                      tabsetPanel(type = "tabs",
-                                  tabPanel(h4("Gift Trends",style="text-align: center;"), 
+      tabItem(tabName = "gift",
+              tabsetPanel(type = "tabs",
+                          tabPanel(h4("Gift Trends",style="text-align: center;"), 
                                            plotlyOutput("giftYearPlot"),
                                            plotlyOutput("giftQuarterPlot"), 
                                            plotlyOutput("giftMonthPlot"), 
@@ -152,13 +150,12 @@ ui <- dashboardPage(
                                            plotlyOutput("giftAmtGiftChannelPlot"),
                                            plotlyOutput("giftAmtGiftTypePlot")
                                            ),
-                                  tabPanel(h4("Gift Insights",style="text-align: center;"), 
+                            tabPanel(h4("Gift Insights",style="text-align: center;"), 
                                           plotlyOutput("giftchannelInsightPlot"), 
                                           plotlyOutput("giftpaymentTypePlot"), 
                                           plotlyOutput("giftTypePlot")),
-                                  tabPanel(h4("Gift Flow",style="text-align: center;"),
-                                           plotlyOutput("giftFlowPlot")
-                                           )
+                            tabPanel(h4("Gift Flow",style="text-align: center;"),
+                                           plotlyOutput("giftFlowPlot"))
               )      
             )
           )
@@ -235,9 +232,9 @@ ui <- dashboardPage(
     })
     
     
-    #==========
+    #=============
     # Interaction plots
-    #==========
+    #=============
     output$interactionOverviewOutput <- renderPlotly({
       
       g <- interaction_df() %>%
