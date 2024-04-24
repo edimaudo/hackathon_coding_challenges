@@ -376,15 +376,15 @@ ui <- dashboardPage(
         type = "sankey",
         orientation = "h",
         node = list(pad = 15,
-                    thickness = 20,
-                    line = list(color = "black", width = 0.5),
+                    thickness = 35,
+                    line = list(color = "black", width = 0.3),
                     label = nodes$name),
         link = list(source = links$source,
                     target = links$target,
                     value = links$value),
         textfont = list(size = 10),
-        width = 720,
-        height = 480
+        width = 900,
+        height = 600
       ) %>%
         layout(title = "Interaction Type --> Interaction Summary",
                font = list(size = 14),
@@ -583,7 +583,52 @@ ui <- dashboardPage(
     })
     
     output$giftFlowPlot <- renderPlotly({
+      frequencies <- transaction_df() %>%
+        count(APPEAL, GIFT_CHANNEL, PAYMENT_TYPE) %>%
+        arrange(APPEAL, desc(n))
       
+      # create a table of frequencies
+      freq_table <- transaction_df() %>% group_by(APPEAL, GIFT_CHANNEL, PAYMENT_TYPE) %>%
+        summarise(n = n())
+      
+      # create a nodes data frame
+      nodes <- data.frame(name = unique(c(as.character(freq_table$APPEAL),
+                                          as.character(freq_table$GIFT_CHANNEL),
+                                          as.character(freq_table$PAYMENT_TYPE))))
+      
+      
+      
+      # create links dataframe
+      links <- data.frame(source = match(freq_table$APPEAL, nodes$name) - 1,
+                          target = match(freq_table$GIFT_CHANNEL, nodes$name) - 1,
+                          value = freq_table$n,
+                          stringsAsFactors = FALSE)
+      
+      links <- rbind(links,
+                     data.frame(source = match(freq_table$GIFT_CHANNEL, nodes$name) - 1,
+                                target = match(freq_table$PAYMENT_TYPE, nodes$name) - 1,
+                                value = freq_table$n,
+                                stringsAsFactors = FALSE))
+      
+      
+      # Make Sankey diagram
+      plot_ly(
+        type = "sankey",
+        orientation = "h",
+        node = list(pad = 15,
+                    thickness = 35,
+                    line = list(color = "black", width = 0.3),
+                    label = nodes$name),
+        link = list(source = links$source,
+                    target = links$target,
+                    value = links$value),
+        textfont = list(size = 10),
+        width = 900,
+        height = 600
+      ) %>%
+        layout(title = "Appeal --> GIFT Channel --> Payment Type",
+               font = list(size = 14),
+               margin = list(t = 40, l = 10, r = 10, b = 10))
     })
     
     
