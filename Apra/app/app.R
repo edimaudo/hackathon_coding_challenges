@@ -132,7 +132,8 @@ ui <- dashboardPage(
                           ),
                           tabPanel(h4("Interaction Insights",style="text-align: center;"), 
                                    plotlyOutput("interactionInsightPlot")),
-                          tabPanel(h4("Interaction Flow",style="text-align: center;")
+                          tabPanel(h4("Interaction Flow",style="text-align: center;"),
+                                   plotlyOutput("interactionFlowPlot")
                                             
                           )
                   )
@@ -155,7 +156,9 @@ ui <- dashboardPage(
                                           plotlyOutput("giftchannelInsightPlot"), 
                                           plotlyOutput("giftpaymentTypePlot"), 
                                           plotlyOutput("giftTypePlot")),
-                                  tabPanel(h4("Gift Flow",style="text-align: center;"))
+                                  tabPanel(h4("Gift Flow",style="text-align: center;"),
+                                           plotlyOutput("giftFlowPlot")
+                                           )
               )      
             )
           )
@@ -339,6 +342,54 @@ ui <- dashboardPage(
       ggplotly(g)
     })
     
+    
+    output$interactionFlowPlot <- renderPlotly({
+      frequencies <- interaction_df() %>% 
+        count(INTERACTION_TYPE, INTERACTION_SUMMARY) %>% 
+        arrange(INTERACTION_TYPE, desc(n))
+      
+      # create a table of frequencies
+      freq_table <- interaction %>% group_by(INTERACTION_TYPE, INTERACTION_SUMMARY) %>% 
+        summarise(n = n())
+      
+      # create a nodes data frame
+      nodes <- data.frame(name = unique(c(as.character(freq_table$INTERACTION_TYPE),
+                                          as.character(freq_table$INTERACTION_SUMMARY))))
+      
+      
+      
+      # create links dataframe
+      links <- data.frame(source = match(freq_table$INTERACTION_TYPE, nodes$name) - 1,
+                          target = match(freq_table$INTERACTION_SUMMARY, nodes$name) - 1,
+                          value = freq_table$n,
+                          stringsAsFactors = FALSE)
+      
+      links <- rbind(links,
+                     data.frame(source = match(freq_table$INTERACTION_TYPE, nodes$name) - 1,
+                                target = match(freq_table$INTERACTION_SUMMARY, nodes$name) - 1,
+                                value = freq_table$n,
+                                stringsAsFactors = FALSE))
+      
+      
+      # Make Sankey diagram
+      plot_ly(
+        type = "sankey",
+        orientation = "h",
+        node = list(pad = 15,
+                    thickness = 20,
+                    line = list(color = "black", width = 0.5),
+                    label = nodes$name),
+        link = list(source = links$source,
+                    target = links$target,
+                    value = links$value),
+        textfont = list(size = 10),
+        width = 720,
+        height = 480
+      ) %>%
+        layout(title = "Interaction Type --> Interaction Summary",
+               font = list(size = 14),
+               margin = list(t = 40, l = 10, r = 10, b = 10))
+    })
     #=============
     # Gift Plots
     #=============
@@ -531,6 +582,9 @@ ui <- dashboardPage(
       ggplotly(g)      
     })
     
+    output$giftFlowPlot <- renderPlotly({
+      
+    })
     
     
     
