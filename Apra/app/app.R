@@ -349,7 +349,7 @@ ui <- dashboardPage(
         arrange(INTERACTION_TYPE, desc(n))
       
       # create a table of frequencies
-      freq_table <- interaction %>% group_by(INTERACTION_TYPE, INTERACTION_SUMMARY) %>% 
+      freq_table <- interaction_df() %>% group_by(INTERACTION_TYPE, INTERACTION_SUMMARY) %>% 
         summarise(n = n())
       
       # create a nodes data frame
