@@ -60,7 +60,9 @@ ui <- dashboardPage(
       menuSubItem("Interaction", tabName = "interaction"),
       menuSubItem("Gifts", tabName = "gift"),
       menuItem("Customer Segmentation", tabName = "segment", icon = icon("list")),
-      menuItem("Gift Forecasting", tabName = "forecast", icon = icon("list"))
+      menuItem("Gift Forecasting Overview", tabName = "forecast_overview", icon = icon("list")),
+      menuSubItem("Gift Forecasting Analysis", tabName = "forecast_analysis"),
+      menuSubItem("Gift Forecasting", tabName = "gift_forecasting")
     )
   ),
   dashboardBody(
@@ -158,11 +160,18 @@ ui <- dashboardPage(
                             tabPanel(h4("Gift Flow",style="text-align: center;"),h6(note_info),
                                            plotlyOutput("giftFlowPlot"))
               )      
-            )
-          )
-        )
+            ), 
+      #=========
+      # Forecasting
+      #=========
+      tabItem(tabName = "forecast_overview",h6(note_info),
+              fluidRow(
+                
+              )
+              )
       )
-
+  )
+)
   ################
   # Server
   ################
