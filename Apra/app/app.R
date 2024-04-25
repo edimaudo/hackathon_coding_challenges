@@ -42,6 +42,7 @@ difference_info <- c("Yes","No")
 log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat','manual-arima')
+note_info <- "Using only data from 2010 onwards"
 ################
 # UI
 ################
@@ -141,7 +142,7 @@ ui <- dashboardPage(
       #=========
       tabItem(tabName = "gift",
               tabsetPanel(type = "tabs",
-                          tabPanel(h4("Gift Trends",style="text-align: center;"), 
+                          tabPanel(h4("Gift Trends",style="text-align: center;"),h6(note_info), 
                                            plotlyOutput("giftYearPlot"),
                                            plotlyOutput("giftQuarterPlot"), 
                                            plotlyOutput("giftMonthPlot"), 
@@ -150,11 +151,11 @@ ui <- dashboardPage(
                                            plotlyOutput("giftAmtGiftChannelPlot"),
                                            plotlyOutput("giftAmtGiftTypePlot")
                                            ),
-                            tabPanel(h4("Gift Insights",style="text-align: center;"), 
+                            tabPanel(h4("Gift Insights",style="text-align: center;"),h6(note_info), 
                                           plotlyOutput("giftchannelInsightPlot"), 
                                           plotlyOutput("giftpaymentTypePlot"), 
                                           plotlyOutput("giftTypePlot")),
-                            tabPanel(h4("Gift Flow",style="text-align: center;"),
+                            tabPanel(h4("Gift Flow",style="text-align: center;"),h6(note_info),
                                            plotlyOutput("giftFlowPlot"))
               )      
             )
