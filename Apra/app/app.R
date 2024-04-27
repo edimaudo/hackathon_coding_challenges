@@ -207,7 +207,7 @@ ui <- dashboardPage(
           ),
       tabItem(tabName = "forecast_analysis",
               sidebarLayout(
-                sidebarPanel(
+                sidebarPanel(width = 3,
                   selectInput("aggregateInput", "Aggregate", 
                               choices = aggregate_info, selected = 'daily'),
                   selectInput("frequencyInput", "Frequency", 
@@ -221,7 +221,7 @@ ui <- dashboardPage(
                   submitButton("Submit")
                 ),
                 mainPanel(
-                  h1("Analysis",style="text-align: center;"), 
+                  h1("Analysis",style="text-align: center;"),h6(note_info),
                   tabsetPanel(type = "tabs",
                               tabPanel(
                                 h4("Decomposition",
