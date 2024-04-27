@@ -71,11 +71,11 @@ gift_xts <- xts(x = transaction_f$Total, order.by = transaction_f$GIFT_DATE)
 ################
 ui <- dashboardPage(
   dashboardHeader(title = "Apra Data Science Challenge",
-                  tags$li(a(href = 'https://www.aprahome.org',
-                            img(src = 'https://www.aprahome.org/Portals/_default/skins/siteskin/images/logo.png',
-                                title = "Home", height = "30px"),
-                            style = "padding-top:10px; padding-bottom:10px;"),
-                          class = "dropdown")),
+    tags$li(a(href = 'https://www.aprahome.org',
+      img(src = 'https://www.aprahome.org/Portals/_default/skins/siteskin/images/logo.png',
+        title = "Home", height = "30px"),
+          style = "padding-top:10px; padding-bottom:10px;"),
+            class = "dropdown")),
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
@@ -196,7 +196,44 @@ ui <- dashboardPage(
                 h4("Monthly Gift plot",style="text-align: center;"),
                 plotlyOutput("giftMonthlyPlot")
               )
-       )
+          ),
+      tabItem(tabName = "forecast_analysis",
+              sidebarLayout(
+                sidebarPanel(
+                  selectInput("aggregateInput", "Aggregate", 
+                              choices = aggregate_info, selected = 'daily'),
+                  selectInput("frequencyInput", "Frequency", 
+                              choices = frequency_info, selected = 7),
+                  radioButtons("differenceInput","Difference",
+                               choices = difference_info, selected = "No"),
+                  numericInput("differenceNumericInput", "Difference Input", 
+                               1, min = 1, max = 52, step = 0.5),
+                  radioButtons("logInput","Log",
+                               choices = log_info, selected = "No"),
+                  submitButton("Submit")
+                ),
+                mainPanel(
+                  h1("Analysis",style="text-align: center;"), 
+                  tabsetPanel(type = "tabs",
+                              tabPanel(
+                                h4("Decomposition",
+                                   style="text-align: center;"),
+                                plotlyOutput("decompositionPlot")),
+                              tabPanel(
+                                h4("Multi seasonal Decomposition",
+                                   style="text-align: center;"),
+                                plotlyOutput("multidecompositionPlot")),
+                              tabPanel(
+                                h4("ACF Plot",style="text-align: center;"), 
+                                plotlyOutput("acfPlot")),
+                              tabPanel(
+                                h4("PACF Plot",style="text-align: center;"), 
+                                plotlyOutput("pacfPlot"))
+                  )
+                )
+              )  
+      )
+      
        )
       )
     )  
@@ -718,6 +755,7 @@ ui <- dashboardPage(
     # Forecasting
     #==================
     
+    # Forecast overview
     output$giftDailyPlot <- renderPlotly({
       gift_daily <- apply.daily(gift_xts,mean)
       
@@ -737,6 +775,11 @@ ui <- dashboardPage(
         scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount")
       ggplotly(g)
     })
+    
+    # Forecast analysis
+    
+    
+    # Forecast prediction
     
   }             
   
