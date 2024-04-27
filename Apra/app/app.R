@@ -44,20 +44,23 @@ model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat','manual-arima')
 note_info <- "Using only data from 2010 onwards"
 
+# generating range of dates 
+date_range <- data.frame(seq(start_date, end_date,"days")) 
+gift_data <- data.frame(data=c(1:nrow(date_range)))
+colnames(date_range) <- "GIFT_DATE"
+date_range <- cbind(date_range,gift_data)
 
-
-date_range <-  as.data.frame(seq(as.Date("2010-01-01"), as.Date(today()) ,"days"))
-transaction <- as.data.frame(transaction)
-date_range <- as.data.frame(date_range)
+# transaction
+transaction <- as.tibble(transaction)
+date_range <- as.tibble(date_range)
 transaction_f1 <- transaction %>%
   filter(GIFT_DATE >= '2010-01-01',GIFT_DATE <= today()) %>%
   group_by(GIFT_DATE) %>%
   summarise(Total = sum(GIFT_AMOUNT)) %>%
   select(GIFT_DATE,Total)
-glimpse(transaction_f1)
 
 transaction_f <- transaction_f1 %>%
-dplyr::right_join(transaction_f1,date_range,by='GIFT_DATE', copy = FALSE) %>%
+right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
 replace(is.na(.), 0) %>%
 select(GIFT_DATE,Total)
 
@@ -193,54 +196,10 @@ ui <- dashboardPage(
                 h4("Monthly Gift plot",style="text-align: center;"),
                 plotlyOutput("giftMonthlyPlot")
               )
-       ),
-      tabItem(tabName = "forecast_analysis",
-              sidebarLayout(
-                sidebarPanel(width = 3,
-                             selectInput("campaignInput", "Campaign", 
-                                         choices = campaign, selected = campaign, multiple = TRUE),
-                             selectInput("primaryUnitInput", "Primary Unit", 
-                                         choices = primary_unit, selected = primary_unit,multiple = TRUE),
-                             selectInput("giftTypeInput", "Gift Type", 
-                                         choices = gift_type, selected = gift_type,multiple = TRUE),
-                             selectInput("giftChannelInput", "Gift Channel", 
-                                         choices = gift_channel, selected = gift_channel,multiple = TRUE),
-                             selectInput("paymentTypeInput", "Payment Type", 
-                                         choices = payment_type, selected = payment_type,multiple = TRUE),
-                             submitButton("Submit")
-                ),
-                mainPanel(
-                  fluidRow(
-                    DT::dataTableOutput("rfmTable")
-                  )
-                )
-              )
-       ),
-      tabItem(tabName = "gift_forecasting",
-              sidebarLayout(
-                sidebarPanel(width = 3,
-                             selectInput("campaignInput", "Campaign", 
-                                         choices = campaign, selected = campaign, multiple = TRUE),
-                             selectInput("primaryUnitInput", "Primary Unit", 
-                                         choices = primary_unit, selected = primary_unit,multiple = TRUE),
-                             selectInput("giftTypeInput", "Gift Type", 
-                                         choices = gift_type, selected = gift_type,multiple = TRUE),
-                             selectInput("giftChannelInput", "Gift Channel", 
-                                         choices = gift_channel, selected = gift_channel,multiple = TRUE),
-                             selectInput("paymentTypeInput", "Payment Type", 
-                                         choices = payment_type, selected = payment_type,multiple = TRUE),
-                             submitButton("Submit")
-                ),
-                mainPanel(
-                  fluidRow(
-                    DT::dataTableOutput("rfmTable")
-                  )
-                )
-              )
+       )
        )
       )
-  )
-)
+    )  
   ################
   # Server
   ################
@@ -760,23 +719,23 @@ ui <- dashboardPage(
     #==================
     
     output$giftDailyPlot <- renderPlotly({
-      gift_daily <- apply.daily(gift_xts(),mean)
-      glimpse(gift_daily)
-      #g <- autoplot(gift_daily, main = "Daily Gift amount from 2010 onwards") +   
-      #  scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount")
-      #ggplotly(g)
+      gift_daily <- apply.daily(gift_xts,mean)
+      
+      g <- autoplot(gift_daily, main = "Daily Gift amount from 2010 onwards") +   
+        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount")
+      ggplotly(g)
     })
     output$giftWeeklyPlot <- renderPlotly({
-      #gift_weekly <- apply.weekly(gift_xts(), mean) 
-      #g <- autoplot(gift_weekly, main = "Weekly Gift amount from 2010 onwards") +   
-      #  scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount")
-      #ggplotly(g)
+      gift_weekly <- apply.weekly(gift_xts, mean) 
+      g <- autoplot(gift_weekly, main = "Weekly Gift amount from 2010 onwards") +   
+        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount")
+      ggplotly(g)
     })
     output$giftMonthlyPlot <- renderPlotly({
-      #gift_monthly <- apply.monthly(gift_xts(), mean)
-      #g <- autoplot(gift_monthly, main = "Monthly Gift amount from 2010 onwards") +   
-      #  scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount")
-      #ggplotly(g)
+      gift_monthly <- apply.monthly(gift_xts, mean)
+      g <- autoplot(gift_monthly, main = "Monthly Gift amount from 2010 onwards") +   
+        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount")
+      ggplotly(g)
     })
     
   }             
