@@ -48,6 +48,7 @@ log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat','manual-arima')
 note_info <- "Using only data from 2010 onwards"
+forecast_info <- "Series: forecast data"
 
 #=============
 # Forecast info
@@ -197,11 +198,10 @@ ui <- dashboardPage(
       #=========
       tabItem(tabName = "forecast_overview",h6(note_info),
               fluidRow(
-                h4("Daily Gift plot",style="text-align: center;"),
                 plotlyOutput("giftDailyPlot"),
-                h4("Weekly Gift plot",style="text-align: center;"),
+                br(),br(),
                 plotlyOutput("giftWeeklyPlot"),
-                h4("Monthly Gift plot",style="text-align: center;"),
+                br(),br(),
                 plotlyOutput("giftMonthlyPlot")
               )
           ),
@@ -271,25 +271,45 @@ ui <- dashboardPage(
                DOW = lubridate::wday(GIFT_DATE, label=TRUE))
     })
     
-# 
-#     date_range <- reactive({
-#       seq(as.Date("2010-01-01"), as.Date(today()) ,"days") 
-#     })
-#     
-#     gift_xts <-  reactive({
-#       transaction_f <- transaction %>%
-#         filter(GIFT_DATE >= '2010-01-01',GIFT_DATE <= today()) %>%
-#         group_by(GIFT_DATE) %>%
-#         summarise(Total = sum(GIFT_AMOUNT)) %>%
-#         right_join(transaction,date_range(),by='GIFT_DATE',copy = FALSE) %>%
-#         replace(is.na(.), 0) %>%
-#         select(GIFT_DATE,Total)
-#         glimpse(transaction_f)
-#       xts(x = transaction_f$Total, order.by = transaction_f$GIFT_DATE) 
-#     })
+    forecast_analysis_df <- reactive({
+      gift_daily <- apply.daily(gift_xts,mean)
+      gift_weekly <- apply.weekly(gift_xts, mean) 
+      gift_monthly <- apply.monthly(gift_xts, mean) 
       
-  
-    
+      if (input$aggregateInput == 'daily'){
+        gift_end <- floor(1*length(gift_daily)) 
+        gift_data <- gift_daily[1:gift_end,] 
+        gift_start <- c(year (start(gift_data)), month(start(gift_data)),
+                        day(start(gift_data)))
+        gift_end <- c(year(end(gift_data)), month(end(gift_data)), 
+                      day(end(gift_data)))
+        gift_data <- ts(as.numeric(gift_data), start = gift_start, 
+                        end = gift_end, frequency = as.numeric(input$frequencyInput))             
+      } else if(input$aggregateInput == 'weekly'){
+        gift_end <- floor(1*length(gift_weekly)) 
+        gift_data <- gift_weekly[1:gift_end,] 
+        gift_start <- c(year (start(gift_data)), month(start(gift_data)),
+                        week(start(gift_data)))
+        gift_end <- c(year(end(gift_data)), month(end(gift_data)), 
+                      week(end(gift_data)))
+        gift_data <- ts(as.numeric(gift_data), start = gift_start, 
+                        end = gift_end, frequency = as.numeric(input$frequencyInput))         
+      } else if(input$aggregateInput == 'monthly') {
+        gift_end <- floor(1*length(gift_monthly)) 
+        gift_data <- gift_monthly[1:gift_end,] 
+        gift_start <- c(year (start(gift_data)), month(start(gift_data)))
+        gift_end <- c(year(end(gift_data)), month(end(gift_data)))
+        gift_data <- ts(as.numeric(gift_data), start = gift_start, 
+                        end = gift_end, frequency = as.numeric(input$frequencyInput))               
+      }
+      
+      if (input$differenceInput == "Yes"){
+        gift_data <- diff(gift_data, differences = as.numeric(input$differenceNumericInput)) 
+      }
+      
+      gift_data
+      
+    })
     #=============
     # Overview
     #=============
@@ -767,28 +787,64 @@ ui <- dashboardPage(
     output$giftDailyPlot <- renderPlotly({
       gift_daily <- apply.daily(gift_xts,mean)
       
-      g <- autoplot(gift_daily, main = "Daily Gift amount from 2010 onwards") +   
-        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount")
+      g <- autoplot(gift_daily) +   
+        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount",
+                                                          title = "Daily Gift Chart") + 
+        theme(plot.title = element_text(hjust=0.5))
       ggplotly(g)
     })
     output$giftWeeklyPlot <- renderPlotly({
       gift_weekly <- apply.weekly(gift_xts, mean) 
-      g <- autoplot(gift_weekly, main = "Weekly Gift amount from 2010 onwards") +   
-        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount")
+      g <- autoplot(gift_weekly) +   
+        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount",
+                                                          title = "Weekly Gift Chart") +
+        theme(plot.title = element_text(hjust=0.5))
       ggplotly(g)
     })
     output$giftMonthlyPlot <- renderPlotly({
       gift_monthly <- apply.monthly(gift_xts, mean)
-      g <- autoplot(gift_monthly, main = "Monthly Gift amount from 2010 onwards") +   
-        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount")
+      g <- autoplot(gift_monthly) +   
+        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount",
+                                                          title = "Monthly Gift Chart") + 
+        theme(plot.title = element_text(hjust=0.5))
       ggplotly(g)
     })
     
     # Forecast analysis
-    output$decompositionPlot <- renderPlotly({})
-    output$multidecompositionPlot <- renderPlotly({})
-    output$acfPlot <- renderPlotly({})
-    output$pacfPlot <- renderPlotly({})
+    output$decompositionPlot <- renderPlotly({
+      p <- forecast_analysis_df() %>%
+        decompose() %>%
+        autoplot() + scale_y_continuous(labels = scales::comma) + 
+        theme(plot.title = element_text(hjust=0.5))
+      ggplotly(p)
+    })
+    output$multidecompositionPlot <- renderPlotly({
+      p <- forecast_analysis_df() %>%
+        mstl() %>%
+        autoplot()  + scale_y_continuous(labels = scales::comma)
+      ggplotly(p)
+    })
+    
+    output$acfPlot <- renderPlotly({
+      
+      if (input$logInput == "No"){
+        ggAcf(forecast_analysis_df()) + labs(title=forecast_info) + 
+          theme(plot.title = element_text(hjust=0.5))
+      } else {
+        ggAcf(log(forecast_analysis_df())) + labs(title=forecast_info) + 
+          theme(plot.title = element_text(hjust=0.5))
+      }
+      
+    })
+    output$pacfPlot <- renderPlotly({
+      if (input$logInput == "No"){
+        ggPacf(forecast_analysis_df()) + labs(title=forecast_info) + 
+          theme(plot.title = element_text(hjust=0.5))
+      } else {
+        ggPacf(log(forecast_analysis_df())) + labs(title=forecast_info) + 
+          theme(plot.title = element_text(hjust=0.5))
+      }
+    })
     
     
     # Forecast prediction
