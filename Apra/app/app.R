@@ -25,6 +25,7 @@ constituent <- read_csv("Apra Constituent Data.csv")
 transaction <- read_csv("Apra Gift Transactions Data.csv")
 interaction <- read_csv("Apra Interactions Data.csv")
 rfm_score <- read_excel("rfm_score.xlsx")
+
 #=============
 # Data munging
 #=============
@@ -35,6 +36,10 @@ payment_type <- sort(unique(na.omit(transaction$PAYMENT_TYPE)))
 gift_type <- sort(unique(na.omit(transaction$GIFT_TYPE)))
 gift_designation <- sort(unique(na.omit(transaction$GIFT_DESIGNATION)))
 gift_channel <- sort(unique(na.omit(transaction$GIFT_CHANNEL)))
+
+#=============
+# Drop downs
+#=============
 aggregate_info <- c("daily",'weekly','monthly')
 horizon_info <- c(1:50) #default 14
 frequency_info <- c(7, 12, 52, 365)
@@ -44,6 +49,9 @@ model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat','manual-arima')
 note_info <- "Using only data from 2010 onwards"
 
+#=============
+# Forecast info
+#=============
 # generating range of dates 
 date_range <- data.frame(seq(start_date, end_date,"days")) 
 gift_data <- data.frame(data=c(1:nrow(date_range)))
@@ -777,6 +785,10 @@ ui <- dashboardPage(
     })
     
     # Forecast analysis
+    output$decompositionPlot <- renderPlotly({})
+    output$multidecompositionPlot <- renderPlotly({})
+    output$acfPlot <- renderPlotly({})
+    output$pacfPlot <- renderPlotly({})
     
     
     # Forecast prediction
