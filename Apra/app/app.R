@@ -974,11 +974,13 @@ ui <- dashboardPage(
     })
     
     # Forecast results
+    output$forecastOutput <- DT::renderDataTable({})
     
     # Forecast accuracy
+    output$accuracyOutput <- DT::renderDataTable({})
     
     # Forecast Prediction
-    
+    output$predictionOutput <- DT::renderDataTable({})
     
   }             
   
