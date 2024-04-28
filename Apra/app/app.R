@@ -77,9 +77,9 @@ gift_daily <- apply.daily(gift_xts,mean)
 gift_weekly <- apply.weekly(gift_xts, mean) 
 gift_monthly <- apply.monthly(gift_xts, mean) 
 
-forecast_df <- function (ts,aggregateInput,frequencyInput,dataType) {
+forecast_df <- function (ts_df,aggregateInput,frequencyInput,dataType) {
   if(aggregateInput == 'daily'){
-    gift_data <- apply.daily(gift_xts,mean)
+    gift_data <- apply.daily(ts_df,mean)
     gift_end <- floor(0.8*length(gift_data)) 
     gift_train <- gift_data[1:gift_end,] 
     gift_test <- gift_data[(gift_end+1):length(gift_data),]
@@ -96,7 +96,7 @@ forecast_df <- function (ts,aggregateInput,frequencyInput,dataType) {
     gift_test <- ts(as.numeric(gift_test), start = gift_start, 
                     end = gift_end, frequency = as.numeric(frequencyInput))
   } else if(aggregateInput == 'weekly'){
-    gift_data <- apply.weekly(gift_xts, mean) 
+    gift_data <- apply.weekly(ts_df, mean) 
     gift_end <- floor(0.8*length(gift_data)) 
     gift_train <- gift_data[1:gift_end,] 
     gift_test <- gift_data[(gift_end+1):length(gift_data),]
@@ -113,7 +113,7 @@ forecast_df <- function (ts,aggregateInput,frequencyInput,dataType) {
     gift_test <- ts(as.numeric(gift_test), start = gift_start, 
                     end = gift_end, frequency = as.numeric(frequencyInput))
   } else {
-    gift_data <- apply.monthly(gift_xts, mean) 
+    gift_data <- apply.monthly(ts_df, mean) 
     gift_end <- floor(0.8*length(gift_data)) 
     gift_train <- gift_data[1:gift_end,] 
     gift_test <- gift_data[(gift_end+1):length(gift_data),]
@@ -1042,7 +1042,79 @@ ui <- dashboardPage(
     })
     
     # Forecast accuracy
-    output$accuracyOutput <- DT::renderDataTable({})
+    output$accuracyOutput <- DT::renderDataTable({
+      forecast.horizon <- as.numeric(input$horizonInput)
+      
+      train <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"train")
+      test <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"test")
+      # models
+      gift_train_auto_exp_forecast <- ets(train) %>% 
+        forecast(h=forecast.horizon)    
+      
+      gift_train_auto_arima_forecast <- auto.arima(train) %>% 
+        forecast(h=forecast.horizon)             
+      
+      gift_train_simple_exp_forecast <- HoltWinters(train,
+                                                    beta=FALSE, 
+                                                    gamma=FALSE) %>% 
+        forecast(h=forecast.horizon)             
+      
+      gift_train_double_exp_forecast <- HoltWinters(train,
+                                                    beta=TRUE, 
+                                                    gamma=FALSE) %>% 
+        forecast(h=forecast.horizon)  
+      
+      gift_train_triple_exp_forecast <- HoltWinters(train,
+                                                    beta=TRUE, 
+                                                    gamma=TRUE) %>% 
+        forecast(h=forecast.horizon)  
+      
+      gift_train_tbat_forecast <-  tbats(train) %>% forecast(h=forecast.horizon)
+      
+      
+      
+      auto_exp_accuracy <- as.data.frame(accuracy( gift_train_auto_exp_forecast ,test))
+      auto_arima_accuracy <- as.data.frame(accuracy(gift_train_auto_arima_forecast ,test))
+      simple_exp_accuracy <- as.data.frame(accuracy(gift_train_simple_exp_forecast ,test))
+      double_exp_accuracy <- as.data.frame(accuracy(gift_train_double_exp_forecast ,test))
+      triple_exp_accuracy <- as.data.frame(accuracy(gift_train_triple_exp_forecast ,test))
+      tbat_accuracy <- as.data.frame(accuracy(gift_train_tbat_forecast ,test))
+      
+      
+      
+      
+      auto_exp_accuracy <- numeric_update(auto_exp_accuracy)
+      auto_arima_accuracy <- numeric_update(auto_arima_accuracy)
+      simple_exp_accuracy <- numeric_update(simple_exp_accuracy)
+      double_exp_accuracy <- numeric_update(double_exp_accuracy)
+      triple_exp_accuracy <- numeric_update(triple_exp_accuracy)
+      tbat_accuracy <- numeric_update(tbat_accuracy)
+      
+      models<- c("auto-exponential","auto-exponential",
+                 "auto-arima","auto-arima",
+                 "simple-exponential","simple-exponential",
+                 "double-exponential","double-exponential",
+                 "triple-exponential","triple-exponential",
+                 "tbat","tbat")
+      
+      data<- c("Training set", 'Test set',
+               "Training set", 'Test set',
+               "Training set", 'Test set',
+               "Training set", 'Test set',
+               "Training set", 'Test set',
+               "Training set", 'Test set')
+      
+      outputInfo <- rbind(auto_exp_accuracy,auto_arima_accuracy,
+                          simple_exp_accuracy,double_exp_accuracy,
+                          triple_exp_accuracy,tbat_accuracy)           
+      
+      
+      
+      
+      outputInfo <- cbind(models, data, outputInfo)
+      
+      DT::datatable(outputInfo, options = list(scrollX = TRUE))
+    })
     
     # Forecast Prediction
     output$predictionOutput <- DT::renderDataTable({})
