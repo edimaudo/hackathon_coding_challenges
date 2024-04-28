@@ -245,9 +245,9 @@ ui <- dashboardPage(
        )
       )
     )  
-  ################
-  # Server
-  ################
+################
+# Server
+################
   server <- function(input, output,session) {
    
     #=============
@@ -310,6 +310,7 @@ ui <- dashboardPage(
       gift_data
       
     })
+    
     #=============
     # Overview
     #=============
@@ -355,7 +356,7 @@ ui <- dashboardPage(
     
     
     #=============
-    # Interaction plots
+    # Interaction Data plots
     #=============
     output$interactionOverviewOutput <- renderPlotly({
       
@@ -510,7 +511,7 @@ ui <- dashboardPage(
                margin = list(t = 40, l = 10, r = 10, b = 10))
     })
     #=============
-    # Gift Plots
+    # Gift Data Plots
     #=============
     output$giftOverviewOutput <- renderPlotly({
       
