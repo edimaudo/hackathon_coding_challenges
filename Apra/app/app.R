@@ -67,12 +67,15 @@ transaction_f1 <- transaction %>%
   filter(GIFT_DATE >= '2010-01-01',GIFT_DATE <= today()) %>%
   group_by(GIFT_DATE) %>%
   summarise(Total = sum(GIFT_AMOUNT)) %>%
-  select(GIFT_DATE,Total)
-
-transaction_f <- transaction_f1 %>%
   right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
   replace(is.na(.), 0) %>%
   select(GIFT_DATE,Total)
+  #select(GIFT_DATE,Total)
+
+#transaction_f <- transaction_f1 %>%
+#  right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
+#  replace(is.na(.), 0) %>%
+#  select(GIFT_DATE,Total)
 
 gift_xts <- xts(x = transaction_f$Total, order.by = transaction_f$GIFT_DATE) 
 gift_daily <- apply.daily(gift_xts,mean)
@@ -952,7 +955,6 @@ ui <- dashboardPage(
       
       # set forecast horizon
       forecast.horizon <- as.numeric(input$horizonInput)
-      
       train <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"train")
       
       # models
@@ -1073,17 +1075,12 @@ ui <- dashboardPage(
       
       gift_train_tbat_forecast <-  tbats(train) %>% forecast(h=forecast.horizon)
       
-      
-      
       auto_exp_accuracy <- as.data.frame(accuracy( gift_train_auto_exp_forecast ,test))
       auto_arima_accuracy <- as.data.frame(accuracy(gift_train_auto_arima_forecast ,test))
       simple_exp_accuracy <- as.data.frame(accuracy(gift_train_simple_exp_forecast ,test))
       double_exp_accuracy <- as.data.frame(accuracy(gift_train_double_exp_forecast ,test))
       triple_exp_accuracy <- as.data.frame(accuracy(gift_train_triple_exp_forecast ,test))
       tbat_accuracy <- as.data.frame(accuracy(gift_train_tbat_forecast ,test))
-      
-      
-      
       
       auto_exp_accuracy <- numeric_update(auto_exp_accuracy)
       auto_arima_accuracy <- numeric_update(auto_arima_accuracy)
@@ -1110,9 +1107,7 @@ ui <- dashboardPage(
                           simple_exp_accuracy,double_exp_accuracy,
                           triple_exp_accuracy,tbat_accuracy)           
       
-      
-      
-      
+
       outputInfo <- cbind(models, data, outputInfo)
       
       DT::datatable(outputInfo, options = list(scrollX = TRUE))
