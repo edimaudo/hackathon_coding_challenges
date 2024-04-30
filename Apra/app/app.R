@@ -55,6 +55,8 @@ gift_test_df <- as.data.frame(tibble())
 # Forecast info
 #=============
 # generating range of dates 
+start_date <- as.Date("2010-01-01") 
+end_date <- as.Date(today()) 
 date_range <- data.frame(seq(start_date, end_date,"days")) 
 gift_data <- data.frame(data=c(1:nrow(date_range)))
 colnames(date_range) <- "GIFT_DATE"
