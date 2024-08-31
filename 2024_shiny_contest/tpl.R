@@ -16,7 +16,3 @@ for (package in packages) {
 #=============
 # Load data
 #=============
-constituent <- read_csv("Apra Constituent Data.csv")
-transaction <- read_csv("Apra Gift Transactions Data.csv")
-interaction <- read_csv("Apra Interactions Data.csv")
-rfm_score <- read_excel("rfm_score.xlsx")
