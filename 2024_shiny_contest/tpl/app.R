@@ -53,7 +53,7 @@ toronto_neighborhood <- fromJSON("Neighbourhoods.geojson")
 # UI
 ################
 ui <- dashboardPage(
-  dashboardHeader(title = "Apra Data Science Challenge", tags$li(
+  dashboardHeader(title = "TPL", tags$li(
     a(
       href = 'https://www.aprahome.org',
       img(
@@ -67,10 +67,10 @@ ui <- dashboardPage(
   )),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Overview", tabName = "overview", icon = icon("th")),
-      menuSubItem("Interaction", tabName = "interaction"),
-      menuSubItem("Gifts", tabName = "gift"),
+      menuSubItem("Branch", tabName = "branch"),
+      menuSubItem("Branch Comparisons", tabName = "branch_comp"),
+      menuItem("About", tabName = "about", icon = icon("th")),
       menuItem(
         "Customer Segmentation",
         tabName = "segment",
