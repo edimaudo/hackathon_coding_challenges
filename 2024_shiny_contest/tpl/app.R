@@ -7,22 +7,12 @@ rm(list = ls())
 # Libraries
 ################
 packages <- c(
-  'rjson',
-  'ggplot2',
-  'corrplot',
-  'tidyverse',
-  'shiny',
-  'shinydashboard',
-  'DT',
-  'readxl',
-  'reshape2',
-  'tidyr',
-  'lubridate',
-  'plotly',
-  'RColorBrewer',
-  'data.table',
-  'scales',
-  'dplyr'
+  'rjson','dplyr',
+  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
+  'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
+  'caret','dummies','tidyr','Matrix','lubridate','plotly','RColorBrewer',
+  'data.table','scales','stopwords','tidytext','stringr','wordcloud','wordcloud2',
+  'SnowballC','textmineR','topicmodels','textclean','tm'
 )
 for (package in packages) {
   if (!require(package, character.only = T, quietly = T)) {
