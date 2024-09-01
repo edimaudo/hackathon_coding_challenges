@@ -55,9 +55,9 @@ toronto_neighborhood <- fromJSON("Neighbourhoods.geojson")
 ui <- dashboardPage(
   dashboardHeader(title = "TPL", tags$li(
     a(
-      href = 'https://www.aprahome.org',
+      href = 'https://www.torontopubliclibrary.ca',
       img(
-        src = 'https://www.aprahome.org/Portals/_default/skins/siteskin/images/logo.png',
+        src = 'https://upload.wikimedia.org/wikipedia/commons/4/47/Toronto_Public_Library_Logo.png',
         title = "Home",
         height = "30px"
       ),
@@ -68,21 +68,10 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("th")),
-      menuSubItem("Branch", tabName = "branch"),
-      menuSubItem("Branch Comparisons", tabName = "branch_comp"),
-      menuItem("About", tabName = "about", icon = icon("th")),
-      menuItem(
-        "Customer Segmentation",
-        tabName = "segment",
-        icon = icon("list")
+      menuItem("Branch" ,tabName = "branch",icon = icon("list")),
+      menuItem("Branch Comparison",tabName = "branch_comp",icon = icon("list")),
+      menuItem("About",tabName = "about",icon = icon("list"))
       ),
-      menuItem(
-        "Gift Forecasting Overview",
-        tabName = "forecast_overview",
-        icon = icon("list")
-      ),
-      menuSubItem("Gift Forecasting Analysis", tabName = "forecast_analysis"),
-      menuSubItem("Gift Forecasting", tabName = "forecast")
     )
   ),
   dashboardBody(tabItems(
@@ -93,50 +82,10 @@ ui <- dashboardPage(
     #========
     # Segmentation
     #========
-    tabItem(tabName = "segment", sidebarLayout(
-      sidebarPanel(
-        width = 3,
-        selectInput(
-          "campaignInput",
-          "Campaign",
-          choices = campaign,
-          selected = campaign,
-          multiple = TRUE
-        ),
-        selectInput(
-          "primaryUnitInput",
-          "Primary Unit",
-          choices = primary_unit,
-          selected = primary_unit,
-          multiple = TRUE
-        ),
-        selectInput(
-          "giftTypeInput",
-          "Gift Type",
-          choices = gift_type,
-          selected = gift_type,
-          multiple = TRUE
-        ),
-        selectInput(
-          "giftChannelInput",
-          "Gift Channel",
-          choices = gift_channel,
-          selected = gift_channel,
-          multiple = TRUE
-        ),
-        selectInput(
-          "paymentTypeInput",
-          "Payment Type",
-          choices = payment_type,
-          selected = payment_type,
-          multiple = TRUE
-        ),
-        submitButton("Submit")
-      ),
-      mainPanel(fluidRow(DT::dataTableOutput("rfmTable")))
-    ))
-  ))
-)
+    
+    )
+  )
+
 
 
 
