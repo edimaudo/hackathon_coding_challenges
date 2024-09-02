@@ -43,40 +43,23 @@ toronto_neighborhood <- fromJSON("Neighbourhoods.geojson")
 # UI
 ################
 ui <- dashboardPage(
-  dashboardHeader(title = "TPL", tags$li(
-    a(
-      href = 'https://www.torontopubliclibrary.ca',
-      img(
-        src = 'https://upload.wikimedia.org/wikipedia/commons/4/47/Toronto_Public_Library_Logo.png',
-        title = "Home",
-        height = "30px"
-      ),
-      style = "padding-top:10px; padding-bottom:10px;"
-    ),
-    class = "dropdown"
-  )),
+  dashboardHeader(title = "TPL",
+                  tags$li(a(href = 'https://www.vizforsocialgood.com',
+                            img(src = 'https://upload.wikimedia.org/wikipedia/commons/4/47/Toronto_Public_Library_Logo.png',
+                                title = "Home", height = "30px"),
+                            style = "padding-top:10px; padding-bottom:10px;"),
+                          class = "dropdown")),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Overview", tabName = "overview", icon = icon("th")),
-      menuItem("Branch" ,tabName = "branch",icon = icon("list")),
-      menuItem("Branch Comparison",tabName = "branch_comp",icon = icon("list")),
-      menuItem("About",tabName = "about",icon = icon("list"))
-      ),
+      menuItem("About", tabName = "about", icon = icon("th"))
     )
   ),
-  dashboardBody(tabItems(
-    #========
-    # About
-    #========
-    tabItem(tabName = "about", includeMarkdown("about.md"), hr()),
-    #========
-    # Segmentation
-    #========
-    
+  dashboardBody(
+    tabItems(
+      tabItem(tabName = "about",includeMarkdown("about.md"),hr())
     )
   )
-
-
+)
 
 
 ################
