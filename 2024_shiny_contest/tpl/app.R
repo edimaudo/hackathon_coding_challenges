@@ -36,7 +36,7 @@ tpl_branch_workstation <- read_csv("tpl-workstation-usage-annual-by-branch-2012-
 tpl_yag <- read_csv("Youth_Advisory_Groups_Locations.csv")
 tpl_yh <- read_csv("Youth_Hubs_Locations.csv")
 toronto_wellbeing <- read_csv("wellbeing-toronto-economics.csv")
-toronto_neighborhood <- fromJSON("Neighbourhoods.geojson")
+#toronto_neighborhood <- fromJSON("Neighbourhoods.geojson")
 
 
 ################
@@ -44,7 +44,7 @@ toronto_neighborhood <- fromJSON("Neighbourhoods.geojson")
 ################
 ui <- dashboardPage(
   dashboardHeader(title = "TPL",
-                  tags$li(a(href = 'https://www.vizforsocialgood.com',
+                  tags$li(a(href = 'https://www.torontopubliclibrary.ca',
                             img(src = 'https://upload.wikimedia.org/wikipedia/commons/4/47/Toronto_Public_Library_Logo.png',
                                 title = "Home", height = "30px"),
                             style = "padding-top:10px; padding-bottom:10px;"),
