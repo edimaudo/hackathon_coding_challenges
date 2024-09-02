@@ -64,7 +64,7 @@ ui <- dashboardPage(
                 valueBoxOutput("libraryBox"),
                 valueBoxOutput("clcBox"),
                 valueBoxOutput("keclBox"),
-                valueBoxOutput("nibBox"),
+                #valueBoxOutput("nibBox"),
                 valueBoxOutput("dihBox"),
                 valueBoxOutput("yagBox"),
                 valueBoxOutput("yhBox")
@@ -94,21 +94,27 @@ server <- function(input, output, session) {
       select(BranchName)
     
     valueBox(
-      "Libraries", paste0(length(unique(tpl_library$BranchName))), icon = icon("book"),
+      value = tags$p("Libraries", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      icon = icon("book"),
       color = "aqua"
     )
   })
   # of  Computer_Learning_Centres
   output$clcBox <- renderValueBox({
     valueBox(
-      "Computer Learning Centres", paste0(length(unique(tpl_clc$`Branch Name`))), icon = icon("computer"),
+      value = tags$p("Computer Learning Centres", style = "font-size: 80%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_clc$`Branch Name`))), style = "font-size: 100%;"),
+      icon = icon("computer"),    
       color = "aqua"
     )
   })  
   # of KidsStop_Early_Literacy_Centres
   output$keclBox <- renderValueBox({
     valueBox(
-      "Early Literacy Centres", paste0(length(unique(tpl_kecl$`Branch Name`))), icon = icon("child"),
+      value = tags$p("Early Literacy Centres", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_kecl$`Branch Name`))), style = "font-size: 100%;"),
+      icon = icon("child"),  
       color = "aqua"
     )
   })  
@@ -116,28 +122,36 @@ server <- function(input, output, session) {
   # of Neighbourhood_Improvement_Area_Branches
   output$nibBox <- renderValueBox({
     valueBox(
-      "Improvement Branches", paste0(length(unique(tpl_nib$`Branch Name`))), icon = icon("thumbs-up"),
+      value = tags$p("Improvement Branches", style = "font-size: 80%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_nib$`Branch Name`))), style = "font-size: 100%;"),
+      icon = icon("thumbs-up"),  
       color = "aqua"
     )
   })  
   # of Digital_Innovation_Hubs
   output$dihBox <- renderValueBox({
     valueBox(
-      "Digital Innovation Hub", paste0(length(unique(tpl_dih$`Branch Name`))), icon = icon("lightbulb"),
+      value = tags$p("Digital Innovation Hub", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_dih$`Branch Name`))), style = "font-size: 100%;"),
+      icon = icon("lightbulb"),  
       color = "aqua"
     )
   })    
   # of Youth_Advisory_Groups_Locations
   output$yagBox <- renderValueBox({
     valueBox(
-      "Youth Advisory", paste0(length(unique(tpl_yag$`Branch Name`))), icon = icon("person"),
+      value = tags$p("Youth Advisory", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_yag$`Branch Name`))), style = "font-size: 100%;"),
+      icon = icon("person"),  
       color = "aqua"
     )
   })   
   # of Youth_Hubs_Locations
   output$yhBox <- renderValueBox({
     valueBox(
-      "Youth Hub", paste0(length(unique(tpl_yh$`Branch Name`))), icon = icon("person"),
+      value = tags$p("Youth Hub", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_yh$`Branch Name`))), style = "font-size: 100%;"),
+      icon = icon("person"), 
       color = "aqua"
     )
   }) 
