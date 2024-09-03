@@ -69,8 +69,20 @@ ui <- dashboardPage(
                 valueBoxOutput("yagBox"),
                 valueBoxOutput("yhBox")
               ),
+              h2("Trends",style="text-align: center;text-style:bold"),
               fluidRow(
-                #plotlyOutput("submissionOutput"),  
+                radioButtons( 
+                  inputId = "radioTrend", 
+                  label = "", 
+                  choices = list( 
+                    "Annual Card Registrations" = 1, 
+                    "Annual Circulation" = 2, 
+                    "Annual Visits" = 3,
+                    "Annual Workstation Usage" = 4 
+                  ) ,
+                  inline=T
+                ),
+                plotlyOutput("tplOverviewTrendPlot"),  
               ),
               
       ),
@@ -155,6 +167,35 @@ server <- function(input, output, session) {
       color = "aqua"
     )
   }) 
+  
+  
+  output$tplOverviewTrendPlot <- renderPlotly({
+    
+    temp_df <- linkedin %>%
+      group_by(Date)%>%
+      summarise(
+        Impressions = sum(`Impressions (total)`),
+        Clicks = sum(`Clicks (total)`),
+        Reactions = sum(`Reactions (total)`),
+        Comments = sum(`Comments (total)`),
+        Reposts = sum(`Reposts (total)`)
+      ) %>%
+      select(Date, Impressions, Clicks, Reactions, Comments, Reposts)
+    
+    d <- reshape2::melt(temp_df, id.vars="Date")
+    
+    plot_output <- ggplot(d, aes(Date,value, col=variable)) + 
+      geom_line()  + theme_classic() +
+      labs(x ="Date", y = "Metric Count",col='Linkedin Metrics') + 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12)) 
+    
+    ggplotly(plot_output)
+    
+  })
+  
 
 }
 
