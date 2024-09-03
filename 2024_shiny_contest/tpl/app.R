@@ -112,7 +112,7 @@ server <- function(input, output, session) {
       color = "aqua"
     )
   })
-  # of  Computer_Learning_Centres
+  # Computer_Learning_Centres
   output$clcBox <- renderValueBox({
     valueBox(
       value = tags$p("Computer Learning Centres", style = "font-size: 80%;"),
@@ -171,28 +171,16 @@ server <- function(input, output, session) {
   
   output$tplOverviewTrendPlot <- renderPlotly({
     
-    temp_df <- linkedin %>%
-      group_by(Date)%>%
-      summarise(
-        Impressions = sum(`Impressions (total)`),
-        Clicks = sum(`Clicks (total)`),
-        Reactions = sum(`Reactions (total)`),
-        Comments = sum(`Comments (total)`),
-        Reposts = sum(`Reposts (total)`)
-      ) %>%
-      select(Date, Impressions, Clicks, Reactions, Comments, Reposts)
-    
-    d <- reshape2::melt(temp_df, id.vars="Date")
-    
-    plot_output <- ggplot(d, aes(Date,value, col=variable)) + 
-      geom_line()  + theme_classic() +
-      labs(x ="Date", y = "Metric Count",col='Linkedin Metrics') + 
-      theme(legend.text = element_text(size = 12),
-            legend.title = element_text(size = 12),
-            axis.title = element_text(size = 14),
-            axis.text = element_text(size = 12)) 
-    
-    ggplotly(plot_output)
+    if (input$radioTrend == 1) {
+      
+    } else if (input$radioTrend == 2){
+      
+    } else if (input$radioTrend == 3){
+      
+    } else if (input$radioTrend == 4){
+      
+    }
+
     
   })
   
