@@ -42,7 +42,7 @@ ggplot(tpl_library, aes(Long, Lat, group=group)) +
   geom_point(size = .25, show.legend = FALSE) +
   coord_quickmap()
 
-
+library(mapview)
 library(sf)
 p <- ggplot()
 p <- p + geom_polygon( data=tpl_library, 
@@ -50,3 +50,6 @@ p <- p + geom_polygon( data=tpl_library,
                        color="white", size = 0.2) 
 p
 
+install.packages("mapview")
+
+mapview(tpl_library, xcol = "Long", ycol = "Lat", crs = 4269, grid = FALSE)
