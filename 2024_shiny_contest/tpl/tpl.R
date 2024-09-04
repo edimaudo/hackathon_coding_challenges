@@ -40,3 +40,17 @@ tpl_library <- tpl %>%
 
 
 
+
+
+tpl_trend <- tpl_branch_circulation %>%
+  group_by(Year)%>%
+  summarise(Total = sum(Circulation)) %>%
+  select(Year, Circulation)
+
+
+
+
+
+
+  
+
