@@ -168,18 +168,49 @@ server <- function(input, output, session) {
     )
   }) 
   
-  
+  #"Annual Card Registrations" = 1, 
+  #"Annual Circulation" = 2, 
+  #"Annual Visits" = 3,
+  #"Annual Workstation Usage" = 4 
   output$tplOverviewTrendPlot <- renderPlotly({
     
     if (input$radioTrend == 1) {
-      
+      #- tpl-card-registrations-annual-by-branch-2012-2022
+      tpl_trend <- tpl_branch_card_registration %>%
+        group_by(Year)%>%
+        summarise(Total = sum(Registrations)) %>%
+        select(Year, Total) 
     } else if (input$radioTrend == 2){
-      
+      #- tpl-circulation-annual-by-branch-2012-2022
+      tpl_trend <- tpl_branch_circulation%>%
+        group_by(Year)%>%
+        summarise(Total = sum(Circulation)) %>%
+        select(Year, Total)
     } else if (input$radioTrend == 3){
-      
+      #- tpl-visits-annual-by-branch-2012-2022
+      tpl_trend <- tpl_branch_visit%>%
+        group_by(Year)%>%
+        summarise(Total = sum(Visits)) %>%
+        select(Year, Total)
     } else if (input$radioTrend == 4){
-      
+      #- tpl-workstation-usage-annual-by-branch-2012-2022
+      tpl_trend <- tpl_branch_workstation%>%
+        group_by(Year)%>%
+        summarise(Total = sum(Sessions)) %>%
+        select(Year, Total)
     }
+    
+    g <- ggplot(tpl_trend, aes(x = Year, ,y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() + 
+      labs(x ="Year", y = "Total") + scale_x_continuous(breaks = breaks_pretty()) + 
+      scale_y_continuous(breaks = breaks_pretty(),labels = label_comma()) + 
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+    
+    ggplotly(g)
+    
 
     
   })
