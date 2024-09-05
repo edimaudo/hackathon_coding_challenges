@@ -64,7 +64,6 @@ ui <- dashboardPage(
                 valueBoxOutput("libraryBox"),
                 valueBoxOutput("clcBox"),
                 valueBoxOutput("keclBox"),
-                #valueBoxOutput("nibBox"),
                 valueBoxOutput("dihBox"),
                 valueBoxOutput("yagBox"),
                 valueBoxOutput("yhBox")
@@ -87,18 +86,16 @@ ui <- dashboardPage(
               
       ),
       tabItem(tabName = "branch",
-              navset_pill( 
-                nav_panel("A", "Page A content"), 
-                nav_panel("B", "Page B content"), 
-                nav_panel("C", "Page C content") 
+              tabsetPanel(type = "tabs",
+                          tabPanel("Plot", plotOutput("plot")),
+                          tabPanel("Summary", verbatimTextOutput("summary")),
+                          tabPanel("Table", tableOutput("table")),
               )
-              ),
+      ),
       tabItem(tabName = "about",includeMarkdown("about.md"),hr())
-    )
   )
+ )
 )
-
-
 ################
 # Server
 ################
