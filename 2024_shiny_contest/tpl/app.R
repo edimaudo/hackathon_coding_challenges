@@ -8,7 +8,7 @@ rm(list = ls())
 ################
 packages <- c(
   'rjson','dplyr',
-  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
+  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','bslib','DT','readxl',
   'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
   'caret','dummies','tidyr','Matrix','lubridate','plotly','RColorBrewer',
   'data.table','scales','stopwords','tidytext','stringr','wordcloud','wordcloud2',
@@ -86,6 +86,13 @@ ui <- dashboardPage(
               ),
               
       ),
+      tabItem(tabName = "branch",
+              navset_pill( 
+                nav_panel("A", "Page A content"), 
+                nav_panel("B", "Page B content"), 
+                nav_panel("C", "Page C content") 
+              )
+              ),
       tabItem(tabName = "about",includeMarkdown("about.md"),hr())
     )
   )
@@ -168,10 +175,6 @@ server <- function(input, output, session) {
     )
   }) 
   
-  #"Annual Card Registrations" = 1, 
-  #"Annual Circulation" = 2, 
-  #"Annual Visits" = 3,
-  #"Annual Workstation Usage" = 4 
   output$tplOverviewTrendPlot <- renderPlotly({
     
     if (input$radioTrend == 1) {
