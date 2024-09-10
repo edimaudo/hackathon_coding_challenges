@@ -1,7 +1,7 @@
-#========================================
-# Shiny web app which provides insights
-# about Toronto Public Library
-#=========================================
+################
+# Shiny web app which provides 
+# insights about  Toronto Public Library
+################
 rm(list = ls())
 ################
 # Libraries
@@ -21,7 +21,7 @@ for (package in packages) {
   }
 }
 ################
-# Load data
+# Data
 ################
 tpl_clc <- read_csv("Computer_Learning_Centres.csv")
 tpl_dih <- read_csv("Digital_Innovation_Hubs.csv")
@@ -36,12 +36,11 @@ tpl_branch_workstation <- read_csv("tpl-workstation-usage-annual-by-branch-2012-
 tpl_yag <- read_csv("Youth_Advisory_Groups_Locations.csv")
 tpl_yh <- read_csv("Youth_Hubs_Locations.csv")
 
+
 tpl_branch <- tpl %>%
   filter(PhysicalBranch == 1) %>%
   select(BranchName) %>%
   arrange()
-
-
 
 tpl_branch_code <- function(branchName){
   tpl_branch <- tpl %>%
@@ -98,9 +97,9 @@ ui <- dashboardPage(
               ),
               
       ),
-      #========  
-      # Branch
-      #========
+    #========  
+    # Branch
+    #========
       tabItem(tabName = "branch",
               sidebarLayout(
                 sidebarPanel(width = 2,
@@ -111,16 +110,16 @@ ui <- dashboardPage(
                 
                 mainPanel (
                   fluidRow(
-                    valueBoxOutput("cityInsightBox"),
-                    valueBoxOutput("countryInsightBox"),
-                    valueBoxOutput("sdgInsightBox"), 
-                    valueBoxOutput("repostsBox")
+                    valueBoxOutput("branchCodeBox"),
+                    valueBoxOutput("workStationsBox"),
+                    valueBoxOutput("serviceTierBox"), 
+                    valueBoxOutput("presentSiteBox")
                   ),
                   fluidRow(
-                    valueBoxOutput("submissionInsightBox"),
-                    valueBoxOutput("topicInsightBox"),
-                    valueBoxOutput("repostsBox"),
-                    valueBoxOutput("commentsBox")
+                    valueBoxOutput("kidStopBox"),
+                    valueBoxOutput("clcBox"),
+                    valueBoxOutput("dihBox"),
+                    valueBoxOutput("teenCouncilBox")
                   ),
                   fluidRow(
                     dataTableOutput("branchTable")
@@ -148,9 +147,9 @@ ui <- dashboardPage(
                 )
               )
       ),
-      #========  
-      # About
-      #========
+    #========  
+    # About
+    #========
       tabItem(tabName = "about",includeMarkdown("about.md"),hr())
   )
  )
@@ -272,19 +271,38 @@ server <- function(input, output, session) {
     
     ggplotly(g)
     
+  })
     
-    #-----------
-    # Branch Table
-    #-----------
+  
+  # fluidRow(
+  #   valueBoxOutput("branchCodeBox"),
+  #   valueBoxOutput("workStationsBox"),
+  #   valueBoxOutput("serviceTierBox"), 
+  #   valueBoxOutput("presentSiteBox")
+  # ),
+  # fluidRow(
+  #   valueBoxOutput("kidStopBox"),
+  #   valueBoxOutput("clcBox"),
+  #   valueBoxOutput("dihBox"),
+  #   valueBoxOutput("teenCouncilBox")
+
+  #-----------
+  # Branch boxes
+  #-----------
+  
+    
+  #-----------
+  # Branch Table
+  #-----------
     output$branchTable <- renderDataTable({
       tpl_branch() %>%
         filter(BranchName == input$branchInput) %>%
         select(Address,PostalCode,WardName,Website,Telephone,SquareFootage)
     })
     
-    #-----------
-    # Branch Trend
-    #-----------
+  #-----------
+  # Branch Trend
+  #-----------
     output$tplBranchTrendPlot <- renderPlotly({
       if (input$radioBranchTrend == 1) {
         #- tpl-card-registrations-annual-by-branch-2012-2022
@@ -328,9 +346,6 @@ server <- function(input, output, session) {
       ggplotly(g)
       
     })
-
-    
-  })
   
 
 }
