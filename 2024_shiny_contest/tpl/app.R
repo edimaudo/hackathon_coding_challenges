@@ -35,7 +35,11 @@ tpl_branch_visit <- read_csv("tpl-visits-annual-by-branch-2012-2022.csv")
 tpl_branch_workstation <- read_csv("tpl-workstation-usage-annual-by-branch-2012-2022.csv")
 tpl_yag <- read_csv("Youth_Advisory_Groups_Locations.csv")
 tpl_yh <- read_csv("Youth_Hubs_Locations.csv")
-toronto_wellbeing <- read_csv("wellbeing-toronto-economics.csv")
+
+tpl_branch <- tpl %>%
+  filter(PhysicalBranch == 1) %>%
+  select(BranchName) %>%
+  arrange()
 
 
 ################
@@ -86,10 +90,35 @@ ui <- dashboardPage(
               
       ),
       tabItem(tabName = "branch",
-              tabsetPanel(type = "tabs",
-                          tabPanel("Plot", plotOutput("plot")),
-                          tabPanel("Summary", verbatimTextOutput("summary")),
-                          tabPanel("Table", tableOutput("table")),
+              sidebarLayout(
+                sidebarPanel(width = 2,
+                             selectInput("branchInput", label = "Branch",choices =tpl_branch),
+                ),
+                
+                mainPanel (
+                  fluidRow(
+                    valueBoxOutput("cityInsightBox"),
+                    valueBoxOutput("countryInsightBox"),
+                    valueBoxOutput("sdgInsightBox"), 
+                    valueBoxOutput("repostsBox")
+                  ),
+                  fluidRow(
+                    valueBoxOutput("submissionInsightBox"),
+                    valueBoxOutput("topicInsightBox"),
+                    valueBoxOutput("repostsBox"),
+                    valueBoxOutput("commentsBox")
+                  ),
+                  fluidRow(
+                    dataTableOutput("branchTable")
+                  ),
+                  fluidRow(
+                    column(width = 12, 
+                           box(h3("Plotted by ",style="text-align: center;text-style:bold"),
+                               plotlyOutput("plottedbyOutput"),
+                               )
+                    )
+                  )
+                )
               )
       ),
       tabItem(tabName = "about",includeMarkdown("about.md"),hr())
