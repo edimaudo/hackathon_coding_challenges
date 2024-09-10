@@ -48,8 +48,8 @@ tpl_branch <- tpl %>%
 ui <- dashboardPage(
   dashboardHeader(title = "TPL",
                   tags$li(a(href = 'https://www.torontopubliclibrary.ca',
-                            img(src = 'https://upload.wikimedia.org/wikipedia/commons/4/47/Toronto_Public_Library_Logo.png',
-                                title = "Home", height = "30px"),
+                          img(src = 'https://upload.wikimedia.org/wikipedia/commons/4/47/Toronto_Public_Library_Logo.png',
+                          title = "Home", height = "30px"),
                             style = "padding-top:10px; padding-bottom:10px;"),
                           class = "dropdown")),
   dashboardSidebar(
@@ -89,6 +89,9 @@ ui <- dashboardPage(
               ),
               
       ),
+      #========  
+      # Branch
+      #========
       tabItem(tabName = "branch",
               sidebarLayout(
                 sidebarPanel(width = 2,
@@ -113,14 +116,30 @@ ui <- dashboardPage(
                   ),
                   fluidRow(
                     column(width = 12, 
-                           box(h3("Plotted by ",style="text-align: center;text-style:bold"),
-                               plotlyOutput("plottedbyOutput"),
-                               )
+                           box(h3("Branch Trends",style="text-align: center;text-style:bold"),
+                               fluidRow(
+                                 radioButtons( 
+                                   inputId = "radioBranchTrend", 
+                                   label = "", 
+                                   choices = list( 
+                                     "Annual Card Registrations" = 1, 
+                                     "Annual Circulation" = 2, 
+                                     "Annual Visits" = 3,
+                                     "Annual Workstation Usage" = 4 
+                                   ) ,
+                                   inline=T
+                                 ),
+                                 plotlyOutput("tplBranchTrendPlot"),  
+                               ),
+                            )
                     )
                   )
                 )
               )
       ),
+      #========  
+      # About
+      #========
       tabItem(tabName = "about",includeMarkdown("about.md"),hr())
   )
  )
@@ -229,7 +248,7 @@ server <- function(input, output, session) {
         select(Year, Total)
     }
     
-    g <- ggplot(tpl_trend, aes(x = Year, ,y = Total))  +
+    g <- ggplot(tpl_trend, aes(x = Year, y = Total))  +
       geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() + 
       labs(x ="Year", y = "Total") + scale_x_continuous(breaks = breaks_pretty()) + 
       scale_y_continuous(breaks = breaks_pretty(),labels = label_comma()) + 
@@ -240,6 +259,57 @@ server <- function(input, output, session) {
     
     ggplotly(g)
     
+    #########
+    # Branch Insights
+    ########
+    
+    
+    
+    output$branchTable <- renderDataTable({
+      tpl_branch() %>%
+        filter(BranchName == input$branchInput) %>%
+        select(Address,PostalCode,WardName,Website,Telephone,SquareFootage)
+    })
+    
+    output$tplBranchTrendPlot <- renderPlotly({
+      if (input$radioTrend == 1) {
+        #- tpl-card-registrations-annual-by-branch-2012-2022
+        tpl_trend <- tpl_branch_card_registration %>%
+          group_by(Year)%>%
+          summarise(Total = sum(Registrations)) %>%
+          select(Year, Total) 
+      } else if (input$radioTrend == 2){
+        #- tpl-circulation-annual-by-branch-2012-2022
+        tpl_trend <- tpl_branch_circulation%>%
+          group_by(Year)%>%
+          summarise(Total = sum(Circulation)) %>%
+          select(Year, Total)
+      } else if (input$radioTrend == 3){
+        #- tpl-visits-annual-by-branch-2012-2022
+        tpl_trend <- tpl_branch_visit%>%
+          group_by(Year)%>%
+          summarise(Total = sum(Visits)) %>%
+          select(Year, Total)
+      } else if (input$radioTrend == 4){
+        #- tpl-workstation-usage-annual-by-branch-2012-2022
+        tpl_trend <- tpl_branch_workstation%>%
+          group_by(Year)%>%
+          summarise(Total = sum(Sessions)) %>%
+          select(Year, Total)
+      }
+      
+      g <- ggplot(tpl_trend, aes(x = Year, y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() + 
+        labs(x ="Year", y = "Total") + scale_x_continuous(breaks = breaks_pretty()) + 
+        scale_y_continuous(breaks = breaks_pretty(),labels = label_comma()) + 
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
+      
+      ggplotly(g)
+      
+    })
 
     
   })
