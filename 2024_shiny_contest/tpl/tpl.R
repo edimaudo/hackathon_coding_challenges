@@ -32,12 +32,16 @@ tpl_branch_workstation <- read_csv("tpl-workstation-usage-annual-by-branch-2012-
 tpl_yag <- read_csv("Youth_Advisory_Groups_Locations.csv")
 tpl_yh <- read_csv("Youth_Hubs_Locations.csv")
 toronto_wellbeing <- read_csv("wellbeing-toronto-economics.csv")
-tpl_map <- fromJSON("Neighbourhoods.geojson")
+
 
 tpl_library <- tpl %>%
   filter(PhysicalBranch == 1) %>%
   select(BranchName,Lat,Long,SquareFootage)
 
+tpl_branch <- tpl %>%
+  filter(PhysicalBranch == 1) %>%
+  select(BranchName) %>%
+  arrange()
 
 
 
