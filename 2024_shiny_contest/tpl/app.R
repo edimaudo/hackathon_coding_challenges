@@ -42,16 +42,25 @@ tpl_branch <- tpl %>%
   arrange()
 
 
+
+tpl_branch_code <- function(branchName){
+  tpl_branch <- tpl %>%
+    filter(PhysicalBranch == 1, BranchName = branchName) %>%
+    select(BranchCode)
+}
+
 ################
 # UI
 ################
 ui <- dashboardPage(
-  dashboardHeader(title = "TPL",
-                  tags$li(a(href = 'https://www.torontopubliclibrary.ca',
-                          img(src = 'https://upload.wikimedia.org/wikipedia/commons/4/47/Toronto_Public_Library_Logo.png',
-                          title = "Home", height = "30px"),
-                            style = "padding-top:10px; padding-bottom:10px;"),
-                          class = "dropdown")),
+  dashboardHeader(
+    title = "TPL",
+    tags$li(a(href = 'https://www.torontopubliclibrary.ca',
+    img(src = 'https://upload.wikimedia.org/wikipedia/commons/4/47/Toronto_Public_Library_Logo.png',
+    title = "Home", height = "30px"),
+    style = "padding-top:10px; padding-bottom:10px;"),
+    class = "dropdown")
+    ),
   dashboardSidebar(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("list")),
@@ -95,7 +104,9 @@ ui <- dashboardPage(
       tabItem(tabName = "branch",
               sidebarLayout(
                 sidebarPanel(width = 2,
-                             selectInput("branchInput", label = "Branch",choices =tpl_branch),
+                             selectInput("branchInput", 
+                                         label = "Branch",
+                                         choices =tpl_branch),
                 ),
                 
                 mainPanel (
@@ -219,7 +230,9 @@ server <- function(input, output, session) {
       color = "aqua"
     )
   }) 
-  
+  #-----------
+  # Overview Trend
+  #-----------
   output$tplOverviewTrendPlot <- renderPlotly({
     
     if (input$radioTrend == 1) {
@@ -259,40 +272,45 @@ server <- function(input, output, session) {
     
     ggplotly(g)
     
-    #########
-    # Branch Insights
-    ########
     
-    
-    
+    #-----------
+    # Branch Table
+    #-----------
     output$branchTable <- renderDataTable({
       tpl_branch() %>%
         filter(BranchName == input$branchInput) %>%
         select(Address,PostalCode,WardName,Website,Telephone,SquareFootage)
     })
     
+    #-----------
+    # Branch Trend
+    #-----------
     output$tplBranchTrendPlot <- renderPlotly({
-      if (input$radioTrend == 1) {
+      if (input$radioBranchTrend == 1) {
         #- tpl-card-registrations-annual-by-branch-2012-2022
         tpl_trend <- tpl_branch_card_registration %>%
+          filter(BranchCode == tpl_branch_code(input$BranchCode)) %>%
           group_by(Year)%>%
           summarise(Total = sum(Registrations)) %>%
           select(Year, Total) 
-      } else if (input$radioTrend == 2){
+      } else if (input$radioBranchTrend == 2){
         #- tpl-circulation-annual-by-branch-2012-2022
         tpl_trend <- tpl_branch_circulation%>%
+          filter(BranchCode == tpl_branch_code(input$BranchCode)) %>%
           group_by(Year)%>%
           summarise(Total = sum(Circulation)) %>%
           select(Year, Total)
-      } else if (input$radioTrend == 3){
+      } else if (input$radioBranchTrend == 3){
         #- tpl-visits-annual-by-branch-2012-2022
         tpl_trend <- tpl_branch_visit%>%
+          filter(BranchCode == tpl_branch_code(input$BranchCode)) %>%
           group_by(Year)%>%
           summarise(Total = sum(Visits)) %>%
           select(Year, Total)
-      } else if (input$radioTrend == 4){
+      } else if (input$radioBranchTrend == 4){
         #- tpl-workstation-usage-annual-by-branch-2012-2022
         tpl_trend <- tpl_branch_workstation%>%
+          filter(BranchCode == tpl_branch_code(input$BranchCode)) %>%
           group_by(Year)%>%
           summarise(Total = sum(Sessions)) %>%
           select(Year, Total)
