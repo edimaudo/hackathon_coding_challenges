@@ -51,9 +51,10 @@ tpl_trend <- tpl_branch_circulation %>%
   select(Year, Circulation)
 
 
+length(unique(tpl_yag$`Branch Name`))
 
 
-
+length(tpl_yag$Branch.Name)
 
   
 
