@@ -114,13 +114,13 @@ ui <- dashboardPage(
                   fluidRow(
                     valueBoxOutput("branchCodeBox"),
                     valueBoxOutput("workStationsBox"),
-                    valueBoxOutput("serviceTierBox"),
+                    #valueBoxOutput("serviceTierBox"),
                     valueBoxOutput("presentSiteBox")
                   ),
                   fluidRow(
                     valueBoxOutput("kidStopBox"),
-                    valueBoxOutput("clcBox"),
-                    valueBoxOutput("dihBox"),
+                    valueBoxOutput("branchclcBox"),
+                    #valueBoxOutput("branchdihBox"),
                     valueBoxOutput("teenCouncilBox")
                   ),
                   fluidRow(
@@ -151,7 +151,7 @@ server <- function(input, output, session) {
     
     valueBox(
       value = tags$p("Libraries", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(tpl_library$BranchName)), style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
@@ -161,7 +161,7 @@ server <- function(input, output, session) {
   output$clcBox <- renderValueBox({
     valueBox(
       value = tags$p("Computer Learning Centres", style = "font-size: 80%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_clc$`Branch Name`))), style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(tpl_clc$Branch.Name)), style = "font-size: 100%;"),
       icon = icon("computer"),    
       color = "aqua"
     )
@@ -170,7 +170,7 @@ server <- function(input, output, session) {
   output$keclBox <- renderValueBox({
     valueBox(
       value = tags$p("Early Literacy Centres", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_kecl$`Branch Name`))), style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(tpl_kecl$Branch.Name)), style = "font-size: 100%;"),
       icon = icon("child"),  
       color = "aqua"
     )
@@ -180,7 +180,7 @@ server <- function(input, output, session) {
   output$nibBox <- renderValueBox({
     valueBox(
       value = tags$p("Improvement Branches", style = "font-size: 80%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_nib$`Branch Name`))), style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(tpl_nib$Branch.Name)), style = "font-size: 100%;"),
       icon = icon("thumbs-up"),  
       color = "aqua"
     )
@@ -189,7 +189,7 @@ server <- function(input, output, session) {
   output$dihBox <- renderValueBox({
     valueBox(
       value = tags$p("Digital Innovation Hub", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_dih$`Branch Name`))), style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(tpl_dih$Branch.Name)), style = "font-size: 100%;"),
       icon = icon("lightbulb"),  
       color = "aqua"
     )
@@ -198,7 +198,7 @@ server <- function(input, output, session) {
   output$yagBox <- renderValueBox({
     valueBox(
       value = tags$p("Youth Advisory", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_yag$`Branch Name`))), style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(tpl_yag$Branch.Name)), style = "font-size: 100%;"),
       icon = icon("person"),  
       color = "aqua"
     )
@@ -207,7 +207,7 @@ server <- function(input, output, session) {
   output$yhBox <- renderValueBox({
     valueBox(
       value = tags$p("Youth Hub", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_yh$`Branch Name`))), style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(tpl_yh$Branch.Name)), style = "font-size: 100%;"),
       icon = icon("person"), 
       color = "aqua"
     )
@@ -311,7 +311,7 @@ server <- function(input, output, session) {
     )
   })
 
-  output$clcBox <- renderValueBox({
+  output$branchclcBox <- renderValueBox({
     valueBox(
       value = tags$p("CLC", style = "font-size: 100%;"),
       subtitle = tags$p(paste0(tpl_branch_info()$CLC), style = "font-size: 100%;"),
@@ -320,7 +320,7 @@ server <- function(input, output, session) {
     )
   })
 
-  output$dihBox <- renderValueBox({
+  output$branchdihBox <- renderValueBox({
     valueBox(
       value = tags$p("DIH", style = "font-size: 100%;"),
       subtitle = tags$p(paste0(tpl_branch_info()$DIH), style = "font-size: 100%;"),
