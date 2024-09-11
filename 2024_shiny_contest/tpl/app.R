@@ -62,7 +62,8 @@ ui <- dashboardPage(
     ),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Overview", tabName = "overview", icon = icon("list")),
+      menuItem("Overview", tabName = "overview", icon = icon("house")),
+      menuItem("Branch", tabName = "branch", icon = icon("book")),
       menuItem("About", tabName = "about", icon = icon("th"))
     )
   ),
@@ -139,7 +140,7 @@ ui <- dashboardPage(
                                    ) ,
                                    inline=T
                                  ),
-                                 plotlyOutput("tplBranchTrendPlot"),  
+                                 plotlyOutput("tplBranchTrendPlot")
                                ),
                             )
                     )
@@ -274,18 +275,87 @@ server <- function(input, output, session) {
   })
     
   
-  # fluidRow(
-  #   valueBoxOutput("branchCodeBox"),
-  #   valueBoxOutput("workStationsBox"),
-  #   valueBoxOutput("serviceTierBox"), 
-  #   valueBoxOutput("presentSiteBox")
-  # ),
-  # fluidRow(
-  #   valueBoxOutput("kidStopBox"),
-  #   valueBoxOutput("clcBox"),
-  #   valueBoxOutput("dihBox"),
-  #   valueBoxOutput("teenCouncilBox")
+  # Branch boxes
 
+  tpl_branch_info <- tpl %>%
+    filter(PhysicalBranch == 1, BranchName=input$branchInput) %>%
+    select(BranchName,BranchCode,Workstations,ServiceTier,PresentSiteYear,KidsStop,CLC,DIH,TeenCouncil)
+    
+  
+  output$branchCodeBox <- renderValueBox({
+    valueBox(
+      value = tags$p("Libraries", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+  
+  output$workStationsBox <- renderValueBox({
+    valueBox(
+      value = tags$p("Libraries", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+
+  output$serviceTierBox <- renderValueBox({
+    valueBox(
+      value = tags$p("Libraries", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+
+  output$presentSiteBox <- renderValueBox({
+    valueBox(
+      value = tags$p("Libraries", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+    
+  output$kidStopBox <- renderValueBox({
+    valueBox(
+      value = tags$p("Libraries", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+
+  output$clcBox <- renderValueBox({
+    valueBox(
+      value = tags$p("Libraries", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+  
+  output$dihBox <- renderValueBox({
+    valueBox(
+      value = tags$p("Libraries", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+  
+  output$teenCouncilBox <- renderValueBox({
+    valueBox(
+      value = tags$p("Libraries", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+ 
+  
+  
   #-----------
   # Branch boxes
   #-----------
