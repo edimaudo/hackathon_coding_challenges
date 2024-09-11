@@ -47,6 +47,8 @@ tpl_branch <- tpl %>%
   select(BranchName) %>%
   arrange()
 
+month <- c("January",'Feburary','March','April','May','June','July','August','September','October','November','December')
+
 ################
 # UI
 ################
@@ -149,46 +151,29 @@ ui <- dashboardPage(
     #========  
     # Branch Events
     #========
-    tabItem(tabName = "branch",
+    tabItem(tabName = "branch_event",
             sidebarLayout(
               sidebarPanel(width = 3,
-                           selectInput("branchInput", 
+                           selectInput("branchEventInput", 
                                        label = "Branch",
-                                       choices =tpl_branch)
+                                       choices =tpl_branch),
+                           selectInput("monthEventInput", 
+                                       label = "Month",
+                                       choices =month)
               ),
               
               mainPanel (
                 fluidRow(
-                  valueBoxOutput("branchCodeBox"),
-                  valueBoxOutput("workStationsBox"),
+                  #valueBoxOutput("branchCodeBox"),
+                  #valueBoxOutput("workStationsBox"),
                   #valueBoxOutput("serviceTierBox"),
-                  valueBoxOutput("presentSiteBox")
+                  #valueBoxOutput("presentSiteBox")
                 ),
                 fluidRow(
-                  valueBoxOutput("kidStopBox"),
-                  valueBoxOutput("branchclcBox"),
+                  #valueBoxOutput("kidStopBox"),
+                  #valueBoxOutput("branchclcBox"),
                   #valueBoxOutput("branchdihBox"),
-                  valueBoxOutput("teenCouncilBox")
-                ),
-                fluidRow(
-                  dataTableOutput("branchTable")
-                ),
-                fluidRow(
-                  h3("Branch Trends",style="text-align: center;text-style:bold"),
-                  fluidRow(
-                    radioButtons( 
-                      inputId = "radioBranchTrend", 
-                      label = "", 
-                      choices = list( 
-                        "Annual Card Registrations" = 1, 
-                        "Annual Circulation" = 2, 
-                        "Annual Visits" = 3,
-                        "Annual Workstation Usage" = 4 
-                      ) ,
-                      inline=T
-                    ),
-                    plotlyOutput("tplBranchTrendPlot")
-                  )
+                  #valueBoxOutput("teenCouncilBox")
                 )
               )
             )
@@ -307,7 +292,7 @@ server <- function(input, output, session) {
     }
     
     g <- ggplot(tpl_trend, aes(x = Year, y = Total))  +
-      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() + 
+      geom_bar(stat = "identity",width = 0.5, fill='#0474ca') + theme_classic() + 
       labs(x ="Year", y = "Total") + scale_x_continuous(breaks = breaks_pretty()) + 
       scale_y_continuous(breaks = breaks_pretty(),labels = label_comma()) + 
       theme(legend.text = element_text(size = 12),
@@ -450,7 +435,7 @@ server <- function(input, output, session) {
       }
 
       g <- ggplot(tpl_trend, aes(x = Year, y = Total))  +
-        geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() +
+        geom_bar(stat = "identity",width = 0.5, fill='#0474ca') + theme_classic() +
         labs(x ="Year", y = "Total") + scale_x_continuous(breaks = breaks_pretty()) +
         scale_y_continuous(breaks = breaks_pretty(),labels = label_comma()) +
         theme(legend.text = element_text(size = 12),
