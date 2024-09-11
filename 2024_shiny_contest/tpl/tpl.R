@@ -19,19 +19,18 @@ for (package in packages) {
 ################
 # Load data
 ################
-tpl_clc <- read_csv("Computer_Learning_Centres.csv")
-tpl_dih <- read_csv("Digital_Innovation_Hubs.csv")
-tpl_kecl <- read_csv("KidsStop_Early_Literacy_Centres.csv")
-tpl_nib <- read_csv("Neighbourhood_Improvement_Area_Branches.csv")
-tpl <- read_csv("tpl-branch-general-information-2023.csv")
-tpl_branch_card_registration <- read_csv("tpl-card-registrations-annual-by-branch-2012-2022.csv")
-tpl_branch_circulation <- read_csv("tpl-circulation-annual-by-branch-2012-2022.csv")
-tpl_branch_eventfeed <- read_csv("tpl-events-feed.csv")
-tpl_branch_visit <- read_csv("tpl-visits-annual-by-branch-2012-2022.csv")
-tpl_branch_workstation <- read_csv("tpl-workstation-usage-annual-by-branch-2012-2022.csv")
-tpl_yag <- read_csv("Youth_Advisory_Groups_Locations.csv")
-tpl_yh <- read_csv("Youth_Hubs_Locations.csv")
-toronto_wellbeing <- read_csv("wellbeing-toronto-economics.csv")
+tpl_clc <- read.csv("Computer_Learning_Centres.csv",sep = ",")  
+tpl_dih <- read.csv("Digital_Innovation_Hubs.csv",sep = ",")
+tpl_kecl <- read.csv("KidsStop_Early_Literacy_Centres.csv",sep = ",")
+tpl_nib <- read.csv("Neighbourhood_Improvement_Area_Branches.csv",sep = ",")
+tpl <- read.csv("tpl-branch-general-information-2023.csv",sep = ",")
+tpl_branch_card_registration <- read.csv("tpl-card-registrations-annual-by-branch-2012-2022.csv",sep = ",")
+tpl_branch_circulation <- read.csv("tpl-circulation-annual-by-branch-2012-2022.csv",sep = ",")
+tpl_branch_eventfeed <- read.csv("tpl-events-feed.csv",sep = ",")
+tpl_branch_visit <- read.csv("tpl-visits-annual-by-branch-2012-2022.csv",sep = ",")
+tpl_branch_workstation <- read.csv("tpl-workstation-usage-annual-by-branch-2012-2022.csv",sep = ",")
+tpl_yag <- read.csv("Youth_Advisory_Groups_Locations.csv",sep = ",")
+tpl_yh <- read.csv("Youth_Hubs_Locations.csv",sep = ",")
 
 
 tpl_library <- tpl %>%
