@@ -23,18 +23,18 @@ for (package in packages) {
 ################
 # Data
 ################
-tpl_clc <- read_csv("Computer_Learning_Centres.csv")
-tpl_dih <- read_csv("Digital_Innovation_Hubs.csv")
-tpl_kecl <- read_csv("KidsStop_Early_Literacy_Centres.csv")
-tpl_nib <- read_csv("Neighbourhood_Improvement_Area_Branches.csv")
-tpl <- read_csv("tpl-branch-general-information-2023.csv")
-tpl_branch_card_registration <- read_csv("tpl-card-registrations-annual-by-branch-2012-2022.csv")
-tpl_branch_circulation <- read_csv("tpl-circulation-annual-by-branch-2012-2022.csv")
-tpl_branch_eventfeed <- read_csv("tpl-events-feed.csv")
-tpl_branch_visit <- read_csv("tpl-visits-annual-by-branch-2012-2022.csv")
-tpl_branch_workstation <- read_csv("tpl-workstation-usage-annual-by-branch-2012-2022.csv")
-tpl_yag <- read_csv("Youth_Advisory_Groups_Locations.csv")
-tpl_yh <- read_csv("Youth_Hubs_Locations.csv")
+tpl_clc <- read.csv("Computer_Learning_Centres.csv",sep = ",")  
+tpl_dih <- read.csv("Digital_Innovation_Hubs.csv",sep = ",")
+tpl_kecl <- read.csv("KidsStop_Early_Literacy_Centres.csv",sep = ",")
+tpl_nib <- read.csv("Neighbourhood_Improvement_Area_Branches.csv",sep = ",")
+tpl <- read.csv("tpl-branch-general-information-2023.csv",sep = ",")
+tpl_branch_card_registration <- read.csv("tpl-card-registrations-annual-by-branch-2012-2022.csv",sep = ",")
+tpl_branch_circulation <- read.csv("tpl-circulation-annual-by-branch-2012-2022.csv",sep = ",")
+tpl_branch_eventfeed <- read.csv("tpl-events-feed.csv",sep = ",")
+tpl_branch_visit <- read.csv("tpl-visits-annual-by-branch-2012-2022.csv",sep = ",")
+tpl_branch_workstation <- read.csv("tpl-workstation-usage-annual-by-branch-2012-2022.csv",sep = ",")
+tpl_yag <- read.csv("Youth_Advisory_Groups_Locations.csv",sep = ",")
+tpl_yh <- read.csv("Youth_Hubs_Locations.csv",sep = ",")
 
 
 tpl_branch <- tpl %>%
@@ -62,16 +62,17 @@ ui <- dashboardPage(
     ),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Overview", tabName = "overview", icon = icon("house"))#,
-      #menuItem("Branch", tabName = "branch", icon = icon("book")),
-      #menuItem("About", tabName = "about", icon = icon("th"))
+      menuItem("Overview", tabName = "overview", icon = icon("house")),
+      menuItem("Branch", tabName = "branch", icon = icon("book")),
+      menuItem("About", tabName = "about", icon = icon("th"))
     )
   ),
   dashboardBody(
-    #========  
-    # Overview
-    #========
+
     tabItems(
+      #========  
+      # Overview
+      #========
       tabItem(tabName = "overview",
               fluidRow(
                 valueBoxOutput("libraryBox"),
@@ -81,8 +82,9 @@ ui <- dashboardPage(
                 valueBoxOutput("yagBox"),
                 valueBoxOutput("yhBox")
               ),
-              h2("Trends",style="text-align: center;text-style:bold"),
+              
               fluidRow(
+                h2("Trends",style="text-align: center;text-style:bold"),
                 radioButtons( 
                   inputId = "radioTrend", 
                   label = "", 
@@ -94,16 +96,15 @@ ui <- dashboardPage(
                   ) ,
                   inline=T
                 ),
-                plotlyOutput("tplOverviewTrendPlot"),  
-              ),
-              
+                plotlyOutput("tplOverviewTrendPlot") 
+              )
       ),
-    #========  
-    # Branch
-    #========
+      #========  
+      # Branch
+      #========
       tabItem(tabName = "branch",
               sidebarLayout(
-                sidebarPanel(width = 8,
+                sidebarPanel(width = 3,
                              selectInput("branchInput", 
                                          label = "Branch",
                                          choices =tpl_branch)
@@ -113,7 +114,7 @@ ui <- dashboardPage(
                   fluidRow(
                     valueBoxOutput("branchCodeBox"),
                     valueBoxOutput("workStationsBox"),
-                    valueBoxOutput("serviceTierBox"), 
+                    valueBoxOutput("serviceTierBox"),
                     valueBoxOutput("presentSiteBox")
                   ),
                   fluidRow(
@@ -123,28 +124,11 @@ ui <- dashboardPage(
                     valueBoxOutput("teenCouncilBox")
                   ),
                   fluidRow(
-                    dataTableOutput("branchTable"),
+                    dataTableOutput("branchTable")
                   ),
-                  fluidRow(
-                     h3("Branch Trends",style="text-align: center;text-style:bold"),
-                      fluidRow(
-                                 radioButtons( 
-                                   inputId = "radioBranchTrend", 
-                                   label = "", 
-                                   choices = list( 
-                                     "Annual Card Registrations" = 1, 
-                                     "Annual Circulation" = 2, 
-                                     "Annual Visits" = 3,
-                                     "Annual Workstation Usage" = 4 
-                                   ) ,
-                                   inline=T
-                                 ),
-                                 plotlyOutput("tplBranchTrendPlot"),
-                      )
-                  )
                 )
-              )
-      ),
+      )
+    ),
     #========  
     # About
     #========
@@ -172,6 +156,7 @@ server <- function(input, output, session) {
       color = "aqua"
     )
   })
+  
   # Computer_Learning_Centres
   output$clcBox <- renderValueBox({
     valueBox(
@@ -233,25 +218,24 @@ server <- function(input, output, session) {
   output$tplOverviewTrendPlot <- renderPlotly({
     
     if (input$radioTrend == 1) {
-      #- tpl-card-registrations-annual-by-branch-2012-2022
       tpl_trend <- tpl_branch_card_registration %>%
         group_by(Year)%>%
         summarise(Total = sum(Registrations)) %>%
         select(Year, Total) 
     } else if (input$radioTrend == 2){
-      #- tpl-circulation-annual-by-branch-2012-2022
+      
       tpl_trend <- tpl_branch_circulation%>%
         group_by(Year)%>%
         summarise(Total = sum(Circulation)) %>%
         select(Year, Total)
     } else if (input$radioTrend == 3){
-      #- tpl-visits-annual-by-branch-2012-2022
+      
       tpl_trend <- tpl_branch_visit%>%
         group_by(Year)%>%
         summarise(Total = sum(Visits)) %>%
         select(Year, Total)
     } else if (input$radioTrend == 4){
-      #- tpl-workstation-usage-annual-by-branch-2012-2022
+      
       tpl_trend <- tpl_branch_workstation%>%
         group_by(Year)%>%
         summarise(Total = sum(Sessions)) %>%
@@ -272,26 +256,29 @@ server <- function(input, output, session) {
   })
     
   
+  #-----------
   # Branch boxes
-
-  tpl_branch_info <- tpl %>%
-    filter(PhysicalBranch == 1, BranchName=input$branchInput) %>%
-    select(BranchName,BranchCode,Workstations,ServiceTier,PresentSiteYear,KidsStop,CLC,DIH,TeenCouncil)
-    
+  #-----------
+  tpl_branch_info  <- reactive({
+    tpl %>%
+      filter(PhysicalBranch == 1, BranchName==input$branchInput) %>%
+      select(BranchName,BranchCode,Workstations,ServiceTier,PresentSiteYear,KidsStop,CLC,DIH,TeenCouncil)
+  }) 
   
+
   output$branchCodeBox <- renderValueBox({
     valueBox(
-      value = tags$p("Libraries", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      value = tags$p("Branch Code", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(tpl_branch_info()$BranchCode), style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
   })
-  
+
   output$workStationsBox <- renderValueBox({
     valueBox(
-      value = tags$p("Libraries", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      value = tags$p("Workstations", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(tpl_branch_info()$Workstations), style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
@@ -299,8 +286,8 @@ server <- function(input, output, session) {
 
   output$serviceTierBox <- renderValueBox({
     valueBox(
-      value = tags$p("Libraries", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      value = tags$p("Service Tier", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(tpl_branch_info()$ServiceTier), style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
@@ -308,17 +295,17 @@ server <- function(input, output, session) {
 
   output$presentSiteBox <- renderValueBox({
     valueBox(
-      value = tags$p("Libraries", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      value = tags$p("Available Since", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(tpl_branch_info()$PresentSiteYear), style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
   })
-    
+
   output$kidStopBox <- renderValueBox({
     valueBox(
-      value = tags$p("Libraries", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      value = tags$p("Kid Stop", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(tpl_branch_info()$KidsStop), style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
@@ -326,47 +313,44 @@ server <- function(input, output, session) {
 
   output$clcBox <- renderValueBox({
     valueBox(
-      value = tags$p("Libraries", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      value = tags$p("CLC", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(tpl_branch_info()$CLC), style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
   })
-  
+
   output$dihBox <- renderValueBox({
     valueBox(
-      value = tags$p("Libraries", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      value = tags$p("DIH", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(tpl_branch_info()$DIH), style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
   })
-  
+
   output$teenCouncilBox <- renderValueBox({
     valueBox(
-      value = tags$p("Libraries", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(tpl_library$BranchName))), style = "font-size: 100%;"),
+      value = tags$p("Youth Council", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(tpl_branch_info()$TeenCouncil), style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
   })
- 
-  
-  
-  #-----------
-  # Branch boxes
-  #-----------
-  
-    
+# 
   #-----------
   # Branch Table
   #-----------
-    output$branchTable <- renderDataTable({
-      tpl_branch() %>%
-        filter(BranchName == input$branchInput) %>%
-        select(Address,PostalCode,WardName,Website,Telephone,SquareFootage)
-    })
-    
+  tbl_branch_table <- reactive({
+    tpl %>%
+      filter(PhysicalBranch == 1, BranchName == input$branchInput) %>%
+      select(Address,PostalCode,WardName,Website,Telephone,SquareFootage)
+  })
+  
+  output$branchTable <- renderDataTable({
+      tbl_branch_table()
+  })
+
   #-----------
   # Branch Trend
   #-----------
@@ -374,46 +358,46 @@ server <- function(input, output, session) {
       if (input$radioBranchTrend == 1) {
         #- tpl-card-registrations-annual-by-branch-2012-2022
         tpl_trend <- tpl_branch_card_registration %>%
-          filter(BranchCode == tpl_branch_code(input$BranchCode)) %>%
+          filter(BranchCode == tpl_branch_code(input$branchInput)) %>%
           group_by(Year)%>%
           summarise(Total = sum(Registrations)) %>%
-          select(Year, Total) 
+          select(Year, Total)
       } else if (input$radioBranchTrend == 2){
         #- tpl-circulation-annual-by-branch-2012-2022
         tpl_trend <- tpl_branch_circulation%>%
-          filter(BranchCode == tpl_branch_code(input$BranchCode)) %>%
+          filter(BranchCode == tpl_branch_code(input$branchInput)) %>%
           group_by(Year)%>%
           summarise(Total = sum(Circulation)) %>%
           select(Year, Total)
       } else if (input$radioBranchTrend == 3){
         #- tpl-visits-annual-by-branch-2012-2022
         tpl_trend <- tpl_branch_visit%>%
-          filter(BranchCode == tpl_branch_code(input$BranchCode)) %>%
+          filter(BranchCode == tpl_branch_code(input$branchInput)) %>%
           group_by(Year)%>%
           summarise(Total = sum(Visits)) %>%
           select(Year, Total)
       } else if (input$radioBranchTrend == 4){
         #- tpl-workstation-usage-annual-by-branch-2012-2022
         tpl_trend <- tpl_branch_workstation%>%
-          filter(BranchCode == tpl_branch_code(input$BranchCode)) %>%
+          filter(BranchCode == tpl_branch_code(input$branchInput)) %>%
           group_by(Year)%>%
           summarise(Total = sum(Sessions)) %>%
           select(Year, Total)
       }
-      
+
       g <- ggplot(tpl_trend, aes(x = Year, y = Total))  +
-        geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() + 
-        labs(x ="Year", y = "Total") + scale_x_continuous(breaks = breaks_pretty()) + 
-        scale_y_continuous(breaks = breaks_pretty(),labels = label_comma()) + 
+        geom_bar(stat = "identity",width = 0.5, fill='black') + theme_classic() +
+        labs(x ="Year", y = "Total") + scale_x_continuous(breaks = breaks_pretty()) +
+        scale_y_continuous(breaks = breaks_pretty(),labels = label_comma()) +
         theme(legend.text = element_text(size = 12),
               legend.title = element_text(size = 12),
               axis.title = element_text(size = 14),
               axis.text = element_text(size = 12))
-      
+
       ggplotly(g)
-      
+
     })
-  
+#   
 
 }
 
