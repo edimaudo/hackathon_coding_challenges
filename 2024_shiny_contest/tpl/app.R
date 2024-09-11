@@ -62,9 +62,9 @@ ui <- dashboardPage(
     ),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Overview", tabName = "overview", icon = icon("house")),
-      menuItem("Branch", tabName = "branch", icon = icon("book")),
-      menuItem("About", tabName = "about", icon = icon("th"))
+      menuItem("Overview", tabName = "overview", icon = icon("house"))#,
+      #menuItem("Branch", tabName = "branch", icon = icon("book")),
+      #menuItem("About", tabName = "about", icon = icon("th"))
     )
   ),
   dashboardBody(
@@ -106,7 +106,7 @@ ui <- dashboardPage(
                 sidebarPanel(width = 8,
                              selectInput("branchInput", 
                                          label = "Branch",
-                                         choices =tpl_branch),
+                                         choices =tpl_branch)
                 ),
                 
                 mainPanel (
@@ -123,7 +123,7 @@ ui <- dashboardPage(
                     valueBoxOutput("teenCouncilBox")
                   ),
                   fluidRow(
-                    dataTableOutput("branchTable")
+                    dataTableOutput("branchTable"),
                   ),
                   fluidRow(
                      h3("Branch Trends",style="text-align: center;text-style:bold"),
@@ -139,7 +139,7 @@ ui <- dashboardPage(
                                    ) ,
                                    inline=T
                                  ),
-                                 plotlyOutput("tplBranchTrendPlot")
+                                 plotlyOutput("tplBranchTrendPlot"),
                       )
                   )
                 )
