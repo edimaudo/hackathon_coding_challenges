@@ -63,6 +63,7 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("house")),
       menuItem("Branch", tabName = "branch", icon = icon("book")),
+      menuItem("Branch Events", tabName = "branch_event", icon = icon("book")),
       menuItem("About", tabName = "about", icon = icon("th"))
     )
   ),
@@ -148,6 +149,50 @@ ui <- dashboardPage(
     #========  
     # Branch Events
     #========
+    tabItem(tabName = "branch",
+            sidebarLayout(
+              sidebarPanel(width = 3,
+                           selectInput("branchInput", 
+                                       label = "Branch",
+                                       choices =tpl_branch)
+              ),
+              
+              mainPanel (
+                fluidRow(
+                  valueBoxOutput("branchCodeBox"),
+                  valueBoxOutput("workStationsBox"),
+                  #valueBoxOutput("serviceTierBox"),
+                  valueBoxOutput("presentSiteBox")
+                ),
+                fluidRow(
+                  valueBoxOutput("kidStopBox"),
+                  valueBoxOutput("branchclcBox"),
+                  #valueBoxOutput("branchdihBox"),
+                  valueBoxOutput("teenCouncilBox")
+                ),
+                fluidRow(
+                  dataTableOutput("branchTable")
+                ),
+                fluidRow(
+                  h3("Branch Trends",style="text-align: center;text-style:bold"),
+                  fluidRow(
+                    radioButtons( 
+                      inputId = "radioBranchTrend", 
+                      label = "", 
+                      choices = list( 
+                        "Annual Card Registrations" = 1, 
+                        "Annual Circulation" = 2, 
+                        "Annual Visits" = 3,
+                        "Annual Workstation Usage" = 4 
+                      ) ,
+                      inline=T
+                    ),
+                    plotlyOutput("tplBranchTrendPlot")
+                  )
+                )
+              )
+            )
+    ),
     #========  
     # About
     #========
