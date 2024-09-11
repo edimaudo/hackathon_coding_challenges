@@ -373,8 +373,6 @@ server <- function(input, output, session) {
   #-----------
   # Branch Trend
   #-----------
-
-  
     output$tplBranchTrendPlot <- renderPlotly({
       if (input$radioBranchTrend == 1) {
         #- tpl-card-registrations-annual-by-branch-2012-2022
@@ -418,7 +416,9 @@ server <- function(input, output, session) {
       ggplotly(g)
 
     })
-#   
+  #-----------
+  # Branch Events
+  #-----------
 
 }
 
