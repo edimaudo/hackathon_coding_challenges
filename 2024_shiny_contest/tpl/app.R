@@ -103,7 +103,7 @@ ui <- dashboardPage(
     #========
       tabItem(tabName = "branch",
               sidebarLayout(
-                sidebarPanel(width = 2,
+                sidebarPanel(width = 8,
                              selectInput("branchInput", 
                                          label = "Branch",
                                          choices =tpl_branch),
@@ -126,9 +126,8 @@ ui <- dashboardPage(
                     dataTableOutput("branchTable")
                   ),
                   fluidRow(
-                    column(width = 12, 
-                           box(h3("Branch Trends",style="text-align: center;text-style:bold"),
-                               fluidRow(
+                     h3("Branch Trends",style="text-align: center;text-style:bold"),
+                      fluidRow(
                                  radioButtons( 
                                    inputId = "radioBranchTrend", 
                                    label = "", 
@@ -141,9 +140,7 @@ ui <- dashboardPage(
                                    inline=T
                                  ),
                                  plotlyOutput("tplBranchTrendPlot")
-                               ),
-                            )
-                    )
+                      )
                   )
                 )
               )
