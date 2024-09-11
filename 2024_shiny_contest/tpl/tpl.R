@@ -56,5 +56,15 @@ length(unique(tpl_yag$`Branch Name`))
 
 length(tpl_yag$Branch.Name)
 
-  
+tpl_branch_code <- function(branchName){
+  tpl_branch <- tpl %>%
+    filter(BranchName == branchName) %>%
+    select(BranchCode)
+}
+tpl_branch_code("Yorkville")[,1]
 
+tpl_trend <- tpl_branch_card_registration %>%
+  filter(BranchCode == 'YO') %>%
+  group_by(Year)%>%
+  summarise(Total = sum(Registrations)) %>%
+  select(Year, Total)
