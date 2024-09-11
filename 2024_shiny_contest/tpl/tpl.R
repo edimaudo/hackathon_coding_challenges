@@ -68,3 +68,9 @@ tpl_trend <- tpl_branch_card_registration %>%
   group_by(Year)%>%
   summarise(Total = sum(Registrations)) %>%
   select(Year, Total)
+
+
+library("lubridate")
+
+
+tpl_branch_eventfeed$start_month <- unique(lubridate::month(tpl_branch_eventfeed$startdate,label=TRUE,abbr = FALSE))
