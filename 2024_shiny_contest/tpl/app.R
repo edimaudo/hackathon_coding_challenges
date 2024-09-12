@@ -247,20 +247,23 @@ ui <- dashboardPage(
               ),
               
               mainPanel (
-                fluidRow(
-                  #valueBoxOutput("branchCodeBox"),
-                  #valueBoxOutput("workStationsBox"),
-                  #valueBoxOutput("serviceTierBox"),
-                  #valueBoxOutput("presentSiteBox")
-                ),
-                fluidRow(
-                  #valueBoxOutput("kidStopBox"),
-                  #valueBoxOutput("branchclcBox"),
-                  #valueBoxOutput("branchdihBox"),
-                  #valueBoxOutput("teenCouncilBox")
-                ),
-                fluidRow(
-                  dataTableOutput("branchEventTable")
+                
+                tabsetPanel(
+                  tabPanel("Text Analytics",
+                           fluidRow(
+                             h3("Sentiment Analysis",style="text-align: center;text-style:bold"),
+                             plotlyOutput("sentimentPlot"),
+                             h3("Word Cloud",style="text-align: center;text-style:bold"),
+                             wordcloud2Output("wordCloudPlot",width = "150%", height = "400px"),
+                             h3("Potential Topics",style="text-align: center;text-style:bold"),
+                             dataTableOutput("topicTable")
+                           )
+                  ),
+                  tabPanel("Table",
+                           fluidRow(
+                             dataTableOutput("branchEventTable")
+                           )
+                  )
                 )
               )
             )
@@ -544,12 +547,89 @@ server <- function(input, output, session) {
   }) 
   
   #-----------
-  # Branch Event sentiment analysis
+  # Sentiment analysis
   #-----------
+  output$sentimentPlot <- renderPlotly({
+    review_words <-  tpl_event_info() %>%
+      unnest_tokens(word, description) %>%
+      anti_join(stop_words) %>%
+      distinct() %>%
+      filter(nchar(word) > 3) 
+    
+    bing_word_counts <- sentiment_analysis(review_words)
+    
+    g <- bing_word_counts %>%
+      group_by(sentiment) %>%
+      top_n(10) %>%
+      ggplot(aes(reorder(word, n), n, fill = sentiment)) +
+      geom_bar(alpha = 0.9, stat = "identity", show.legend = FALSE) + theme_classic() +
+      facet_wrap(~sentiment, scales = "free_y") +
+      labs(y = "Contribution to sentiment", x = NULL) +
+      coord_flip()
+    
+    ggplotly(g)
+  })
   
   #-----------
-  # Branch Event word cloud
+  # word cloud
   #-----------
+  output$wordCloudPlot <- renderWordcloud2({
+    word_cloud( tpl_event_info$title)
+  })
+  
+  #-----------
+  # topics
+  #-----------
+  output$topicTable <- renderDataTable({
+    
+    set.seed(1502)
+    clean <- textcleaner(tpl_event_info()$description)
+    clean <- clean %>% mutate(id = rownames(clean))
+    
+    # crete dtm
+    dtm_r <- CreateDtm(doc_vec = clean$x,
+                       doc_names = clean$id,
+                       ngram_window = c(1,2),
+                       stopword_vec = stopwords("en"),
+                       verbose = F)
+    
+    dtm_r <- dtm_r[,colSums(dtm_r)>2]
+    
+    mod_lda <- FitLdaModel(dtm = dtm_r,
+                           k = 10, # number of topic
+                           iterations = 500,
+                           burnin = 180,
+                           alpha = 0.1,beta = 0.05,
+                           optimize_alpha = T,
+                           calc_likelihood = T,
+                           calc_coherence = T,
+                           calc_r2 = T)
+    
+    mod_lda$top_terms <- GetTopTerms(phi = mod_lda$phi,M = 15)
+    mod_lda$prevalence <- colSums(mod_lda$theta)/sum(mod_lda$theta)*100
+    
+    mod_lda$labels <- LabelTopics(assignments = mod_lda$theta > 0.05, 
+                                  dtm = dtm_r,
+                                  M = 1)
+    
+    mod_lda$summary <- data.frame(topic = rownames(mod_lda$phi),
+                                  labels = mod_lda$labels,
+                                  coherence = round(mod_lda$coherence,3),
+                                  prevalence = round(mod_lda$prevalence,3),
+                                  top_terms = apply(mod_lda$top_terms,2,
+                                                    function(x){paste(x,collapse = ", ")}))
+    
+    modsum <- mod_lda$summary %>%
+      `rownames<-`(NULL)
+    
+    top_terms<- modsum %>% 
+      rename(label = label_1, `top terms` = top_terms) %>%
+      arrange(desc(coherence)) %>%
+      slice(1:10)
+    
+    top_terms
+    
+  })
   
   
   #-----------
