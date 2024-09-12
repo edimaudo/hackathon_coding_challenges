@@ -249,6 +249,12 @@ ui <- dashboardPage(
               mainPanel (
                 
                 tabsetPanel(
+                  tabPanel("Insights",
+                           fluidRow(
+                             h3("Events by Day of Week",style="text-align: center;text-style:bold"),
+                             plotlyOutput("brancheventsDOWPlot"),
+                           ),
+                  ),
                   tabPanel("Text Analytics",
                            fluidRow(
                              h3("Sentiment Analysis",style="text-align: center;text-style:bold"),
@@ -568,13 +574,10 @@ server <- function(input, output, session) {
       labs(y = "Contribution to sentiment", x = NULL) +
       coord_flip()
     
-    
-    
     tryCatch(ggplotly(g),
              error = function(e){
                message("No data available:\n", e)
              })
-    
     
   })
   
@@ -649,13 +652,24 @@ server <- function(input, output, session) {
              })
     
   })
-  
+  #-----------
+  # Branch Events Insights
+  #-----------
+  output$brancheventsDOWPlot <- renderPlotly({
+    
+  })
   
   #-----------
   # Branch Events Table
   #-----------
   output$branchEventTable <- renderDataTable({
-    tpl_event_info()
+    
+    tryCatch( tpl_event_info(),
+              error = function(e){
+                message("No data available:\n", e)
+              })
+    
+    
   })
   
   
