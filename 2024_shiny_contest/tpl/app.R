@@ -57,7 +57,7 @@ tpl_branch_eventfeed$DOW <- lubridate::wday(tpl_branch_eventfeed$startdate,label
 
 month <- tpl_branch_eventfeed %>%
   mutate(Month = factor(Month, levels = month.name)) %>%
-  Select (Month) %>%
+  select (Month) %>%
   arrange(Month)
 
 #=============
@@ -542,14 +542,15 @@ server <- function(input, output, session) {
   
   tpl_event_info  <- reactive({
     tpl_branch_eventfeed %>%
-      filter(library==input$branchEventInput, Month = monthEventInput) %>%
-      select(title, description,location,pagelink,eventtype1,eventtype2,eventtype3,agregroup1,Month,DOW)
+      filter(library==input$branchEventInput, Month == input$monthEventInput) %>%
+      select(title, description,location,pagelink,eventtype1,eventtype2,eventtype3,agegroup1,Month,DOW)
   }) 
   
   #-----------
   # Sentiment analysis
   #-----------
   output$sentimentPlot <- renderPlotly({
+    
     review_words <-  tpl_event_info() %>%
       unnest_tokens(word, description) %>%
       anti_join(stop_words) %>%
@@ -567,14 +568,27 @@ server <- function(input, output, session) {
       labs(y = "Contribution to sentiment", x = NULL) +
       coord_flip()
     
-    ggplotly(g)
+    
+    
+    tryCatch(ggplotly(g),
+             error = function(e){
+               message("No data available:\n", e)
+             })
+    
+    
   })
   
   #-----------
   # word cloud
   #-----------
   output$wordCloudPlot <- renderWordcloud2({
-    word_cloud( tpl_event_info$title)
+    
+    tryCatch(word_cloud( tpl_event_info()$title),
+             error = function(e){
+               message("No data available:\n", e)
+             })
+    
+    
   })
   
   #-----------
@@ -627,7 +641,12 @@ server <- function(input, output, session) {
       arrange(desc(coherence)) %>%
       slice(1:10)
     
-    top_terms
+   
+    
+    tryCatch( top_terms,
+             error = function(e){
+               message("No data available:\n", e)
+             })
     
   })
   
