@@ -47,7 +47,14 @@ tpl_branch <- tpl %>%
   select(BranchName) %>%
   arrange()
 
-month <- c("January",'Feburary','March','April','May','June','July','August','September','October','November','December')
+tpl_branch_eventfeed$Month <- lubridate::month(tpl_branch_eventfeed$startdate,label=TRUE,abbr = FALSE)
+tpl_branch_eventfeed$DOW <- lubridate::wday(tpl_branch_eventfeed$startdate,label=TRUE,abbr = FALSE)
+
+
+month <- tpl_branch_eventfeed %>%
+  mutate(Month = factor(Month, levels = month.name)) %>%
+  Select (Month) %>%
+  arrange(Month)
 
 ################
 # UI
@@ -174,6 +181,9 @@ ui <- dashboardPage(
                   #valueBoxOutput("branchclcBox"),
                   #valueBoxOutput("branchdihBox"),
                   #valueBoxOutput("teenCouncilBox")
+                ),
+                fluidRow(
+                  dataTableOutput("branchEventTable")
                 )
               )
             )
@@ -449,6 +459,30 @@ server <- function(input, output, session) {
   #-----------
   # Branch Events
   #-----------
+  
+  tpl_event_info  <- reactive({
+    tpl_branch_eventfeed %>%
+      filter(library==input$branchEventInput, Month = monthEventInput) %>%
+      select(title, description,location,pagelink,eventtype1,eventtype2,eventtype3,agregroup1,Month,DOW)
+  }) 
+  
+  #-----------
+  # Branch Event sentiment analysis
+  #-----------
+  
+  #-----------
+  # Branch Event word cloud
+  #-----------
+  
+  
+  #-----------
+  # Branch Events Table
+  #-----------
+  output$branchEventTable <- renderDataTable({
+    tpl_event_info()
+  })
+  
+  
 
 }
 
