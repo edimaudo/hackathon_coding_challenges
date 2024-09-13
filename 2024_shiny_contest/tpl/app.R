@@ -655,7 +655,23 @@ server <- function(input, output, session) {
   #-----------
   # Branch Events Insights
   #-----------
+  # Day of week
   output$brancheventsDOWPlot <- renderPlotly({
+    
+    g <- tpl_event_info() %>%
+      group_by(DOW) %>%
+      summarise(Total = n()) %>%
+      select(DOW, Total) %>%
+      ggplot(aes(x = as.factor(DOW) ,y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      labs(x ="Day of Week", y = "Total Events") 
+    theme(legend.text = element_text(size = 12),
+          legend.title = element_text(size = 12),
+          axis.title = element_text(size = 14),
+          axis.text = element_text(size = 12))
+    
+  ggplotly(g)
+  
     
   })
   
