@@ -255,6 +255,8 @@ ui <- dashboardPage(
                              plotlyOutput("brancheventsDOWPlot"),
                              h3("Age Groups",style="text-align: center;text-style:bold"),
                              plotlyOutput("brancheventsAgePlot"),
+                             h3("Event Flow",style="text-align: center;text-style:bold"),
+                             plotlyOutput("eventFlowPlot")
                            ),
                   ),
                   tabPanel("Text Analytics",
@@ -264,7 +266,7 @@ ui <- dashboardPage(
                              h3("Word Cloud",style="text-align: center;text-style:bold"),
                              wordcloud2Output("wordCloudPlot",width = "150%", height = "400px"),
                              h3("Potential Topics",style="text-align: center;text-style:bold"),
-                             dataTableOutput("topicTable")
+                             dataTableOutput("topicTable"),
                            )
                   ),
                   tabPanel("Table",
@@ -547,7 +549,6 @@ server <- function(input, output, session) {
   #-----------
   # Branch Events
   #-----------
-  
   tpl_event_info  <- reactive({
     tpl_branch_eventfeed %>%
       filter(library==input$branchEventInput, Month == input$monthEventInput) %>%
@@ -696,6 +697,65 @@ server <- function(input, output, session) {
   
   
   # Sankey
+  output$eventFlowPlot <- renderPlotly({
+    
+    requencies <- tpl_event_info() %>% 
+      count(eventtype1, eventtype2) %>% 
+      arrange(eventtype1, desc(n))
+    
+    # create a table of frequencies
+    freq_table <- tpl_event_info() %>% group_by(eventtype1, eventtype2) %>% 
+      summarise(n = n())
+    
+    # create a nodes data frame
+    nodes <- data.frame(name = unique(c(as.character(freq_table$eventtype1),
+                                        as.character(freq_table$eventtype2))))
+    
+    
+    
+    # create links dataframe
+    links <- data.frame(source = match(freq_table$eventtype1, nodes$name) - 1,
+                        target = match(freq_table$eventtype2, nodes$name) - 1,
+                        value = freq_table$n,
+                        stringsAsFactors = FALSE)
+    
+    links <- rbind(links,
+                   data.frame(source = match(freq_table$eventtype1, nodes$name) - 1,
+                              target = match(freq_table$eventtype2, nodes$name) - 1,
+                              value = freq_table$n,
+                              stringsAsFactors = FALSE))
+    
+    
+    # Make Sankey diagram
+    g <- plot_ly(
+      type = "sankey",
+      orientation = "h",
+      node = list(pad = 15,
+                  thickness = 35,
+                  line = list(color = "black", width = 0.3),
+                  label = nodes$name),
+      link = list(source = links$source,
+                  target = links$target,
+                  value = links$value),
+      textfont = list(size = 10),
+      width = 900,
+      height = 600
+    ) %>%
+      layout(title = "TPL Event Group --> TPL Event Type",
+             font = list(size = 14),
+             margin = list(t = 40, l = 10, r = 10, b = 10))
+    
+    
+    #ggplotly(g)
+    
+    tryCatch(ggplotly(g),
+             error = function(e){
+               message("No data available:\n", e)
+             })
+    
+    
+    
+  })
   
     
  
