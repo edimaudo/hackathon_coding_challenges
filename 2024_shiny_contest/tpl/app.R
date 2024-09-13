@@ -253,6 +253,8 @@ ui <- dashboardPage(
                            fluidRow(
                              h3("Events by Day of Week",style="text-align: center;text-style:bold"),
                              plotlyOutput("brancheventsDOWPlot"),
+                             h3("Age Groups",style="text-align: center;text-style:bold"),
+                             plotlyOutput("brancheventsAgePlot"),
                            ),
                   ),
                   tabPanel("Text Analytics",
@@ -671,9 +673,32 @@ server <- function(input, output, session) {
           axis.text = element_text(size = 12))
     
   ggplotly(g)
+ 
+  }) 
+  
+  # Age group
+  output$brancheventsAgePlot <- renderPlotly({
+    g <- tpl_event_info() %>%
+      group_by(agegroup1) %>%
+      summarise(Total = n()) %>%
+      select(agegroup1, Total) %>%
+      ggplot(aes(x = reorder(agegroup1,Total) ,y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black')  + 
+      labs(x ="Age Group", y = "Total") + coord_flip() +
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+    
+    ggplotly(g)
+  })
+  
+  
+  
+  # Sankey
   
     
-  })
+ 
   
   #-----------
   # Branch Events Table
