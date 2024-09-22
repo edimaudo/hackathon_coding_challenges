@@ -1,3 +1,5 @@
+
+
 ################
 # Shiny web app which provides 
 # insights about  Toronto Public Library
@@ -7,11 +9,10 @@ rm(list = ls())
 # Libraries
 ################
 packages <- c(
-  'rjson','dplyr',
-  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','bslib','DT','readxl',
-  'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
-  'caret','dummies','tidyr','Matrix','lubridate','plotly','RColorBrewer',
-  'data.table','scales','stopwords','tidytext','stringr','wordcloud','wordcloud2',
+
+  'ggplot2','tidyverse','shiny','shinydashboard','DT',
+  'lubridate','plotly','RColorBrewer','scales','stopwords',
+  'tidytext','stringr','wordcloud','wordcloud2',
   'SnowballC','textmineR','topicmodels','textclean','tm'
 )
 for (package in packages) {
