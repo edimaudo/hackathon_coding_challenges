@@ -22,6 +22,9 @@ library(textmineR)
 library(topicmodels)
 library(textclean)
 library(tm)
+library(htmltools)
+library(markdown)
+library(scales)
 
 
 # packages <- c(
@@ -300,7 +303,7 @@ ui <- dashboardPage(
     #========  
     # About
     #========
-      tabItem(tabName = "about",includeMarkdown("about.md"),hr())
+      tabItem(tabName = "about",shiny::includeMarkdown("about.md"),hr())
   )
  )
 )
