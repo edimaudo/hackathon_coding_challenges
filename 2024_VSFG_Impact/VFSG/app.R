@@ -9,7 +9,7 @@ rm(list = ls())
 packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
   'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
-  'caret','dummies','tidyr','Matrix','lubridate','plotly','RColorBrewer',
+  'caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
   'data.table','scales','stopwords','tidytext','stringr','wordcloud','wordcloud2',
   'SnowballC','textmineR','topicmodels','textclean','tm'
 )
@@ -287,7 +287,8 @@ server <- function(input, output,session) {
   #================
   output$charityBox <- renderValueBox({
     valueBox(
-      "Charities", paste0(length(unique(charity_impact$`Name of charity/Project`))), icon = icon("list"),
+      "Charities", 
+      paste0(length(unique(charity_impact$`Name of charity/Project`))), icon = icon("list"),
       color = "aqua"
     )
   })
