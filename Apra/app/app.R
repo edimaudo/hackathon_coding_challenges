@@ -9,7 +9,7 @@ rm(list = ls())
 packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
   'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
-  'caret','dummies','tidyr','Matrix','lubridate','plotly','RColorBrewer',
+  'caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
   'data.table','scales','rfm','forecast','TTR','xts','dplyr'
 )
 for (package in packages) {
@@ -72,10 +72,10 @@ transaction_f1 <- transaction %>%
   select(GIFT_DATE,Total)
   #select(GIFT_DATE,Total)
 
-#transaction_f <- transaction_f1 %>%
-#  right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
-#  replace(is.na(.), 0) %>%
-#  select(GIFT_DATE,Total)
+transaction_f <- transaction_f1 %>%
+  right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
+  replace(is.na(.), 0) %>%
+  select(GIFT_DATE,Total)
 
 gift_xts <- xts(x = transaction_f$Total, order.by = transaction_f$GIFT_DATE) 
 gift_daily <- apply.daily(gift_xts,mean)
