@@ -6,12 +6,12 @@
 # Libraries
 ################
 library(ggplot2)
+library(plotly)
 library(tidyverse)
 library(shiny)
 library(shinydashboard)
 library(DT)
 library(lubridate)
-library(plotly)
 library(stopwords)
 library(tidytext)
 library(stringr)
@@ -24,3 +24,31 @@ library(tm)
 library(htmltools)
 library(markdown)
 library(scales)
+
+################
+# Data
+################
+
+#===============
+# Data Setup
+#===============
+
+
+
+#=============
+# Text analytics
+#=============
+
+
+
+
+################
+# UI
+################
+
+
+
+################
+# Server
+################
+server <- function(input, output, session) {}
