@@ -65,7 +65,7 @@ ui <- dashboardPage(
             tabItem(tabName = "Trends",
                     sidebarLayout(
                         sidebarPanel(
-                            sliderInput("Years", "Years:", min = 1999, max = 2019, 
+                            sliderInput("Years", "Years:", min = 1999, max = 2019, value=1999,
                                         step=1, ticks = FALSE, sep="")
                         ),
                         mainPanel(
