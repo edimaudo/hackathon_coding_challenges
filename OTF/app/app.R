@@ -28,6 +28,8 @@ library(scales)
 ################
 # Data
 ################
+#load data
+df <- read.csv("otf.csv")
 
 #===============
 # Data Setup
