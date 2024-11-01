@@ -1,0 +1,2872 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20242.24.0711.1636                               -->
+<workbook original-version='18.1' source-build='2024.2.1 (20242.24.0711.1636)' source-platform='mac' version='18.1' xml:base='https://public.tableau.com' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.AccessibleZoneTabOrder.true...AccessibleZoneTabOrder />
+    <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <AutoCreateAndUpdateDSDPhoneLayouts />
+    <CascadingFilters />
+    <DashboardMttwImageObject />
+    <_.fcp.ExternalImageContentForZones.true...ExternalImageContentForZones />
+    <MapboxVectorStylesAndLayers />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelExtractV2.true...ObjectModelExtractV2 />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SetMembershipControl />
+    <SheetIdentifierTracking />
+    <SortTagCleanup />
+    <_.fcp.VConnDownstreamExtractsWithWarnings.true...VConnDownstreamExtractsWithWarnings />
+    <WindowsPersistSimpleIdentifiers />
+    <WorksheetBackgroundTransparency />
+    <ZoneBackgroundTransparency />
+  </document-format-change-manifest>
+  <repository-location id='data_driven_communication' path='/workbooks' revision='1.2' />
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <_.fcp.AnimationOnByDefault.false...style>
+    <_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule element='animation'>
+      <_.fcp.AnimationOnByDefault.false...format attr='animation-on' value='ao-on' />
+    </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
+  </_.fcp.AnimationOnByDefault.false...style>
+  <datasources>
+    <datasource hasconnection='false' inline='true' name='Parameters' version='18.1'>
+      <aliases enabled='yes' />
+      <column caption='Top Countries' datatype='integer' name='[Parameter 1]' param-domain-type='range' role='measure' type='quantitative' value='10'>
+        <calculation class='tableau' formula='10' />
+        <range granularity='5' max='30' min='5' />
+      </column>
+      <column caption='Gender' datatype='string' name='[Parameter 2]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+        <calculation class='tableau' formula='&quot;All&quot;' />
+        <members>
+          <member value='&quot;All&quot;' />
+          <member value='&quot;Femenino&quot;' />
+          <member value='&quot;Masculino&quot;' />
+        </members>
+      </column>
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[Parameter 2]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;All&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Masculino&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Femenino&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+    </datasource>
+    <datasource caption='Entradas_de_extranjeros_a_Colom (Entradas_de_extranjeros_a_Colombia_20241017)' inline='true' name='federated.13y58z10akd2yg12r1g5503vza42' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='Entradas_de_extranjeros_a_Colombia_20241017' name='excel-direct.0yp76ud09hyuqn1f9yo5d0bx0jc8'>
+            <connection class='excel-direct' cleaning='no' compat='no' dataRefreshTime='' filename='/Users/edima/Documents/Coding/hackathon-coding-challenges/Data_social_good/data_driven_communication/Entradas_de_extranjeros_a_Colombia_20241017.xlsx' interpretationMode='0' password='' server='' validate='no' workgroup-auth-mode='as-is' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='excel-direct.0yp76ud09hyuqn1f9yo5d0bx0jc8' name='Entradas_de_extranjeros_a_Colom' table='[Entradas_de_extranjeros_a_Colom$]' type='table'>
+          <columns gridOrigin='A1:K10001:no:A1:K10001:0' header='yes' outcome='2'>
+            <column datatype='string' name='Año' ordinal='0' />
+            <column datatype='string' name='Mes' ordinal='1' />
+            <column datatype='string' name='Nacionalidad' ordinal='2' />
+            <column datatype='string' name='Codigo Iso 3166' ordinal='3' />
+            <column datatype='string' name='Femenino' ordinal='4' />
+            <column datatype='string' name='Masculino' ordinal='5' />
+            <column datatype='string' name='Indefinido' ordinal='6' />
+            <column datatype='string' name='Total' ordinal='7' />
+            <column datatype='string' name='Latitud - Longitud' ordinal='8' />
+            <column datatype='string' name='Latitude' ordinal='9' />
+            <column datatype='string' name='Longitude' ordinal='10' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='excel-direct.0yp76ud09hyuqn1f9yo5d0bx0jc8' name='Entradas_de_extranjeros_a_Colom' table='[Entradas_de_extranjeros_a_Colom$]' type='table'>
+          <columns gridOrigin='A1:K10001:no:A1:K10001:0' header='yes' outcome='2'>
+            <column datatype='string' name='Año' ordinal='0' />
+            <column datatype='string' name='Mes' ordinal='1' />
+            <column datatype='string' name='Nacionalidad' ordinal='2' />
+            <column datatype='string' name='Codigo Iso 3166' ordinal='3' />
+            <column datatype='string' name='Femenino' ordinal='4' />
+            <column datatype='string' name='Masculino' ordinal='5' />
+            <column datatype='string' name='Indefinido' ordinal='6' />
+            <column datatype='string' name='Total' ordinal='7' />
+            <column datatype='string' name='Latitud - Longitud' ordinal='8' />
+            <column datatype='string' name='Latitude' ordinal='9' />
+            <column datatype='string' name='Longitude' ordinal='10' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='integer' name='context'>0</attribute>
+              <attribute datatype='string' name='gridOrigin'>&quot;A1:K10001:no:A1:K10001:0&quot;</attribute>
+              <attribute datatype='boolean' name='header'>true</attribute>
+              <attribute datatype='integer' name='outcome'>2</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Año</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Año]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Año</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Mes</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Mes]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Mes</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Nacionalidad</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Nacionalidad]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Nacionalidad</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Codigo Iso 3166</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Codigo Iso 3166]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Codigo Iso 3166</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Femenino</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Femenino]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Femenino</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Masculino</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Masculino]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Masculino</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Indefinido</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Indefinido]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Indefinido</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Total</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Total]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Total</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Latitud - Longitud</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Latitud - Longitud]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Latitud - Longitud</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Latitude</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Latitude]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Latitude</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Longitude</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Longitude]</local-name>
+            <parent-name>[Entradas_de_extranjeros_a_Colom]</parent-name>
+            <remote-alias>Longitude</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RCA_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column datatype='integer' datatype-customized='true' name='[Año]' role='dimension' type='quantitative' />
+      <column caption='Gender Total' datatype='real' name='[Calculation_3861062633590292480]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='If [Parameters].[Parameter 2] = &apos;All&apos; then &#10;    sum([Femenino]) + sum([Masculino]) //+ sum([Indefinido])&#10;ELSEIF [Parameters].[Parameter 2] = &apos;Femenino&apos; then&#10;    sum([Femenino]) &#10;ELSE&#10; sum([Masculino])&#10;END' />
+      </column>
+      <column datatype='real' datatype-customized='true' name='[Femenino]' role='measure' type='quantitative' />
+      <column datatype='real' datatype-customized='true' name='[Indefinido]' role='measure' type='quantitative' />
+      <column datatype='real' datatype-customized='true' name='[Latitude]' role='dimension' type='ordinal' />
+      <column aggregation='Avg' datatype='real' datatype-customized='true' name='[Longitude]' role='dimension' semantic-role='[Geographical].[Longitude]' type='quantitative' />
+      <column datatype='real' datatype-customized='true' name='[Masculino]' role='measure' type='quantitative' />
+      <column datatype='string' name='[Nacionalidad]' role='dimension' semantic-role='[Country].[Name]' type='nominal'>
+        <semantic-values semantic-role='[Country].[Name]'>
+          <semantic-value key='&quot;Anguila/Territorio Británico de Ultramar&quot;' value='&quot;Anguilla&quot;' />
+          <semantic-value key='&quot;Bermudas/Territorio Británico de Ultramar&quot;' value='&quot;Bermuda&quot;' />
+          <semantic-value key='&quot;Emiratos Árabes&quot;' value='&quot;United Arab Emirates&quot;' />
+          <semantic-value key='&quot;Estados Unidos de América&quot;' value='&quot;United States&quot;' />
+          <semantic-value key='&quot;Federación de Rusia&quot;' value='&quot;Russia&quot;' />
+          <semantic-value key='&quot;Gibraltar/Territorio Británico de Ultramar&quot;' value='&quot;Gibraltar&quot;' />
+          <semantic-value key='&quot;Guam/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Guam&quot;' />
+          <semantic-value key='&quot;Guayana Francesa/Departamento de Ultramar Francés&quot;' value='&quot;Guyana&quot;' />
+          <semantic-value key='&quot;Islas Aland/Provincia de Finlandia&quot;' value='&quot;Finland&quot;' />
+          <semantic-value key='&quot;Islas Caimán/Territorio Británico de Ultramar&quot;' value='&quot;Cayman Islands&quot;' />
+          <semantic-value key='&quot;Islas Christmas&quot;' value='&quot;Christmas Island&quot;' />
+          <semantic-value key='&quot;Islas Fiji&quot;' value='&quot;Fiji&quot;' />
+          <semantic-value key='&quot;Islas Pitcairn/Territorio Británico de Ultramar&quot;' value='&quot;Pitcairn Islands&quot;' />
+          <semantic-value key='&quot;Islas Turcas y Caicos/Territorio Británico de Ultramar&quot;' value='&quot;Turks and Caicos Islands&quot;' />
+          <semantic-value key='&quot;Islas Vírgenes Británicas/Territorio Británico de Ultramar&quot;' value='&quot;British Virgin Islands&quot;' />
+          <semantic-value key='&quot;Montserrat/Territorio Británico de Ultramar&quot;' value='&quot;Montserrat&quot;' />
+          <semantic-value key='&quot;Nueva Caledonia/Territorio francés&quot;' value='&quot;New Caledonia&quot;' />
+          <semantic-value key='&quot;Papúa Occidental&quot;' value='&quot;Papua New Guinea&quot;' />
+          <semantic-value key='&quot;Polinesia Francesa/Colectividad de Ultramar Francesa&quot;' value='&quot;French Polynesia&quot;' />
+          <semantic-value key='&quot;Puerto Rico/Territorio de Estados Unidos&quot;' value='&quot;Puerto Rico&quot;' />
+          <semantic-value key='&quot;Reino Unido de Gran Bretaña e Irlanda del Norte&quot;' value='&quot;United Kingdom&quot;' />
+          <semantic-value key='&quot;República Árabe de Yemen&quot;' value='&quot;Yemen&quot;' />
+          <semantic-value key='&quot;República Árabe Siria&quot;' value='&quot;Saudi Arabia&quot;' />
+          <semantic-value key='&quot;República de Armenia&quot;' value='&quot;Armenia&quot;' />
+          <semantic-value key='&quot;República de Belarús&quot;' value='&quot;Belarus&quot;' />
+          <semantic-value key='&quot;República de Corea&quot;' value='&quot;South Korea&quot;' />
+          <semantic-value key='&quot;República de Irlanda&quot;' value='&quot;Ireland&quot;' />
+          <semantic-value key='&quot;República de Kosovo&quot;' value='&quot;Kosovo&quot;' />
+          <semantic-value key='&quot;República de Moldavia&quot;' value='&quot;Moldova&quot;' />
+          <semantic-value key='&quot;República de Tayikistán&quot;' value='&quot;Tajikistan&quot;' />
+          <semantic-value key='&quot;República de Yibuti&quot;' value='&quot;Djibouti&quot;' />
+          <semantic-value key='&quot;República Democrática de Timor Oriental&quot;' value='&quot;Timor Leste&quot;' />
+          <semantic-value key='&quot;República Democrática Popular  Lao&quot;' value='&quot;Laos&quot;' />
+          <semantic-value key='&quot;República Democrática Popular de Corea&quot;' value='&quot;North Korea&quot;' />
+          <semantic-value key='&quot;Sahara Occidental/Desierto Sahara&quot;' value='&quot;Western Sahara&quot;' />
+          <semantic-value key='&quot;Samoa Estadounidense/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Samoa&quot;' />
+          <semantic-value key='&quot;Samoa Occidental&quot;' value='&quot;American Samoa&quot;' />
+          <semantic-value key='&quot;San Cristóbal y Nevis&quot;' value='&quot;Saint Kitts and Nevis&quot;' />
+          <semantic-value key='&quot;Santa Sede/Ciudad del Vaticano&quot;' value='&quot;Vatican City&quot;' />
+          <semantic-value key='&quot;Tíbet/Región Autónoma de China&quot;' value='&quot;China&quot;' />
+          <semantic-value key='&quot;Yugoslavia&quot;' value='&quot;Serbia&quot;' />
+        </semantic-values>
+      </column>
+      <column aggregation='Sum' datatype='real' datatype-customized='true' name='[Total]' role='dimension' type='ordinal' />
+      <_.fcp.ObjectModelTableType.true...column caption='Entradas_de_extranjeros_a_Colom' datatype='table' name='[__tableau_internal_object_id__].[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]' role='measure' type='quantitative' />
+      <column-instance column='[Año]' derivation='None' name='[none:Año:ok]' pivot='key' type='ordinal' />
+      <column-instance column='[Forecast Indicator]' derivation='None' forecast-column-base='[Forecast Indicator]' forecast-column-type='forecast-indicator' name='[none:Forecast Indicator:nk]' pivot='key' type='nominal' />
+      <column-instance column='[Nacionalidad]' derivation='None' name='[none:Nacionalidad:nk]' pivot='key' type='nominal' />
+      <column-instance column='[Femenino]' derivation='Sum' name='[sum:Femenino:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Masculino]' derivation='Sum' name='[sum:Masculino:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Calculation_3861062633590292480]' derivation='User' name='[usr:Calculation_3861062633590292480:qk]' pivot='key' type='quantitative' />
+      <group caption='Action (Año)' hidden='true' name='[Action (Año)]' name-style='unqualified' user:auto-column='sheet_link'>
+        <groupfilter function='crossjoin'>
+          <groupfilter function='level-members' level='[none:Año:ok]' />
+        </groupfilter>
+      </group>
+      <group caption='Action (Nacionalidad)' hidden='true' name='[Action (Nacionalidad)]' name-style='unqualified' user:auto-column='sheet_link'>
+        <groupfilter function='crossjoin'>
+          <groupfilter function='level-members' level='[Nacionalidad]' />
+        </groupfilter>
+      </group>
+      <drill-paths>
+        <drill-path name='Año, Mes'>
+          <field>[Año]</field>
+          <field>[Mes]</field>
+        </drill-path>
+      </drill-paths>
+      <extract _.fcp.ObjectModelExtractV2.true...object-id='' _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='/var/folders/w9/cv0lh9lj3_79503qn1046m_00000gn/T/tableau-temp/#TableauTemp_1a93gwd0xndmo716zk0sg0i6au15.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='10/27/2024 11:31:34 PM' username='tableau_internal_user'>
+          <_.fcp.ObjectModelEncapsulateLegacy.false...relation name='Extract' table='[Extract].[Extract]' type='table' />
+          <_.fcp.ObjectModelEncapsulateLegacy.true...relation name='Extract' table='[Extract].[Extract]' type='table' />
+          <metadata-records>
+            <metadata-record class='column'>
+              <remote-name>Año</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Año]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Año</remote-alias>
+              <ordinal>0</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>12</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Mes</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Mes]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Mes</remote-alias>
+              <ordinal>1</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>12</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Nacionalidad</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Nacionalidad]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Nacionalidad</remote-alias>
+              <ordinal>2</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>536</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Codigo Iso 3166</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Codigo Iso 3166]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Codigo Iso 3166</remote-alias>
+              <ordinal>3</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>526</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Femenino</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Femenino]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Femenino</remote-alias>
+              <ordinal>4</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>908</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Masculino</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Masculino]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Masculino</remote-alias>
+              <ordinal>5</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>1105</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Indefinido</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Indefinido]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Indefinido</remote-alias>
+              <ordinal>6</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Total</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Total]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Total</remote-alias>
+              <ordinal>7</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>1470</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Latitud - Longitud</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Latitud - Longitud]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Latitud - Longitud</remote-alias>
+              <ordinal>8</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>76</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Latitude</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Latitude]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Latitude</remote-alias>
+              <ordinal>9</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>76</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Longitude</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Longitude]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Longitude</remote-alias>
+              <ordinal>10</ordinal>
+              <family>Entradas_de_extranjeros_a_Colom</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>76</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='1' name='LEN_RCA_S2' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+          </metadata-records>
+        </connection>
+      </extract>
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[none:Nacionalidad:nk]' palette='color_blind_10_0' type='palette'>
+            <map to='#1170aa'>
+              <bucket>&quot;Ecuador&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Antártida&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Brasil&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Desconocido&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Georgia&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Iraq&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Islas Vírgenes Británicas/Territorio Británico de Ultramar&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Macedonia&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Nauru&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Portugal&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;República Democrática del Congo&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Singapur&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Turkmenistán&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;534&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Barbados&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;China&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Estonia&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Guyana&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Islas Fiji&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Lesoto&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Micronesia&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Palestina&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;República de Corea&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;San  Vicente y las Granadinas&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Tanzania&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Zimbabue&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Alemania&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Bermudas/Territorio Británico de Ultramar&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Costa Rica&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Finlandia&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Hungría&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Islas Midway/Territorio no incorporado de Estados Unidos&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Libia&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Montserrat/Territorio Británico de Ultramar&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Paraguay&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;República de Tayikistán&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Senegal&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Togo&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Argentina&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Burundi&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Egipto&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Grecia&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Islandia&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Jamaica&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Maldivas&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Nigeria&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Refugiado Otro&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Reunión&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Sudáfrica&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Uganda&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Antigua y Barbuda&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Brunei Darussalam&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Dinamarca&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Ghana&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Isla de Man&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Islas Wallis y Futuna&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Madagascar&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Nepal&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Puerto Rico/Territorio de Estados Unidos&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;República Democrática Popular de Corea&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Somalia&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Turquía&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Andorra&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Bolivia&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Croacia&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Francia&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;India&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Islas Pitcairn/Territorio Británico de Ultramar&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Liechtenstein&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Mozambique&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;República de Yibuti&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Serbia&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Tonga&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Bahréin&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Chad&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;España&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Guinea Bissau&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Islas Cook&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Kiribati&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Mayotte/Colectividad Territorial Francesa&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Pakistán&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;República de Armenia&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;San Cristóbal y Nevis&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Tailandia&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Yugoslavia&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;903&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Bélgica&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Chipre&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Etiopia&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Haití&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Islas Heard Y Mcdonald&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Letonia&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Mónaco&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Panamá&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;República de Irlanda&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Santa Lucia&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Territorio Antártico Británico/Territorio Británico de Ultramar&quot;</bucket>
+            </map>
+            <map to='#a3acb9'>
+              <bucket>&quot;México&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Azerbaiyán&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Camerún&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Eslovaquia&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Guernsey&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Islas Christmas&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Kenia&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Mauricio&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Omán&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;República CentroÁfricana&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Samoa Estadounidense/Territorio no incorporado de Estados Unidos&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Suiza&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Angola&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Bosnia y Herzegovina&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Cuba&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Gabón&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Indonesia&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Islas Salomón&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Lituania&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Myanmar&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Polinesia Francesa/Colectividad de Ultramar Francesa&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;República Del Congo&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Seychelles&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Trinidad y Tobago&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Aruba&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Bután&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;El Salvador&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Guam/Territorio no incorporado de Estados Unidos&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Islas Aland/Provincia de Finlandia&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Japón&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Malí&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Noruega&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Reino Unido de Gran Bretaña e Irlanda del Norte&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Rumania&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Sudán&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Uruguay&quot;</bucket>
+            </map>
+            <map to='#c85200'>
+              <bucket>&quot;Venezuela&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Australia&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Cabo Verde&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Emiratos Árabes&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Guatemala&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Islas Alboran y Perejil&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Jordania&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Malta&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Nueva Caledonia/Territorio francés&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;República Árabe de Yemen&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Rwanda&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Sudán del Sur&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Uzbekistán&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Bahamas&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Canadá&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Eslovenia&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Guinea&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Islas Cocos&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Kirguistán&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Mauritania&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Países Bajos&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;República Checa&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Samoa Occidental&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Surinam&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Vietnam&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Bangladesh&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Chile&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Guinea Ecuatorial&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Islas del Canal&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Kuwait&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Palau&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;República de Belarús&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;San Marino&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Taiwán&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Zambia&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Arabia Saudita&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Bulgaria&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Dominica&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Gibraltar/Territorio Británico de Ultramar&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Isla Johnston&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Israel&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Malasia&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Nicaragua&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Qatar&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;República Democrática Popular  Lao&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Sri Lanka&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Tuvalu&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Anguila/Territorio Británico de Ultramar&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Botsuana&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Curazao&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Gambia&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Irán&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Islas Turcas y Caicos/Territorio Británico de Ultramar&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Luxemburgo&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Namibia&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Polonia&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;República Democrática de Timor Oriental&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Sierra Leona&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Túnez&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Afganistán&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Belice&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Comoras&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Federación de Rusia&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Honduras&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Islas Marianas del Norte&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Líbano&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Mongolia&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Papúa Nueva Guinea&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;República de Kosovo&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Santa Sede/Ciudad del Vaticano&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Territorio Británico del Océano Índico/Territorios Británicos de Ultramar&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Austria&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Camboya&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Eritrea&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Guayana Francesa/Departamento de Ultramar Francés&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Islas Caimán/Territorio Británico de Ultramar&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Kazajistán&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Marruecos&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Nueva Zelanda&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;República Árabe Siria&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Sahara Occidental/Desierto Sahara&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Suecia&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Vanuatu&quot;</bucket>
+            </map>
+            <map to='#fc7d0b'>
+              <bucket>&quot;Estados Unidos de América&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Argelia&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Burkina Faso&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Granada&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Isla Wake&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Italia&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Malawi&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Níger&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Refugiado&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;República Dominicana&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Suazilandia&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Ucrania&quot;</bucket>
+            </map>
+            <map to='#ffbc79'>
+              <bucket>&quot;Perú&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Albania&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Benín&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Costa de Marfil&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Filipinas&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Hong Kong&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Islas Marshall&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Liberia&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Montenegro&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Papúa Occidental&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;República de Moldavia&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Santo Tomé y Príncipe&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Tíbet/Región Autónoma de China&quot;</bucket>
+            </map>
+          </encoding>
+          <encoding attr='color' field='[:Measure Names]' palette='color_blind_10_0' type='palette'>
+            <map to='#1170aa'>
+              <bucket>&quot;[federated.13y58z10akd2yg12r1g5503vza42].[sum:Femenino:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]&quot;</bucket>
+            </map>
+            <map to='#fc7d0b'>
+              <bucket>&quot;[federated.13y58z10akd2yg12r1g5503vza42].[sum:Masculino:qk]&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;Canada&quot;' />
+      </semantic-values>
+      <default-sorts>
+        <manual-sort column='[none:Forecast Indicator:nk]' direction='ASC'>
+          <dictionary>
+            <bucket>&quot;Actual&quot;</bucket>
+            <bucket>&quot;Estimate&quot;</bucket>
+          </dictionary>
+        </manual-sort>
+      </default-sorts>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Gender' datatype='string' name='[Parameter 2]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+        </column>
+      </datasource-dependencies>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='Entradas_de_extranjeros_a_Colom' id='Entradas!de!extranjeros!a!Colom_7EA5041F9BAA4A7FA7CA5B723F59333A'>
+            <properties context=''>
+              <relation connection='excel-direct.0yp76ud09hyuqn1f9yo5d0bx0jc8' name='Entradas_de_extranjeros_a_Colom' table='[Entradas_de_extranjeros_a_Colom$]' type='table'>
+                <columns gridOrigin='A1:K10001:no:A1:K10001:0' header='yes' outcome='2'>
+                  <column datatype='string' name='Año' ordinal='0' />
+                  <column datatype='string' name='Mes' ordinal='1' />
+                  <column datatype='string' name='Nacionalidad' ordinal='2' />
+                  <column datatype='string' name='Codigo Iso 3166' ordinal='3' />
+                  <column datatype='string' name='Femenino' ordinal='4' />
+                  <column datatype='string' name='Masculino' ordinal='5' />
+                  <column datatype='string' name='Indefinido' ordinal='6' />
+                  <column datatype='string' name='Total' ordinal='7' />
+                  <column datatype='string' name='Latitud - Longitud' ordinal='8' />
+                  <column datatype='string' name='Latitude' ordinal='9' />
+                  <column datatype='string' name='Longitude' ordinal='10' />
+                </columns>
+              </relation>
+            </properties>
+            <properties context='extract'>
+              <relation name='Extract' table='[Extract].[Extract]' type='table' />
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <mapsources>
+    <mapsource name='Tableau' />
+  </mapsources>
+  <actions>
+    <action caption='Filter 1 (generated)' name='[Action1_EDF1D78467C34530BB1C1E98396EECCB]'>
+      <activation auto-clear='true' type='on-select' />
+      <source dashboard='Main' type='sheet' worksheet='Country' />
+      <command command='tsc:tsl-filter'>
+        <param name='special-fields' value='all' />
+        <param name='target' value='Main' />
+      </command>
+    </action>
+    <action caption='Filter 2 (generated)' name='[Action2_F2A00AA163684D9197B96E1D03B4C326]'>
+      <activation auto-clear='true' type='on-select' />
+      <source dashboard='Main' type='sheet' worksheet='Year Trend' />
+      <command command='tsc:tsl-filter'>
+        <param name='special-fields' value='all' />
+        <param name='target' value='Main' />
+      </command>
+    </action>
+    <action caption='Filter 3 (generated)' name='[Action3_EB6E9609B5C6461DAA2E7EF4CFD5F735]'>
+      <activation auto-clear='true' type='on-select' />
+      <source dashboard='Main' type='sheet' worksheet='Gender Trend' />
+      <command command='tsc:tsl-filter'>
+        <param name='special-fields' value='all' />
+        <param name='target' value='Main' />
+      </command>
+    </action>
+    <action caption='Filter 4 (generated)' name='[Action4_2694AFC5067C4E368965835FD0EA8345]'>
+      <activation auto-clear='true' type='on-select' />
+      <source dashboard='Main' type='sheet' worksheet='Country Gender Trend' />
+      <command command='tsc:tsl-filter'>
+        <param name='special-fields' value='all' />
+        <param name='target' value='Main' />
+      </command>
+    </action>
+  </actions>
+  <worksheets>
+    <worksheet name='Country'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontalignment='1' fontcolor='#003087' fontname='Tableau Semibold'>Migration Trend</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Entradas_de_extranjeros_a_Colom (Entradas_de_extranjeros_a_Colombia_20241017)' name='federated.13y58z10akd2yg12r1g5503vza42' />
+            <datasource name='Parameters' />
+          </datasources>
+          <mapsources>
+            <mapsource name='Tableau' />
+          </mapsources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Gender' datatype='string' name='[Parameter 2]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+              <calculation class='tableau' formula='&quot;All&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.13y58z10akd2yg12r1g5503vza42'>
+            <column datatype='integer' datatype-customized='true' name='[Año]' role='dimension' type='quantitative' />
+            <column caption='Gender Total' datatype='real' name='[Calculation_3861062633590292480]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='If [Parameters].[Parameter 2] = &apos;All&apos; then &#10;    sum([Femenino]) + sum([Masculino]) //+ sum([Indefinido])&#10;ELSEIF [Parameters].[Parameter 2] = &apos;Femenino&apos; then&#10;    sum([Femenino]) &#10;ELSE&#10; sum([Masculino])&#10;END' />
+            </column>
+            <column datatype='real' datatype-customized='true' name='[Femenino]' role='measure' type='quantitative' />
+            <column datatype='real' datatype-customized='true' name='[Masculino]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Mes]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Nacionalidad]' role='dimension' semantic-role='[Country].[Name]' type='nominal'>
+              <semantic-values semantic-role='[Country].[Name]'>
+                <semantic-value key='&quot;Anguila/Territorio Británico de Ultramar&quot;' value='&quot;Anguilla&quot;' />
+                <semantic-value key='&quot;Bermudas/Territorio Británico de Ultramar&quot;' value='&quot;Bermuda&quot;' />
+                <semantic-value key='&quot;Emiratos Árabes&quot;' value='&quot;United Arab Emirates&quot;' />
+                <semantic-value key='&quot;Estados Unidos de América&quot;' value='&quot;United States&quot;' />
+                <semantic-value key='&quot;Federación de Rusia&quot;' value='&quot;Russia&quot;' />
+                <semantic-value key='&quot;Gibraltar/Territorio Británico de Ultramar&quot;' value='&quot;Gibraltar&quot;' />
+                <semantic-value key='&quot;Guam/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Guam&quot;' />
+                <semantic-value key='&quot;Guayana Francesa/Departamento de Ultramar Francés&quot;' value='&quot;Guyana&quot;' />
+                <semantic-value key='&quot;Islas Aland/Provincia de Finlandia&quot;' value='&quot;Finland&quot;' />
+                <semantic-value key='&quot;Islas Caimán/Territorio Británico de Ultramar&quot;' value='&quot;Cayman Islands&quot;' />
+                <semantic-value key='&quot;Islas Christmas&quot;' value='&quot;Christmas Island&quot;' />
+                <semantic-value key='&quot;Islas Fiji&quot;' value='&quot;Fiji&quot;' />
+                <semantic-value key='&quot;Islas Pitcairn/Territorio Británico de Ultramar&quot;' value='&quot;Pitcairn Islands&quot;' />
+                <semantic-value key='&quot;Islas Turcas y Caicos/Territorio Británico de Ultramar&quot;' value='&quot;Turks and Caicos Islands&quot;' />
+                <semantic-value key='&quot;Islas Vírgenes Británicas/Territorio Británico de Ultramar&quot;' value='&quot;British Virgin Islands&quot;' />
+                <semantic-value key='&quot;Montserrat/Territorio Británico de Ultramar&quot;' value='&quot;Montserrat&quot;' />
+                <semantic-value key='&quot;Nueva Caledonia/Territorio francés&quot;' value='&quot;New Caledonia&quot;' />
+                <semantic-value key='&quot;Papúa Occidental&quot;' value='&quot;Papua New Guinea&quot;' />
+                <semantic-value key='&quot;Polinesia Francesa/Colectividad de Ultramar Francesa&quot;' value='&quot;French Polynesia&quot;' />
+                <semantic-value key='&quot;Puerto Rico/Territorio de Estados Unidos&quot;' value='&quot;Puerto Rico&quot;' />
+                <semantic-value key='&quot;Reino Unido de Gran Bretaña e Irlanda del Norte&quot;' value='&quot;United Kingdom&quot;' />
+                <semantic-value key='&quot;República Árabe de Yemen&quot;' value='&quot;Yemen&quot;' />
+                <semantic-value key='&quot;República Árabe Siria&quot;' value='&quot;Saudi Arabia&quot;' />
+                <semantic-value key='&quot;República de Armenia&quot;' value='&quot;Armenia&quot;' />
+                <semantic-value key='&quot;República de Belarús&quot;' value='&quot;Belarus&quot;' />
+                <semantic-value key='&quot;República de Corea&quot;' value='&quot;South Korea&quot;' />
+                <semantic-value key='&quot;República de Irlanda&quot;' value='&quot;Ireland&quot;' />
+                <semantic-value key='&quot;República de Kosovo&quot;' value='&quot;Kosovo&quot;' />
+                <semantic-value key='&quot;República de Moldavia&quot;' value='&quot;Moldova&quot;' />
+                <semantic-value key='&quot;República de Tayikistán&quot;' value='&quot;Tajikistan&quot;' />
+                <semantic-value key='&quot;República de Yibuti&quot;' value='&quot;Djibouti&quot;' />
+                <semantic-value key='&quot;República Democrática de Timor Oriental&quot;' value='&quot;Timor Leste&quot;' />
+                <semantic-value key='&quot;República Democrática Popular  Lao&quot;' value='&quot;Laos&quot;' />
+                <semantic-value key='&quot;República Democrática Popular de Corea&quot;' value='&quot;North Korea&quot;' />
+                <semantic-value key='&quot;Sahara Occidental/Desierto Sahara&quot;' value='&quot;Western Sahara&quot;' />
+                <semantic-value key='&quot;Samoa Estadounidense/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Samoa&quot;' />
+                <semantic-value key='&quot;Samoa Occidental&quot;' value='&quot;American Samoa&quot;' />
+                <semantic-value key='&quot;San Cristóbal y Nevis&quot;' value='&quot;Saint Kitts and Nevis&quot;' />
+                <semantic-value key='&quot;Santa Sede/Ciudad del Vaticano&quot;' value='&quot;Vatican City&quot;' />
+                <semantic-value key='&quot;Tíbet/Región Autónoma de China&quot;' value='&quot;China&quot;' />
+                <semantic-value key='&quot;Yugoslavia&quot;' value='&quot;Serbia&quot;' />
+              </semantic-values>
+            </column>
+            <column-instance column='[Año]' derivation='None' name='[none:Año:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[Año]' derivation='None' name='[none:Año:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Mes]' derivation='None' name='[none:Mes:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Nacionalidad]' derivation='None' name='[none:Nacionalidad:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Calculation_3861062633590292480]' derivation='User' name='[usr:Calculation_3861062633590292480:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[Action (Año)]'>
+            <groupfilter function='level-members' level='[none:Año:ok]' user:ui-action-filter='[Action2_F2A00AA163684D9197B96E1D03B4C326]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[Action (Nacionalidad)]' filter-group='4'>
+            <groupfilter function='level-members' level='[Nacionalidad]' user:ui-action-filter='[Action1_EDF1D78467C34530BB1C1E98396EECCB]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='quantitative' column='[federated.13y58z10akd2yg12r1g5503vza42].[Latitude (generated)]' included-values='non-null' />
+          <filter class='quantitative' column='[federated.13y58z10akd2yg12r1g5503vza42].[Longitude (generated)]' included-values='non-null' />
+          <filter class='quantitative' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' filter-group='3' included-values='in-range'>
+            <min>2012</min>
+            <max>2023</max>
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]' filter-group='5'>
+            <groupfilter function='level-members' level='[none:Mes:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' filter-group='6'>
+            <groupfilter function='level-members' level='[none:Nacionalidad:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[Latitude (generated)]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[Longitude (generated)]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[Action (Nacionalidad)]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[Action (Año)]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='[federated.13y58z10akd2yg12r1g5503vza42].[Longitude (generated)]' field-type='quantitative' max='9176064.5397474915' min='-22878233.228502009' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.13y58z10akd2yg12r1g5503vza42].[Latitude (generated)]' field-type='quantitative' max='11053896.576248288' min='-3684546.463818945' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+          </style-rule>
+          <style-rule element='mark'>
+            <encoding attr='color' field='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' palette='blue_10_0' type='interpolated' />
+          </style-rule>
+          <style-rule element='table'>
+            <format attr='omit-on-special' field='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' value='false' />
+            <format attr='break-on-special' field='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' value='false' />
+            <format attr='show-null-value-warning' field='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' value='false' />
+          </style-rule>
+          <style-rule element='map-layer'>
+            <format attr='enabled' id='b01002_001e' value='false' />
+            <format attr='enabled' id='b01002_002e' value='false' />
+            <format attr='enabled' id='b01002_003e' value='false' />
+            <format attr='enabled' id='dp02_0001e' value='false' />
+            <format attr='enabled' id='dp02_0015e' value='false' />
+            <format attr='enabled' id='dp03_0027e_plus_dp03_0029e' value='false' />
+            <format attr='enabled' id='dp03_0028e' value='false' />
+            <format attr='enabled' id='dp03_0030e_plus_dp03_0031e' value='false' />
+            <format attr='enabled' id='dp03_0062e' value='false' />
+            <format attr='enabled' id='dp03_0088e' value='false' />
+            <format attr='enabled' id='dp04_0001e' value='false' />
+            <format attr='enabled' id='dp04_0046e' value='false' />
+            <format attr='enabled' id='dp04_0047e' value='false' />
+            <format attr='enabled' id='dp04_0089e' value='false' />
+            <format attr='enabled' id='dp05_0001e' value='false' />
+            <format attr='enabled' id='dp05_0002e_div_dp05_0003e' value='false' />
+            <format attr='enabled' id='dp05_0032e' value='false' />
+            <format attr='enabled' id='dp05_0033e' value='false' />
+            <format attr='enabled' id='dp05_0034e' value='false' />
+            <format attr='enabled' id='dp05_0039e' value='false' />
+            <format attr='enabled' id='dp05_0047e' value='false' />
+            <format attr='enabled' id='dp05_0053e' value='false' />
+            <format attr='enabled' id='dp05_0066e' value='false' />
+            <format attr='enabled' id='dp05_0077e' value='false' />
+            <format attr='enabled' id='Coastline' value='true' />
+            <format attr='enabled' id='admin-2-label' value='true' />
+          </style-rule>
+          <style-rule element='map'>
+            <format attr='washout' value='0' />
+            <format attr='map-style' value='normal' />
+            <format attr='wrap' value='false' />
+          </style-rule>
+          <style-rule element='map-data-layer'>
+            <format attr='palette' value='tableau-map-blue-green-light' />
+            <format attr='geo-area-type' value='State' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Multipolygon' />
+            <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <color column='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' />
+              <size column='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' />
+              <lod column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' />
+              <geometry column='[federated.13y58z10akd2yg12r1g5503vza42].[Geometry (generated)]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text>
+                <run fontcolor='#787878'>Nacionalidad:&#9;</run>
+                <run bold='true'><![CDATA[<[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]>]]></run>
+                <run>Æ&#10;</run>
+                <run fontcolor='#787878'>Total:&#9;</run>
+                <run bold='true'><![CDATA[<[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]>]]></run>
+              </formatted-text>
+            </customized-tooltip>
+            <style>
+              <style-rule element='mark'>
+                <format attr='size' value='2.9060773849487305' />
+                <format attr='has-halo' value='true' />
+                <format attr='mark-transparency' value='126' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.13y58z10akd2yg12r1g5503vza42].[Latitude (generated)]</rows>
+        <cols>[federated.13y58z10akd2yg12r1g5503vza42].[Longitude (generated)]</cols>
+      </table>
+      <simple-id uuid='{BAEEB8A7-6F07-40A6-B28A-47D3B687E008}' />
+    </worksheet>
+    <worksheet name='Country Gender Trend'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontalignment='1' fontcolor='#003087' fontname='Tableau Semibold'>Country Trend</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Entradas_de_extranjeros_a_Colom (Entradas_de_extranjeros_a_Colombia_20241017)' name='federated.13y58z10akd2yg12r1g5503vza42' />
+            <datasource name='Parameters' />
+          </datasources>
+          <mapsources>
+            <mapsource name='Tableau' />
+          </mapsources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Gender' datatype='string' name='[Parameter 2]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+              <calculation class='tableau' formula='&quot;All&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.13y58z10akd2yg12r1g5503vza42'>
+            <column datatype='integer' datatype-customized='true' name='[Año]' role='dimension' type='quantitative' />
+            <column caption='Gender Total' datatype='real' name='[Calculation_3861062633590292480]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='If [Parameters].[Parameter 2] = &apos;All&apos; then &#10;    sum([Femenino]) + sum([Masculino]) //+ sum([Indefinido])&#10;ELSEIF [Parameters].[Parameter 2] = &apos;Femenino&apos; then&#10;    sum([Femenino]) &#10;ELSE&#10; sum([Masculino])&#10;END' />
+            </column>
+            <column datatype='real' datatype-customized='true' name='[Femenino]' role='measure' type='quantitative' />
+            <column datatype='real' datatype-customized='true' name='[Masculino]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Mes]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Nacionalidad]' role='dimension' semantic-role='[Country].[Name]' type='nominal'>
+              <semantic-values semantic-role='[Country].[Name]'>
+                <semantic-value key='&quot;Anguila/Territorio Británico de Ultramar&quot;' value='&quot;Anguilla&quot;' />
+                <semantic-value key='&quot;Bermudas/Territorio Británico de Ultramar&quot;' value='&quot;Bermuda&quot;' />
+                <semantic-value key='&quot;Emiratos Árabes&quot;' value='&quot;United Arab Emirates&quot;' />
+                <semantic-value key='&quot;Estados Unidos de América&quot;' value='&quot;United States&quot;' />
+                <semantic-value key='&quot;Federación de Rusia&quot;' value='&quot;Russia&quot;' />
+                <semantic-value key='&quot;Gibraltar/Territorio Británico de Ultramar&quot;' value='&quot;Gibraltar&quot;' />
+                <semantic-value key='&quot;Guam/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Guam&quot;' />
+                <semantic-value key='&quot;Guayana Francesa/Departamento de Ultramar Francés&quot;' value='&quot;Guyana&quot;' />
+                <semantic-value key='&quot;Islas Aland/Provincia de Finlandia&quot;' value='&quot;Finland&quot;' />
+                <semantic-value key='&quot;Islas Caimán/Territorio Británico de Ultramar&quot;' value='&quot;Cayman Islands&quot;' />
+                <semantic-value key='&quot;Islas Christmas&quot;' value='&quot;Christmas Island&quot;' />
+                <semantic-value key='&quot;Islas Fiji&quot;' value='&quot;Fiji&quot;' />
+                <semantic-value key='&quot;Islas Pitcairn/Territorio Británico de Ultramar&quot;' value='&quot;Pitcairn Islands&quot;' />
+                <semantic-value key='&quot;Islas Turcas y Caicos/Territorio Británico de Ultramar&quot;' value='&quot;Turks and Caicos Islands&quot;' />
+                <semantic-value key='&quot;Islas Vírgenes Británicas/Territorio Británico de Ultramar&quot;' value='&quot;British Virgin Islands&quot;' />
+                <semantic-value key='&quot;Montserrat/Territorio Británico de Ultramar&quot;' value='&quot;Montserrat&quot;' />
+                <semantic-value key='&quot;Nueva Caledonia/Territorio francés&quot;' value='&quot;New Caledonia&quot;' />
+                <semantic-value key='&quot;Papúa Occidental&quot;' value='&quot;Papua New Guinea&quot;' />
+                <semantic-value key='&quot;Polinesia Francesa/Colectividad de Ultramar Francesa&quot;' value='&quot;French Polynesia&quot;' />
+                <semantic-value key='&quot;Puerto Rico/Territorio de Estados Unidos&quot;' value='&quot;Puerto Rico&quot;' />
+                <semantic-value key='&quot;Reino Unido de Gran Bretaña e Irlanda del Norte&quot;' value='&quot;United Kingdom&quot;' />
+                <semantic-value key='&quot;República Árabe de Yemen&quot;' value='&quot;Yemen&quot;' />
+                <semantic-value key='&quot;República Árabe Siria&quot;' value='&quot;Saudi Arabia&quot;' />
+                <semantic-value key='&quot;República de Armenia&quot;' value='&quot;Armenia&quot;' />
+                <semantic-value key='&quot;República de Belarús&quot;' value='&quot;Belarus&quot;' />
+                <semantic-value key='&quot;República de Corea&quot;' value='&quot;South Korea&quot;' />
+                <semantic-value key='&quot;República de Irlanda&quot;' value='&quot;Ireland&quot;' />
+                <semantic-value key='&quot;República de Kosovo&quot;' value='&quot;Kosovo&quot;' />
+                <semantic-value key='&quot;República de Moldavia&quot;' value='&quot;Moldova&quot;' />
+                <semantic-value key='&quot;República de Tayikistán&quot;' value='&quot;Tajikistan&quot;' />
+                <semantic-value key='&quot;República de Yibuti&quot;' value='&quot;Djibouti&quot;' />
+                <semantic-value key='&quot;República Democrática de Timor Oriental&quot;' value='&quot;Timor Leste&quot;' />
+                <semantic-value key='&quot;República Democrática Popular  Lao&quot;' value='&quot;Laos&quot;' />
+                <semantic-value key='&quot;República Democrática Popular de Corea&quot;' value='&quot;North Korea&quot;' />
+                <semantic-value key='&quot;Sahara Occidental/Desierto Sahara&quot;' value='&quot;Western Sahara&quot;' />
+                <semantic-value key='&quot;Samoa Estadounidense/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Samoa&quot;' />
+                <semantic-value key='&quot;Samoa Occidental&quot;' value='&quot;American Samoa&quot;' />
+                <semantic-value key='&quot;San Cristóbal y Nevis&quot;' value='&quot;Saint Kitts and Nevis&quot;' />
+                <semantic-value key='&quot;Santa Sede/Ciudad del Vaticano&quot;' value='&quot;Vatican City&quot;' />
+                <semantic-value key='&quot;Tíbet/Región Autónoma de China&quot;' value='&quot;China&quot;' />
+                <semantic-value key='&quot;Yugoslavia&quot;' value='&quot;Serbia&quot;' />
+              </semantic-values>
+            </column>
+            <column-instance column='[Año]' derivation='None' name='[none:Año:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[Año]' derivation='None' name='[none:Año:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Mes]' derivation='None' name='[none:Mes:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Nacionalidad]' derivation='None' name='[none:Nacionalidad:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Femenino]' derivation='Sum' name='[sum:Femenino:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Masculino]' derivation='Sum' name='[sum:Masculino:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Calculation_3861062633590292480]' derivation='User' name='[usr:Calculation_3861062633590292480:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[Action (Año)]'>
+            <groupfilter function='level-members' level='[none:Año:ok]' user:ui-action-filter='[Action3_EB6E9609B5C6461DAA2E7EF4CFD5F735]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[Action (Nacionalidad)]' filter-group='4'>
+            <groupfilter function='level-members' level='[Nacionalidad]' user:ui-action-filter='[Action1_EDF1D78467C34530BB1C1E98396EECCB]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='quantitative' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' filter-group='3' included-values='in-range'>
+            <min>2012</min>
+            <max>2023</max>
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]' filter-group='5'>
+            <groupfilter function='level-members' level='[none:Mes:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' filter-group='6'>
+            <groupfilter function='level-members' level='[none:Nacionalidad:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[Action (Nacionalidad)]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[Action (Año)]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+          <style-rule element='refline'>
+            <format attr='stroke-color' id='refline0' value='#000000' />
+          </style-rule>
+          <style-rule element='map'>
+            <format attr='washout' value='0.0' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='on' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' />
+              <size column='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' />
+              <tooltip column='[federated.13y58z10akd2yg12r1g5503vza42].[sum:Femenino:qk]' />
+              <tooltip column='[federated.13y58z10akd2yg12r1g5503vza42].[sum:Masculino:qk]' />
+              <text column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' />
+              <lod column='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' />
+              <lod column='[federated.13y58z10akd2yg12r1g5503vza42].[sum:Masculino:qk]' />
+              <lod column='[federated.13y58z10akd2yg12r1g5503vza42].[sum:Femenino:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text>
+                <run fontcolor='#787878'>Nacionalidad:&#9;</run>
+                <run bold='true'><![CDATA[<[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]>]]></run>
+                <run>Æ&#10;</run>
+                <run fontcolor='#787878'>Masculino:&#9;</run>
+                <run bold='true' fontcolor='#000000'><![CDATA[<[federated.13y58z10akd2yg12r1g5503vza42].[sum:Masculino:qk]>]]></run>
+                <run>Æ&#10;</run>
+                <run fontcolor='#787878'>Femenino:&#9;</run>
+                <run bold='true' fontcolor='#000000'><![CDATA[<[federated.13y58z10akd2yg12r1g5503vza42].[sum:Femenino:qk]>]]></run>
+              </formatted-text>
+            </customized-tooltip>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-line-first' value='true' />
+                <format attr='mark-labels-line-last' value='true' />
+                <format attr='mark-labels-range-min' value='true' />
+                <format attr='mark-labels-range-max' value='true' />
+                <format attr='mark-labels-mode' value='all' />
+                <format attr='mark-labels-range-scope' value='pane' />
+                <format attr='mark-labels-range-field' value='' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{921F2C70-B6D4-42B5-B027-8D8E2B6D067E}' />
+    </worksheet>
+    <worksheet name='Gender Trend'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontalignment='1' fontcolor='#003087' fontname='Tableau Medium'>&lt;Sheet Name&gt;</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Entradas_de_extranjeros_a_Colom (Entradas_de_extranjeros_a_Colombia_20241017)' name='federated.13y58z10akd2yg12r1g5503vza42' />
+          </datasources>
+          <datasource-dependencies datasource='federated.13y58z10akd2yg12r1g5503vza42'>
+            <column datatype='integer' datatype-customized='true' name='[Año]' role='dimension' type='quantitative' />
+            <column datatype='real' datatype-customized='true' name='[Femenino]' role='measure' type='quantitative' />
+            <column datatype='real' datatype-customized='true' name='[Masculino]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Mes]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Nacionalidad]' role='dimension' semantic-role='[Country].[Name]' type='nominal'>
+              <semantic-values semantic-role='[Country].[Name]'>
+                <semantic-value key='&quot;Anguila/Territorio Británico de Ultramar&quot;' value='&quot;Anguilla&quot;' />
+                <semantic-value key='&quot;Bermudas/Territorio Británico de Ultramar&quot;' value='&quot;Bermuda&quot;' />
+                <semantic-value key='&quot;Emiratos Árabes&quot;' value='&quot;United Arab Emirates&quot;' />
+                <semantic-value key='&quot;Estados Unidos de América&quot;' value='&quot;United States&quot;' />
+                <semantic-value key='&quot;Federación de Rusia&quot;' value='&quot;Russia&quot;' />
+                <semantic-value key='&quot;Gibraltar/Territorio Británico de Ultramar&quot;' value='&quot;Gibraltar&quot;' />
+                <semantic-value key='&quot;Guam/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Guam&quot;' />
+                <semantic-value key='&quot;Guayana Francesa/Departamento de Ultramar Francés&quot;' value='&quot;Guyana&quot;' />
+                <semantic-value key='&quot;Islas Aland/Provincia de Finlandia&quot;' value='&quot;Finland&quot;' />
+                <semantic-value key='&quot;Islas Caimán/Territorio Británico de Ultramar&quot;' value='&quot;Cayman Islands&quot;' />
+                <semantic-value key='&quot;Islas Christmas&quot;' value='&quot;Christmas Island&quot;' />
+                <semantic-value key='&quot;Islas Fiji&quot;' value='&quot;Fiji&quot;' />
+                <semantic-value key='&quot;Islas Pitcairn/Territorio Británico de Ultramar&quot;' value='&quot;Pitcairn Islands&quot;' />
+                <semantic-value key='&quot;Islas Turcas y Caicos/Territorio Británico de Ultramar&quot;' value='&quot;Turks and Caicos Islands&quot;' />
+                <semantic-value key='&quot;Islas Vírgenes Británicas/Territorio Británico de Ultramar&quot;' value='&quot;British Virgin Islands&quot;' />
+                <semantic-value key='&quot;Montserrat/Territorio Británico de Ultramar&quot;' value='&quot;Montserrat&quot;' />
+                <semantic-value key='&quot;Nueva Caledonia/Territorio francés&quot;' value='&quot;New Caledonia&quot;' />
+                <semantic-value key='&quot;Papúa Occidental&quot;' value='&quot;Papua New Guinea&quot;' />
+                <semantic-value key='&quot;Polinesia Francesa/Colectividad de Ultramar Francesa&quot;' value='&quot;French Polynesia&quot;' />
+                <semantic-value key='&quot;Puerto Rico/Territorio de Estados Unidos&quot;' value='&quot;Puerto Rico&quot;' />
+                <semantic-value key='&quot;Reino Unido de Gran Bretaña e Irlanda del Norte&quot;' value='&quot;United Kingdom&quot;' />
+                <semantic-value key='&quot;República Árabe de Yemen&quot;' value='&quot;Yemen&quot;' />
+                <semantic-value key='&quot;República Árabe Siria&quot;' value='&quot;Saudi Arabia&quot;' />
+                <semantic-value key='&quot;República de Armenia&quot;' value='&quot;Armenia&quot;' />
+                <semantic-value key='&quot;República de Belarús&quot;' value='&quot;Belarus&quot;' />
+                <semantic-value key='&quot;República de Corea&quot;' value='&quot;South Korea&quot;' />
+                <semantic-value key='&quot;República de Irlanda&quot;' value='&quot;Ireland&quot;' />
+                <semantic-value key='&quot;República de Kosovo&quot;' value='&quot;Kosovo&quot;' />
+                <semantic-value key='&quot;República de Moldavia&quot;' value='&quot;Moldova&quot;' />
+                <semantic-value key='&quot;República de Tayikistán&quot;' value='&quot;Tajikistan&quot;' />
+                <semantic-value key='&quot;República de Yibuti&quot;' value='&quot;Djibouti&quot;' />
+                <semantic-value key='&quot;República Democrática de Timor Oriental&quot;' value='&quot;Timor Leste&quot;' />
+                <semantic-value key='&quot;República Democrática Popular  Lao&quot;' value='&quot;Laos&quot;' />
+                <semantic-value key='&quot;República Democrática Popular de Corea&quot;' value='&quot;North Korea&quot;' />
+                <semantic-value key='&quot;Sahara Occidental/Desierto Sahara&quot;' value='&quot;Western Sahara&quot;' />
+                <semantic-value key='&quot;Samoa Estadounidense/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Samoa&quot;' />
+                <semantic-value key='&quot;Samoa Occidental&quot;' value='&quot;American Samoa&quot;' />
+                <semantic-value key='&quot;San Cristóbal y Nevis&quot;' value='&quot;Saint Kitts and Nevis&quot;' />
+                <semantic-value key='&quot;Santa Sede/Ciudad del Vaticano&quot;' value='&quot;Vatican City&quot;' />
+                <semantic-value key='&quot;Tíbet/Región Autónoma de China&quot;' value='&quot;China&quot;' />
+                <semantic-value key='&quot;Yugoslavia&quot;' value='&quot;Serbia&quot;' />
+              </semantic-values>
+            </column>
+            <column-instance column='[Año]' derivation='None' name='[none:Año:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[Año]' derivation='None' name='[none:Año:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Mes]' derivation='None' name='[none:Mes:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Nacionalidad]' derivation='None' name='[none:Nacionalidad:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Femenino]' derivation='Sum' name='[sum:Femenino:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Masculino]' derivation='Sum' name='[sum:Masculino:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[Action (Año)]'>
+            <groupfilter function='level-members' level='[none:Año:ok]' user:ui-action-filter='[Action2_F2A00AA163684D9197B96E1D03B4C326]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[Action (Nacionalidad)]' filter-group='4'>
+            <groupfilter function='level-members' level='[Nacionalidad]' user:ui-action-filter='[Action1_EDF1D78467C34530BB1C1E98396EECCB]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='quantitative' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' filter-group='3' included-values='in-range'>
+            <min>2012</min>
+            <max>2023</max>
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]' filter-group='5'>
+            <groupfilter function='level-members' level='[none:Mes:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' filter-group='6'>
+            <groupfilter function='level-members' level='[none:Nacionalidad:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[Action (Nacionalidad)]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[Action (Año)]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' scope='cols' value='' />
+            <encoding attr='space' class='0' field='[federated.13y58z10akd2yg12r1g5503vza42].[sum:Femenino:qk]' field-type='quantitative' fold='true' scope='rows' type='space' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+          <style-rule element='refline'>
+            <format attr='stroke-color' id='refline0' value='#000000' />
+          </style-rule>
+          <style-rule element='legend-title-text'>
+            <format attr='color' field='[federated.13y58z10akd2yg12r1g5503vza42].[:Measure Names]' value='Leyenda'>
+              <formatted-text>
+                <run>Leyenda</run>
+              </formatted-text>
+            </format>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.13y58z10akd2yg12r1g5503vza42].[:Measure Names]' />
+            </encodings>
+          </pane>
+          <pane id='1' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.13y58z10akd2yg12r1g5503vza42].[sum:Femenino:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <color column='[federated.13y58z10akd2yg12r1g5503vza42].[:Measure Names]' />
+            </encodings>
+          </pane>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.13y58z10akd2yg12r1g5503vza42].[sum:Masculino:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.13y58z10akd2yg12r1g5503vza42].[:Measure Names]' />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>([federated.13y58z10akd2yg12r1g5503vza42].[sum:Masculino:qk] + [federated.13y58z10akd2yg12r1g5503vza42].[sum:Femenino:qk])</rows>
+        <cols>[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]</cols>
+      </table>
+      <simple-id uuid='{20E9772E-F011-42EC-9DEE-D034DE66DFBB}' />
+    </worksheet>
+    <worksheet name='Year Trend'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontalignment='1' fontcolor='#003087' fontname='Tableau Semibold'>Yearly Trend</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Entradas_de_extranjeros_a_Colom (Entradas_de_extranjeros_a_Colombia_20241017)' name='federated.13y58z10akd2yg12r1g5503vza42' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Gender' datatype='string' name='[Parameter 2]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+              <calculation class='tableau' formula='&quot;All&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.13y58z10akd2yg12r1g5503vza42'>
+            <column datatype='integer' datatype-customized='true' name='[Año]' role='dimension' type='quantitative' />
+            <column caption='Gender Total' datatype='real' name='[Calculation_3861062633590292480]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='If [Parameters].[Parameter 2] = &apos;All&apos; then &#10;    sum([Femenino]) + sum([Masculino]) //+ sum([Indefinido])&#10;ELSEIF [Parameters].[Parameter 2] = &apos;Femenino&apos; then&#10;    sum([Femenino]) &#10;ELSE&#10; sum([Masculino])&#10;END' />
+            </column>
+            <column datatype='real' datatype-customized='true' name='[Femenino]' role='measure' type='quantitative' />
+            <column datatype='real' datatype-customized='true' name='[Masculino]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Mes]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Nacionalidad]' role='dimension' semantic-role='[Country].[Name]' type='nominal'>
+              <semantic-values semantic-role='[Country].[Name]'>
+                <semantic-value key='&quot;Anguila/Territorio Británico de Ultramar&quot;' value='&quot;Anguilla&quot;' />
+                <semantic-value key='&quot;Bermudas/Territorio Británico de Ultramar&quot;' value='&quot;Bermuda&quot;' />
+                <semantic-value key='&quot;Emiratos Árabes&quot;' value='&quot;United Arab Emirates&quot;' />
+                <semantic-value key='&quot;Estados Unidos de América&quot;' value='&quot;United States&quot;' />
+                <semantic-value key='&quot;Federación de Rusia&quot;' value='&quot;Russia&quot;' />
+                <semantic-value key='&quot;Gibraltar/Territorio Británico de Ultramar&quot;' value='&quot;Gibraltar&quot;' />
+                <semantic-value key='&quot;Guam/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Guam&quot;' />
+                <semantic-value key='&quot;Guayana Francesa/Departamento de Ultramar Francés&quot;' value='&quot;Guyana&quot;' />
+                <semantic-value key='&quot;Islas Aland/Provincia de Finlandia&quot;' value='&quot;Finland&quot;' />
+                <semantic-value key='&quot;Islas Caimán/Territorio Británico de Ultramar&quot;' value='&quot;Cayman Islands&quot;' />
+                <semantic-value key='&quot;Islas Christmas&quot;' value='&quot;Christmas Island&quot;' />
+                <semantic-value key='&quot;Islas Fiji&quot;' value='&quot;Fiji&quot;' />
+                <semantic-value key='&quot;Islas Pitcairn/Territorio Británico de Ultramar&quot;' value='&quot;Pitcairn Islands&quot;' />
+                <semantic-value key='&quot;Islas Turcas y Caicos/Territorio Británico de Ultramar&quot;' value='&quot;Turks and Caicos Islands&quot;' />
+                <semantic-value key='&quot;Islas Vírgenes Británicas/Territorio Británico de Ultramar&quot;' value='&quot;British Virgin Islands&quot;' />
+                <semantic-value key='&quot;Montserrat/Territorio Británico de Ultramar&quot;' value='&quot;Montserrat&quot;' />
+                <semantic-value key='&quot;Nueva Caledonia/Territorio francés&quot;' value='&quot;New Caledonia&quot;' />
+                <semantic-value key='&quot;Papúa Occidental&quot;' value='&quot;Papua New Guinea&quot;' />
+                <semantic-value key='&quot;Polinesia Francesa/Colectividad de Ultramar Francesa&quot;' value='&quot;French Polynesia&quot;' />
+                <semantic-value key='&quot;Puerto Rico/Territorio de Estados Unidos&quot;' value='&quot;Puerto Rico&quot;' />
+                <semantic-value key='&quot;Reino Unido de Gran Bretaña e Irlanda del Norte&quot;' value='&quot;United Kingdom&quot;' />
+                <semantic-value key='&quot;República Árabe de Yemen&quot;' value='&quot;Yemen&quot;' />
+                <semantic-value key='&quot;República Árabe Siria&quot;' value='&quot;Saudi Arabia&quot;' />
+                <semantic-value key='&quot;República de Armenia&quot;' value='&quot;Armenia&quot;' />
+                <semantic-value key='&quot;República de Belarús&quot;' value='&quot;Belarus&quot;' />
+                <semantic-value key='&quot;República de Corea&quot;' value='&quot;South Korea&quot;' />
+                <semantic-value key='&quot;República de Irlanda&quot;' value='&quot;Ireland&quot;' />
+                <semantic-value key='&quot;República de Kosovo&quot;' value='&quot;Kosovo&quot;' />
+                <semantic-value key='&quot;República de Moldavia&quot;' value='&quot;Moldova&quot;' />
+                <semantic-value key='&quot;República de Tayikistán&quot;' value='&quot;Tajikistan&quot;' />
+                <semantic-value key='&quot;República de Yibuti&quot;' value='&quot;Djibouti&quot;' />
+                <semantic-value key='&quot;República Democrática de Timor Oriental&quot;' value='&quot;Timor Leste&quot;' />
+                <semantic-value key='&quot;República Democrática Popular  Lao&quot;' value='&quot;Laos&quot;' />
+                <semantic-value key='&quot;República Democrática Popular de Corea&quot;' value='&quot;North Korea&quot;' />
+                <semantic-value key='&quot;Sahara Occidental/Desierto Sahara&quot;' value='&quot;Western Sahara&quot;' />
+                <semantic-value key='&quot;Samoa Estadounidense/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Samoa&quot;' />
+                <semantic-value key='&quot;Samoa Occidental&quot;' value='&quot;American Samoa&quot;' />
+                <semantic-value key='&quot;San Cristóbal y Nevis&quot;' value='&quot;Saint Kitts and Nevis&quot;' />
+                <semantic-value key='&quot;Santa Sede/Ciudad del Vaticano&quot;' value='&quot;Vatican City&quot;' />
+                <semantic-value key='&quot;Tíbet/Región Autónoma de China&quot;' value='&quot;China&quot;' />
+                <semantic-value key='&quot;Yugoslavia&quot;' value='&quot;Serbia&quot;' />
+              </semantic-values>
+            </column>
+            <column-instance column='[Año]' derivation='None' name='[none:Año:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[Año]' derivation='None' name='[none:Año:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Mes]' derivation='None' name='[none:Mes:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Nacionalidad]' derivation='None' name='[none:Nacionalidad:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Calculation_3861062633590292480]' derivation='User' name='[usr:Calculation_3861062633590292480:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[Action (Año)]'>
+            <groupfilter function='level-members' level='[none:Año:ok]' user:ui-action-filter='[Action3_EB6E9609B5C6461DAA2E7EF4CFD5F735]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[Action (Nacionalidad)]' filter-group='4'>
+            <groupfilter function='level-members' level='[Nacionalidad]' user:ui-action-filter='[Action1_EDF1D78467C34530BB1C1E98396EECCB]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='quantitative' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' filter-group='3' included-values='in-range'>
+            <min>2012</min>
+            <max>2023</max>
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]' filter-group='5'>
+            <groupfilter function='level-members' level='[none:Mes:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' filter-group='6'>
+            <groupfilter function='level-members' level='[none:Nacionalidad:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[Action (Nacionalidad)]</column>
+            <column>[federated.13y58z10akd2yg12r1g5503vza42].[Action (Año)]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' scope='rows' value='' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+          <style-rule element='quick-filter'>
+            <format attr='title' field='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' value='Años'>
+              <formatted-text>
+                <run>Años</run>
+              </formatted-text>
+            </format>
+          </style-rule>
+          <style-rule element='parameter-ctrl'>
+            <format attr='title' field='[Parameters].[Parameter 2]' value='Género'>
+              <formatted-text>
+                <run auto-url='true' hyperlink='tabdoc:load-url url=&amp;quot;Género&amp;quot;'>Género</run>
+              </formatted-text>
+            </format>
+          </style-rule>
+        </style>
+        <panes>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <lod column='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' />
+              <text column='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' />
+              <tooltip column='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text>
+                <run fontcolor='#787878'>Año:&#9;</run>
+                <run bold='true'><![CDATA[<[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:ok]>]]></run>
+                <run>Æ&#10;</run>
+                <run fontcolor='#787878'>Total:&#9;</run>
+                <run bold='true'><![CDATA[<[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]>]]></run>
+                <run>Æ&#10;</run>
+              </formatted-text>
+            </customized-tooltip>
+            <style>
+              <style-rule element='mark'>
+                <format attr='size' value='1.5932043790817261' />
+                <format attr='has-stroke' value='false' />
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-show' value='false' />
+                <format attr='mark-color' value='#4e79a7' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]</rows>
+        <cols>[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:ok]</cols>
+      </table>
+      <simple-id uuid='{7D1AB075-8ED2-49CF-82F7-E365985310E5}' />
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard _.fcp.AccessibleZoneTabOrder.true...enable-sort-zone-taborder='true' name='Main'>
+      <style>
+        <style-rule element='dash-text'>
+          <format attr='text-align' id='dash-text_10' value='center' />
+          <format attr='vertical-align' id='dash-text_10' value='center' />
+        </style-rule>
+      </style>
+      <size maxheight='1200' maxwidth='1800' minheight='1200' minwidth='1800' sizing-mode='fixed' />
+      <datasources>
+        <datasource name='Parameters' />
+        <datasource caption='Entradas_de_extranjeros_a_Colom (Entradas_de_extranjeros_a_Colombia_20241017)' name='federated.13y58z10akd2yg12r1g5503vza42' />
+      </datasources>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Gender' datatype='string' name='[Parameter 2]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <members>
+            <member value='&quot;All&quot;' />
+            <member value='&quot;Femenino&quot;' />
+            <member value='&quot;Masculino&quot;' />
+          </members>
+        </column>
+      </datasource-dependencies>
+      <datasource-dependencies datasource='federated.13y58z10akd2yg12r1g5503vza42'>
+        <column datatype='integer' datatype-customized='true' name='[Año]' role='dimension' type='quantitative' />
+        <column datatype='string' name='[Mes]' role='dimension' type='nominal' />
+        <column datatype='string' name='[Nacionalidad]' role='dimension' semantic-role='[Country].[Name]' type='nominal'>
+          <semantic-values semantic-role='[Country].[Name]'>
+            <semantic-value key='&quot;Anguila/Territorio Británico de Ultramar&quot;' value='&quot;Anguilla&quot;' />
+            <semantic-value key='&quot;Bermudas/Territorio Británico de Ultramar&quot;' value='&quot;Bermuda&quot;' />
+            <semantic-value key='&quot;Emiratos Árabes&quot;' value='&quot;United Arab Emirates&quot;' />
+            <semantic-value key='&quot;Estados Unidos de América&quot;' value='&quot;United States&quot;' />
+            <semantic-value key='&quot;Federación de Rusia&quot;' value='&quot;Russia&quot;' />
+            <semantic-value key='&quot;Gibraltar/Territorio Británico de Ultramar&quot;' value='&quot;Gibraltar&quot;' />
+            <semantic-value key='&quot;Guam/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Guam&quot;' />
+            <semantic-value key='&quot;Guayana Francesa/Departamento de Ultramar Francés&quot;' value='&quot;Guyana&quot;' />
+            <semantic-value key='&quot;Islas Aland/Provincia de Finlandia&quot;' value='&quot;Finland&quot;' />
+            <semantic-value key='&quot;Islas Caimán/Territorio Británico de Ultramar&quot;' value='&quot;Cayman Islands&quot;' />
+            <semantic-value key='&quot;Islas Christmas&quot;' value='&quot;Christmas Island&quot;' />
+            <semantic-value key='&quot;Islas Fiji&quot;' value='&quot;Fiji&quot;' />
+            <semantic-value key='&quot;Islas Pitcairn/Territorio Británico de Ultramar&quot;' value='&quot;Pitcairn Islands&quot;' />
+            <semantic-value key='&quot;Islas Turcas y Caicos/Territorio Británico de Ultramar&quot;' value='&quot;Turks and Caicos Islands&quot;' />
+            <semantic-value key='&quot;Islas Vírgenes Británicas/Territorio Británico de Ultramar&quot;' value='&quot;British Virgin Islands&quot;' />
+            <semantic-value key='&quot;Montserrat/Territorio Británico de Ultramar&quot;' value='&quot;Montserrat&quot;' />
+            <semantic-value key='&quot;Nueva Caledonia/Territorio francés&quot;' value='&quot;New Caledonia&quot;' />
+            <semantic-value key='&quot;Papúa Occidental&quot;' value='&quot;Papua New Guinea&quot;' />
+            <semantic-value key='&quot;Polinesia Francesa/Colectividad de Ultramar Francesa&quot;' value='&quot;French Polynesia&quot;' />
+            <semantic-value key='&quot;Puerto Rico/Territorio de Estados Unidos&quot;' value='&quot;Puerto Rico&quot;' />
+            <semantic-value key='&quot;Reino Unido de Gran Bretaña e Irlanda del Norte&quot;' value='&quot;United Kingdom&quot;' />
+            <semantic-value key='&quot;República Árabe de Yemen&quot;' value='&quot;Yemen&quot;' />
+            <semantic-value key='&quot;República Árabe Siria&quot;' value='&quot;Saudi Arabia&quot;' />
+            <semantic-value key='&quot;República de Armenia&quot;' value='&quot;Armenia&quot;' />
+            <semantic-value key='&quot;República de Belarús&quot;' value='&quot;Belarus&quot;' />
+            <semantic-value key='&quot;República de Corea&quot;' value='&quot;South Korea&quot;' />
+            <semantic-value key='&quot;República de Irlanda&quot;' value='&quot;Ireland&quot;' />
+            <semantic-value key='&quot;República de Kosovo&quot;' value='&quot;Kosovo&quot;' />
+            <semantic-value key='&quot;República de Moldavia&quot;' value='&quot;Moldova&quot;' />
+            <semantic-value key='&quot;República de Tayikistán&quot;' value='&quot;Tajikistan&quot;' />
+            <semantic-value key='&quot;República de Yibuti&quot;' value='&quot;Djibouti&quot;' />
+            <semantic-value key='&quot;República Democrática de Timor Oriental&quot;' value='&quot;Timor Leste&quot;' />
+            <semantic-value key='&quot;República Democrática Popular  Lao&quot;' value='&quot;Laos&quot;' />
+            <semantic-value key='&quot;República Democrática Popular de Corea&quot;' value='&quot;North Korea&quot;' />
+            <semantic-value key='&quot;Sahara Occidental/Desierto Sahara&quot;' value='&quot;Western Sahara&quot;' />
+            <semantic-value key='&quot;Samoa Estadounidense/Territorio no incorporado de Estados Unidos&quot;' value='&quot;Samoa&quot;' />
+            <semantic-value key='&quot;Samoa Occidental&quot;' value='&quot;American Samoa&quot;' />
+            <semantic-value key='&quot;San Cristóbal y Nevis&quot;' value='&quot;Saint Kitts and Nevis&quot;' />
+            <semantic-value key='&quot;Santa Sede/Ciudad del Vaticano&quot;' value='&quot;Vatican City&quot;' />
+            <semantic-value key='&quot;Tíbet/Región Autónoma de China&quot;' value='&quot;China&quot;' />
+            <semantic-value key='&quot;Yugoslavia&quot;' value='&quot;Serbia&quot;' />
+          </semantic-values>
+        </column>
+        <column-instance column='[Año]' derivation='None' name='[none:Año:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Mes]' derivation='None' name='[none:Mes:nk]' pivot='key' type='nominal' />
+        <column-instance column='[Nacionalidad]' derivation='None' name='[none:Nacionalidad:nk]' pivot='key' type='nominal' />
+      </datasource-dependencies>
+      <zones>
+        <zone h='100000' id='8' type-v2='layout-basic' w='100000' x='0' y='0'>
+          <zone h='49333' id='37' param='horz' type-v2='layout-flow' w='99112' x='444' y='667'>
+            <zone h='49333' id='35' type-v2='layout-basic' w='99112' x='444' y='667'>
+              <zone h='7224' id='7' param='horz' type-v2='layout-flow' w='99112' x='444' y='667'>
+                <zone fixed-size='1423' forceUpdate='true' h='7224' id='10' is-fixed='true' type-v2='text' w='79500' x='444' y='667'>
+                  <formatted-text>
+                    <run fontcolor='#003087' fontname='Tableau Medium' fontsize='48'>Immigration to Columbia</run>
+                  </formatted-text>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+                <zone _.fcp.ExternalImageContentForZones.true...image-file-url='https://unstats.un.org/unsd/undataforum/assets/img/banners/UNWDF_2024_logo_E.png' alt-text='Unstats' h='7224' id='9' is-centered='0' is-scaled='1' type-v2='bitmap' url='https://unstats.un.org/unsd/undataforum/' w='19612' x='79944' y='667'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+              </zone>
+              <zone h='37083' id='11' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='99112' x='444' y='12917'>
+                <zone fixed-size='672' h='37083' id='34' is-fixed='true' name='Year Trend' w='49556' x='444' y='12917'>
+                  <layout-cache minheight='183' type-h='scalable' type-w='cell' />
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+                <zone h='37083' id='45' name='Country' w='49556' x='50000' y='12917'>
+                  <layout-cache minwidth='201' type-h='fixed' type-w='scalable' />
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+              </zone>
+              <zone h='5026' id='56' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='99112' x='444' y='7891'>
+                <zone h='5000' id='40' name='Year Trend' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' show-domain='false' show-null-ctrls='false' type-v2='filter' w='24778' x='444' y='7917'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+                <zone h='5000' id='38' mode='checkdropdown' name='Year Trend' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]' show-apply='true' show-exclude='false' type-v2='filter' w='24778' x='25222' y='7917'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+                <zone h='5000' id='39' mode='checkdropdown' name='Year Trend' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' show-apply='true' show-mode='false' type-v2='filter' w='24778' x='50000' y='7917'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+                <zone custom-title='true' h='5000' id='41' mode='compact' param='[Parameters].[Parameter 2]' type-v2='paramctrl' w='24778' x='74778' y='7917'>
+                  <formatted-text>
+                    <run>Género</run>
+                  </formatted-text>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+              </zone>
+            </zone>
+          </zone>
+          <zone h='49333' id='69' name='Gender Trend' w='49556' x='444' y='50000'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='49333' id='71' name='Country Gender Trend' w='49556' x='50000' y='50000'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
+          </zone-style>
+        </zone>
+        <zone h='4833' id='70' name='Gender Trend' pane-specification-id='2' param='[federated.13y58z10akd2yg12r1g5503vza42].[:Measure Names]' type-v2='color' w='7778' x='5000' y='54000' />
+      </zones>
+      <devicelayouts>
+        <devicelayout auto-generated='true' name='Phone'>
+          <size maxheight='1650' minheight='1650' sizing-mode='vscroll' />
+          <zones>
+            <zone h='100000' id='79' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98666' id='78' param='vert' type-v2='layout-flow' w='99112' x='444' y='667'>
+                <zone fixed-size='1423' forceUpdate='true' h='7224' id='10' type-v2='text' w='79500' x='444' y='667'>
+                  <formatted-text>
+                    <run fontcolor='#003087' fontname='Tableau Medium' fontsize='48'>Immigration to Columbia</run>
+                  </formatted-text>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone _.fcp.ExternalImageContentForZones.true...image-file-url='https://unstats.un.org/unsd/undataforum/assets/img/banners/UNWDF_2024_logo_E.png' alt-text='Unstats' fixed-size='79' h='7224' id='9' is-centered='0' is-fixed='true' is-scaled='1' type-v2='bitmap' url='https://unstats.un.org/unsd/undataforum/' w='19612' x='79944' y='667'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone custom-title='true' h='5000' id='41' mode='compact' param='[Parameters].[Parameter 2]' type-v2='paramctrl' w='24778' x='74778' y='7917'>
+                  <formatted-text>
+                    <run>Género</run>
+                  </formatted-text>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='5000' id='40' name='Year Trend' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' show-domain='false' show-null-ctrls='false' type-v2='filter' w='24778' x='444' y='7917'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='5000' id='38' mode='checkdropdown' name='Year Trend' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]' show-apply='true' show-exclude='false' type-v2='filter' w='24778' x='25222' y='7917'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='5000' id='39' mode='checkdropdown' name='Year Trend' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' show-apply='true' show-mode='false' type-v2='filter' w='24778' x='50000' y='7917'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='280' h='37083' id='34' is-fixed='true' name='Year Trend' w='49556' x='444' y='12917'>
+                  <layout-cache minheight='183' type-h='scalable' type-w='cell' />
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='280' h='37083' id='45' is-fixed='true' name='Country' w='49556' x='50000' y='12917'>
+                  <layout-cache minwidth='201' type-h='fixed' type-w='scalable' />
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='280' h='49333' id='69' is-fixed='true' name='Gender Trend' w='49556' x='444' y='50000'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='4833' id='70' name='Gender Trend' pane-specification-id='2' param='[federated.13y58z10akd2yg12r1g5503vza42].[:Measure Names]' type-v2='color' w='7778' x='5000' y='54000'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='280' h='49333' id='71' is-fixed='true' name='Country Gender Trend' w='49556' x='50000' y='50000'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+              </zone>
+              <zone-style>
+                <format attr='border-color' value='#000000' />
+                <format attr='border-style' value='none' />
+                <format attr='border-width' value='0' />
+                <format attr='margin' value='8' />
+              </zone-style>
+            </zone>
+          </zones>
+        </devicelayout>
+      </devicelayouts>
+      <simple-id uuid='{F122D51A-DED4-4FBF-A473-37B4ADEB902E}' />
+    </dashboard>
+  </dashboards>
+  <windows show-side-pane='false' source-height='30'>
+    <window class='dashboard' maximized='true' name='Main'>
+      <viewpoints>
+        <viewpoint name='Country'>
+          <zoom type='entire-view' />
+          <default-map-tool-selection tool='1' />
+        </viewpoint>
+        <viewpoint name='Country Gender Trend' />
+        <viewpoint name='Gender Trend'>
+          <zoom type='entire-view' />
+        </viewpoint>
+        <viewpoint name='Year Trend'>
+          <zoom type='entire-view' />
+        </viewpoint>
+      </viewpoints>
+      <active id='45' />
+      <simple-id uuid='{7EFBD25A-B6D0-419E-822C-64C5C7F1D2A3}' />
+    </window>
+    <window class='worksheet' hidden='true' name='Country'>
+      <cards>
+        <edge name='left'>
+          <strip size='300'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' type='filter' values='relevant' />
+            <card param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]' type='filter' values='cascading' />
+            <card param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' show-domain='false' show-null-ctrls='false' type='filter' values='cascading' />
+            <card pane-specification-id='0' param='[federated.13y58z10akd2yg12r1g5503vza42].[usr:Calculation_3861062633590292480:qk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <default-map-tool-selection tool='1' />
+      </viewpoint>
+      <simple-id uuid='{A1AD28CB-36F1-4B1A-AC21-6E7339008FA2}' />
+    </window>
+    <window class='worksheet' hidden='true' name='Country Gender Trend'>
+      <cards>
+        <edge name='left'>
+          <strip size='227'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' type='filter' />
+            <card mode='checkdropdown' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]' type='filter' />
+            <card param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' show-domain='false' show-null-ctrls='false' type='filter' />
+            <card mode='compact' param='[Parameters].[Parameter 2]' type='parameter' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{507235C7-DF32-4219-82A4-54FA89061A60}' />
+    </window>
+    <window class='worksheet' hidden='true' name='Gender Trend'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' type='filter' />
+            <card mode='checkdropdown' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]' type='filter' />
+            <card param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' show-domain='false' show-null-ctrls='false' type='filter' />
+            <card mode='compact' param='[Parameters].[Parameter 2]' type='parameter' />
+            <card pane-specification-id='2' param='[federated.13y58z10akd2yg12r1g5503vza42].[:Measure Names]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.13y58z10akd2yg12r1g5503vza42].[:Measure Names]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{126A852E-F3D3-4A9F-B4F7-A97886BB96D6}' />
+    </window>
+    <window class='worksheet' hidden='true' name='Year Trend'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Mes:nk]' show-apply='true' show-exclude='false' type='filter' />
+            <card mode='checkdropdown' param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Nacionalidad:nk]' show-apply='true' show-mode='false' type='filter' />
+            <card param='[federated.13y58z10akd2yg12r1g5503vza42].[none:Año:qk]' show-domain='false' show-null-ctrls='false' type='filter' />
+            <card custom-title='true' mode='compact' param='[Parameters].[Parameter 2]' type='parameter' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{666E2055-71F7-4E1B-972A-964665DE2AA1}' />
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='384' name='Main' width='384'>
+      iVBORw0KGgoAAAANSUhEUgAAAYAAAAGACAYAAACkx7W/AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAgAElEQVR4nOzdeVgV593/8ffZOIdNQEAWEQEVRAXc9xWXGpvF7EmbpjFJkyZNm1+65mk2
+      26Tb07RplqZ9TNKkSatJm8QlaqJxQY0xiAsqAgKyigv7euCs8/sDOQEFRIUDON/XdXl5ljkz
+      3znAfGbumblvjaIoCkIIIVRH29cFCCGE6BsSAEIIoVISAEIIoVISAEIIoVISAEIIoVISAEII
+      oVISAEIIoVISAEIIoVISAEIIoVISAEIIoVISAEIIoVISAEIIoVISAEIIoVISAEIIoVL6vi5A
+      iKtlszs4mHnW9Txh1BC8PQ19WFHfuf5H/6Wm3gLAgsmRPP+DuX1cUf/0/Kq9bNlXAICXSc/W
+      v93VxxX1DQkAMeDV1luY8d33XM/T37+fpLghfVhR30k9dpqKmiYAwoK8+7ga96itt+A8P6zJ
+      IG8PdLpLN2zkFFexN/0UAD5eHr1anzs5nAp1DS07ABoN+PuaupxeAkAIMaAl3fkPis7UAnD8
+      owcZExPUxxX1nZKzdUR/828ABAd4UbbjR11OLwEgxDXkme/NwtxsAyAuKrCPq+m/7lgSz9jz
+      QeFh0PVxNX1HAkCIa8iPvjW5r0sYEG6YO5Ib5o7s6zL6nFwFJIQQKiVHAEI18kqqKSitASA6
+      3J+RkQEoisKew6fYtCePnKJqQCEuKpD7bkxgdJsmFKdTIeVAMZ/uPUlucTVarYbRUYGsuCmB
+      UZGDO1zeucpGjuaWARDk78WE0SEAHMsrZ+2OHDLyyrFY7USG+XHnktHMnjCs3ecPZ59jfUoO
+      GScrsNkcRIX7cdfSMcxIHNrpOh7NLeNcZSMAo6MDGRYyqMvvxOFU2HOohC8Ol1Byth6dTkNk
+      2CDmTBjGjMShaLUaCkpryC+tYeHUqIs+n3b8DDX1zQBMHB1KoL+n673K2iZ2phVx6lw940YG
+      s2jaxZ8/XVZPysFijp+soLzaTGOTDU+TgehwPxZMiWRG4lA0Gs1Fn9t3tJQGsxWAZovN9fqX
+      R0opLau/aPoFU4ajb3NyuLSsnsz8CqClrXx8XEiX31N9o5V/bz7O1q8KKCitwW53Ehrkw+zx
+      Edx7wziih/p3+fndB4ux2BwAzBofgZfJgKIopB0/w8Y9J8nKr8BqczA83I/bF41mzsRhXc6v
+      LZvdQcqBYgDOnv/ZA1htDj7/quCi6X29jUxPCAdAoyjnT58LMUBVVJsJTn7F9byzq4Ce/utu
+      fvPmlwD8z/0zmDV+KE+9tpsjOWUXTeth0PHv39zArYviWLszh2f+upvM/MqLpjN66Fjzu5u4
+      OTn2ovc+3JbN7T9bB8B1s2J44QdzefKVFD7/qrDD9fjVI7N59qHZfHXsNE++vJNdB0s6nO43
+      j83llw/M7PC9O3+xjv9szQbg9V8u4ZHbJ3Y4HcCnX5zk8T9uI7e4usP3R0T4c+/143h59QH8
+      fE3kb/z+RdPMXvEv19U0W16/kyUzogF4/7NMvvf8Z66N9A/vnsQrP1/s+tyGlFz+8M5X7DtS
+      SlcboGkJ4az53Y0XbWAT73iLY7nlXXyyvbovfoyv99dX+7y9/ij3r9wMwI3zRrH+L7d2+tm1
+      O3J4+IXPKK82d/i+Qa/lZ9+dxq8fmdPpFUjhS17jTHkDADnrHyavpJpnX9/NgTaXL7f103un
+      8scnkru1blW1TQTOf7lb0wJMjA/l4Or7ADkCECr19w8P87t/7Ov0favNwQO/2syqj9M73WAD
+      WKwOVjy3iQVTIru85O7LI6VMueefOJ2db+6e+9sXpJ8oY93OHLraLXvqtd1cNyuGCaNDO5/o
+      El5dc4DH/7ity+WcPFXDc3//AgC/S1xO2NbqT49zz1OfdDnv1/97iC+PlF5yXqnHTvONRz/g
+      wOr7GORt7HYNPeXdT45x33Ob2q2LQa9Fp9PSbLEDYLM7+e1b+yg+U8e7L1zf4RFLW/c+/Qlf
+      HTvd5TQvvruf5KnDuW7WiKteh65IAAhVqq5rRqvV8I0Z0SxfEMuE0SEoisLqTzN5efUBAOoa
+      rXz+VSF6nYZls0dw4/xRJMUOwe5QeHv9UVZ9lA5AbYOFbamF3LZodKfLqz1/bfa0hHBuWxTH
+      zMSheJoMbN9fyFOv7cZ6vnlg7Y4cAGZPiODWhXFMSwjHaNDx2Zf5PPu3PTgcLVuij7bnXHEA
+      7Nhf1G7j7+9r5NE7JrJkRjShgd40Wx0cP1nOh9tOuOrprvQT53hg5eaLNpiexos3NSajnmWz
+      Yrh+7kimJ4YTFe6PBsgvreGttUd46d9pKArkFlfz2vuH+OUDM1yfXfn92VTXtjQ9/eLlFCpr
+      W+59+PUjcwgP9rloWUaPy7/SJ7ugkode+My1LhNHh/C//28B8yZHotNqyCqo5Pf/2Md7m44D
+      8K/Nx5k9IYKHb5vQ5Xy/OnYajQaSpwzn5uQ4JsaHYPTQkXKgmKde2+0KltWbM7sVAN6eBt58
+      9joAKmqaePKVFAB8vTx46acLL5q+bTOdBIBQpUXTovi/Z5YSc0HTwtRx4WTklbN9fxEA188d
+      yV//ZwmRoe3b0qeNC+NIThmp5/fkis/Wdbm82OGDWf3bG5g0Jqzd6xNGh3C2opE/vbcfgISR
+      wfzrNzeQGNu+CWtifCjFZ+r4v/Ohc6nldUZRFJ548euNf+zwwXz+t7uIDGu/fkmxQ0gYGXxZ
+      AdBssXP3k+tptjow6LU8esdEHr51PHFRgWi17feKH7tzEv/+zY3tNkatxsQE8aefLMTDoOP3
+      b38FwMfbT7QLgFuS41yPn3/jS1cA3LoorsfuA3jm9d1YrC3BPGVsGDvf+Fa7O8zHxATxz+dv
+      ICjAi5f+lQbAs6/v4d4bEjoMvFbfuyWJX9w3nRHDAtq9PnF0KOYmG8+8vgdoCcLuMHroeeDm
+      JAAKT9e6AsBk/Pr1zshVQEKVpowNu2jj32rsiK83IDMSwy/a+ANoNBrXdeQAdruzy+WNiPC/
+      aOPfakyb5Y2ODrxo49/RdJdaXme+PFLK0fNt51qNhv/+7/KLNv5X6tdv7CW7sIqQwV7sfONb
+      /OVni4iPCbpo4w8twdrRxr+t79/+9Z50Rl457jxdWVFjZt3OXNfzN569rsPuRTQa+N0P5zH8
+      /HdYVm1mQ0ruRdO19fPvXrzxbzVpzNdHda0njXuTBIAQF7hUG+7X0/XM8rTdnFF3p+vKttRC
+      1+Nls2M6DZsrcTDzLKFB3ux889vMGh9x1fNrewWTxebA0cX5k562M60Yu6MlZKeMDSOpi+/J
+      6KHnO98c53re0ZU33aXTuneTLE1AQqjIicIq1+N5kyN7dN6+3h589tc7iY/u/h3IjU1WtqUW
+      cTj7HAWlNdSbra5ml4u48XrF4ye/vsJoemL4JadvO83xkxW9UlNvkAAQQkVar9kHCA3s2c7i
+      Xvn54i73lNtqMFt55vU9rProMOZme4/W0RPaXvIZFnTxSeULtZ2ms8tF+yMJACFUpG3zVuvV
+      Jj2lo6tvOtLUbGPhw2vYn3HG9drUcWFMGRtGyGBvDPqvm0H+59VdPVpjd7VtbtJ3o3fRttf/
+      OwfQrVUSAEKoSFCbE6/5pbV9UsNfVh9wbfzjhg9mze9vct0lfaFfvrary/sJektAm/seKmou
+      vUffdppLdcHcn8hJYCFUpO0lkht357n1yppWrXcqA11u/K9ET61O7PCvu/c4nH3uktOnn/j6
+      bvJRkR1f4dMfSQAIoSKLZ0S5Hh/LK+fvHx7udNreaps/eaql6wmjQcf4Hhi4p+1NXrUNzV1M
+      2X1zJ33dF0/KgWJX/0odURSF/2zJcj2fN6lnT65fjrZdW9c3Wi555ZQEgBAqMiEuhJlJX3cm
+      94PfbeVnL+2g5PyNZU6nQvqJczz+v5+z8OE1vVKDx/k2fovNwbmqzptXtu4r6NYe/ZDBXq7H
+      21KLrro+gBERAa7vyWZ38tOXdnR6tPTvzcfZf7ylScvkoeP2xZ3fEd7bAv1M6HUt53marQ5X
+      P02dkQAQQkU0Gg1/++U38DK1nP5TlJZ+ZyKvex2fmX/Cc/qLTLjrbV5Zc5DGJtsl5nZl4ts0
+      Qz3x4jZXNxjwda+rSx/9gG88+kG35jezTe+ov3trH2+tO0LT+RPcTkXhSE5Zl30wdWbl92e7
+      Hv9r03Ee/d1W6s93btda69vrj/Lgrz91vfaDuyYRHOBFXzF66JkY//XNZPc9s5EdaUU4nC33
+      NFisjnaXqcpJYCFUJjF2CJtfvYM7frGOsjZ74G03+NMTwnnsrknc89QnPb78FTcm8sXhlj3T
+      9z/LYteBEqYlhON0Okk7fpYzFS29ZiaOCnbdtdyV7906npdXH8Bic9BstfPgrz7l+y9sYfAg
+      E/VmK00WO9a0n6HVXl5/QIunR/OjuyfzypqWvqH+/t/DvLcxgxmJQzF66DicfY7T53v4hJZu
+      PX79yJzLWkZv+OFdk/jO0xsBKDhdy8KH1uBp1OPr7UFVbTNTx4Wx953vABIAQqjSvMmRnFj3
+      EG+tO8rn+wooOluHQa8lYWQwd183hm/OHkFGXve7W74c992YwGdfnuS/n58A4ExFA+t2ft3n
+      kEGv5YlvT+FXj8zBa8aLl2wGGjksgDdXLuOBlZuw2lr2dO0OJ2U9cD3+Sz9diNFDx4vvpqIo
+      LSHZ9m7qVgumRPKfPyzHy3RxdxHu9u1lY9l39DSv/+eQ67Umi911VNSWBIAY8LxMBp57+OvD
+      9ZBObnBKbjMoyJwJnXdVsHRmjOtSvjkTOh+Y48Z5o4g4311BR10fjIkJctXV1ZUh4+OGuKZr
+      2w/RhaaOC3NNlzAyuMNpbls0mvjolnlM7qTvoVb+viZ+8p2p/OQ7Uzt8v+1JYFMnvWnef1Oi
+      a6CXERFdD4rSSqvVsOb3y0meks6b645w/GQFdruD6KH+XDdrBI/dNdE1yM5zD892BUBHfQq1
+      umfZWCaNDuGv/2npZrqsqhGtRsPQEF+mJwxFe0EXC+PjQlzfZVxUxwP6tC7zf//fAu5YPJqX
+      Vx/g89RC1wlhb08DM5OG8sDyJG5fPLrL+n7ynanUN7Y0Hw326/wy0RER/q66untfxYU0Gg1/
+      /Z8l3DR/FO9sOEb6iXPU1DdjMuqJGerP7Uu+PkchA8IIITr05tojfO98+/bi6VFs/dtdvbKc
+      li2Q0u0+mPpaY5MNu8OJr7dHj/TP1JfkCEAIlWkwW/Hx8uhymsYmG38538UxdHyE01NatqED
+      Z0PaUa+gA5VcBSSEysz47rt879efsnVfAebm9lf6KIrCvqOlLHx4DcfPj5nrYdBx3w0JfVGq
+      6GVyBCCEypib7by59ghvrj2CTqsheqgfg/08URQoKK2hoqap3fS//eE8hof79VG1ojdJAAih
+      MsPDBpF/qmW0KYdTIa+kBkouHn3K06jndz+ax4/unuLuEoWbyElgIVRGUSAzv5yt+wpJzThN
+      XnE11fXNWK0OfL09GDEsgHmThnHPsrGEdqMrZDFwSQAIIYRKyUlgIYRQKQkAIYRQKQkAIYRQ
+      KQkAIYRQKQkAIYRQqcsKALlgSAghrh1dBsBrr73Gq6++CkBmZiYvvvgi69atc0thQqjVJ598
+      wnPPPQfAgQMHePjhh/u4InGt6vROYIfDQVlZGTabrWWghrSWjqGOHTvGTTfdxCuvvEJFRQXf
+      /va3ycjIIC8vj5kzZzJ37ly3FS/Etaimpoaqqirq6urYt28f3t7eWCwWXn75Zex2O4899hj/
+      +c9/qKioYNmyZSQmJvZ1yWKA6vQI4MiRI/j6+jJo0CCOHj1KXl4eP/7xjzGbzeTm5uLt7c0v
+      f/lL1qxZw7Fjx4iJiSEhQTqMEqInzJ49m71792Kz2TAajXz55ZcoioKfnx8pKSlkZGQwZswY
+      RowY0deligGs0wBISUlh2LBhREZGsmvXLgB0Oh06nQ4vLy8qKyuprq7GaDRy7733MmzYMF5/
+      /XW3FS7EtSwpKYkNGzYQGxsLgJeXFzabjVmzZjF69GgeffRRAD74oHvj5grREd3KlStXdvRG
+      fX09N910E4mJidTU1DBq1Ciio6OBll/O+vp6du/ezYoVKzh27BiHDx/mlltuITAw0J31C3HN
+      0Wg0hIaG4uvry+zZszGZTMyePZvy8nKysrJITExk//79lJSUsHz5cnx9ffu6ZDFASV9AQgih
+      UnIfgBBCqJQEgBBCqNQlA+DkyZOsX7+eiooKnE4nn376KdnZ2QA4nU7S09OBlpvE9u/fz+bN
+      m7Fara73HQ5Ht+YNLSeeDx06BEBpaSkbNmygpKSEpqYmtm7dytatW7Hb7Ve3xkIMEIWFhRQV
+      FQG4/i5a/xeiJ3QZAA6Hg5MnTzJnzhzWrl3LunXriI+PZ+/evdTX17N+/Xq2bdsGQHFxMSaT
+      iXHjxrF+/XoA0tLS2LJlC7W1tVgsFjIyMlzhcOG89+zZg4+PD0VFRRQWFpKZmcmcOXPYuHEj
+      DQ0NJCYmEhMTw+bNm3v5KxGif9izZw8pKSkA5OTktPtfiJ7QZQDodDqWLFnCwYMHiYqKoqmp
+      iaioKKZNm0Z+fj4333wzQ4cOBWD48OGMGTOG7du3M378eAAaGhqoqanBbDbzzjvvoCgK//zn
+      Pzucd3FxMZMnT2bu3LlkZWWxePFicnNzCQ4OJjg4mKNHj/Lxxx8zffr0Xv5KhOh7FosFg8GA
+      Xq/HZrNd+gNCXIFLNgG9++67BAYGsnjxYldzjtlsxmg0tpvOarXy8ssvc9111zFq1CgAIiMj
+      iY2NJSwsDF9fXxISEvDx8elw3hqNBrvd7pr3hg0baGho4LbbbgNg/vz5JCcnu+5IFuJatm/f
+      PqqqqqiqqiI1NbWvyxHXqC4Hha+vr+fQoUMYjUZqa2sZN24c77zzDlVVVTz++ON88sknHDly
+      BE9PTwICAnA6nezatYuxY8cybtw4AgMD+eSTTxg0aBBWq5VNmza59mYunPesWbNYtWoVFouF
+      Bx98kKeffpqZM2eyceNGhg8fTnZ2Nna7nfDwcLd8MUL0pcLCQh599FEUReHtt9/Gy8urr0sS
+      16DLvg/AbDZjMpnQart3AZHFYnHdQdzQ0ICPjw8ajabLafX6i3OpubkZjUZz0ZGHEEKIKyM3
+      ggkhhErJfQBCCKFSEgBCCKFSEgBCCKFSEgBCCKFSEgBCCKFSEgBCCKFSEgBCCKFSEgBCCKFS
+      EgBCCKFSEgBCCKFSEgBCCKFSEgBCCKFSEgBCCKFSEgBCCKFSEgBCCKFSEgBCCKFSEgBCCKFS
+      EgBCCKFSEgBCuEm92cq5ysa+LgMAc7ONMxUNyIiw6iYBIEQbTkXh27/cwM9e2uF6bfWnx7n+
+      R/+lqrbpqub95/f2E7d81SWn+9emDK77wX/a/fvFyzuvatkXWvNpJuGLX6PJYu/R+YqBRQJA
+      iDa0Gg2T4kN58d39pGacpsli5+cv7SRksDeD/TwBqKproqyq/Z68U1GoqDFjszs7nK/zMva0
+      PQw6Bvl4kFVQwZ7DJQzy8cDHy6PdNIqiuPbeO6qndZqa+uaL9vKtNke3axHXNgkAIS7wgzsn
+      ERPhz1Ov7mLVR4epqm/mV4/MAeCp13YRNP9lQha+yiO/2QLAx9tPEDDnJYIXvELA3JdYuyMH
+      gKn3/JPvv/AZcx/4N9956hPX/OsaLQTNf5knX0kB4I//TGVI8is0n98bv2NJPB/8YTlzJg5j
+      yGBvPvjDcp753izW7czBZ+afeP0/h/CZ+Sdyi6s7rOcnf9pO5HV/Zfyd/yBg7l9Y8sgHABSe
+      rmXi3W9jnPpHfvZSzx5RiIFJAkCICxg9dPz+R/PZvr+Ip17bzRPfnkJEiC9Hc8v47Vv7eO+F
+      G1j751v4+4eHOZx9jkB/T95auYz0D+5ndFQgf/l3GgBNzTb++ckxCk/XMm9SpGv+g7yNLJkZ
+      zb82HcfpVPho+wkWTYvCZNR3WZfd4aSxycZP/7yDBVOGU3K2rsN6LDYH9Y02fnj3ZL513Ri2
+      pRZitTl46rVdFJ2p5eM/3cI914/t1e9QDAwSAEJ04LZFcUweE4pep+Xn900H4HD2OQDW7shh
+      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
+    </thumbnail>
+  </thumbnails>
+</workbook>
