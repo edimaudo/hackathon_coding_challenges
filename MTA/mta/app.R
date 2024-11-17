@@ -46,3 +46,51 @@ for (package in packages) {
 ################
 # Data
 ################
+
+################
+# UI
+################
+ui <- dashboardPage(
+  dashboardHeader(
+    title = "MTA Insights",
+    tags$li(a(href = 'https://new.mta.info/',
+              img(src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/MTA_NYC_logo.svg/1200px-MTA_NYC_logo.svg.png',
+                  title = "Home", height = "30px"),
+              style = "padding-top:10px; padding-bottom:10px;"),
+            class = "dropdown")
+  ),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("Overview", tabName = "overview", icon = icon("house")),
+      menuItem("Performance", tabName = "performance", icon = icon("book")),
+      menuItem("Customer Insights", tabName = "customer", icon = icon("book")),
+      menuItem("Ridership", tabName = "ridership", icon = icon("book")),
+      menuItem("About", tabName = "about", icon = icon("th"))
+    )
+  ),
+  dashboardBody(
+    
+    tabItems(
+       
+      #===About====
+      tabItem(tabName = "about",shiny::includeMarkdown("about.md"),hr())#,
+      #===Overview====
+      
+      #tabItem(tabName = "overview",
+      #        fluidRow(
+      #          valueBoxOutput("libraryBox"),
+                
+      #        )
+              
+            
+      )
+    )
+  )
+
+
+################
+# Server
+################
+server <- function(input, output, session) {
+  
+}
