@@ -46,6 +46,14 @@ for (package in packages) {
 ################
 # Data
 ################
+mta_daily_ridership <- read.csv("MTA_Daily_Ridership.csv")
+mta_monthly_ridership <- read.csv("MTA_Monthly_Ridership.csv")
+mta_kpi <- read.csv("MTA_Key_Performance_Indicators.csv")
+mta_service_reliability <- read.csv("MTA_LIRR_Service_Reliability.csv")
+mta_customer_feedback <- read.csv("MTA_Customer_Feedback.csv")
+mat_customer_engagement <- read.csv("MTA_NYCT_Customer_Engagement_Statistics.csv")
+mta_customer_feedback_kpi <- read.csv("MTA_NYCT_Customer_Feedback_Performance_Metrics.csv")
+mta_subway_stations <- read.csv("MTA_Subway_Stations.csv")
 
 ################
 # UI
