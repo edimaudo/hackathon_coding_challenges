@@ -73,19 +73,20 @@ ui <- dashboardPage(
     tabItems(
        
       #===About====
-      tabItem(tabName = "about",shiny::includeMarkdown("about.md"),hr())#,
+      tabItem(tabName = "about",shiny::includeMarkdown("about.md"),hr()),
       #===Overview====
       
-      #tabItem(tabName = "overview",
-      #        fluidRow(
-      #          valueBoxOutput("libraryBox"),
-                
-      #        )
-              
-            
+      tabItem(tabName = "overview",
+              fluidRow(
+                #valueBoxOutput("libraryBox"),
+                #valueBoxOutput("libraryBox"),
+                #valueBoxOutput("libraryBox"),
+                #valueBoxOutput("libraryBox"),
+              )
       )
     )
   )
+ )
 
 
 ################
