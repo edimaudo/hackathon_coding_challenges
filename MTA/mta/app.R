@@ -27,7 +27,6 @@
 
 # remove when publihsing
 packages <- c(
-
   'ggplot2','tidyverse',
   'shiny',
   'shinydashboard','DT',
@@ -54,6 +53,7 @@ mta_customer_feedback <- read.csv("MTA_Customer_Feedback.csv")
 mat_customer_engagement <- read.csv("MTA_NYCT_Customer_Engagement_Statistics.csv")
 mta_customer_feedback_kpi <- read.csv("MTA_NYCT_Customer_Feedback_Performance_Metrics.csv")
 mta_subway_stations <- read.csv("MTA_Subway_Stations.csv")
+mta_colors <- read.csv("MTA_Colors.csv")
 
 ################
 # UI
@@ -79,22 +79,25 @@ ui <- dashboardPage(
   dashboardBody(
     
     tabItems(
-       
+      
       #===About====
       tabItem(tabName = "about",shiny::includeMarkdown("about.md"),hr()),
       #===Overview====
       
       tabItem(tabName = "overview",
               fluidRow(
-                #valueBoxOutput("libraryBox"),
-                #valueBoxOutput("libraryBox"),
-                #valueBoxOutput("libraryBox"),
-                #valueBoxOutput("libraryBox"),
+                valueBoxOutput("operatorBox"),
+                valueBoxOutput("lineBox"),
+                valueBoxOutput("stationBox")
+              ),
+              fluidRow(
+                #  - Subway stations map
               )
+              
       )
     )
   )
- )
+)
 
 
 ################
@@ -102,4 +105,37 @@ ui <- dashboardPage(
 ################
 server <- function(input, output, session) {
   
+  output$operatorBox <- renderValueBox({
+    valueBox(
+      value = tags$p("# of Operators", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(unique(mta_colors$Operator)), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+  
+  output$lineBox <- renderValueBox({
+    valueBox(
+      value = tags$p("# of Lines", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(unique(mta_subway_stations$Line)), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+  
+  output$stationBox <- renderValueBox({
+    valueBox(
+      value = tags$p("# of Stations", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(unique(mta_subway_stations$`Stop Name`)), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+  
+  
+  
 }
+
+
+# Run the application 
+shinyApp(ui = ui, server = server)
