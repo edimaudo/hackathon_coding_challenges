@@ -83,7 +83,6 @@ ui <- dashboardPage(
       #===About====
       tabItem(tabName = "about",shiny::includeMarkdown("about.md"),hr()),
       #===Overview====
-      
       tabItem(tabName = "overview",
               fluidRow(
                 valueBoxOutput("operatorBox"),
@@ -108,7 +107,8 @@ server <- function(input, output, session) {
   output$operatorBox <- renderValueBox({
     valueBox(
       value = tags$p("# of Operators", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(unique(mta_colors$Operator)), style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(mta_colors$Operator))), 
+                        style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
@@ -117,7 +117,8 @@ server <- function(input, output, session) {
   output$lineBox <- renderValueBox({
     valueBox(
       value = tags$p("# of Lines", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(unique(mta_subway_stations$Line)), style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(mta_subway_stations$Line))), 
+                        style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
@@ -126,7 +127,8 @@ server <- function(input, output, session) {
   output$stationBox <- renderValueBox({
     valueBox(
       value = tags$p("# of Stations", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(unique(mta_subway_stations$`Stop Name`)), style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(unique(mta_subway_stations$`Stop Name`))), 
+                        style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
