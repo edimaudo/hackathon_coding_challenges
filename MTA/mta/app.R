@@ -24,6 +24,7 @@
 # library(htmltools)
 # library(markdown)
 # library(scales)
+# library(leaflet)
 
 # remove when publihsing
 packages <- c(
@@ -32,9 +33,9 @@ packages <- c(
   'shinydashboard','DT',
   'lubridate','plotly','RColorBrewer','scales','stopwords',
   'tidytext','stringr','wordcloud','wordcloud2',
-  'SnowballC','textmineR','topicmodels','textclean','tm'
+  'SnowballC','textmineR','topicmodels','textclean','tm','leaflet'
 )
-for (package in packages) {
+for (package in packages) { 
   if (!require(package, character.only = T, quietly = T)) {
     install.packages(package)
     library(package, character.only = T)
