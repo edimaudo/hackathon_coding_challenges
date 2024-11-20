@@ -48,7 +48,6 @@ for (package in packages) {
 ################
 mta_daily_ridership <- read.csv("MTA_Daily_Ridership.csv")
 mta_monthly_ridership <- read.csv("MTA_Monthly_Ridership.csv")
-mta_kpi <- read.csv("MTA_Key_Performance_Indicators.csv")
 mta_service_reliability <- read.csv("MTA_LIRR_Service_Reliability.csv")
 mta_customer_feedback <- read.csv("MTA_Customer_Feedback.csv")
 mat_customer_engagement <- read.csv("MTA_NYCT_Customer_Engagement_Statistics.csv")
@@ -56,10 +55,15 @@ mta_customer_feedback_kpi <- read.csv("MTA_NYCT_Customer_Feedback_Performance_Me
 mta_subway_stations <- read.csv("MTA_Subway_Stations.csv")
 mta_colors <- read.csv("MTA_Colors.csv")
 
+year <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
+month <- c("January",'February','March','April','May','June','July','August','September','October','November','December')
+
+
 ################
 # UI
 ################
 ui <- dashboardPage(
+  #===Headers=======
   dashboardHeader(
     title = "MTA Insights",
     tags$li(a(href = 'https://new.mta.info/',
@@ -68,6 +72,7 @@ ui <- dashboardPage(
               style = "padding-top:10px; padding-bottom:10px;"),
             class = "dropdown")
   ),
+  #===Sidebars=======
   dashboardSidebar(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("house")),
@@ -81,7 +86,7 @@ ui <- dashboardPage(
     
     tabItems(
       
-      #===About====
+      #===About=======
       tabItem(tabName = "about",shiny::includeMarkdown("about.md"),hr()),
       #===Overview====
       tabItem(tabName = "overview",
@@ -93,7 +98,36 @@ ui <- dashboardPage(
               fluidRow(
                 #  - Subway stations map
               )
-              
+      ),
+      #===Performance====
+      tabItem(tabName = "performance",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                             selectInput("yearPerformanceInput", 
+                                         label = "Year",
+                                         choices = year),
+                             selectInput("monthPerformanceInput", 
+                                         label = "Month",
+                                         choices =month)
+                ),
+                
+                mainPanel (
+                  
+                  tabsetPanel(
+                    tabPanel("Service Reliability",
+                             fluidRow(
+                               #plotlyOutput("eventFlowPlot")
+                             ),
+                    ),
+                    tabPanel("Customer Feedback Metrics",
+                             fluidRow(
+                               h3("Sentiment Analysis",style="text-align: center;text-style:bold")#,
+                               #plotlyOutput("sentimentPlot"),
+                             )
+                    )
+                  )
+                )
+            )
       )
     )
   )
