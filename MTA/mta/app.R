@@ -58,6 +58,9 @@ mta_colors <- read.csv("MTA_Colors.csv")
 year_data <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
 month_data <- c("January",'February','March','April','May','June','July','August','September','October','November','December')
 
+mta_service_reliability$Year <- lubridate::year(mta_service_reliability$Month)
+mta_service_reliability$Month <- lubridate::month(mta_service_reliability$Month,label = TRUE,abbr = FALSE)
+
 
 ################
 # UI
@@ -121,13 +124,16 @@ ui <- dashboardPage(
                     ),
                     tabPanel("Customer Feedback Metrics",
                              fluidRow(
-                               h3("Sentiment Analysis",style="text-align: center;text-style:bold")#,
+                               
                                #plotlyOutput("sentimentPlot"),
                              )
                     )
                   )
                 )
             )
+      #=====Customer Insights=====
+      
+      #=====Ridership======
       )
     )
   )
