@@ -55,8 +55,8 @@ mta_customer_feedback_kpi <- read.csv("MTA_NYCT_Customer_Feedback_Performance_Me
 mta_subway_stations <- read.csv("MTA_Subway_Stations.csv")
 mta_colors <- read.csv("MTA_Colors.csv")
 
-year <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
-month <- c("January",'February','March','April','May','June','July','August','September','October','November','December')
+year_data <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
+month_data <- c("January",'February','March','April','May','June','July','August','September','October','November','December')
 
 
 ################
@@ -103,12 +103,12 @@ ui <- dashboardPage(
       tabItem(tabName = "performance",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                             selectInput("yearPerformanceInput", 
-                                         label = "Year",
-                                         choices = year),
+                             sliderInput("yearPerformanceInput", "Year",
+                                         min = min(year_data), max =  max(year_data),
+                                         value = c(min(year_data),max(year_data))),
                              selectInput("monthPerformanceInput", 
                                          label = "Month",
-                                         choices =month)
+                                         choices = month_data)
                 ),
                 
                 mainPanel (
@@ -162,7 +162,7 @@ server <- function(input, output, session) {
   output$stationBox <- renderValueBox({
     valueBox(
       value = tags$p("# of Stations", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(unique(mta_subway_stations$`Stop Name`))), 
+      subtitle = tags$p(paste0(length(unique(mta_subway_stations$Stop.Name))), 
                         style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
