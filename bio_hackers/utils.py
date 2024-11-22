@@ -18,6 +18,7 @@ OVERVIEW_HEADER = 'OVERIEW'
 PREDICTION_NAME_HEADER = 'WINE QUALITY PREDICTION'
 WINE_EXPLORATION_HEADER = 'WINE QUALITY EXPLORATION'
 APP_FILTERS = 'FILTERS'
+ABOUT_APP_TEXT = "The app analyzes red and white wine samples to provide insights into quality.  The two datasets are related to red and white variants of the Portuguese "Vinho Verde" wine"
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 st.set_page_config( 
