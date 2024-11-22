@@ -1,5 +1,5 @@
 import streamlit as st
-import utils.*
+from utils import *
 
 st.title(APP_NAME)
 st.write(ABOUT_APP_TEXT)
