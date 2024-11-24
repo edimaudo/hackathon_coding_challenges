@@ -10,6 +10,12 @@ import pickle
 from pycaret.classification import *
 from pycaret.regression import *
 import datetime
+from sklearn import preprocessing
+from sklearn.metrics import accuracy_score
+from sklearn import model_selection
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler, OneHotEncoder
 
 # Dashboard text
 APP_NAME = 'WINE QUALITY INSIGHTS'
