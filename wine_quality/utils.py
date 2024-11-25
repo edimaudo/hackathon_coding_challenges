@@ -1,5 +1,6 @@
 # Libraries
 import streamlit as st
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import datetime
@@ -16,6 +17,7 @@ from sklearn import model_selection
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler, OneHotEncoder
+from sklearn.cluster import KMeans
 
 # Dashboard text
 APP_NAME = 'WINE QUALITY INSIGHTS'
