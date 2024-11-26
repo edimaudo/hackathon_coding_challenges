@@ -1,7 +1,7 @@
 from utils import * 
 st.title(APP_NAME)
 
-st.subheader(PREDICTION_NAME_HEADER)
+st.header(PREDICTION_NAME_HEADER)
 
 columns_data = ['fixed acidity',	
 'volatile acidity',	
