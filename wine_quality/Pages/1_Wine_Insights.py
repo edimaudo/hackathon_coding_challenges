@@ -15,3 +15,13 @@ with st.expander(" "):
 
 st.subheader("**Data Visualization**")
 
+
+
+#- fixed acidity vs volatile acidity
+#- free sulfur dioxide vs total sulfur dioxide
+#- sulphates vs chlorides
+#- density vs pH	
+
+wine_df = df[['fixed acidity','volatile acidity']]
+
+
