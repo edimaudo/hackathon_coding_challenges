@@ -119,8 +119,20 @@ ui <- dashboardPage(
                   tabsetPanel(
                     tabPanel("Service Reliability",
                              fluidRow(
-                               #plotlyOutput("eventFlowPlot")
-                             ),
+                               h3("Branch Trends",style="text-align: center;text-style:bold"),
+                               fluidRow(
+                                 radioButtons( 
+                                   inputId = "serviceReliabilityTrend", 
+                                   label = "", 
+                                   choices = list( 
+                                     "Major Incidents" = 1, 
+                                     "No of Short Trains" = 2
+                                   ) ,
+                                   inline=T
+                                 ),
+                                 plotlyOutput("serviceReliabilityTrendPlot")
+                               )
+                             )
                     ),
                     tabPanel("Customer Feedback Metrics",
                              fluidRow(
@@ -175,6 +187,9 @@ server <- function(input, output, session) {
     )
   })
   
+  output$serviceReliabilityTrendPlot <- renderPlotly({
+    
+  })
   
   
 }
