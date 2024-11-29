@@ -59,7 +59,7 @@ year_data <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
 month_data <- c("January",'February','March','April','May','June','July','August','September','October','November','December')
 
 mta_service_reliability$Year <- lubridate::year(mta_service_reliability$Month)
-mta_service_reliability$Month <- lubridate::month(mta_service_reliability$Month,label = TRUE,abbr = FALSE)
+mta_service_reliability$MonthName <- lubridate::month(mta_service_reliability$Month,label = TRUE,abbr = FALSE)
 
 
 ################
@@ -109,8 +109,9 @@ ui <- dashboardPage(
                              sliderInput("yearPerformanceInput", "Year",
                                          min = min(year_data), max =  max(year_data),
                                          value = c(min(year_data),max(year_data))),
-                             selectInput("monthPerformanceInput", 
-                                         label = "Month",choices = month_data)
+                             multiInput("monthPerformanceInput", 
+                                         label = "Month",choices = month_data, 
+                                        selected = month_data, width = "250px")
                 ),
                 
                 mainPanel (
@@ -120,7 +121,7 @@ ui <- dashboardPage(
                                h3("Branch Trends",style="text-align: center;text-style:bold"),
                                fluidRow(
                                  radioButtons( 
-                                   inputId = "serviceReliabilityTrend", 
+                                   inputId = "serviceReliabilityInput", 
                                    label = "", 
                                    choices = list( 
                                      "Major Incidents" = 1, 
@@ -154,7 +155,7 @@ ui <- dashboardPage(
 # Server
 ################
 server <- function(input, output, session) {
-  
+  #===Overview====
   output$operatorBox <- renderValueBox({
     valueBox(
       value = tags$p("# of Operators", style = "font-size: 100%;"),
@@ -186,33 +187,37 @@ server <- function(input, output, session) {
   })
   
   #===Performance====
+  mta_service_reliability_df  <- reactive({
+    mta_service_reliability %>%
+      filter(Year==input$yearPerformanceInput, MonthName %in% input$monthPerformanceInput) %>%
+      select(Year, MajorIncidents,NoofShortTrains)
+      
+  }) 
+  
+  
   output$serviceReliabilityTrendPlot <- renderPlotly({
     
-    if (input$radioBranchTrend == 1) {
-      #- tpl-card-registrations-annual-by-branch-2012-2022
-      tpl_trend <- tpl_branch_card_registration %>%
-        filter(BranchCode == tpl_branch_code(input$branchInput)[,1]) %>%
+    if (input$serviceReliabilityInput == 1) {
+      service_trend <- mta_service_reliability_df  %>%
         group_by(Year)%>%
-        summarise(Total = sum(Registrations)) %>%
+        summarise(Total = sum(MajorIncidents)) %>%
         select(Year, Total)
-    } else if (input$radioBranchTrend == 2){
-      #- tpl-circulation-annual-by-branch-2012-2022
-      tpl_trend <- tpl_branch_circulation%>%
-        filter(BranchCode == tpl_branch_code(input$branchInput)[,1]) %>%
+    } else if (input$serviceReliabilityInput == 2){
+      service_trend <- mta_service_reliability_df  %>%
         group_by(Year)%>%
-        summarise(Total = sum(Circulation)) %>%
+        summarise(Total = sum(NoofShortTrains)) %>%
         select(Year, Total)
     }
-    
-    g <- ggplot(tpl_trend, aes(x = Year, y = Total))  +
-      geom_bar(stat = "identity",width = 0.5, fill='#0474ca') + theme_classic() +
+
+    g <- ggplot(service_trend, aes(x = Year, y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='#0039A5') + theme_classic() +
       labs(x ="Year", y = "Total") + scale_x_continuous(breaks = breaks_pretty()) +
       scale_y_continuous(breaks = breaks_pretty(),labels = label_comma()) +
       theme(legend.text = element_text(size = 12),
             legend.title = element_text(size = 12),
             axis.title = element_text(size = 14),
             axis.text = element_text(size = 12))
-    
+
     ggplotly(g)
     
     
