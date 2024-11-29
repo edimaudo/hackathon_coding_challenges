@@ -195,13 +195,10 @@ server <- function(input, output, session) {
       group_by(Year,MonthName) %>%
       summarize(MajorIncidents = sum(MajorIncidents), NoofShortTrains = sum(NoofShortTrains)) %>%
       select(Year,MajorIncidents,NoofShortTrains)
-      
   }) 
   
   
-  
   output$serviceReliabilityTrendPlot <- renderPlotly({
-    
     if (input$serviceReliabilityInput == 1) {
       service_trend <- mta_service_reliability_df()  %>%
         group_by(Year) %>%
