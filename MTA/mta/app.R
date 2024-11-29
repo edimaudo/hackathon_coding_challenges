@@ -25,15 +25,14 @@
 # library(markdown)
 # library(scales)
 # library(leaflet)
-# library(shinyWidgets)
 
-# remove when publihsing
+# remove when publishing
 packages <- c(
-  'ggplot2','tidyverse','plotly',
+  'ggplot2','tidyverse','plotly','leaflet',
   'shiny','shinyWidgets','shinydashboard',
   'DT','lubridate','RColorBrewer','scales','stopwords',
   'tidytext','stringr','wordcloud','wordcloud2',
-  'SnowballC','textmineR','topicmodels','textclean','tm','leaflet'
+  'SnowballC','textmineR','topicmodels','textclean','tm'
 )
 for (package in packages) { 
   if (!require(package, character.only = T, quietly = T)) {
@@ -55,6 +54,7 @@ mta_customer_feedback_kpi <- read.csv("MTA_NYCT_Customer_Feedback_Performance_Me
 mta_subway_stations <- read.csv("MTA_Subway_Stations.csv")
 mta_colors <- read.csv("MTA_Colors.csv")
 
+# Data Updates
 year_data <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
 month_data <- c("January",'February','March','April','May','June','July','August','September','October','November','December')
 
@@ -101,7 +101,9 @@ ui <- dashboardPage(
                 valueBoxOutput("stationBox")
               ),
               fluidRow(
+                h3("MTA Subway Station Map",style="text-align: center;text-style:bold"),
                 #  - Subway stations map
+                leafletOutput("subwayMap", width = 'auto',height="600px")
               )
       ),
       #===Performance====
@@ -194,6 +196,22 @@ server <- function(input, output, session) {
       icon = icon("book"),
       color = "aqua"
     )
+  })
+  
+  output$subwayMap <- renderLeaflet({
+    
+    m <- leaflet() %>%
+        addTiles() %>% 
+        setView(lng=mta_subway_stations$GTFS.Longitude[1],
+                         lat=mta_subway_stations$GTFS.Latitude[1],zoom=15) %>%
+        addMarkers(lng=mta_subway_stations$GTFS.Longitude,
+                   lat = mta_subway_stations$GTFS.Latitude,
+                   popup = mta_subway_stations$Stop.Name)
+      
+    
+    m
+    #subwayMap <- addRectangles(subwayMap,lng1 = ,lat1 = , lng2, lat2 = )
+    
   })
   
   #===Performance====
