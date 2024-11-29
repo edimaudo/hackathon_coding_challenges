@@ -117,9 +117,8 @@ ui <- dashboardPage(
                 
                 mainPanel (
                   tabsetPanel(
+                    h3("Yearly Trends",style="text-align: center;text-style:bold"),
                     tabPanel("Service Reliability",
-                             fluidRow(
-                               h3("Branch Trends",style="text-align: center;text-style:bold"),
                                fluidRow(
                                  radioButtons( 
                                    inputId = "serviceReliabilityInput", 
@@ -132,12 +131,20 @@ ui <- dashboardPage(
                                  ),
                                  plotlyOutput("serviceReliabilityTrendPlot")
                                )
-                             )
+                             
                     ),
                     tabPanel("Customer Feedback Metrics",
                              fluidRow(
-                               
-                               #plotlyOutput("sentimentPlot"),
+                               radioButtons( 
+                                 inputId = "customerPerformanceInput", 
+                                 label = "", 
+                                 choices = list( 
+                                   "Total Complaints" = 1, 
+                                   "Total Commendations" = 2
+                                 ) ,
+                                 inline=T
+                               ),
+                               plotlyOutput("customerPerformanceTrendPlot")
                              )
                     )
                   )
@@ -224,6 +231,8 @@ server <- function(input, output, session) {
     
     
   })
+  
+  customerPerformanceTrendPlot <- renderPlotly({})
   
  
 }
