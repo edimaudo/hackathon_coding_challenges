@@ -256,8 +256,8 @@ server <- function(input, output, session) {
         select(Year, Subject,Total)
     }
     
-    g <- ggplot(df, aes(Year, Total, colour = Subject)) + 
-      geom_line(size=2) + theme_minimal() +
+    g <- ggplot(service_trend, aes(Year, Total, colour = Subject)) + 
+      geom_line(size=1) + theme_minimal() +
       labs(x = "Year", y = "Total", color="Subject") +  scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
