@@ -110,12 +110,10 @@ ui <- dashboardPage(
                                          min = min(year_data), max =  max(year_data),
                                          value = c(min(year_data),max(year_data))),
                              selectInput("monthPerformanceInput", 
-                                         label = "Month",
-                                         choices = month_data)
+                                         label = "Month",choices = month_data)
                 ),
                 
                 mainPanel (
-                  
                   tabsetPanel(
                     tabPanel("Service Reliability",
                              fluidRow(
@@ -187,11 +185,40 @@ server <- function(input, output, session) {
     )
   })
   
+  #===Performance====
   output$serviceReliabilityTrendPlot <- renderPlotly({
+    
+    if (input$radioBranchTrend == 1) {
+      #- tpl-card-registrations-annual-by-branch-2012-2022
+      tpl_trend <- tpl_branch_card_registration %>%
+        filter(BranchCode == tpl_branch_code(input$branchInput)[,1]) %>%
+        group_by(Year)%>%
+        summarise(Total = sum(Registrations)) %>%
+        select(Year, Total)
+    } else if (input$radioBranchTrend == 2){
+      #- tpl-circulation-annual-by-branch-2012-2022
+      tpl_trend <- tpl_branch_circulation%>%
+        filter(BranchCode == tpl_branch_code(input$branchInput)[,1]) %>%
+        group_by(Year)%>%
+        summarise(Total = sum(Circulation)) %>%
+        select(Year, Total)
+    }
+    
+    g <- ggplot(tpl_trend, aes(x = Year, y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='#0474ca') + theme_classic() +
+      labs(x ="Year", y = "Total") + scale_x_continuous(breaks = breaks_pretty()) +
+      scale_y_continuous(breaks = breaks_pretty(),labels = label_comma()) +
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+    
+    ggplotly(g)
+    
     
   })
   
-  
+ 
 }
 
 
