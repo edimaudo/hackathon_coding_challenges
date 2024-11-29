@@ -58,7 +58,7 @@ mta_colors <- read.csv("MTA_Colors.csv")
 year_data <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
 month_data <- c("January",'February','March','April','May','June','July','August','September','October','November','December')
 
-mta_service_reliability$Year <- lubridate::year(mta_service_reliability$Month)
+mta_service_reliability$Year <- lubridate::year(lubridate::mdy(mta_service_reliability$Month))
 mta_service_reliability$MonthName <- lubridate::month(mta_service_reliability$Month,label = TRUE,abbr = FALSE)
 
 
@@ -190,21 +190,25 @@ server <- function(input, output, session) {
   #===Performance====
   mta_service_reliability_df  <- reactive({
     mta_service_reliability %>%
-      filter(Year==input$yearPerformanceInput, MonthName %in% input$monthPerformanceInput) %>%
-      select(Year, MajorIncidents,NoofShortTrains)
+      filter(Year %in% c(input$yearPerformanceInput[1]:input$yearPerformanceInput[2]) , 
+             MonthName %in% c(input$monthPerformanceInput)) %>%
+      group_by(Year,MonthName) %>%
+      summarize(MajorIncidents = sum(MajorIncidents), NoofShortTrains = sum(NoofShortTrains)) %>%
+      select(Year,MajorIncidents,NoofShortTrains)
       
   }) 
+  
   
   
   output$serviceReliabilityTrendPlot <- renderPlotly({
     
     if (input$serviceReliabilityInput == 1) {
-      service_trend <- mta_service_reliability_df  %>%
-        group_by(Year)%>%
+      service_trend <- mta_service_reliability_df()  %>%
+        group_by(Year) %>%
         summarise(Total = sum(MajorIncidents)) %>%
         select(Year, Total)
     } else if (input$serviceReliabilityInput == 2){
-      service_trend <- mta_service_reliability_df  %>%
+      service_trend <- mta_service_reliability_df()  %>%
         group_by(Year)%>%
         summarise(Total = sum(NoofShortTrains)) %>%
         select(Year, Total)
