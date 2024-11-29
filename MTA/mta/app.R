@@ -61,6 +61,8 @@ month_data <- c("January",'February','March','April','May','June','July','August
 mta_service_reliability$Year <- lubridate::year(lubridate::mdy(mta_service_reliability$Month))
 mta_service_reliability$MonthName <- lubridate::month(mta_service_reliability$Month,label = TRUE,abbr = FALSE)
 
+mta_customer_feedback_kpi$Year <- lubridate::year(lubridate::mdy(mta_customer_feedback_kpi$Month))
+mta_customer_feedback_kpi$MonthName <- lubridate::month(lubridate::mdy(mta_customer_feedback_kpi$Month),label = TRUE,abbr = FALSE)
 
 ################
 # UI
@@ -152,7 +154,7 @@ ui <- dashboardPage(
             )
       #=====Customer Insights=====
       
-      #=====Ridership======
+      #=====Ridership=============
       )
     )
   )
@@ -232,7 +234,42 @@ server <- function(input, output, session) {
     
   })
   
-  customerPerformanceTrendPlot <- renderPlotly({})
+  mta_customer_feedback_kpi_df  <- reactive({
+    mta_customer_feedback_kpi %>%
+      filter(Year %in% c(input$yearPerformanceInput[1]:input$yearPerformanceInput[2]) , 
+             MonthName %in% c(input$monthPerformanceInput)) %>%
+      group_by(Year,MonthName, Subject) %>%
+      summarize(Complaints = sum(Total.Complaints), Commendations = sum(Total.Commendations)) %>%
+      select(Year,Subject,Commendations,Complaints)
+  }) 
+  
+  output$customerPerformanceTrendPlot <- renderPlotly({
+    if (input$customerPerformanceInput == 1) {
+      service_trend <-   mta_customer_feedback_kpi_df()  %>%
+        group_by(Year, Subject) %>%
+        summarise(Total = sum(Complaints)) %>%
+        select(Year, Subject, Total)
+    } else if (input$customerPerformanceInput == 2){
+      service_trend <- mta_customer_feedback_kpi_df()  %>%
+        group_by(Year, Subject)%>%
+        summarise(Total = sum(Commendations)) %>%
+        select(Year, Subject,Total)
+    }
+    
+    g <- ggplot(df, aes(Year, Total, colour = Subject)) + 
+      geom_line(size=2) + theme_minimal() +
+      labs(x = "Year", y = "Total", color="Subject") +  scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    
+    ggplotly(g)
+    
+    
+    
+  })
   
  
 }
