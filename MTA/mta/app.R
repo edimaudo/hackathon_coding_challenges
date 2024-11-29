@@ -25,13 +25,13 @@
 # library(markdown)
 # library(scales)
 # library(leaflet)
+# library(shinyWidgets)
 
 # remove when publihsing
 packages <- c(
-  'ggplot2','tidyverse',
-  'shiny',
-  'shinydashboard','DT',
-  'lubridate','plotly','RColorBrewer','scales','stopwords',
+  'ggplot2','tidyverse','plotly',
+  'shiny','shinyWidgets','shinydashboard',
+  'DT','lubridate','RColorBrewer','scales','stopwords',
   'tidytext','stringr','wordcloud','wordcloud2',
   'SnowballC','textmineR','topicmodels','textclean','tm','leaflet'
 )
@@ -109,9 +109,10 @@ ui <- dashboardPage(
                              sliderInput("yearPerformanceInput", "Year",
                                          min = min(year_data), max =  max(year_data),
                                          value = c(min(year_data),max(year_data))),
-                             multiInput("monthPerformanceInput", 
+                             selectInput("monthPerformanceInput", 
                                          label = "Month",choices = month_data, 
-                                        selected = month_data, width = "250px")
+                                         selected = month_data,
+                                         multiple = TRUE, width = "250px")
                 ),
                 
                 mainPanel (
