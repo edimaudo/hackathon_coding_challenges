@@ -200,17 +200,15 @@ server <- function(input, output, session) {
   
   output$subwayMap <- renderLeaflet({
     
-    m <- leaflet() %>%
+    subMap <- leaflet() %>%
         addTiles() %>% 
         setView(lng=mta_subway_stations$GTFS.Longitude[1],
                          lat=mta_subway_stations$GTFS.Latitude[1],zoom=15) %>%
         addMarkers(lng=mta_subway_stations$GTFS.Longitude,
                    lat = mta_subway_stations$GTFS.Latitude,
                    popup = mta_subway_stations$Stop.Name)
-      
-    
-    m
-    #subwayMap <- addRectangles(subwayMap,lng1 = ,lat1 = , lng2, lat2 = )
+   
+    subMap
     
   })
   
