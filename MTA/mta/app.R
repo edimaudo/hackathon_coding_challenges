@@ -63,7 +63,7 @@ mta_service_reliability$MonthName <- lubridate::month(mta_service_reliability$Mo
 mta_customer_feedback_kpi$Year <- lubridate::year(lubridate::mdy(mta_customer_feedback_kpi$Month))
 mta_customer_feedback_kpi$MonthName <- lubridate::month(lubridate::mdy(mta_customer_feedback_kpi$Month),label = TRUE,abbr = FALSE)
 
-aggregate_info <- c("daily",'weekly','monthly')
+aggregate_info <- c(sort(unique(mta_monthly_ridership$Agency)))
 horizon_info <- c(1:50) #default 14
 frequency_info <- c(7, 12, 52, 365)
 difference_info <- c("Yes","No")
@@ -87,9 +87,11 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("house")),
-      menuItem("Performance", tabName = "performance", icon = icon("book")),
-      menuItem("Customer Insights", tabName = "customer", icon = icon("book")),
-      menuItem("Ridership", tabName = "ridership", icon = icon("book")),
+      menuItem("Performance", tabName = "performance", icon = icon("list")),
+      menuItem("Customer Insights", tabName = "customer", icon = icon("list")),
+      menuItem("Ridership Overview", tabName = "ridership_overview", icon = icon("list")),
+      menuSubItem("Riderhsip Analysis", tabName = "ridership_analysis"),
+      menuSubItem("Riderhsip Forecasting", tabName = "riderhsip_forecast"),
       menuItem("About", tabName = "about", icon = icon("th"))
     )
   ),
@@ -163,6 +165,76 @@ ui <- dashboardPage(
       #====Customer Insights=====
       
       #====Ridership=============
+      tabItem(tabName = "ridership_overview",h6(note_info),
+              fluidRow(
+                plotlyOutput("ridershipMonthlyPlot")
+              )
+      ),
+      tabItem(tabName = "riderhsip_analysis",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                             selectInput("aggregateInput", "Aggregate", 
+                                         choices = aggregate_info, selected = aggregate_info,
+                                         multiple = TRUE),
+                             selectInput("frequencyInput", "Frequency", 
+                                         choices = frequency_info, selected = 7),
+                             radioButtons("differenceInput","Difference",
+                                          choices = difference_info, selected = "No"),
+                             numericInput("differenceNumericInput", "Difference Input", 
+                                          1, min = 1, max = 52, step = 0.5),
+                             radioButtons("logInput","Log",
+                                          choices = log_info, selected = "No"),
+                             submitButton("Submit")
+                ),
+                mainPanel(
+                  h1("Analysis",style="text-align: center;"),h6(note_info),
+                  tabsetPanel(type = "tabs",
+                              tabPanel(
+                                h4("Decomposition",
+                                   style="text-align: center;"),
+                                plotlyOutput("decompositionPlot")),
+                              tabPanel(
+                                h4("Multi seasonal Decomposition",
+                                   style="text-align: center;"),
+                                plotlyOutput("multidecompositionPlot")),
+                              tabPanel(
+                                h4("ACF Plot",style="text-align: center;"), 
+                                plotlyOutput("acfPlot")),
+                              tabPanel(
+                                h4("PACF Plot",style="text-align: center;"), 
+                                plotlyOutput("pacfPlot"))
+                  )
+                )
+              )  
+      ),
+      tabItem(tabName = "riderhsip_forecast",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                             selectInput("aggregateInput", "Aggregate",
+                                         choices = aggregate_info, selected = 'daily'),
+                             selectInput("horizonInput", "Horizon",
+                                         choices = horizon_info, selected = 14),
+                             selectInput("frequencyInput", "Frequency",
+                                         choices = frequency_info, selected = 7),
+                             submitButton("Submit")
+                ),
+                mainPanel(
+                  h1("Forecasting",style="text-align: center;"),
+                  tabsetPanel(type = "tabs",
+                              tabPanel(h4("Forecast Visualization",style="text-align: center;"),
+                                       plotOutput("forecastPlot")),
+                              tabPanel(h4("Forecast Results",style="text-align: center;"),
+                                       DT::dataTableOutput("forecastOutput")),
+                              tabPanel(h4("Forecast Metrics",style="text-align: center;"),
+                                       DT::dataTableOutput("accuracyOutput")),
+                              tabPanel(h4("Forecast Prediction",style="text-align: center;"),
+                                       DT::dataTableOutput("predictionOutput"))
+                  )
+                  
+                )
+              )
+              
+      )
       )
     )
   )
