@@ -44,8 +44,7 @@ for (package in packages) {
 
 ################
 # Data
-################
-mta_daily_ridership <- read.csv("MTA_Daily_Ridership.csv")
+################         
 mta_monthly_ridership <- read.csv("MTA_Monthly_Ridership.csv")
 mta_service_reliability <- read.csv("MTA_LIRR_Service_Reliability.csv")
 mta_customer_feedback <- read.csv("MTA_Customer_Feedback.csv")
@@ -64,6 +63,13 @@ mta_service_reliability$MonthName <- lubridate::month(mta_service_reliability$Mo
 mta_customer_feedback_kpi$Year <- lubridate::year(lubridate::mdy(mta_customer_feedback_kpi$Month))
 mta_customer_feedback_kpi$MonthName <- lubridate::month(lubridate::mdy(mta_customer_feedback_kpi$Month),label = TRUE,abbr = FALSE)
 
+aggregate_info <- c("daily",'weekly','monthly')
+horizon_info <- c(1:50) #default 14
+frequency_info <- c(7, 12, 52, 365)
+difference_info <- c("Yes","No")
+log_info <- c("Yes","No")
+model_info <- c('auto-arima','auto-exponential','simple-exponential',
+                'double-exponential','triple-exponential', 'tbat')
 ################
 # UI
 ################
@@ -106,7 +112,7 @@ ui <- dashboardPage(
                 leafletOutput("subwayMap", width = 'auto',height="600px")
               )
       ),
-      #===Performance====
+      #====Performance====
       tabItem(tabName = "performance",
               sidebarLayout(
                 sidebarPanel(width = 3,
@@ -154,9 +160,9 @@ ui <- dashboardPage(
                   )
                 )
             )
-      #=====Customer Insights=====
+      #====Customer Insights=====
       
-      #=====Ridership=============
+      #====Ridership=============
       )
     )
   )
