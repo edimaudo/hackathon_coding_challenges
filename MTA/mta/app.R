@@ -134,7 +134,8 @@ ui <- dashboardPage(
                              selectInput("monthPerformanceInput", 
                                          label = "Month",choices = month_data, 
                                          selected = month_data,
-                                         multiple = TRUE, width = "250px")
+                                         multiple = TRUE, width = "250px"),
+                             submitButton("Submit")
                 ),
                 
                 mainPanel (
@@ -188,6 +189,7 @@ ui <- dashboardPage(
                             label = "Month",choices = month_data, 
                             selected = month_data,
                             multiple = TRUE, width = "250px"),
+                submitButton("Submit"),
                 ),
                 
                 mainPanel (
@@ -215,7 +217,7 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(
-                  h1("Analysis",style="text-align: center;"),h6(note_info),
+                  h1("Analysis",style="text-align: center;"),
                   tabsetPanel(type = "tabs",
                               tabPanel(
                                 h4("Decomposition",
@@ -408,7 +410,13 @@ server <- function(input, output, session) {
   
   output$ridershipMonthlyPlot <- renderPlotly({
     
-    g <- ggplot(mta_monthly_ridership(), aes(Year, Ridership, colour = Agency)) + 
+    ridership_trend <- mta_ridership_df()  %>%
+      group_by(Year, Agency) %>%
+      summarise(Ridership = sum(Ridership)) %>%
+      select(Year, Agency, Ridership)
+    
+    
+    g <- ggplot(ridership_trend, aes(Year, Ridership, colour = Agency)) + 
       geom_line(size=1) + theme_minimal() +
       labs(x = "Year", y = "Ridership", color="Agency") +  scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
@@ -420,6 +428,7 @@ server <- function(input, output, session) {
     ggplotly(g)
     
   })
+  
 }
 
 
