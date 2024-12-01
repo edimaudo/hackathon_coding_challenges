@@ -55,13 +55,20 @@ mta_colors <- read.csv("MTA_Colors.csv")
 
 # Data Updates
 year_data <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
-month_data <- c("January",'February','March','April','May','June','July','August','September','October','November','December')
+month_data <- c("January",'February','March','April','May','June','July','August',
+                'September','October','November','December')
 
 mta_service_reliability$Year <- lubridate::year(lubridate::mdy(mta_service_reliability$Month))
-mta_service_reliability$MonthName <- lubridate::month(mta_service_reliability$Month,label = TRUE,abbr = FALSE)
+mta_service_reliability$MonthName <- lubridate::month(mta_service_reliability$Month,
+                                                      label = TRUE,abbr = FALSE)
 
 mta_customer_feedback_kpi$Year <- lubridate::year(lubridate::mdy(mta_customer_feedback_kpi$Month))
-mta_customer_feedback_kpi$MonthName <- lubridate::month(lubridate::mdy(mta_customer_feedback_kpi$Month),label = TRUE,abbr = FALSE)
+mta_customer_feedback_kpi$MonthName <- lubridate::month(lubridate::mdy(mta_customer_feedback_kpi$Month),
+                                                        label = TRUE,abbr = FALSE)
+
+mta_monthly_ridership$Year <- lubridate::year(lubridate::ymd(mta_monthly_ridership$Month))
+mta_monthly_ridership$MonthName <- lubridate::month(lubridate::ymd(mta_monthly_ridership$Month),
+                                                        label = TRUE,abbr = FALSE)
 
 note_info <- "From 2008 onwards:"
 agency <- c(sort(unique(mta_monthly_ridership$Agency)))
@@ -368,6 +375,10 @@ server <- function(input, output, session) {
   })
   
  
+  #===Riderhship====
+  output$ridershipMonthlyPlot <- renderPlotly({
+    
+  })
 }
 
 
