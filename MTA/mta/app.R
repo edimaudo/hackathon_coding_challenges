@@ -395,8 +395,29 @@ server <- function(input, output, session) {
   })
   
  
-  #===Riderhship====
+  #===Ridership====
+  
+  mta_ridership_df  <- reactive({
+    mta_monthly_ridership %>%
+      filter(Year %in% c(input$yearRidershipInput[1]:input$yearRidershipInput[2]) , 
+             MonthName %in% c(input$monthRidershipInput)) %>%
+      group_by(Year,MonthName,Agency) %>%
+      summarize(Ridership = sum(Ridership)) %>%
+      select(Year,MonthName,Agency, Ridership)
+  })
+  
   output$ridershipMonthlyPlot <- renderPlotly({
+    
+    g <- ggplot(mta_monthly_ridership(), aes(Year, Ridership, colour = Agency)) + 
+      geom_line(size=1) + theme_minimal() +
+      labs(x = "Year", y = "Ridership", color="Agency") +  scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    
+    ggplotly(g)
     
   })
 }
