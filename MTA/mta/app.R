@@ -130,12 +130,8 @@ ui <- dashboardPage(
                                          min = min(mta_monthly_ridership$Year), 
                                          max =  max(mta_monthly_ridership$Year),
                                          value = c(min(mta_monthly_ridership$Year),
-                                                   max(mta_monthly_ridership$Year))),
-                             selectInput("monthPerformanceInput", 
-                                         label = "Month",choices = month_data, 
-                                         selected = month_data,
-                                         multiple = TRUE, width = "250px"),
-                             submitButton("Submit")
+                                                   max(mta_monthly_ridership$Year)))
+                             
                 ),
                 
                 mainPanel (
@@ -184,12 +180,7 @@ ui <- dashboardPage(
                             min = min(mta_monthly_ridership$Year), 
                             max =  max(mta_monthly_ridership$Year),
                             value = c(min(mta_monthly_ridership$Year),
-                                      max(mta_monthly_ridership$Year))),
-                selectInput("monthRidershipInput", 
-                            label = "Month",choices = month_data, 
-                            selected = month_data,
-                            multiple = TRUE, width = "250px"),
-                submitButton("Submit"),
+                                      max(mta_monthly_ridership$Year)))
                 ),
                 
                 mainPanel (
@@ -213,8 +204,7 @@ ui <- dashboardPage(
                              numericInput("differenceNumericInput", "Difference Input", 
                                           1, min = 1, max = 52, step = 0.5),
                              radioButtons("logInput","Log",
-                                          choices = log_info, selected = "No"),
-                             submitButton("Submit")
+                                          choices = log_info, selected = "No")
                 ),
                 mainPanel(
                   h1("Analysis",style="text-align: center;"),
@@ -324,9 +314,8 @@ server <- function(input, output, session) {
   #===Performance====
   mta_service_reliability_df  <- reactive({
     mta_service_reliability %>%
-      filter(Year %in% c(input$yearPerformanceInput[1]:input$yearPerformanceInput[2]) , 
-             MonthName %in% c(input$monthPerformanceInput)) %>%
-      group_by(Year,MonthName) %>%
+      filter(Year %in% c(input$yearPerformanceInput[1]:input$yearPerformanceInput[2])) %>%
+      group_by(Year) %>%
       summarize(MajorIncidents = sum(MajorIncidents), NoofShortTrains = sum(NoofShortTrains)) %>%
       select(Year,MajorIncidents,NoofShortTrains)
   }) 
@@ -401,11 +390,10 @@ server <- function(input, output, session) {
   
   mta_ridership_df  <- reactive({
     mta_monthly_ridership %>%
-      filter(Year %in% c(input$yearRidershipInput[1]:input$yearRidershipInput[2]) , 
-             MonthName %in% c(input$monthRidershipInput)) %>%
-      group_by(Year,MonthName,Agency) %>%
+      filter(Year %in% c(input$yearRidershipInput[1]:input$yearRidershipInput[2])) %>%
+      group_by(Year,Agency) %>%
       summarize(Ridership = sum(Ridership)) %>%
-      select(Year,MonthName,Agency, Ridership)
+      select(Year,Agency, Ridership)
   })
   
   output$ridershipMonthlyPlot <- renderPlotly({
