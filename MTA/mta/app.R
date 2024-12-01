@@ -127,8 +127,10 @@ ui <- dashboardPage(
               sidebarLayout(
                 sidebarPanel(width = 3,
                              sliderInput("yearPerformanceInput", "Year",
-                                         min = min(year_data), max =  max(year_data),
-                                         value = c(min(year_data),max(year_data))),
+                                         min = min(mta_monthly_ridership$Year), 
+                                         max =  max(mta_monthly_ridership$Year),
+                                         value = c(min(mta_monthly_ridership$Year),
+                                                   max(mta_monthly_ridership$Year))),
                              selectInput("monthPerformanceInput", 
                                          label = "Month",choices = month_data, 
                                          selected = month_data,
@@ -170,12 +172,30 @@ ui <- dashboardPage(
                   )
                 )
             )
+      ),
       #====Customer Insights=====
       
       #====Ridership=============
-      tabItem(tabName = "ridership_overview",h6(note_info),
-              fluidRow(
-                plotlyOutput("ridershipMonthlyPlot")
+      tabItem(tabName = "ridership_overview",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                sliderInput("yearRidershipInput", "Year",
+                            min = min(mta_monthly_ridership$Year), 
+                            max =  max(mta_monthly_ridership$Year),
+                            value = c(min(mta_monthly_ridership$Year),
+                                      max(mta_monthly_ridership$Year))),
+                selectInput("monthRidershipInput", 
+                            label = "Month",choices = month_data, 
+                            selected = month_data,
+                            multiple = TRUE, width = "250px"),
+                ),
+                
+                mainPanel (
+                    h3("Yearly Trends",style="text-align: center;text-style:bold"),
+                    fluidRow(
+                                  plotlyOutput("ridershipMonthlyPlot")
+                    )
+                  )
               )
       ),
       tabItem(tabName = "ridership_analysis",
@@ -247,7 +267,7 @@ ui <- dashboardPage(
       )
     )
   )
-)
+
 
 
 ################
