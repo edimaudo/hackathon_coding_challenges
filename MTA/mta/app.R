@@ -127,10 +127,11 @@ ui <- dashboardPage(
               sidebarLayout(
                 sidebarPanel(width = 3,
                              sliderInput("yearPerformanceInput", "Year",
-                                         min = min(mta_monthly_ridership$Year), 
-                                         max =  max(mta_monthly_ridership$Year),
-                                         value = c(min(mta_monthly_ridership$Year),
-                                                   max(mta_monthly_ridership$Year)))
+                                         min = min(mta_service_reliability$Year), 
+                                         max =  max(mta_service_reliability$Year),
+                                         value = c(min(mta_service_reliability$Year),
+                                                   max(mta_service_reliability$Year))), 
+                             submitButton("Submit")
                              
                 ),
                 
@@ -180,7 +181,8 @@ ui <- dashboardPage(
                             min = min(mta_monthly_ridership$Year), 
                             max =  max(mta_monthly_ridership$Year),
                             value = c(min(mta_monthly_ridership$Year),
-                                      max(mta_monthly_ridership$Year)))
+                                      max(mta_monthly_ridership$Year))),
+                submitButton("Submit")
                 ),
                 
                 mainPanel (
@@ -204,7 +206,8 @@ ui <- dashboardPage(
                              numericInput("differenceNumericInput", "Difference Input", 
                                           1, min = 1, max = 52, step = 0.5),
                              radioButtons("logInput","Log",
-                                          choices = log_info, selected = "No")
+                                          choices = log_info, selected = "No"), 
+                             submitButton("Submit")
                 ),
                 mainPanel(
                   h1("Analysis",style="text-align: center;"),
@@ -350,9 +353,8 @@ server <- function(input, output, session) {
   
   mta_customer_feedback_kpi_df  <- reactive({
     mta_customer_feedback_kpi %>%
-      filter(Year %in% c(input$yearPerformanceInput[1]:input$yearPerformanceInput[2]) , 
-             MonthName %in% c(input$monthPerformanceInput)) %>%
-      group_by(Year,MonthName, Subject) %>%
+      filter(Year %in% c(input$yearPerformanceInput[1]:input$yearPerformanceInput[2])) %>%
+      group_by(Year, Subject) %>%
       summarize(Complaints = sum(Total.Complaints), Commendations = sum(Total.Commendations)) %>%
       select(Year,Subject,Commendations,Complaints)
   }) 
