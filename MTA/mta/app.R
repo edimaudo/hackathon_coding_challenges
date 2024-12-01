@@ -63,13 +63,14 @@ mta_service_reliability$MonthName <- lubridate::month(mta_service_reliability$Mo
 mta_customer_feedback_kpi$Year <- lubridate::year(lubridate::mdy(mta_customer_feedback_kpi$Month))
 mta_customer_feedback_kpi$MonthName <- lubridate::month(lubridate::mdy(mta_customer_feedback_kpi$Month),label = TRUE,abbr = FALSE)
 
-aggregate_info <- c(sort(unique(mta_monthly_ridership$Agency)))
+note_info <- "From 2008 onwards:"
+agency <- c(sort(unique(mta_monthly_ridership$Agency)))
 horizon_info <- c(1:50) #default 14
 frequency_info <- c(7, 12, 52, 365)
 difference_info <- c("Yes","No")
 log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
-                'double-exponential','triple-exponential', 'tbat')
+                'double-exponential','triple-exponential', 'tbat', 'lstm')
 ################
 # UI
 ################
@@ -170,11 +171,11 @@ ui <- dashboardPage(
                 plotlyOutput("ridershipMonthlyPlot")
               )
       ),
-      tabItem(tabName = "riderhsip_analysis",
+      tabItem(tabName = "ridership_analysis",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                             selectInput("aggregateInput", "Aggregate", 
-                                         choices = aggregate_info, selected = aggregate_info,
+                             selectInput("agencyInput", "Agency", 
+                                         choices = agency, selected = agency,
                                          multiple = TRUE),
                              selectInput("frequencyInput", "Frequency", 
                                          choices = frequency_info, selected = 7),
@@ -210,8 +211,9 @@ ui <- dashboardPage(
       tabItem(tabName = "riderhsip_forecast",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                             selectInput("aggregateInput", "Aggregate",
-                                         choices = aggregate_info, selected = 'daily'),
+                             selectInput("agencyInput", "Agency", 
+                                         choices = agency, selected = agency,
+                                         multiple = TRUE),
                              selectInput("horizonInput", "Horizon",
                                          choices = horizon_info, selected = 14),
                              selectInput("frequencyInput", "Frequency",
