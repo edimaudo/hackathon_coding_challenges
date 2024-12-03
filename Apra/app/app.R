@@ -331,9 +331,9 @@ ui <- dashboardPage(
                               tabPanel(h4("Forecast Results",style="text-align: center;"),
                                        DT::dataTableOutput("forecastOutput")),
                               tabPanel(h4("Forecast Metrics",style="text-align: center;"),
-                                       DT::dataTableOutput("accuracyOutput")),
-                              tabPanel(h4("Forecast Prediction",style="text-align: center;"),
-                                       DT::dataTableOutput("predictionOutput"))
+                                       DT::dataTableOutput("accuracyOutput"))#,
+                              #tabPanel(h4("Forecast Prediction",style="text-align: center;"),
+                              #         DT::dataTableOutput("predictionOutput"))
                   )
                   
                 )
