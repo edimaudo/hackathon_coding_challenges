@@ -419,6 +419,23 @@ server <- function(input, output, session) {
     
   })
   
+#====Ridership Analysis====
+output$decompositionPlot <- renderPlotly({
+  
+})
+
+output$multidecompositionPlot <- renderPlotly({
+  
+})
+
+output$acfPlot <- renderPlotly({
+  
+})
+
+output$pacfPlot <- renderPlotly({
+  
+})
+  
 }
 
 
