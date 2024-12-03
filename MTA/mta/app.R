@@ -54,7 +54,8 @@ mta_subway_stations <- read.csv("MTA_Subway_Stations.csv")
 mta_colors <- read.csv("MTA_Colors.csv")
 
 # Data Updates
-year_data <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
+#year_data <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
+year_data <- c(2019,2020,2021,2022,2023,2024)
 month_data <- c("January",'February','March','April','May','June','July','August',
                 'September','October','November','December')
 
@@ -70,14 +71,24 @@ mta_monthly_ridership$Year <- lubridate::year(lubridate::ymd(mta_monthly_ridersh
 mta_monthly_ridership$MonthName <- lubridate::month(lubridate::ymd(mta_monthly_ridership$Month),
                                                         label = TRUE,abbr = FALSE)
 
-note_info <- "From 2008 onwards:"
 agency <- c(sort(unique(mta_monthly_ridership$Agency)))
+
+# Forecast info
 horizon_info <- c(1:50) #default 14
 frequency_info <- c(7, 12, 52, 365)
 difference_info <- c("Yes","No")
 log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat', 'lstm')
+
+
+numeric_update <- function(df){
+  rownames(df) <- c()
+  is.num <- sapply(df, is.numeric)
+  df[is.num] <- lapply(df[is.num], round, 0)           
+  return (df)
+}
+
 ################
 # UI
 ################
@@ -96,7 +107,7 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("house")),
       menuItem("Performance", tabName = "performance", icon = icon("list")),
-      menuItem("Customer Insights", tabName = "customer", icon = icon("list")),
+      #menuItem("Customer Insights", tabName = "customer", icon = icon("list")),
       menuItem("Ridership Overview", tabName = "ridership_overview", icon = icon("list")),
       menuSubItem("Riderhsip Analysis", tabName = "ridership_analysis"),
       menuSubItem("Riderhsip Forecasting", tabName = "riderhsip_forecast"),
@@ -178,10 +189,10 @@ ui <- dashboardPage(
               sidebarLayout(
                 sidebarPanel(width = 3,
                 sliderInput("yearRidershipInput", "Year",
-                            min = 2019, 
-                            max =  max(mta_monthly_ridership$Year),
-                            value = c(2019,
-                                      max(mta_monthly_ridership$Year))),
+                            min = min(year_data), 
+                            max =  max(year_data),
+                            value = c(min(year_data),
+                                      max(year_data))),
                 submitButton("Submit")
                 ),
                 
@@ -388,8 +399,9 @@ server <- function(input, output, session) {
   })
   
  
-  #===Ridership====
+  ######Ridership#####
   
+  #====Overview====
   mta_ridership_df  <- reactive({
     mta_monthly_ridership %>%
       filter(Year %in% c(input$yearRidershipInput[1]:input$yearRidershipInput[2])) %>%
