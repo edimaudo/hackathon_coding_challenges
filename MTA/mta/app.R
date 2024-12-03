@@ -178,15 +178,15 @@ ui <- dashboardPage(
               sidebarLayout(
                 sidebarPanel(width = 3,
                 sliderInput("yearRidershipInput", "Year",
-                            min = min(mta_monthly_ridership$Year), 
+                            min = 2019, 
                             max =  max(mta_monthly_ridership$Year),
-                            value = c(min(mta_monthly_ridership$Year),
+                            value = c(2019,
                                       max(mta_monthly_ridership$Year))),
                 submitButton("Submit")
                 ),
                 
                 mainPanel (
-                    h3("Yearly Trends",style="text-align: center;text-style:bold"),
+                    h3("Yearly Trend",style="text-align: center;text-style:bold"),
                     fluidRow(
                                   plotlyOutput("ridershipMonthlyPlot")
                     )
