@@ -280,7 +280,7 @@ ui <- dashboardPage(
 # Server
 ################
 server <- function(input, output, session) {
-  #===Overview====
+  ####Overview####
   output$operatorBox <- renderValueBox({
     valueBox(
       value = tags$p("# of Operators", style = "font-size: 100%;"),
@@ -325,7 +325,7 @@ server <- function(input, output, session) {
     
   })
   
-  #===Performance====
+  ####Performance####
   mta_service_reliability_df  <- reactive({
     mta_service_reliability %>%
       filter(Year %in% c(input$yearPerformanceInput[1]:input$yearPerformanceInput[2])) %>%
@@ -399,9 +399,10 @@ server <- function(input, output, session) {
   })
   
  
+  
   ######Ridership#####
   
-  #====Overview====
+  #==== Ridership Overview====
   mta_ridership_df  <- reactive({
     mta_monthly_ridership %>%
       filter(Year %in% c(input$yearRidershipInput[1]:input$yearRidershipInput[2])) %>%
@@ -431,7 +432,7 @@ server <- function(input, output, session) {
     
   })
   
-#====Ridership Analysis====
+  #====Ridership Analysis====
 output$decompositionPlot <- renderPlotly({
   
 })
