@@ -82,6 +82,32 @@ model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat', 'lstm')
 
 
+forecast_df <- function (ts_df,aggregateInput,frequencyInput,dataType) {
+
+  mta_data <- apply.monthly(ts_df, mean) 
+  mta_end <- floor(0.8*length(mta_data)) 
+  mta_train <- mta_data[1:mta_end,] 
+  mta_test <- mta_data[(mta_end+1):length(mta_data),]
+  mta_start <- c(year (start(mta_train)), month(start(mta_train)))
+  mta_end <- c(year(end(mta_train)), month(end(mta_train)))
+  mta_train <- ts(as.numeric(mta_train), start = mta_start, 
+                  end = mta_end, frequency = as.numeric(frequencyInput) )
+  mta_start <- c(year (start(mta_test)), month(start(mta_test)))
+  mta_end <- c(year(end(mta_test)), month(end(mta_test)))
+  mta_test <- ts(as.numeric(mta_test), start = mta_start, 
+                 end = mta_end, frequency = as.numeric(frequencyInput))
+  
+if (dataType == "train") {
+  output <- mta_train
+} else {
+  output <- mta_test
+}
+output
+  
+  
+}
+
+
 numeric_update <- function(df){
   rownames(df) <- c()
   is.num <- sapply(df, is.numeric)
