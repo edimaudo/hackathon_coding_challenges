@@ -73,7 +73,7 @@ mta_monthly_ridership$MonthName <- lubridate::month(lubridate::ymd(mta_monthly_r
 
 agency <- c(sort(unique(mta_monthly_ridership$Agency)))
 
-# Forecast info
+###====Forecast info=====#
 horizon_info <- c(1:50) #default 14
 frequency_info <- c(7, 12, 52, 365)
 difference_info <- c("Yes","No")
