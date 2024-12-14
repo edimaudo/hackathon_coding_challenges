@@ -48,13 +48,11 @@ for (package in packages) {
 mta_monthly_ridership <- read.csv("MTA_Monthly_Ridership.csv")
 mta_service_reliability <- read.csv("MTA_LIRR_Service_Reliability.csv")
 mta_customer_feedback <- read.csv("MTA_Customer_Feedback.csv")
-mat_customer_engagement <- read.csv("MTA_NYCT_Customer_Engagement_Statistics.csv")
 mta_customer_feedback_kpi <- read.csv("MTA_NYCT_Customer_Feedback_Performance_Metrics.csv")
 mta_subway_stations <- read.csv("MTA_Subway_Stations.csv")
 mta_colors <- read.csv("MTA_Colors.csv")
 
 # Data Updates
-#year_data <- c(2015,2016,2017,2018,2019,2020,2021,2022,2023,2024)
 year_data <- c(2019,2020,2021,2022,2023,2024)
 month_data <- c("January",'February','March','April','May','June','July','August',
                 'September','October','November','December')
@@ -115,7 +113,7 @@ numeric_update <- function(df){
   return (df)
 }
 
-##mta_xts <- xts(x = transaction_f$Total, order.by = transaction_f$GIFT_DATE) 
+##mta_xts <- xts(x = transaction_f$Total, order.by = transaction_f$mta_DATE) 
 ##mta_monthly <- apply.monthly(mta_xts, mean) 
 
 ################
@@ -432,8 +430,6 @@ server <- function(input, output, session) {
   
   ###Customer Feedback####
   
-  ## Customer engagement
-  
   ## Customer feedback
   
   ######Ridership#####
@@ -457,7 +453,8 @@ server <- function(input, output, session) {
     
     g <- ggplot(ridership_trend, aes(Year, Ridership, colour = Agency)) + 
       geom_line(size=1) + theme_minimal() +
-      labs(x = "Year", y = "Ridership", color="Agency") +  scale_y_continuous(labels = comma) +
+      labs(x = "Year", y = "Ridership", color="Agency") + 
+      scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             axis.title = element_text(size = 10),
@@ -512,7 +509,7 @@ output$forecastPlot <- renderPlot({
   
   # set forecast horizon
   forecast.horizon <- as.numeric(input$horizonInput)
-  train <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"train")
+  train <- forecast_df(mta_xts,input$aggregateInput,input$frequencyInput,"train")
   
   # models
   auto_exp_model <- train %>% ets %>% forecast(h=forecast.horizon)
@@ -533,7 +530,7 @@ output$forecastPlot <- renderPlot({
     autolayer(triple_exp_model, series = "triple exponential", alpha=0.25) +
     autolayer(tbat_model, series = "tbat", alpha=0.7) + 
     guides(colour = guide_legend("Models")) + scale_y_continuous(labels = scales::comma) + 
-    labs(x ="Gift Date", y = "Gift Amount", title = "Gift Amt. Forecast") + 
+    labs(x ="mta Date", y = "mta Amount", title = "mta Amt. Forecast") + 
     theme(plot.title = element_text(hjust=0.5))
   
 })
@@ -543,42 +540,42 @@ output$forecastOutput <- DT::renderDataTable({
   
   forecast.horizon <- as.numeric(input$horizonInput)
   
-  train <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"train")
-  test <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"test")
+  train <- forecast_df(mta_xts,input$aggregateInput,input$frequencyInput,"train")
+  test <- forecast_df(mta_xts,input$aggregateInput,input$frequencyInput,"test")
   
   # models
-  gift_train_auto_exp_forecast <- ets(train) %>% 
+  mta_train_auto_exp_forecast <- ets(train) %>% 
     forecast(h=forecast.horizon)    
   
-  gift_train_auto_arima_forecast <- auto.arima(train) %>% 
+  mta_train_auto_arima_forecast <- auto.arima(train) %>% 
     forecast(h=forecast.horizon)             
   
-  gift_train_simple_exp_forecast <- HoltWinters(train,
+  mta_train_simple_exp_forecast <- HoltWinters(train,
                                                 beta=FALSE, 
                                                 gamma=FALSE) %>% 
     forecast(h=forecast.horizon)             
   
-  gift_train_double_exp_forecast <- HoltWinters(train,
+  mta_train_double_exp_forecast <- HoltWinters(train,
                                                 beta=TRUE, 
                                                 gamma=FALSE) %>% 
     forecast(h=forecast.horizon)  
   
-  gift_train_triple_exp_forecast <- HoltWinters(train,
+  mta_train_triple_exp_forecast <- HoltWinters(train,
                                                 beta=TRUE, 
                                                 gamma=TRUE) %>% 
     forecast(h=forecast.horizon)  
   
-  gift_train_tbat_forecast <-  tbats(train) %>% forecast(h=forecast.horizon)
+  mta_train_tbat_forecast <-  tbats(train) %>% forecast(h=forecast.horizon)
   
   
   
   # forecast output
-  auto_exp_forecast <- as.data.frame(gift_train_auto_exp_forecast$mean)
-  auto_arima_forecast <- as.data.frame(gift_train_auto_arima_forecast$mean)
-  simple_exp_forecast <- as.data.frame(gift_train_simple_exp_forecast$mean)
-  double_exp_forecast <- as.data.frame(gift_train_double_exp_forecast$mean)
-  triple_exp_forecast <- as.data.frame(gift_train_triple_exp_forecast$mean)
-  tbat_forecast <- as.data.frame(gift_train_tbat_forecast$mean)
+  auto_exp_forecast <- as.data.frame(mta_train_auto_exp_forecast$mean)
+  auto_arima_forecast <- as.data.frame(mta_train_auto_arima_forecast$mean)
+  simple_exp_forecast <- as.data.frame(mta_train_simple_exp_forecast$mean)
+  double_exp_forecast <- as.data.frame(mta_train_double_exp_forecast$mean)
+  triple_exp_forecast <- as.data.frame(mta_train_triple_exp_forecast$mean)
+  tbat_forecast <- as.data.frame(mta_train_tbat_forecast$mean)
   
   auto_exp_forecast <- numeric_update(auto_exp_forecast)
   auto_arima_forecast <- numeric_update(auto_arima_forecast)
@@ -605,38 +602,38 @@ output$forecastOutput <- DT::renderDataTable({
 output$accuracyOutput <- DT::renderDataTable({
   forecast.horizon <- as.numeric(input$horizonInput)
   
-  train <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"train")
-  test <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"test")
+  train <- forecast_df(mta_xts,input$aggregateInput,input$frequencyInput,"train")
+  test <- forecast_df(mta_xts,input$aggregateInput,input$frequencyInput,"test")
   # models
-  gift_train_auto_exp_forecast <- ets(train) %>% 
+  mta_train_auto_exp_forecast <- ets(train) %>% 
     forecast(h=forecast.horizon)    
   
-  gift_train_auto_arima_forecast <- auto.arima(train) %>% 
+  mta_train_auto_arima_forecast <- auto.arima(train) %>% 
     forecast(h=forecast.horizon)             
   
-  gift_train_simple_exp_forecast <- HoltWinters(train,
+  mta_train_simple_exp_forecast <- HoltWinters(train,
                                                 beta=FALSE, 
                                                 gamma=FALSE) %>% 
     forecast(h=forecast.horizon)             
   
-  gift_train_double_exp_forecast <- HoltWinters(train,
+  mta_train_double_exp_forecast <- HoltWinters(train,
                                                 beta=TRUE, 
                                                 gamma=FALSE) %>% 
     forecast(h=forecast.horizon)  
   
-  gift_train_triple_exp_forecast <- HoltWinters(train,
+  mta_train_triple_exp_forecast <- HoltWinters(train,
                                                 beta=TRUE, 
                                                 gamma=TRUE) %>% 
     forecast(h=forecast.horizon)  
   
-  gift_train_tbat_forecast <-  tbats(train) %>% forecast(h=forecast.horizon)
+  mta_train_tbat_forecast <-  tbats(train) %>% forecast(h=forecast.horizon)
   
-  auto_exp_accuracy <- as.data.frame(accuracy( gift_train_auto_exp_forecast ,test))
-  auto_arima_accuracy <- as.data.frame(accuracy(gift_train_auto_arima_forecast ,test))
-  simple_exp_accuracy <- as.data.frame(accuracy(gift_train_simple_exp_forecast ,test))
-  double_exp_accuracy <- as.data.frame(accuracy(gift_train_double_exp_forecast ,test))
-  triple_exp_accuracy <- as.data.frame(accuracy(gift_train_triple_exp_forecast ,test))
-  tbat_accuracy <- as.data.frame(accuracy(gift_train_tbat_forecast ,test))
+  auto_exp_accuracy <- as.data.frame(accuracy( mta_train_auto_exp_forecast ,test))
+  auto_arima_accuracy <- as.data.frame(accuracy(mta_train_auto_arima_forecast ,test))
+  simple_exp_accuracy <- as.data.frame(accuracy(mta_train_simple_exp_forecast ,test))
+  double_exp_accuracy <- as.data.frame(accuracy(mta_train_double_exp_forecast ,test))
+  triple_exp_accuracy <- as.data.frame(accuracy(mta_train_triple_exp_forecast ,test))
+  tbat_accuracy <- as.data.frame(accuracy(mta_train_tbat_forecast ,test))
   
   auto_exp_accuracy <- numeric_update(auto_exp_accuracy)
   auto_arima_accuracy <- numeric_update(auto_arima_accuracy)
