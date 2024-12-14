@@ -136,7 +136,7 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("house")),
       menuItem("Performance", tabName = "performance", icon = icon("list")),
-      #menuItem("Customer Insights", tabName = "customer", icon = icon("list")),
+      menuItem("Customer Insights", tabName = "customer", icon = icon("list")),
       menuItem("Ridership Overview", tabName = "ridership_overview", icon = icon("list")),
       menuSubItem("Riderhsip Analysis", tabName = "ridership_analysis"),
       menuSubItem("Riderhsip Forecasting", tabName = "riderhsip_forecast"),
@@ -428,6 +428,9 @@ server <- function(input, output, session) {
   })
   
  
+  
+  
+  ###Customer Feedback####
   
   ######Ridership#####
   
