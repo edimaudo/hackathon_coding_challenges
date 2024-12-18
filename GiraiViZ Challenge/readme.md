@@ -57,9 +57,9 @@ and creative thinking, providing participants with the flexibility to approach R
 - Usability for advocacy (bonus 5%),
 
 ### Timeline
-1.Registration Period: 6th December 2024 – 20th January 2025
-2.Welcome Webinar: 19th December 2024
-4.Submission Deadline: 20th January 2025
-5.Judging Period: 20th January – 30th January 2025
-6.Winner Announcement: 30th/31st January 2025
-7.Thank You Webinar: 31st January 2025
+1. Registration Period: 6th December 2024 – 20th January 2025
+2. Welcome Webinar: 19th December 2024
+3. Submission Deadline: 20th January 2025
+4. Judging Period: 20th January – 30th January 2025
+5. Winner Announcement: 30th/31st January 2025
+6. Thank You Webinar: 31st January 2025
