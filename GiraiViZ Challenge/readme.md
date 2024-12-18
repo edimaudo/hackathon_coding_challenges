@@ -13,7 +13,7 @@ Showcase the uneven progress of responsible AI across regions and topics, emphas
 3. Inspire Action and Policy Change:
 Drive change through visualisations that can serve as advocacy tools for policymakers, stakeholders and non-state actors, encouraging improvements in responsible AI frameworks and practices.
 
-## Submission Guideline
+### Submission Guideline
 1. Visualization file: Submit your final visualization as a high-resolution image file (JPEG or PNG) or PDF. If your visualization is interactive (eg. a dashboard or html file), provide a link to access it online.
 2. Accompanying description: Include a brief description (up to 300 words) explaining your visualization, the findings it reveals, and how it aligns with the chosen theme.
 3. Tools used: Provide a list of tools or software used in the creation of your visualization.
