@@ -49,12 +49,12 @@ and creative thinking, providing participants with the flexibility to approach R
 
 
 ### Judging Criteria
-- Clarity and communication (25%);
+- Clarity and communication (25%)
 - Relevance and insightfulness (25%)
-- Creativity and originality (20%);
-- Technical proficiency (15%);
-- Relevance to the them and challenge objectives (15%); and
-- Usability for advocacy (bonus 5%),
+- Creativity and originality (20%)
+- Technical proficiency (15%)
+- Relevance to the them and challenge objectives (15%) and
+- Usability for advocacy (bonus 5%)
 
 ### Timeline
 1. Registration Period: 6th December 2024 – 20th January 2025
