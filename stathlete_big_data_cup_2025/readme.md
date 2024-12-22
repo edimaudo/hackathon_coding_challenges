@@ -31,7 +31,7 @@ How do players' on-puck and off-puck movements influence team dynamics and game 
 - Offensive off-puck awareness and positioning
 - Note: These examples are just starting points. Let your creativity shine!
 
-2025 TIMELINE AND KEY DATES
+### TIMELINE AND KEY DATES
 - December - Data is released: GitHub link
 - December and January - Work on projects
 - January 26th - Deadline to submit projects
