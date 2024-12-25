@@ -83,7 +83,8 @@ model_info <- c('auto-arima','auto-exponential','simple-exponential',
 forecast_info <- "Series: forecast data"
 
 
-forecast_df <- function (ts_df,differenceInput,differenceNumericInput,frequencyInput,dataType) {
+forecast_df <- function (ts_df,differenceInput,differenceNumericInput,
+                         frequencyInput,dataType) {
 
   mta_data <- apply.monthly(ts_df, mean) #colMeans
   mta_end <- floor(0.8*length(mta_data)) 
@@ -141,7 +142,6 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("house")),
       menuItem("Performance", tabName = "performance", icon = icon("list")),
-      #menuItem("Customer Insights", tabName = "customer", icon = icon("list")),
       menuItem("Ridership Overview", tabName = "ridership_overview", icon = icon("list")),
       menuSubItem("Riderhsip Analysis", tabName = "ridership_analysis"),
       menuSubItem("Riderhsip Forecasting", tabName = "riderhsip_forecast"),
