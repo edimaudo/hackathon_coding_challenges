@@ -29,7 +29,7 @@
 # remove when publishing
 packages <- c(
   'ggplot2','tidyverse','plotly','leaflet',
-  'shiny','shinyWidgets','shinydashboard',
+  'shiny','shinyWidgets','shinydashboard','xts',
   'DT','lubridate','RColorBrewer','scales','stopwords',
   'tidytext','stringr','wordcloud','wordcloud2',
   'SnowballC','textmineR','topicmodels','textclean','tm'
@@ -77,10 +77,10 @@ frequency_info <- c(7, 12, 52, 365)
 difference_info <- c("Yes","No")
 log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
-                'double-exponential','triple-exponential', 'tbat', 'lstm')
+                'double-exponential','triple-exponential', 'tbat')
 
 
-forecast_df <- function (ts_df,aggregateInput,frequencyInput,dataType) {
+forecast_df <- function (ts_df,frequencyInput,dataType) {
 
   mta_data <- apply.monthly(ts_df, mean) 
   mta_end <- floor(0.8*length(mta_data)) 
@@ -113,8 +113,7 @@ numeric_update <- function(df){
   return (df)
 }
 
-##mta_xts <- xts(x = transaction_f$Total, order.by = transaction_f$mta_DATE) 
-##mta_monthly <- apply.monthly(mta_xts, mean) 
+
 
 ################
 # UI
@@ -465,7 +464,20 @@ server <- function(input, output, session) {
     
   })
   
-  #====Ridership Analysis====
+  
+#====Ridership Analysis====
+  forecast_analysis_df  <- reactive({
+    mta_monthly_ridership %>%
+      filter(Agency %in% c(input$agencyInput)) %>%
+      group_by(Month) %>%
+      summarize(Ridership = sum(Ridership)) %>%
+      select(Month, Ridership)
+    
+    mta_xts <- xts(x = mta_monthly_ridership$Ridership, order.by = mta_monthly_ridership$Month) 
+    mta_monthly <- apply.monthly(mta_xts, mean) 
+    mta_forecast_df <- forecast_df(mta_monthly,input$frequencyInput,"train")
+  })
+  
 output$decompositionPlot <- renderPlotly({
   p <- forecast_analysis_df() %>%
     decompose() %>%
