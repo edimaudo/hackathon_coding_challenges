@@ -80,6 +80,7 @@ difference_info <- c("Yes","No")
 log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat')
+forecast_info <- "Series: forecast data"
 
 
 forecast_df <- function (ts_df,differenceInput,differenceNumericInput,frequencyInput,dataType) {
@@ -104,7 +105,7 @@ if (dataType == "train") {
 }
 
 if (differenceInput == "Yes"){
-    output <- diff(output, differences = as.numeric(input$differenceNumericInput)) 
+    output <- diff(output, differences = as.numeric(differenceNumericInput)) 
 }  
   
 output
