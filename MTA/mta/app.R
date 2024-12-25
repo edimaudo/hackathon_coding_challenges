@@ -71,7 +71,7 @@ mta_monthly_ridership$MonthName <- lubridate::month(lubridate::ymd(mta_monthly_r
 
 agency <- c(sort(unique(mta_monthly_ridership$Agency)))
 
-###====Forecast info=====#
+###====Forecast info=====###
 horizon_info <- c(1:50) #default 14
 frequency_info <- c(7, 12, 52, 365)
 difference_info <- c("Yes","No")
@@ -134,7 +134,7 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Overview", tabName = "overview", icon = icon("house")),
       menuItem("Performance", tabName = "performance", icon = icon("list")),
-      menuItem("Customer Insights", tabName = "customer", icon = icon("list")),
+      #menuItem("Customer Insights", tabName = "customer", icon = icon("list")),
       menuItem("Ridership Overview", tabName = "ridership_overview", icon = icon("list")),
       menuSubItem("Riderhsip Analysis", tabName = "ridership_analysis"),
       menuSubItem("Riderhsip Forecasting", tabName = "riderhsip_forecast"),
@@ -584,7 +584,8 @@ output$forecastOutput <- DT::renderDataTable({
   triple_exp_forecast <- numeric_update(triple_exp_forecast)
   tbat_forecast <- numeric_update(tbat_forecast)
   
-  models <- c("auto-exponential","auto-arima","simple-exponential","double-exponential",
+  models <- c("auto-exponential","auto-arima",
+              "simple-exponential","double-exponential",
               "triple-exponential","tbat")
   
   outputInfo <- cbind(auto_exp_forecast,auto_arima_forecast,
