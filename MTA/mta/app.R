@@ -29,7 +29,8 @@
 # remove when publishing
 packages <- c(
   'ggplot2','tidyverse','plotly','leaflet',
-  'shiny','shinyWidgets','shinydashboard','xts',
+  'shiny','shinyWidgets','shinydashboard',
+  'xts','forecast','TTR',
   'DT','lubridate','RColorBrewer','scales','stopwords',
   'tidytext','stringr','wordcloud','wordcloud2',
   'SnowballC','textmineR','topicmodels','textclean','tm'
@@ -70,6 +71,7 @@ mta_monthly_ridership$MonthName <- lubridate::month(lubridate::ymd(mta_monthly_r
                                                         label = TRUE,abbr = FALSE)
 
 agency <- c(sort(unique(mta_monthly_ridership$Agency)))
+mta_monthly_ridership$Month <- lubridate::as_date(mta_monthly_ridership$Month)
 
 ###====Forecast info=====###
 horizon_info <- c(1:50) #default 14
@@ -80,9 +82,9 @@ model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat')
 
 
-forecast_df <- function (ts_df,frequencyInput,dataType) {
+forecast_df <- function (ts_df,differenceInput,differenceNumericInput,frequencyInput,dataType) {
 
-  mta_data <- apply.monthly(ts_df, mean) 
+  mta_data <- apply.monthly(ts_df, mean) #colMeans
   mta_end <- floor(0.8*length(mta_data)) 
   mta_train <- mta_data[1:mta_end,] 
   mta_test <- mta_data[(mta_end+1):length(mta_data),]
@@ -100,6 +102,11 @@ if (dataType == "train") {
 } else {
   output <- mta_test
 }
+
+if (differenceInput == "Yes"){
+    output <- diff(output, differences = as.numeric(input$differenceNumericInput)) 
+}  
+  
 output
   
   
@@ -473,9 +480,11 @@ server <- function(input, output, session) {
       summarize(Ridership = sum(Ridership)) %>%
       select(Month, Ridership)
     
-    mta_xts <- xts(x = mta_monthly_ridership$Ridership, order.by = mta_monthly_ridership$Month) 
-    mta_monthly <- apply.monthly(mta_xts, mean) 
-    mta_forecast_df <- forecast_df(mta_monthly,input$frequencyInput,"train")
+    mta_xts <- xts(x = mta_monthly_ridership$Ridership, 
+                   order.by = (mta_monthly_ridership$Month))
+    mta_forecast_df <- forecast_df(mta_xts,input$differenceInput,
+                                   input$differenceNumericInput,
+                                   input$frequencyInput,"train")
   })
   
 output$decompositionPlot <- renderPlotly({
