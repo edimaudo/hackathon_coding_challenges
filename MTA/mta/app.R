@@ -86,7 +86,7 @@ forecast_info <- "Series: forecast data"
 forecast_df <- function (ts_df,differenceInput,differenceNumericInput,
                          frequencyInput,dataType) {
 
-  mta_data <- apply.monthly(ts_df, mean) #colMeans
+  mta_data <- apply.monthly(ts_df, colMeans) #colMeans
   mta_end <- floor(0.8*length(mta_data)) 
   mta_train <- mta_data[1:mta_end,] 
   mta_test <- mta_data[(mta_end+1):length(mta_data),]
@@ -295,9 +295,8 @@ ui <- dashboardPage(
                               tabPanel(h4("Forecast Results",style="text-align: center;"),
                                        DT::dataTableOutput("forecastOutput")),
                               tabPanel(h4("Forecast Metrics",style="text-align: center;"),
-                                       DT::dataTableOutput("accuracyOutput")),
-                              tabPanel(h4("Forecast Prediction",style="text-align: center;"),
-                                       DT::dataTableOutput("predictionOutput"))
+                                       DT::dataTableOutput("accuracyOutput"))
+                              
                   )
                   
                 )
@@ -474,7 +473,7 @@ server <- function(input, output, session) {
   
   
 #====Ridership Analysis====
-  forecast_analysis_df  <- reactive({
+  forecast_analysis_df1  <- reactive({
     mta_monthly_ridership %>%
       filter(Agency %in% c(input$agencyInput)) %>%
       group_by(Month) %>%
@@ -483,13 +482,26 @@ server <- function(input, output, session) {
     
     mta_xts <- xts(x = mta_monthly_ridership$Ridership, 
                    order.by = (mta_monthly_ridership$Month))
-    mta_forecast_df <- forecast_df(mta_xts,input$differenceInput,
-                                   input$differenceNumericInput,
-                                   input$frequencyInput,"train")
+    
   })
   
+  mta_forecast_df <- reactive({
+    forecast_df(forecast_analysis_df1(),input$differenceInput,
+                input$differenceNumericInput,
+                input$frequencyInput,"train")
+  })
+  
+  mta_forecast_test <- reactive({
+    forecast_df(forecast_analysis_df1(),input$differenceInput,
+                input$differenceNumericInput,
+                input$frequencyInput,"test")
+  })
+    
+    
+    
+  
 output$decompositionPlot <- renderPlotly({
-  p <- forecast_analysis_df() %>%
+  p <-  mta_forecast_df() %>%
     decompose() %>%
     autoplot() + scale_y_continuous(labels = scales::comma) + 
     theme(plot.title = element_text(hjust=0.5))
@@ -497,7 +509,7 @@ output$decompositionPlot <- renderPlotly({
 })
 
 output$multidecompositionPlot <- renderPlotly({
-  p <- forecast_analysis_df() %>%
+  p <-  mta_forecast_df() %>%
     mstl() %>%
     autoplot()  + scale_y_continuous(labels = scales::comma)
   ggplotly(p)
@@ -506,20 +518,20 @@ output$multidecompositionPlot <- renderPlotly({
 
 output$acfPlot <- renderPlotly({
   if (input$logInput == "No"){
-    ggAcf(forecast_analysis_df()) + labs(title=forecast_info) + 
+    ggAcf( mta_forecast_df()) + labs(title=forecast_info) + 
       theme(plot.title = element_text(hjust=0.5))
   } else {
-    ggAcf(log(forecast_analysis_df())) + labs(title=forecast_info) + 
+    ggAcf(log( mta_forecast_df())) + labs(title=forecast_info) + 
       theme(plot.title = element_text(hjust=0.5))
   }
 })
 
 output$pacfPlot <- renderPlotly({
   if (input$logInput == "No"){
-    ggPacf(forecast_analysis_df()) + labs(title=forecast_info) + 
+    ggPacf( mta_forecast_df()) + labs(title=forecast_info) + 
       theme(plot.title = element_text(hjust=0.5))
   } else {
-    ggPacf(log(forecast_analysis_df())) + labs(title=forecast_info) + 
+    ggPacf(log( mta_forecast_df())) + labs(title=forecast_info) + 
       theme(plot.title = element_text(hjust=0.5))
   }
   
@@ -531,7 +543,7 @@ output$forecastPlot <- renderPlot({
   
   # set forecast horizon
   forecast.horizon <- as.numeric(input$horizonInput)
-  train <- forecast_df(mta_xts,input$aggregateInput,input$frequencyInput,"train")
+  train <- mta_forecast_df()
   
   # models
   auto_exp_model <- train %>% ets %>% forecast(h=forecast.horizon)
@@ -562,8 +574,8 @@ output$forecastOutput <- DT::renderDataTable({
   
   forecast.horizon <- as.numeric(input$horizonInput)
   
-  train <- forecast_df(mta_xts,input$aggregateInput,input$frequencyInput,"train")
-  test <- forecast_df(mta_xts,input$aggregateInput,input$frequencyInput,"test")
+  train <- mta_forecast_df()
+  test <- mta_forecast_test()
   
   # models
   mta_train_auto_exp_forecast <- ets(train) %>% 
@@ -625,8 +637,8 @@ output$forecastOutput <- DT::renderDataTable({
 output$accuracyOutput <- DT::renderDataTable({
   forecast.horizon <- as.numeric(input$horizonInput)
   
-  train <- forecast_df(mta_xts,input$aggregateInput,input$frequencyInput,"train")
-  test <- forecast_df(mta_xts,input$aggregateInput,input$frequencyInput,"test")
+  train <- mta_forecast_df()
+  test <- mta_forecast_test()
   # models
   mta_train_auto_exp_forecast <- ets(train) %>% 
     forecast(h=forecast.horizon)    
