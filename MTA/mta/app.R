@@ -709,3 +709,5 @@ output$predictionOutput <- DT::renderDataTable({})
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
+
