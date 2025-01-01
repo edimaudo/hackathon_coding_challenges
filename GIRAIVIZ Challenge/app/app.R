@@ -52,11 +52,43 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("house")),
-      menuItem("Ranking and Scores", tabName = "rank_score", icon = icon("list")),
+      menuItem("Ranking and Scores", tabName = "rank", icon = icon("list")),
       menuItem("Themes", tabName = "theme", icon = icon("list"))
     )
   ),
   dashboardBody(
+    tabItems(
+      
+      #===About=======
+      tabItem(tabName = "about",shiny::includeMarkdown("about.md"),hr()),
+      #===Overview====
+      tabItem(tabName = "rank",
+              fluidRow(
+                valueBoxOutput("operatorBox"),
+                valueBoxOutput("lineBox"),
+                valueBoxOutput("stationBox")
+              ),
+              fluidRow(
+                h3("MTA Subway Station Map",style="text-align: center;text-style:bold"),
+                #  - Subway stations map
+                leafletOutput("subwayMap", width = 'auto',height="600px")
+              )
+      ),
+      tabItem(tabName = "theme",
+              fluidRow(
+                valueBoxOutput("operatorBox"),
+                valueBoxOutput("lineBox"),
+                valueBoxOutput("stationBox")
+              ),
+              fluidRow(
+                h3("MTA Subway Station Map",style="text-align: center;text-style:bold"),
+                #  - Subway stations map
+                leafletOutput("subwayMap", width = 'auto',height="600px")
+              )
+      )
+    )
+  )
+)
     
 
 
