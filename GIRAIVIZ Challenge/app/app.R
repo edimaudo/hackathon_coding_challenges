@@ -64,26 +64,21 @@ ui <- dashboardPage(
       #===Overview====
       tabItem(tabName = "rank",
               fluidRow(
-                valueBoxOutput("operatorBox"),
-                valueBoxOutput("lineBox"),
-                valueBoxOutput("stationBox")
+               
               ),
               fluidRow(
-                h3("MTA Subway Station Map",style="text-align: center;text-style:bold"),
-                #  - Subway stations map
-                leafletOutput("subwayMap", width = 'auto',height="600px")
+                h3("Rank",style="text-align: center;text-style:bold"),
+                
+                
               )
       ),
       tabItem(tabName = "theme",
               fluidRow(
-                valueBoxOutput("operatorBox"),
-                valueBoxOutput("lineBox"),
-                valueBoxOutput("stationBox")
+               
               ),
               fluidRow(
-                h3("MTA Subway Station Map",style="text-align: center;text-style:bold"),
-                #  - Subway stations map
-                leafletOutput("subwayMap", width = 'auto',height="600px")
+                h3("Themes",style="text-align: center;text-style:bold"),
+                
               )
       )
     )
