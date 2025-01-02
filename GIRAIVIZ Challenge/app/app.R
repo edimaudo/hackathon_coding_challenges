@@ -35,6 +35,13 @@ for (package in packages) {
 dimension_df <- read_excel("data.xlsx","Data")
 ranking_df <- read_excel("data.xlsx","Rankings and Scores")
 
+# Ranking
+region <- sort(unique(ranking_df$))
+sub_region <- sort(unique(ranking_df$))
+country
+
+#Dimension
+
 ################
 # UI
 ################
