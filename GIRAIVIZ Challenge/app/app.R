@@ -16,11 +16,12 @@
 # library(markdown)
 # library(leaflet)
 # library(readxl)
+# library(scales)
 
 # remove when publishing
 packages <- c(
   'ggplot2','tidyverse','plotly','leaflet','readxl',
-  'shiny','shinydashboard','DT','lubridate'
+  'shiny','shinydashboard','DT','lubridate','scales'
 )
 for (package in packages) { 
   if (!require(package, character.only = T, quietly = T)) {
