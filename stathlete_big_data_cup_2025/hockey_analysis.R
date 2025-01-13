@@ -11,3 +11,20 @@ for (package in packages) {
     library(package, character.only=T)
   }
 }
+
+################
+# Load Data
+################
+
+################
+# Modeling
+################
+
+################
+# Report graphs
+################
+
+
+################
+# Insights
+################
