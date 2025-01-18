@@ -45,16 +45,37 @@ plt.grid(alpha=0.3)
 plt.show()
 
 # Timing analysis
-# Add time difference between zone entry and puck recovery
-merged_data['Time_Difference'] = merged_data['Time_Seconds_recovery'] - merged_data['Time_Seconds_entry']
+# Analyze success rates and timing for forechecking events
+# Calculate time to puck recovery following zone entries
+forechecking_events["Time_Seconds"] = forechecking_events["Clock"].apply(
+    lambda x: int(x.split(":")[0]) * 60 + int(x.split(":")[1])  # Convert "MM:SS" to seconds
+)
 
-# Filter recoveries within a 10-second window
-successful_recoveries = merged_data[
-    (merged_data['Time_Difference'] >= 0) & (merged_data['Time_Difference'] <= 10)
+# Identify Zone Entries and subsequent Puck Recoveries within a timeframe
+zone_entries = forechecking_events[forechecking_events["Event"] == "Zone Entry"]
+puck_recoveries = forechecking_events[forechecking_events["Event"] == "Puck Recovery"]
+
+# Merge on periods and filter by time proximity to find successful recoveries after entries
+zone_entry_recoveries = pd.merge(
+    zone_entries, puck_recoveries, on="Period", suffixes=("_entry", "_recovery")
+)
+zone_entry_recoveries["Time_Difference"] = (
+    zone_entry_recoveries["Time_Seconds_recovery"] - zone_entry_recoveries["Time_Seconds_entry"]
+)
+
+# Filter recoveries within 10 seconds of a zone entry (arbitrary threshold for analysis)
+successful_recoveries = zone_entry_recoveries[
+    (zone_entry_recoveries["Time_Difference"] >= 0) & (zone_entry_recoveries["Time_Difference"] <= 10)
 ]
 
-# Calculate recovery success rate
-recovery_success_rate = len(successful_recoveries) / len(merged_data[merged_data['Event'] == "Zone Entry"]) * 100
+# Calculate the recovery success rate
+recovery_success_rate = len(successful_recoveries) / len(zone_entries) * 100
+
+# Summary of timing distribution for successful recoveries
+timing_distribution = successful_recoveries["Time_Difference"].describe()
+
+recovery_success_rate, timing_distribution
+
 print(f"Recovery Success Rate: {recovery_success_rate}%")
 
 # Heatmap of event clusters
