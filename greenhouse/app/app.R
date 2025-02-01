@@ -1,10 +1,25 @@
+################
+# Shiny web app for Greenhouse Gas Air Emissions Data
+################
+
+################
+# Libraries
+################
+# library(ggplot2)
+# library(tidyverse)
+# library(shiny)
+# library(shinydashboard)
+# library(DT)
+# library(lubridate)
+# library(plotly)
+# library(RColorBrewer)
+# library(scales)
+# library(readxl)
+
 packages <- c(
   'ggplot2','tidyverse','plotly','leaflet',
-  'shiny','shinyWidgets','shinydashboard',
-  'xts','forecast','TTR',
-  'DT','lubridate','RColorBrewer','scales','stopwords',
-  'tidytext','stringr','wordcloud','wordcloud2',
-  'SnowballC','textmineR','topicmodels','textclean','tm'
+  'shiny','shinydashboard','readxl',
+  'DT','lubridate','RColorBrewer','scales'
 )
 for (package in packages) { 
   if (!require(package, character.only = T, quietly = T)) {
@@ -12,3 +27,8 @@ for (package in packages) {
     library(package, character.only = T)
   }
 }
+
+################
+# Data
+################ 
+df <- read_excel("data.xlsx")
