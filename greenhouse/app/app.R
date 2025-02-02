@@ -1,10 +1,7 @@
-################
 # Shiny web app for Greenhouse Gas Air Emissions Data
-################
 
-################
-# Libraries
-################
+####### Libraries #####
+
 # library(ggplot2)
 # library(tidyverse)
 # library(shiny)
@@ -28,14 +25,12 @@ for (package in packages) {
   }
 }
 
-################
-# Data
-################ 
+####### Data #######
 df <- read_excel("data.xlsx")
 
-################
-# UI
-################
+####### UI #########
+
+
 ui <- dashboardPage(
   dashboardHeader(title = "Greenhouse Gas Air Emissions Data",
                   tags$li(a(href = 'https://climatedata.imf.org/datasets/c8579761f19740dfbe4418b205654ddf_0/about',
@@ -48,13 +43,28 @@ ui <- dashboardPage(
       menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Overview", tabName = "overview", icon = icon("th")),
       menuItem("Details", tabName = "segment", icon = icon("list"))
+   ),
+   dashboardBody(
+     tabItems(
+      #### Overview ####
+      tabItem(tabName = "overview",
+              fluidRow(
+                valueBoxOutput("libraryBox"),
+                valueBoxOutput("clcBox"),
+                valueBoxOutput("keclBox")
+              ),
+              
+              fluidRow(
+                h2("Trends",style="text-align: center;text-style:bold"),
+                plotlyOutput("tplOverviewTrendPlot") 
+              )
+      ),
+     )
    )
  )
 )
 
-################
-# Server
-################
+####### Server #########
 server <- function(input, output,session) {
   
 }
