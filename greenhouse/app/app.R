@@ -37,9 +37,9 @@ df <- read_excel("data.xlsx")
 # UI
 ################
 ui <- dashboardPage(
-  dashboardHeader(title = "Apra Data Science Challenge",
-                  tags$li(a(href = 'https://www.aprahome.org',
-                            img(src = 'https://www.aprahome.org/Portals/_default/skins/siteskin/images/logo.png',
+  dashboardHeader(title = "Greenhouse Gas Air Emissions Data",
+                  tags$li(a(href = 'https://climatedata.imf.org/datasets/c8579761f19740dfbe4418b205654ddf_0/about',
+                            img(src = 'https://imf-dataviz.maps.arcgis.com/sharing/rest/content/items/bf9aa914b237454babc8ed059575c1a7/resources/imf-climate-logo.png',
                                 title = "Home", height = "30px"),
                             style = "padding-top:10px; padding-bottom:10px;"),
                           class = "dropdown")),
@@ -47,12 +47,7 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Overview", tabName = "overview", icon = icon("th")),
-      menuSubItem("Interaction", tabName = "interaction"),
-      menuSubItem("Gifts", tabName = "gift"),
-      menuItem("Customer Segmentation", tabName = "segment", icon = icon("list")),
-      menuItem("Gift Forecasting Overview", tabName = "forecast_overview", icon = icon("list")),
-      menuSubItem("Gift Forecasting Analysis", tabName = "forecast_analysis"),
-      menuSubItem("Gift Forecasting", tabName = "forecast")
+      menuItem("Details", tabName = "segment", icon = icon("list"))
    )
  )
 )
