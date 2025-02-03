@@ -32,7 +32,7 @@ df <- read_excel("data.xlsx")
 
 
 ui <- dashboardPage(
-  dashboardHeader(title = "Greenhouse Gas Air Emissions Data",
+  dashboardHeader(title = "Greenhouse Gas Emissions Data",
                   tags$li(a(href = 'https://climatedata.imf.org/datasets/c8579761f19740dfbe4418b205654ddf_0/about',
                             img(src = 'https://imf-dataviz.maps.arcgis.com/sharing/rest/content/items/bf9aa914b237454babc8ed059575c1a7/resources/imf-climate-logo.png',
                                 title = "Home", height = "30px"),
