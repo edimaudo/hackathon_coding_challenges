@@ -68,14 +68,31 @@ ui <- dashboardPage(
 server <- function(input, output,session) {
 
   output$countryBox <- renderValueBox({
+      valueBox(
+        value = tags$p("Countries", style = "font-size: 100%;"),
+        subtitle = tags$p(paste0(length(df$Country)), style = "font-size: 100%;"),
+        icon = icon("book"),
+        color = "aqua"
+      )
+  })
+
+  output$industryBox <- renderValueBox({
     valueBox(
-      value = tags$p("Country", style = "font-size: 100%;"),
-      subtitle = tags$p(paste0(length(df$Country)), style = "font-size: 100%;"),
+      value = tags$p("Industries", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(df$Industry)), style = "font-size: 100%;"),
       icon = icon("book"),
       color = "aqua"
     )
   })
-  
+
+  output$gasBox <- renderValueBox({
+    valueBox(
+      value = tags$p("Gas Type", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(df$`Gas Type`)), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
   
 }
   
