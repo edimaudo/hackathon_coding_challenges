@@ -42,21 +42,21 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Overview", tabName = "overview", icon = icon("th")),
-      menuItem("Details", tabName = "segment", icon = icon("list"))
+      menuItem("Details", tabName = "detail", icon = icon("list"))
    ),
    dashboardBody(
      tabItems(
       #### Overview ####
       tabItem(tabName = "overview",
               fluidRow(
-                valueBoxOutput("libraryBox"),
-                valueBoxOutput("clcBox"),
-                valueBoxOutput("keclBox")
+                valueBoxOutput("countryBox"),
+                valueBoxOutput("industryBox"),
+                valueBoxOutput("gasBox")
               ),
               
               fluidRow(
-                h2("Trends",style="text-align: center;text-style:bold"),
-                plotlyOutput("tplOverviewTrendPlot") 
+                h2("Overview",style="text-align: center;text-style:bold"),
+                #plotlyOutput("tplOverviewTrendPlot") 
               )
       ),
      )
@@ -66,6 +66,16 @@ ui <- dashboardPage(
 
 ####### Server #########
 server <- function(input, output,session) {
+
+  output$countryBox <- renderValueBox({
+    valueBox(
+      value = tags$p("Country", style = "font-size: 100%;"),
+      subtitle = tags$p(paste0(length(df$Country)), style = "font-size: 100%;"),
+      icon = icon("book"),
+      color = "aqua"
+    )
+  })
+  
   
 }
   
