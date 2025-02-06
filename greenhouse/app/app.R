@@ -62,18 +62,18 @@ ui <- dashboardPage(
                 valueBoxOutput("countryBox"),
                 valueBoxOutput("industryBox"),
                 valueBoxOutput("gasBox")
-              )#,
+              ),
               
-              #fluidRow(
-              #  h2("Industries",style="text-align: center;text-style:bold")#,
+              fluidRow(
+                h2("Industries",style="text-align: center;text-style:bold"),
                 #plotlyOutput("tplOverviewTrendPlot") 
-              #),
+              ),
               
-              #fluidRow(
-              #  h2("Gas Type",style="text-align: center;text-style:bold")#,
+              fluidRow(
+                h2("Gas Type",style="text-align: center;text-style:bold")#,
                 #plotlyOutput("tplOverviewTrendPlot") 
-              #)
-      )#,
+              )
+      ),
      )
    )
  )
