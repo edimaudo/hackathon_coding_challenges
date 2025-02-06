@@ -28,6 +28,11 @@ for (package in packages) {
 ####### Data #######
 df <- read_excel("data.xlsx")
 
+df2 <- df %>% 
+  pivot_longer(!c("ObjectId2","Country","ISO2","ISO3","Indicator","Unit","Source","CTS Code","CTS Name","CTS Full Descriptor","Industry","Gas Type","Seasonal Adjustment","Scale"),
+               names_to = 'Year',
+               values_to = 'Total')
+
 ####### UI #########
 
 
