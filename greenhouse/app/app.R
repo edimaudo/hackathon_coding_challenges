@@ -43,7 +43,8 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Overview", tabName = "overview", icon = icon("th")),
-      menuItem("Details", tabName = "detail", icon = icon("list"))
+      menuItem("Details", tabName = "detail", icon = icon("list")), 
+      menuItem("Forecasting", tabName = "forecast", icon = icon("list"))
    )
   ),
    dashboardBody(
