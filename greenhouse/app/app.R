@@ -65,6 +65,11 @@ ui <- dashboardPage(
               ),
               
               fluidRow(
+                h2("Countries",style="text-align: center;text-style:bold"),
+                #plotlyOutput("tplOverviewTrendPlot") 
+              ),
+              
+              fluidRow(
                 h2("Industries",style="text-align: center;text-style:bold"),
                 #plotlyOutput("tplOverviewTrendPlot") 
               ),
