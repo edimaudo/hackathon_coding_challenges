@@ -78,12 +78,14 @@ ui <- dashboardPage(
                                "countryDetailInput",
                                "Select Country/Region",
                                country_list,
+                               selected = country_list,
                                multiple = TRUE
                              ),
                              selectInput(
                                "industryDetailInput",
                                "Select Industry",
                                industry_list,
+                               selected = industry_list,
                                multiple = TRUE
                              ),
                              submitButton("Submit")
