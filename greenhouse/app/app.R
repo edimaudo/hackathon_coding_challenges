@@ -33,6 +33,9 @@ df2 <- df %>%
                names_to = 'Year',
                values_to = 'Total')
 
+country_list <- c(sort(unique(df$Country)))
+industry_list <- c(sort(unique(df$Industry)))
+
 ####### UI #########
 
 
@@ -67,6 +70,33 @@ ui <- dashboardPage(
                 h2("Gas Types",style="text-align: center;text-style:bold"),
                 plotlyOutput("gasTypeOverviewTrendPlot") 
               )
+      ),
+      tabItem(tabName="details",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                             selectInput(
+                               "countryDetailInput",
+                               "Select Country/Region",
+                               country_list,
+                               multiple = TRUE
+                             ),
+                             selectInput(
+                               "industryDetailInput",
+                               "Select Industry",
+                               industry_list,
+                               multiple = TRUE
+                             ),
+                             submitButton("Submit")
+                ),
+                
+                mainPanel (
+                  h3("Gas Trend",style="text-align: center;text-style:bold"),
+                  fluidRow(
+                    plotlyOutput("gasdetailTrendPlot")
+                  )
+                )
+              )
+                      
       )
      )
    )
