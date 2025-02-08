@@ -71,7 +71,7 @@ ui <- dashboardPage(
                 plotlyOutput("gasTypeOverviewTrendPlot") 
               )
       ),
-      tabItem(tabName="details",
+      tabItem(tabName="detail",
               sidebarLayout(
                 sidebarPanel(width = 3,
                              selectInput(
@@ -92,7 +92,7 @@ ui <- dashboardPage(
                 mainPanel (
                   h3("Gas Trend",style="text-align: center;text-style:bold"),
                   fluidRow(
-                    plotlyOutput("gasdetailTrendPlot")
+                    plotlyOutput("gasDetailTrendPlot")
                   )
                 )
               )
@@ -153,6 +153,31 @@ server <- function(input, output,session) {
     
     ggplotly(g)
     
+    
+  })
+  
+  output$gasDetailTrendPlot <- renderPlotly({
+    
+    
+    trend <- df2  %>%
+      filter(Country %in% c(input$countryDetailInput) , 
+             Industry %in% c(input$industryDetailInput)) %>%
+      group_by(Year, `Gas Type`) %>%
+      summarise(Total = sum(Total)) %>%
+      select(Year, `Gas Type`, Total)
+    
+    
+    g <- ggplot(trend, aes(Year, Total, group=`Gas Type`, colour = `Gas Type`)) + 
+      geom_line( size=1) + theme_minimal() +
+      labs(x = "Year", y = "Total", color="Gas Type") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    
+    ggplotly(g)
     
   })
   
