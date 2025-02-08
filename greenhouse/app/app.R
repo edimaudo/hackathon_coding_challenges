@@ -55,7 +55,7 @@ ui <- dashboardPage(
    dashboardBody(
      tabItems(
       #### About ###
-       tabItem(tabName = "about",shiny::includeMarkdown("about.md"),hr()),
+      tabItem(tabName = "about",shiny::includeMarkdown("about.md"),hr()),
       #### Overview ####
       tabItem(tabName = "overview",
               fluidRow(
@@ -67,7 +67,7 @@ ui <- dashboardPage(
                 h2("Gas Types",style="text-align: center;text-style:bold"),
                 plotlyOutput("gasTypeOverviewTrendPlot") 
               )
-      ),
+      )
      )
    )
  )
@@ -111,8 +111,8 @@ server <- function(input, output,session) {
       select(Year, `Gas Type`, Total)
     
     
-    g <- ggplot(trend, aes(Year, Total, colour = `Gas Type`)) + 
-      geom_line(size=10) + theme_minimal() +
+    g <- ggplot(trend, aes(Year, Total, group=`Gas Type`, colour = `Gas Type`)) + 
+      geom_line( size=1) + theme_minimal() +
       labs(x = "Year", y = "Total", color="Gas Type") + 
       scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
