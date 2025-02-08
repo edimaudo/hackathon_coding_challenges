@@ -63,20 +63,9 @@ ui <- dashboardPage(
                 valueBoxOutput("industryBox"),
                 valueBoxOutput("gasBox")
               ),
-              
               fluidRow(
-                h2("Countries",style="text-align: center;text-style:bold"),
-                #plotlyOutput("tplOverviewTrendPlot") 
-              ),
-              
-              fluidRow(
-                h2("Industries",style="text-align: center;text-style:bold"),
-                #plotlyOutput("tplOverviewTrendPlot") 
-              ),
-              
-              fluidRow(
-                h2("Gas Type",style="text-align: center;text-style:bold")#,
-                #plotlyOutput("tplOverviewTrendPlot") 
+                h2("Gas Types",style="text-align: center;text-style:bold"),
+                plotlyOutput("gasTypeOverviewTrendPlot") 
               )
       ),
      )
@@ -85,7 +74,7 @@ ui <- dashboardPage(
 
 ####### Server #########
 server <- function(input, output,session) {
-
+  #### Value Boxes ####
   output$countryBox <- renderValueBox({
       valueBox(
         value = tags$p("Countries", style = "font-size: 100%;"),
@@ -112,6 +101,8 @@ server <- function(input, output,session) {
       color = "aqua"
     )
   })
+  
+  #### ####
   
 }
   
