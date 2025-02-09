@@ -52,7 +52,8 @@ ui <- dashboardPage(
       menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Overview", tabName = "overview", icon = icon("th")),
       menuItem("Details", tabName = "detail", icon = icon("list")), 
-      menuItem("Forecasting", tabName = "forecast", icon = icon("list"))
+      menuItem("Gas Type Analysis", tabName = "analysis", icon = icon("list")),
+      menuSubItem("Gas Type Forecasting", tabName = "riderhsip_forecast",icon = icon("th"))
    )
   ),
    dashboardBody(
@@ -99,6 +100,9 @@ ui <- dashboardPage(
                 )
               )
                       
+         ),
+      tabItem(
+        
       )
      )
    )
