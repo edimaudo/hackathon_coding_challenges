@@ -1,5 +1,4 @@
 # Shiny web app for Greenhouse Gas Air Emissions Data
-
 ####### Libraries #####
 
 # library(ggplot2)
@@ -29,7 +28,9 @@ for (package in packages) {
 df <- read_excel("data.xlsx")
 
 df2 <- df %>% 
-  pivot_longer(!c("ObjectId2","Country","ISO2","ISO3","Indicator","Unit","Source","CTS Code","CTS Name","CTS Full Descriptor","Industry","Gas Type","Seasonal Adjustment","Scale"),
+  pivot_longer(!c("ObjectId2","Country","ISO2","ISO3","Indicator","Unit",
+                  "Source","CTS Code","CTS Name","CTS Full Descriptor",
+                  "Industry","Gas Type","Seasonal Adjustment","Scale"),
                names_to = 'Year',
                values_to = 'Total')
 
@@ -37,8 +38,6 @@ country_list <- c(sort(unique(df$Country)))
 industry_list <- c(sort(unique(df$Industry)))
 
 ####### UI #########
-
-
 ui <- dashboardPage(
   dashboardHeader(title = "Greenhouse Gas Emissions Data",
                   tags$li(a(href = 'https://climatedata.imf.org/datasets/c8579761f19740dfbe4418b205654ddf_0/about',
@@ -99,15 +98,10 @@ ui <- dashboardPage(
                   )
                 )
               )
-                      
-         ),
-      tabItem(
-        
-      )
+           )
+         )
+       )
      )
-   )
- )
-
 ####### Server #########
 server <- function(input, output,session) {
   #### Value Boxes ####
