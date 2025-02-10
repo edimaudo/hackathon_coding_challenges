@@ -37,6 +37,17 @@ df2 <- df %>%
 country_list <- c(sort(unique(df$Country)))
 industry_list <- c(sort(unique(df$Industry)))
 
+####### Forecast info #######
+year_data <- c(2023,2024,2025)
+horizon_info <- c(1:50) #default 14
+frequency_info <- c(7, 12, 52, 365)
+difference_info <- c("Yes","No")
+log_info <- c("Yes","No")
+model_info <- c('auto-arima','auto-exponential','simple-exponential',
+                'double-exponential','triple-exponential', 'tbat')
+forecast_info <- "Series: forecast data"
+
+
 ####### UI #########
 ui <- dashboardPage(
   dashboardHeader(title = "Greenhouse Gas Emissions Data",
