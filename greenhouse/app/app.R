@@ -51,23 +51,23 @@ forecast_info <- "Series: forecast data"
 forecast_df <- function (ts_df,differenceInput,differenceNumericInput,
                          frequencyInput,dataType) {
   
-  mta_data <- apply.monthly(ts_df, colMeans) #colMeans
-  mta_end <- floor(0.8*length(mta_data)) 
-  mta_train <- mta_data[1:mta_end,] 
-  mta_test <- mta_data[(mta_end+1):length(mta_data),]
-  mta_start <- c(year (start(mta_train)), month(start(mta_train)))
-  mta_end <- c(year(end(mta_train)), month(end(mta_train)))
-  mta_train <- ts(as.numeric(mta_train), start = mta_start, 
-                  end = mta_end, frequency = as.numeric(frequencyInput) )
-  mta_start <- c(year (start(mta_test)), month(start(mta_test)))
-  mta_end <- c(year(end(mta_test)), month(end(mta_test)))
-  mta_test <- ts(as.numeric(mta_test), start = mta_start, 
-                 end = mta_end, frequency = as.numeric(frequencyInput))
+  df_data <- apply.yearly(ts_df, colMeans) #colMeans
+  df_end <- floor(0.8*length(df_data)) 
+  df_train <- df_data[1:df_end,] 
+  df_test <- df_data[(df_end+1):length(df_data),]
+  df_start <- c(year (start(df_train)), month(start(df_train)))
+  df_end <- c(year(end(df_train)), month(end(df_train)))
+  df_train <- ts(as.numeric(df_train), start = df_start, 
+                  end = df_end, frequency = as.numeric(frequencyInput) )
+  df_start <- c(year (start(df_test)), month(start(df_test)))
+  df_end <- c(year(end(df_test)), month(end(df_test)))
+  df_test <- ts(as.numeric(df_test), start = df_start, 
+                 end = df_end, frequency = as.numeric(frequencyInput))
   
   if (dataType == "train") {
-    output <- mta_train
+    output <- df_train
   } else {
-    output <- mta_test
+    output <- df_test
   }
   
   if (differenceInput == "Yes"){
@@ -148,7 +148,44 @@ ui <- dashboardPage(
                   )
                 )
               )
-           )
+           ),
+      tabItem(tabName = "ridership_analysis",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                             selectInput("agencyInput", "Agency", 
+                                         choices = agency, selected = agency,
+                                         multiple = TRUE),
+                             selectInput("frequencyInput", "Frequency", 
+                                         choices = frequency_info, selected = 7),
+                             radioButtons("differenceInput","Difference",
+                                          choices = difference_info, selected = "No"),
+                             numericInput("differenceNumericInput", "Difference Input", 
+                                          1, min = 1, max = 52, step = 0.5),
+                             radioButtons("logInput","Log",
+                                          choices = log_info, selected = "No"), 
+                             submitButton("Submit")
+                ),
+                mainPanel(
+                  h1("Analysis",style="text-align: center;"),
+                  tabsetPanel(type = "tabs",
+                              tabPanel(
+                                h4("Decomposition",
+                                   style="text-align: center;"),
+                                plotlyOutput("decompositionPlot")),
+                              tabPanel(
+                                h4("Multi seasonal Decomposition",
+                                   style="text-align: center;"),
+                                plotlyOutput("multidecompositionPlot")),
+                              tabPanel(
+                                h4("ACF Plot",style="text-align: center;"), 
+                                plotlyOutput("acfPlot")),
+                              tabPanel(
+                                h4("PACF Plot",style="text-align: center;"), 
+                                plotlyOutput("pacfPlot"))
+                  )
+                )
+              )  
+      )
          )
        )
      )
