@@ -11,10 +11,11 @@
 # library(RColorBrewer)
 # library(scales)
 # library(readxl)
+# library(tensorflow)
 
 packages <- c(
   'ggplot2','tidyverse','plotly','leaflet',
-  'shiny','shinydashboard','readxl',
+  'shiny','shinydashboard','readxl','tensorfloe',
   'DT','lubridate','RColorBrewer','scales'
 )
 for (package in packages) { 
@@ -46,6 +47,44 @@ log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat')
 forecast_info <- "Series: forecast data"
+
+forecast_df <- function (ts_df,differenceInput,differenceNumericInput,
+                         frequencyInput,dataType) {
+  
+  mta_data <- apply.monthly(ts_df, colMeans) #colMeans
+  mta_end <- floor(0.8*length(mta_data)) 
+  mta_train <- mta_data[1:mta_end,] 
+  mta_test <- mta_data[(mta_end+1):length(mta_data),]
+  mta_start <- c(year (start(mta_train)), month(start(mta_train)))
+  mta_end <- c(year(end(mta_train)), month(end(mta_train)))
+  mta_train <- ts(as.numeric(mta_train), start = mta_start, 
+                  end = mta_end, frequency = as.numeric(frequencyInput) )
+  mta_start <- c(year (start(mta_test)), month(start(mta_test)))
+  mta_end <- c(year(end(mta_test)), month(end(mta_test)))
+  mta_test <- ts(as.numeric(mta_test), start = mta_start, 
+                 end = mta_end, frequency = as.numeric(frequencyInput))
+  
+  if (dataType == "train") {
+    output <- mta_train
+  } else {
+    output <- mta_test
+  }
+  
+  if (differenceInput == "Yes"){
+    output <- diff(output, differences = as.numeric(differenceNumericInput)) 
+  }  
+  
+  output
+  
+}
+
+numeric_update <- function(df){
+  rownames(df) <- c()
+  is.num <- sapply(df, is.numeric)
+  df[is.num] <- lapply(df[is.num], round, 0)           
+  return (df)
+}
+
 
 
 ####### UI #########
