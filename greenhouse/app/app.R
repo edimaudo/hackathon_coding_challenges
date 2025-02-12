@@ -149,14 +149,18 @@ ui <- dashboardPage(
                 )
               )
            ),
-      tabItem(tabName = "ridership_analysis",
+      #### Overview ####
+      tabItem(tabName = "analysis",
               sidebarLayout(
                 sidebarPanel(width = 3,
                              selectInput("agencyInput", "Agency", 
                                          choices = agency, selected = agency,
                                          multiple = TRUE),
+                             selectInput("agencyInput", "Agency", 
+                                         choices = agency, selected = agency,
+                                         multiple = TRUE),
                              selectInput("frequencyInput", "Frequency", 
-                                         choices = frequency_info, selected = 7),
+                                         choices = frequency_info, selected = 52),
                              radioButtons("differenceInput","Difference",
                                           choices = difference_info, selected = "No"),
                              numericInput("differenceNumericInput", "Difference Input", 
