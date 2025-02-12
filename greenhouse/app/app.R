@@ -15,7 +15,7 @@
 
 packages <- c(
   'ggplot2','tidyverse','plotly','leaflet',
-  'shiny','shinydashboard','readxl','tensorfloe',
+  'shiny','shinydashboard','readxl',
   'DT','lubridate','RColorBrewer','scales'
 )
 for (package in packages) { 
@@ -153,11 +153,11 @@ ui <- dashboardPage(
       tabItem(tabName = "analysis",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                             selectInput("agencyInput", "Agency", 
-                                         choices = agency, selected = agency,
+                             selectInput("countryInput", "Countries/Regions", 
+                                         choices = country_list, selected = country_list,
                                          multiple = TRUE),
-                             selectInput("agencyInput", "Agency", 
-                                         choices = agency, selected = agency,
+                             selectInput("industryInput", "Industries", 
+                                         choices = industry_list, selected = industry_list,
                                          multiple = TRUE),
                              selectInput("frequencyInput", "Frequency", 
                                          choices = frequency_info, selected = 52),
