@@ -16,6 +16,7 @@
 packages <- c(
   'ggplot2','tidyverse','plotly','leaflet',
   'shiny','shinydashboard','readxl',
+  'xts','forecast',
   'DT','lubridate','RColorBrewer','scales'
 )
 for (package in packages) { 
@@ -37,6 +38,7 @@ df2 <- df %>%
 
 country_list <- c(sort(unique(df$Country)))
 industry_list <- c(sort(unique(df$Industry)))
+gas_list <- c(sort(unique(df$`Gas Type`)))
 
 ####### Forecast info #######
 year_data <- c(2023,2024,2025)
@@ -159,6 +161,9 @@ ui <- dashboardPage(
                              selectInput("industryInput", "Industries", 
                                          choices = industry_list, selected = industry_list,
                                          multiple = TRUE),
+                             selectInput("gasInput", "Gas Type", 
+                                         choices = gas_list, selected = gas_list,
+                                         multiple = TRUE),
                              selectInput("frequencyInput", "Frequency", 
                                          choices = frequency_info, selected = 52),
                              radioButtons("differenceInput","Difference",
@@ -271,6 +276,75 @@ server <- function(input, output,session) {
     ggplotly(g)
     
   })
+  
+  
+  #####Forecast Analysis####
+  forecast_analysis_df1  <- reactive({
+    forecast_data <- df2 %>%
+      filter(Country %in% c(input$countryInput) , 
+             Industry %in% c(input$industryInput),
+             `Gas Type` %in% c(input$gasInput)) %>%
+      group_by(Year) %>%
+      summarize(Total = sum(Total)) %>%
+      select(Year, Total)
+    
+    df_xts <- xts(x = forecast_data$Total, 
+                   order.by = (forecast_data$Year))
+    
+  })
+  
+  gas_forecast_df <- reactive({
+    forecast_df(forecast_analysis_df1(),input$differenceInput,
+                input$differenceNumericInput,
+                input$frequencyInput,"train")
+  })
+  
+  gas_forecast_test <- reactive({
+    forecast_df(forecast_analysis_df1(),input$differenceInput,
+                input$differenceNumericInput,
+                input$frequencyInput,"test")
+  })
+  
+  
+  
+  
+  output$decompositionPlot <- renderPlotly({
+    p <-  gas_forecast_df() %>%
+      decompose() %>%
+      autoplot() + scale_y_continuous(labels = scales::comma) + 
+      theme(plot.title = element_text(hjust=0.5))
+    ggplotly(p)
+  })
+  
+  output$multidecompositionPlot <- renderPlotly({
+    p <-  gas_forecast_df() %>%
+      mstl() %>%
+      autoplot()  + scale_y_continuous(labels = scales::comma)
+    ggplotly(p)
+    
+  })
+  
+  output$acfPlot <- renderPlotly({
+    if (input$logInput == "No"){
+      ggAcf( gas_forecast_df()) + labs(title=forecast_info) + 
+        theme(plot.title = element_text(hjust=0.5))
+    } else {
+      ggAcf(log( gas_forecast_df())) + labs(title=forecast_info) + 
+        theme(plot.title = element_text(hjust=0.5))
+    }
+  })
+  
+  output$pacfPlot <- renderPlotly({
+    if (input$logInput == "No"){
+      ggPacf( gas_forecast_df()) + labs(title=forecast_info) + 
+        theme(plot.title = element_text(hjust=0.5))
+    } else {
+      ggPacf(log( gas_forecast_df())) + labs(title=forecast_info) + 
+        theme(plot.title = element_text(hjust=0.5))
+    }
+    
+  })
+  
   
 }
   
