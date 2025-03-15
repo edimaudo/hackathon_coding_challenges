@@ -405,6 +405,7 @@
       <column datatype='string' name='[City]' role='dimension' semantic-role='[City].[Name]' type='nominal' />
       <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
       <column datatype='date' name='[Date]' role='dimension' type='ordinal' />
+      <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
       <column datatype='string' name='[Payment Method]' role='dimension' type='nominal' />
       <column datatype='string' name='[Product Category]' role='dimension' type='nominal' />
       <column datatype='string' name='[Product Name]' role='dimension' type='nominal' />
@@ -413,7 +414,13 @@
       <column datatype='real' datatype-customized='true' name='[Time (Hr/Min)]' role='dimension' type='ordinal' />
       <column caption='Xmas Dataset' datatype='table' name='[__tableau_internal_object_id__].[Xmas Dataset_97C98497DD5D4494BD3BECE26CCB779A]' role='measure' type='quantitative' />
       <column-instance column='[Product Name]' derivation='None' name='[none:Product Name:nk]' pivot='key' type='nominal' />
+      <column-instance column='[Product Type]' derivation='None' name='[none:Product Type:nk]' pivot='key' type='nominal' />
       <column-instance column='[Date]' derivation='Year' name='[yr:Date:ok]' pivot='key' type='ordinal' />
+      <group caption='Action (City)' hidden='true' name='[Action (City)]' name-style='unqualified' user:auto-column='sheet_link'>
+        <groupfilter function='crossjoin'>
+          <groupfilter function='level-members' level='[City]' />
+        </groupfilter>
+      </group>
       <group caption='Action (City,Country,Payment Method,Product Category,Product Name,Product Type,Purchase Type,YEAR(Date))' hidden='true' name='[Action (City,Country,Payment Method,Product Category,Product Name,Product Type,Purchase Type,YEAR(Date))]' name-style='unqualified' user:auto-column='sheet_link'>
         <groupfilter function='crossjoin'>
           <groupfilter function='level-members' level='[City]' />
@@ -424,6 +431,26 @@
           <groupfilter function='level-members' level='[Product Type]' />
           <groupfilter function='level-members' level='[Purchase Type]' />
           <groupfilter function='level-members' level='[yr:Date:ok]' />
+        </groupfilter>
+      </group>
+      <group caption='Action (Country)' hidden='true' name='[Action (Country)]' name-style='unqualified' user:auto-column='sheet_link'>
+        <groupfilter function='crossjoin'>
+          <groupfilter function='level-members' level='[Country]' />
+        </groupfilter>
+      </group>
+      <group caption='Action (Gender)' hidden='true' name='[Action (Gender)]' name-style='unqualified' user:auto-column='sheet_link'>
+        <groupfilter function='crossjoin'>
+          <groupfilter function='level-members' level='[Gender]' />
+        </groupfilter>
+      </group>
+      <group caption='Action (Product Name)' hidden='true' name='[Action (Product Name)]' name-style='unqualified' user:auto-column='sheet_link'>
+        <groupfilter function='crossjoin'>
+          <groupfilter function='level-members' level='[Product Name]' />
+        </groupfilter>
+      </group>
+      <group caption='Action (Product Type)' hidden='true' name='[Action (Product Type)]' name-style='unqualified' user:auto-column='sheet_link'>
+        <groupfilter function='crossjoin'>
+          <groupfilter function='level-members' level='[Product Type]' />
         </groupfilter>
       </group>
       <drill-paths>
@@ -779,6 +806,17 @@
               <bucket>&quot;Hot Wheels Car Set&quot;</bucket>
             </map>
           </encoding>
+          <encoding attr='color' field='[none:Product Type:nk]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;Adult&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Teen&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Children&quot;</bucket>
+            </map>
+          </encoding>
         </style-rule>
       </style>
       <semantic-values>
@@ -1059,6 +1097,7 @@
             <column datatype='string' name='[City]' role='dimension' semantic-role='[City].[Name]' type='nominal' />
             <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
             <column datatype='date' name='[Date]' role='dimension' type='ordinal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Category]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Name]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Type]' role='dimension' type='nominal' />
@@ -1074,6 +1113,21 @@
             <column-instance column='[Xmas Budget]' derivation='None' name='[none:Xmas Budget:nk]' pivot='key' type='nominal' />
             <column-instance column='[Date]' derivation='Year' name='[yr:Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]'>
+            <groupfilter function='level-members' level='[City]' user:ui-action-filter='[Action3_5987C4206A8F43D28CFAB9274012BF8F]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]'>
+            <groupfilter function='level-members' level='[Country]' user:ui-action-filter='[Action2_E977ECD554C64D7690403B7E33BC827C]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]'>
+            <groupfilter function='level-members' level='[Gender]' user:ui-action-filter='[Action8_8D503B30F52E4AB9BC7689FD5F0795C5]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]'>
+            <groupfilter function='level-members' level='[Product Name]' user:ui-action-filter='[Action5_CF954F4EFDE14B71B7DE31D102C87864]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]'>
+            <groupfilter function='level-members' level='[Product Type]' user:ui-action-filter='[Action7_629D55AEEBA944EB9CFB2CE46D4B32A0]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
           <slices>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:City:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Country:nk]</column>
@@ -1083,6 +1137,11 @@
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Purchase Type:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Xmas Budget:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[yr:Date:ok]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]</column>
           </slices>
           <aggregation value='true' />
         </view>
@@ -1154,6 +1213,7 @@
             <column datatype='real' name='[Cost]' role='measure' type='quantitative' />
             <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
             <column datatype='date' name='[Date]' role='dimension' type='ordinal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Category]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Name]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Type]' role='dimension' type='nominal' />
@@ -1172,6 +1232,18 @@
             <column-instance column='[Calculation_5204683481906315264]' derivation='User' name='[usr:Calculation_5204683481906315264:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Date]' derivation='Year' name='[yr:Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]'>
+            <groupfilter function='level-members' level='[City]' user:ui-action-filter='[Action3_5987C4206A8F43D28CFAB9274012BF8F]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]'>
+            <groupfilter function='level-members' level='[Gender]' user:ui-action-filter='[Action8_8D503B30F52E4AB9BC7689FD5F0795C5]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]'>
+            <groupfilter function='level-members' level='[Product Name]' user:ui-action-filter='[Action5_CF954F4EFDE14B71B7DE31D102C87864]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]'>
+            <groupfilter function='level-members' level='[Product Type]' user:ui-action-filter='[Action7_629D55AEEBA944EB9CFB2CE46D4B32A0]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
           <slices>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Country:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:City:nk]</column>
@@ -1181,6 +1253,10 @@
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Xmas Budget:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[yr:Date:ok]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Purchase Type:nk]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]</column>
           </slices>
           <aggregation value='true' />
         </view>
@@ -1348,6 +1424,18 @@
             <column-instance column='[Calculation_5204683481906315264]' derivation='User' name='[usr:Calculation_5204683481906315264:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Date]' derivation='Year' name='[yr:Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]'>
+            <groupfilter function='level-members' level='[City]' user:ui-action-filter='[Action3_5987C4206A8F43D28CFAB9274012BF8F]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]'>
+            <groupfilter function='level-members' level='[Country]' user:ui-action-filter='[Action2_E977ECD554C64D7690403B7E33BC827C]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]'>
+            <groupfilter function='level-members' level='[Product Name]' user:ui-action-filter='[Action5_CF954F4EFDE14B71B7DE31D102C87864]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]'>
+            <groupfilter function='level-members' level='[Product Type]' user:ui-action-filter='[Action7_629D55AEEBA944EB9CFB2CE46D4B32A0]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
           <slices>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Country:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:City:nk]</column>
@@ -1357,6 +1445,10 @@
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Xmas Budget:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[yr:Date:ok]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Purchase Type:nk]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]</column>
           </slices>
           <aggregation value='true' />
         </view>
@@ -1507,6 +1599,7 @@
             <column datatype='real' name='[Cost]' role='measure' type='quantitative' />
             <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
             <column datatype='date' name='[Date]' role='dimension' type='ordinal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Category]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Name]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Type]' role='dimension' type='nominal' />
@@ -1528,6 +1621,18 @@
             <column-instance column='[Calculation_5204683481906315264]' derivation='User' name='[usr:Calculation_5204683481906315264:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Date]' derivation='Year' name='[yr:Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]'>
+            <groupfilter function='level-members' level='[City]' user:ui-action-filter='[Action3_5987C4206A8F43D28CFAB9274012BF8F]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]'>
+            <groupfilter function='level-members' level='[Country]' user:ui-action-filter='[Action2_E977ECD554C64D7690403B7E33BC827C]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]'>
+            <groupfilter function='level-members' level='[Gender]' user:ui-action-filter='[Action8_8D503B30F52E4AB9BC7689FD5F0795C5]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]'>
+            <groupfilter function='level-members' level='[Product Name]' user:ui-action-filter='[Action5_CF954F4EFDE14B71B7DE31D102C87864]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
           <slices>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Country:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:City:nk]</column>
@@ -1537,6 +1642,10 @@
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Xmas Budget:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[yr:Date:ok]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Purchase Type:nk]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]</column>
           </slices>
           <aggregation value='true' />
         </view>
@@ -1684,6 +1793,7 @@
             <column datatype='real' name='[Cost]' role='measure' type='quantitative' />
             <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
             <column datatype='date' name='[Date]' role='dimension' type='ordinal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Category]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Name]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Type]' role='dimension' type='nominal' />
@@ -1705,6 +1815,21 @@
             <column-instance column='[Calculation_5204683481906315264]' derivation='User' name='[usr:Calculation_5204683481906315264:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Date]' derivation='Year' name='[yr:Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]'>
+            <groupfilter function='level-members' level='[City]' user:ui-action-filter='[Action3_5987C4206A8F43D28CFAB9274012BF8F]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]'>
+            <groupfilter function='level-members' level='[Country]' user:ui-action-filter='[Action2_E977ECD554C64D7690403B7E33BC827C]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]'>
+            <groupfilter function='level-members' level='[Gender]' user:ui-action-filter='[Action8_8D503B30F52E4AB9BC7689FD5F0795C5]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]'>
+            <groupfilter function='level-members' level='[Product Name]' user:ui-action-filter='[Action5_CF954F4EFDE14B71B7DE31D102C87864]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]'>
+            <groupfilter function='level-members' level='[Product Type]' user:ui-action-filter='[Action7_629D55AEEBA944EB9CFB2CE46D4B32A0]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
           <slices>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Country:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:City:nk]</column>
@@ -1714,6 +1839,11 @@
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Xmas Budget:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[yr:Date:ok]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Purchase Type:nk]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]</column>
           </slices>
           <aggregation value='true' />
         </view>
@@ -1858,6 +1988,7 @@
             <column datatype='real' name='[Cost]' role='measure' type='quantitative' />
             <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
             <column datatype='date' name='[Date]' role='dimension' type='ordinal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Category]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Name]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Type]' role='dimension' type='nominal' />
@@ -1877,6 +2008,21 @@
             <column-instance column='[Calculation_5204683481906315264]' derivation='User' name='[usr:Calculation_5204683481906315264:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Date]' derivation='Year' name='[yr:Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]'>
+            <groupfilter function='level-members' level='[City]' user:ui-action-filter='[Action3_5987C4206A8F43D28CFAB9274012BF8F]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]'>
+            <groupfilter function='level-members' level='[Country]' user:ui-action-filter='[Action2_E977ECD554C64D7690403B7E33BC827C]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]'>
+            <groupfilter function='level-members' level='[Gender]' user:ui-action-filter='[Action8_8D503B30F52E4AB9BC7689FD5F0795C5]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]'>
+            <groupfilter function='level-members' level='[Product Name]' user:ui-action-filter='[Action5_CF954F4EFDE14B71B7DE31D102C87864]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]'>
+            <groupfilter function='level-members' level='[Product Type]' user:ui-action-filter='[Action7_629D55AEEBA944EB9CFB2CE46D4B32A0]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
           <slices>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Country:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:City:nk]</column>
@@ -1886,6 +2032,11 @@
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Xmas Budget:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[yr:Date:ok]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Purchase Type:nk]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]</column>
           </slices>
           <aggregation value='true' />
         </view>
@@ -1993,6 +2144,7 @@
             <column datatype='real' name='[Cost]' role='measure' type='quantitative' />
             <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
             <column datatype='date' name='[Date]' role='dimension' type='ordinal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Category]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Name]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Type]' role='dimension' type='nominal' />
@@ -2012,6 +2164,18 @@
             <column-instance column='[Calculation_5204683481906315264]' derivation='User' name='[usr:Calculation_5204683481906315264:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Date]' derivation='Year' name='[yr:Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]'>
+            <groupfilter function='level-members' level='[Country]' user:ui-action-filter='[Action2_E977ECD554C64D7690403B7E33BC827C]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]'>
+            <groupfilter function='level-members' level='[Gender]' user:ui-action-filter='[Action8_8D503B30F52E4AB9BC7689FD5F0795C5]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]'>
+            <groupfilter function='level-members' level='[Product Name]' user:ui-action-filter='[Action5_CF954F4EFDE14B71B7DE31D102C87864]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]'>
+            <groupfilter function='level-members' level='[Product Type]' user:ui-action-filter='[Action7_629D55AEEBA944EB9CFB2CE46D4B32A0]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
           <slices>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Country:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:City:nk]</column>
@@ -2021,6 +2185,10 @@
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Xmas Budget:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[yr:Date:ok]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Purchase Type:nk]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Name)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]</column>
           </slices>
           <aggregation value='true' />
         </view>
@@ -2155,6 +2323,7 @@
             <column datatype='real' name='[Cost]' role='measure' type='quantitative' />
             <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
             <column datatype='date' name='[Date]' role='dimension' type='ordinal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Category]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Name]' role='dimension' type='nominal' />
             <column datatype='string' name='[Product Type]' role='dimension' type='nominal' />
@@ -2174,6 +2343,18 @@
             <column-instance column='[Calculation_5204683481906315264]' derivation='User' name='[usr:Calculation_5204683481906315264:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Date]' derivation='Year' name='[yr:Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]'>
+            <groupfilter function='level-members' level='[City]' user:ui-action-filter='[Action3_5987C4206A8F43D28CFAB9274012BF8F]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]'>
+            <groupfilter function='level-members' level='[Country]' user:ui-action-filter='[Action2_E977ECD554C64D7690403B7E33BC827C]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]'>
+            <groupfilter function='level-members' level='[Gender]' user:ui-action-filter='[Action8_8D503B30F52E4AB9BC7689FD5F0795C5]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]'>
+            <groupfilter function='level-members' level='[Product Type]' user:ui-action-filter='[Action7_629D55AEEBA944EB9CFB2CE46D4B32A0]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
           <computed-sort column='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Product Name:nk]' direction='DESC' using='[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[usr:Calculation_5204683481906315264:qk]' />
           <slices>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Country:nk]</column>
@@ -2184,6 +2365,10 @@
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Xmas Budget:nk]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[yr:Date:ok]</column>
             <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[none:Purchase Type:nk]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Product Type)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Gender)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (City)]</column>
+            <column>[federated.1pisyrt1uxa7dq1ggnarr0uwb1kz].[Action (Country)]</column>
           </slices>
           <aggregation value='true' />
         </view>
@@ -2572,8 +2757,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='2450' minheight='2450' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='65' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='98222' id='64' param='vert' type-v2='layout-flow' w='98934' x='533' y='889'>
+            <zone h='100000' id='67' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98222' id='66' param='vert' type-v2='layout-flow' w='98934' x='533' y='889'>
                 <zone alt-text='Xmas Logo' fixed-size='62' h='7778' id='7' is-fixed='true' is-scaled='1' param='/Users/edima/Documents/Coding/hackathon-coding-challenges/Onyx_FP20/Xmas_Gift/Xmas logo.jpg' type-v2='bitmap' w='9000' x='533' y='889'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
@@ -2786,7 +2971,7 @@
           <zoom type='fit-width' />
         </viewpoint>
       </viewpoints>
-      <active id='28' />
+      <active id='-1' />
       <simple-id uuid='{F02C543B-DA44-48D8-A000-D76B66F7FDCA}' />
     </window>
     <window class='worksheet' name='Reset'>
