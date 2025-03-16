@@ -431,7 +431,7 @@
         </drill-path>
       </drill-paths>
       <extract _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' object-id='' units='records'>
-        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='/var/folders/w9/cv0lh9lj3_79503qn1046m_00000gn/T/tableau-temp/#TableauTemp_19taxy21q3gfyz18uthy604rm5tl.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='03/16/2025 02:36:39 PM' username='tableau_internal_user'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='/var/folders/w9/cv0lh9lj3_79503qn1046m_00000gn/T/tableau-temp/#TableauTemp_14w8yf102vygno1548rlf160egrp.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='03/16/2025 03:11:43 PM' username='tableau_internal_user'>
           <relation name='Extract' table='[Extract].[Extract]' type='table' />
           <metadata-records>
             <metadata-record class='column'>
@@ -979,6 +979,91 @@
       </table>
       <simple-id uuid='{00DE437A-6860-475C-9E0F-825511600FEF}' />
     </worksheet>
+    <worksheet name='Agent Interactions'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Data (Dataset_Technical_Support_Analysis)' name='federated.096zx5a01853f71b6llwb0s0tfmg' />
+          </datasources>
+          <datasource-dependencies datasource='federated.096zx5a01853f71b6llwb0s0tfmg'>
+            <column datatype='string' name='[Agent Group]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Agent Name]' role='dimension' type='nominal' />
+            <column datatype='integer' name='[Agent interactions]' role='measure' type='quantitative' />
+            <column caption='Day Type' datatype='string' name='[Calculation_2040975113810423808]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='If DatePart(&apos;weekday&apos;,[Created time]) &gt; 1 and DatePart(&apos;weekday&apos;,[Created time]) &lt; 7 then &apos;Weekday&apos;&#10;Else &apos;Weekend&apos;&#10;END' />
+            </column>
+            <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
+            <column datatype='datetime' name='[Created time]' role='dimension' type='ordinal' />
+            <column datatype='string' name='[Priority]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Source]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Status]' role='dimension' type='nominal' />
+            <column-instance column='[Agent interactions]' derivation='Avg' name='[avg:Agent interactions:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Agent Group]' derivation='None' name='[none:Agent Group:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Agent Name]' derivation='None' name='[none:Agent Name:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Calculation_2040975113810423808]' derivation='None' name='[none:Calculation_2040975113810423808:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Country]' derivation='None' name='[none:Country:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Priority]' derivation='None' name='[none:Priority:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Source]' derivation='None' name='[none:Source:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Status]' derivation='None' name='[none:Status:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Agent Group:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Agent Name:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Country:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Priority:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Source:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Status:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Calculation_2040975113810423808:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='width' value='144' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='rows' value='false' />
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <text column='[federated.096zx5a01853f71b6llwb0s0tfmg].[avg:Agent interactions:qk]' />
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run bold='true' fontcolor='#285391'>&lt;</run>
+                <run bold='true' fontcolor='#285391'>[federated.096zx5a01853f71b6llwb0s0tfmg].[avg:Agent interactions:qk]</run>
+                <run bold='true' fontcolor='#285391'>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='center' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='size' value='2' />
+              </style-rule>
+              <style-rule element='pane'>
+                <format attr='minwidth' value='-1' />
+                <format attr='maxwidth' value='-1' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{BFD992D8-6E15-469D-925D-B69491539D23}' />
+    </worksheet>
     <worksheet name='Country'>
       <table>
         <view>
@@ -1358,26 +1443,6 @@
       </table>
       <simple-id uuid='{6FFD9DFC-8842-4FD3-B475-FFE45525CED1}' />
     </worksheet>
-    <worksheet name='Sheet 5'>
-      <table>
-        <view>
-          <datasources />
-          <aggregation value='true' />
-        </view>
-        <style />
-        <panes>
-          <pane selection-relaxation-option='selection-relaxation-allow'>
-            <view>
-              <breakdown value='auto' />
-            </view>
-            <mark class='Automatic' />
-          </pane>
-        </panes>
-        <rows />
-        <cols />
-      </table>
-      <simple-id uuid='{F88E5EC4-A2C3-471E-B9E5-65151EBBB672}' />
-    </worksheet>
     <worksheet name='Topic'>
       <table>
         <view>
@@ -1451,6 +1516,174 @@
         <cols>[federated.096zx5a01853f71b6llwb0s0tfmg].[cnt:Ticket ID:qk]</cols>
       </table>
       <simple-id uuid='{A2CC8BF3-86DB-4A0B-94BA-1AFA89AF50F0}' />
+    </worksheet>
+    <worksheet name='Total Tickets'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Data (Dataset_Technical_Support_Analysis)' name='federated.096zx5a01853f71b6llwb0s0tfmg' />
+          </datasources>
+          <datasource-dependencies datasource='federated.096zx5a01853f71b6llwb0s0tfmg'>
+            <column datatype='string' name='[Agent Group]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Agent Name]' role='dimension' type='nominal' />
+            <column caption='Day Type' datatype='string' name='[Calculation_2040975113810423808]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='If DatePart(&apos;weekday&apos;,[Created time]) &gt; 1 and DatePart(&apos;weekday&apos;,[Created time]) &lt; 7 then &apos;Weekday&apos;&#10;Else &apos;Weekend&apos;&#10;END' />
+            </column>
+            <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
+            <column datatype='datetime' name='[Created time]' role='dimension' type='ordinal' />
+            <column datatype='string' name='[Priority]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Source]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Status]' role='dimension' type='nominal' />
+            <column datatype='integer' name='[Ticket ID]' role='measure' type='quantitative' />
+            <column-instance column='[Ticket ID]' derivation='Count' name='[cnt:Ticket ID:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Agent Group]' derivation='None' name='[none:Agent Group:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Agent Name]' derivation='None' name='[none:Agent Name:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Calculation_2040975113810423808]' derivation='None' name='[none:Calculation_2040975113810423808:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Country]' derivation='None' name='[none:Country:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Priority]' derivation='None' name='[none:Priority:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Source]' derivation='None' name='[none:Source:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Status]' derivation='None' name='[none:Status:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Agent Group:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Agent Name:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Country:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Priority:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Source:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Status:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Calculation_2040975113810423808:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.096zx5a01853f71b6llwb0s0tfmg].[cnt:Ticket ID:qk]' scope='rows' value='' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='rows' value='false' />
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <text column='[federated.096zx5a01853f71b6llwb0s0tfmg].[cnt:Ticket ID:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text />
+            </customized-tooltip>
+            <customized-label>
+              <formatted-text>
+                <run bold='true' fontcolor='#285391'>&lt;</run>
+                <run bold='true' fontcolor='#285391'>[federated.096zx5a01853f71b6llwb0s0tfmg].[cnt:Ticket ID:qk]</run>
+                <run bold='true' fontcolor='#285391'>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='vertical-align' value='center' />
+                <format attr='text-align' value='center' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='size' value='2' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{8719D0B1-A045-426E-A27F-E6482F467F31}' />
+    </worksheet>
+    <worksheet name='Total Tickets (2)'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Data (Dataset_Technical_Support_Analysis)' name='federated.096zx5a01853f71b6llwb0s0tfmg' />
+          </datasources>
+          <datasource-dependencies datasource='federated.096zx5a01853f71b6llwb0s0tfmg'>
+            <column datatype='string' name='[Agent Group]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Agent Name]' role='dimension' type='nominal' />
+            <column caption='Day Type' datatype='string' name='[Calculation_2040975113810423808]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='If DatePart(&apos;weekday&apos;,[Created time]) &gt; 1 and DatePart(&apos;weekday&apos;,[Created time]) &lt; 7 then &apos;Weekday&apos;&#10;Else &apos;Weekend&apos;&#10;END' />
+            </column>
+            <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
+            <column datatype='datetime' name='[Created time]' role='dimension' type='ordinal' />
+            <column datatype='string' name='[Priority]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Source]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Status]' role='dimension' type='nominal' />
+            <column datatype='integer' name='[Ticket ID]' role='measure' type='quantitative' />
+            <column-instance column='[Ticket ID]' derivation='Count' name='[cnt:Ticket ID:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Agent Group]' derivation='None' name='[none:Agent Group:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Agent Name]' derivation='None' name='[none:Agent Name:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Calculation_2040975113810423808]' derivation='None' name='[none:Calculation_2040975113810423808:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Country]' derivation='None' name='[none:Country:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Priority]' derivation='None' name='[none:Priority:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Source]' derivation='None' name='[none:Source:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Status]' derivation='None' name='[none:Status:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Agent Group:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Agent Name:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Country:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Priority:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Source:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Status:nk]</column>
+            <column>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Calculation_2040975113810423808:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.096zx5a01853f71b6llwb0s0tfmg].[cnt:Ticket ID:qk]' scope='rows' value='' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='rows' value='false' />
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <mark-sizing mark-sizing-setting='marks-scaling-off' />
+            <encodings>
+              <text column='[federated.096zx5a01853f71b6llwb0s0tfmg].[cnt:Ticket ID:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text />
+            </customized-tooltip>
+            <customized-label>
+              <formatted-text>
+                <run bold='true' fontcolor='#285391'>&lt;</run>
+                <run bold='true' fontcolor='#285391'>[federated.096zx5a01853f71b6llwb0s0tfmg].[cnt:Ticket ID:qk]</run>
+                <run bold='true' fontcolor='#285391'>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='vertical-align' value='center' />
+                <format attr='text-align' value='center' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='size' value='2' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{776D9F29-44CC-4773-AB42-F7E7234F4350}' />
     </worksheet>
   </worksheets>
   <windows source-height='30'>
@@ -1666,7 +1899,7 @@
       </viewpoint>
       <simple-id uuid='{7DD1BBDA-7101-4D10-9CBE-F9C189FAF091}' />
     </window>
-    <window class='worksheet' maximized='true' name='Country'>
+    <window class='worksheet' name='Country'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -1708,7 +1941,7 @@
       </viewpoint>
       <simple-id uuid='{BDD394C7-3B8A-47AF-A800-A9BD956C4F36}' />
     </window>
-    <window class='worksheet' name='Sheet 5'>
+    <window class='worksheet' maximized='true' name='Total Tickets'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -1729,7 +1962,89 @@
           </strip>
         </edge>
       </cards>
-      <simple-id uuid='{D9FDCA88-8BA2-41FB-87CD-6A9B62E9B7E6}' />
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[mn:Created time:ok]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Created time (Hours):qk]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Created time:ok]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Product group:nk]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Topic:nk]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[qr:Created time:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{EDDC94E6-9AB3-4587-81AF-6B0C7168EE16}' />
+    </window>
+    <window class='worksheet' name='Agent Interactions'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[mn:Created time:ok]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Created time (Hours):qk]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Created time:ok]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Product group:nk]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Topic:nk]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[qr:Created time:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{67CFECCB-7263-4FE4-9D8B-AE4E26BF05F8}' />
+    </window>
+    <window class='worksheet' name='Total Tickets (2)'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[mn:Created time:ok]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Created time (Hours):qk]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Created time:ok]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Product group:nk]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[none:Topic:nk]</field>
+            <field>[federated.096zx5a01853f71b6llwb0s0tfmg].[qr:Created time:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{829AA03D-F28C-45B6-BA43-5BA92773AE15}' />
     </window>
   </windows>
   <thumbnails>
@@ -1970,6 +2285,39 @@
       FAAiIjOlABARmSkFgIjITCkARERmSgEgIjJTCgARkZlSAIiIzJQCQERkphQAIiIzpQAQEZkp
       BYCIyEwpAEREZkoBICIyUwoAEZGZUgCIiMyUAkBEZKYUACIiM6UAEBGZKQWAiMhMKQBERGZK
       ASAiMlMKABGRmVIAiIjMlAJARGSmFAAiIjP1/wEq6nyPvq0SewAAAABJRU5ErkJggg==
+    </thumbnail>
+    <thumbnail height='48' name='Agent Interactions' width='296'>
+      iVBORw0KGgoAAAANSUhEUgAAASgAAAAwCAYAAACi9edbAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAGJ0lEQVR4nO3dWWxUVRzH8W9b1kptoSwFoRYRRUCgIGUTXCA0sppIjLgB4hoeeEAfwGiI
+      MTGoIYAJKi6ARJAlKAqETVBACigFy75DS4FWyi5baevDucfmlukwNGV6Mvw+L5M7nN5zKcyZ
+      35z7P2eiSkpKShARcVB0VV+AiEh5NECJiLM0QImIszRAiYizNECJiLM0QImIszRAiYizNECJ
+      iLM0QImIszRAiYizNECJiLM0QImIszRAiYizNECJiLM0QImIszRAiYizNECJiLM0QImIszRA
+      iYizNECJiLM0QImIs6pV9QVI5Cv2vjiouNj/BUIx0eb9MSoqvNdzrbAIgH3ZBQAkxNUCoGnD
+      u8N7IXJTSlAi4iwlqAj24nsLAMjcczyk9n3SWgAw5Z3+lXodYyYuA2BZxn7f85PG9AMgvdv9
+      vuf7j54FwOHjZyrU3+/TRgLQoO5dvufnLN8OwEfT1wJQeL3I9+fNm9QF4ItxgwBIToqvUP9S
+      eZSgRMRZSlAR7OiJswDExdYEoFfHlKDt27VMqtT+M/ecAEqTU2J8bQAKzl0GoKi4OODPpbZq
+      AkDTRsETzOUrhQD8uSsXgNha1YHSv6+1NvMIAB98tQaA+Dpmzumlfo8AcCjXJLWlf+wDYPj4
+      hQCsnDocgJjoME+Syf80QEWgy1fNC/fU2UsAPNrhXgA+GZ0elv69OXEmzDAfpRITYgEYMbAj
+      AJ/OWg9AeS/7D9/qHVI/s5b+DZQOUEP6tAGgVk3/f+sFv+4MeP4+XVr4nr946SoAa7ceBSAj
+      Kxso/f1J+Okjnog4SwkqAuXknfcdN2sU3tvnS9bvBSDrQB4A4994ErixzKCiirzzzFy8FYCY
+      GPM+O3xAqq+dnQT/bcsRAJLqxwE3JifrhafaA6UJauWmg4ASVFVSghIRZylBRaBsb3LcivIq
+      Ifd7hYn165o5obpxtSu13yvXrgMw8fsNALRoWg+AIb3N3NC8lTsqpZ8V3qR7br5JigN6PghA
+      Yy8hWXmn/wVKk1Ra63uCnjetTVPf8bH88+W0lHBRghIRZylBRaDsvHO+49nLsnyP0V6iSm3V
+      GIC+XU2h5ND0hwGoXi2mQv3aOaETpy4A8PnYgUDl36b/ZlGm73jk4I4B2+Wdvug7rhcfPDHa
+      u3+2XCGv4GKw5hIGSlAi4iwlqAjU07vrZOt6rAuXrgGw1Sug3LbXPG7ZbZbC5HjJ691XHrul
+      /my91bSFfwHQpa2Zy3m8U/NbvvZgNu04BsDOQ/kAdGvXDIBWKQ0Cti8s9C9lqRYT2vuxbVd2
+      KYyEnxKUiDhLCSoCtUxO9B67BW1nk5NdVLxw9S4Axo0wCSrUbVAmz8kA4JK39KRLW5NsbD2R
+      dSCnwHe86/A/ACR4dxNtIirPt4u2+I5HDu4UtH3ZxcJnLlwJ2r6oyCy9ueAlz5bNEoO2l9tP
+      CUpEnKUEdQfr9JBZlJuclABA9klTP3X2olnMG2qd1LIN/m1UpvyQEdLPff2TSUTzV5m1chtn
+      vB6wna3fWrfNJLJWKfUB6NE+Oej5G9ar4zveeTA/aPudXqKzawkbJtYJ0lrCQQlKRJylBBWB
+      vluyDYBeqSkApDRJCNhu79FTQGlysompbHKydU2nz5tklZRoKrbt9imT3zYbz12/yVq71ZvN
+      2ra5XkX5q0+bOaTu7YInoem/mLonm2xGDApc91RWXGwNADp7FeR214Os/SeBG7eXmbdiu++4
+      d+f7QupHbh8lKBFxlhJUBFrlrcL/eOY6ANK8uiRbL3TMq3eyczrWc+ltA55v0mwzp/Tz2j0A
+      jB3RC4CX+3cAoPtN5oKs3DJr21o3N9dT3t27fG8t3eJ1ZiM5uxtB/x4PhNSfNWyg2eXAJqhR
+      ExYDMDS9HQDH8s3v48c1u00/3txT366Bdz2Q8FGCEhFnKUFFoNHPm/qnqfM3A7Bpew4AGVk5
+      vna1aph//jef6QzAqGe7hnT+6Ap+T9Strsmbs9ysHbQV3cO8xBYTYkW4ZeeS3n/tCaD0SxM+
+      m7vR187O1X05bjBQ8TWJUnmiSkpKKmcXMXGWfYFnnzQfZez2K3YjuzvthXjVWwJjbxLc7e1h
+      Xt7NBKk6+ognIs76D7eAnjDw5+kaAAAAAElFTkSuQmCC
     </thumbnail>
     <thumbnail height='384' name='Country' width='384'>
       iVBORw0KGgoAAAANSUhEUgAAAYAAAAGACAYAAACkx7W/AAAACXBIWXMAAA7DAAAOwwHHb6hk
@@ -3777,35 +4125,6 @@
       ADVr1ixYmzJxBmBmFilnAGZmkXIGYGYWKXcAZmaRcgdgZhYpdwBmZpFyB2BmFil3AGZmkXIH
       YGYWKXcAZmaRcgdgZhap/wMowm0dKj0g6QAAAABJRU5ErkJggg==
     </thumbnail>
-    <thumbnail height='384' name='Sheet 5' width='384'>
-      iVBORw0KGgoAAAANSUhEUgAAAYAAAAGACAYAAACkx7W/AAAACXBIWXMAAA7DAAAOwwHHb6hk
-      AAAFXUlEQVR4nO3VMQEAIAzAMMC/5yFjRxMF/XpnZg4AOW87AIAdBgAQZQAAUQYAEGUAAFEG
-      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
-      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
-      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
-      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
-      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
-      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
-      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
-      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
-      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
-      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
-      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
-      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
-      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
-      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
-      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
-      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
-      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
-      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
-      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
-      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
-      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
-      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
-      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
-      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
-      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEfFxoG/IiMv0YAAAAASUVORK5CYII=
-    </thumbnail>
     <thumbnail height='348' name='Topic' width='384'>
       iVBORw0KGgoAAAANSUhEUgAAAYAAAAFcCAYAAADBO2nrAAAACXBIWXMAAA7DAAAOwwHHb6hk
       AAAgAElEQVR4nO3daZBUVZr/8S+yK/u+gyCLiMAgIoHiqGPYsmiLzWaIDcjEhBMtAtHzAjEG
@@ -4035,6 +4354,78 @@
       YcOGQLgfwPDhwwH4h3/4hxy07lzOAMzMIuUMwMwsy3744QcAdu3aBUCDBg0AqFy5cs7aVBBn
       AGZmkXIGYGYWKWcAZmaRcgdgZhYpdwBmZpFyB2BmFil3AGZmkXIHYGYWKXcAZmaRcgdgZhYp
       dwBmZpH6P1bxR192MfKCAAAAAElFTkSuQmCC
+    </thumbnail>
+    <thumbnail height='48' name='Total Tickets' width='128'>
+      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
+      gg==
+    </thumbnail>
+    <thumbnail height='48' name='Total Tickets (2)' width='128'>
+      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
+      gg==
     </thumbnail>
   </thumbnails>
   <external>
