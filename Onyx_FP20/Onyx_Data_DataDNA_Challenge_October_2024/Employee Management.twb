@@ -410,7 +410,7 @@
       <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
       <column-instance column='[Employee_Satisfaction_Score]' derivation='Sum' name='[sum:Employee_Satisfaction_Score:qk]' pivot='key' type='quantitative' />
       <extract _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' object-id='' units='records'>
-        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='/var/folders/w9/cv0lh9lj3_79503qn1046m_00000gn/T/tableau-temp/#TableauTemp_19mptz70gajb2z15z800205ddqgk.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='03/17/2025 05:26:30 PM' username='tableau_internal_user'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='/var/folders/w9/cv0lh9lj3_79503qn1046m_00000gn/T/tableau-temp/#TableauTemp_0n6oou00ejhdic18ffh3i1ulxmbi.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='03/17/2025 06:14:45 PM' username='tableau_internal_user'>
           <relation name='Extract' table='[Extract].[Extract]' type='table' />
           <metadata-records>
             <metadata-record class='column'>
@@ -1771,6 +1771,72 @@
       </table>
       <simple-id uuid='{45887413-E53F-4C24-9BAA-4239E74A3DAC}' />
     </worksheet>
+    <worksheet name='Productivity - Years At Company'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column caption='Years At Company' datatype='integer' name='[Years_At_Company]' role='measure' type='quantitative' />
+            <column-instance column='[Years_At_Company]' derivation='Avg' name='[avg:Years_At_Company:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Years_At_Company:qk]' value='n#,##0.00;-#,##0.00' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Years_At_Company:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text />
+            </customized-tooltip>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='center' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{F0A47691-79C8-4508-918A-E9A5310E0968}' />
+    </worksheet>
     <worksheet name='Sheet 12'>
       <table>
         <view>
@@ -2226,7 +2292,7 @@
       </cards>
       <simple-id uuid='{4EE42E94-C58F-4856-BCE2-0D8A25F18C59}' />
     </window>
-    <window class='worksheet' maximized='true' name='Productivity - Work Hrs per week'>
+    <window class='worksheet' name='Productivity - Work Hrs per week'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -2256,6 +2322,37 @@
         </highlight>
       </viewpoint>
       <simple-id uuid='{13E2785D-3E4B-4F79-9B29-FAD6DD5BA908}' />
+    </window>
+    <window class='worksheet' maximized='true' name='Productivity - Years At Company'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2625176428381224961:qk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Work_Hours_Per_Week:qk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{DE5E4E9D-5658-49A4-86F0-51874322F1AE}' />
     </window>
     <window class='worksheet' name='Sheet 12'>
       <cards>
@@ -3423,6 +3520,23 @@
       5mZkHbqwp3Dnzh0wZ84cZI6xZ88eMG/evNzz1q1bB+7fvw82btyILOPD9wHGOtlEkBwgcsrS
       j0X/Ou/fvwcfP35EtgcwefLkgsaHKiU8JzhBsV9NGw9JAJGTpoDI+RNwdlEgzwSWIwAAAABJ
       RU5ErkJggg==
+    </thumbnail>
+    <thumbnail height='48' name='Productivity - Years At Company' width='128'>
+      iVBORw0KGgoAAAANSUhEUgAAAIAAAAAwCAYAAADZ9HK+AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAACyUlEQVR4nO3cPyi1bxzH8dfxnxhIyYpBSUlhUUgGo8EiZTQoGZTBbjHa/SmUwcJkoAwG
+      kxSRUaIwMfhXPMPT3cnz1NPzew7n/DrX9d5Od33v66739bmv63vdndTHx8eHSLAU5HoAkdwS
+      BQicKEDgRAECJwoQOFGAwIkCBE4UIHCiAIETBQicKEDgRAECJwoQOFGAwIkCBE4UIHCiAIET
+      BQicKEDgRAECJwoQOFGAwIkCBE4UIHCiAIFTlOsBZIOXlxdQWFgIioq+5rH/tu7r6yu4u7sD
+      1dXVoKKi4kvGkQl5LcDR0RGYmJgAY2NjYHx8PCt1NzY2wNraGmhoaACXl5egs7MTzMzMgFQq
+      ldG4/oX4CgicvEyAt7c3MD8/D0ZGRrJa9/7+HumZv76+DiorK8H7+zuYnJwEBwcHoLu7+0vG
+      +V+ICRA4eZkAy8vLoLe3F9TX14Pr6+us1C0o+DmviouL8ftiL7leVVX16XcuiAkQOHmVAMnq
+      em9vD6ysrICdnZ2s1q2pqQEDAwNgamoK9PX1gdPTU6TXFF1dXRmNLxNiAgROXiXA3NwcmJ6e
+      BiUlJTmt29jYCPb398HZ2Rm4uLgAPT09SDeSckFMgMDJiwTY2tpCujVbWloKTk5OwNXVFbi9
+      vQXn5+egubn5W+omq/7FxUWwtLQEysrKPtVPOoC7u7ugv7//L572a4kJEDh5kQAPDw+grq4O
+      rK6ufrqe7NOfn5/B5uYmmJ2d/Za6bW1toL29Hb/P/IRkDXB8fIyYAJEckBcJMDo6+sfr29vb
+      SM/YX0/tkmPax8dHpE/t/rVuss9P+gVPT0+gvLwc6bOAZHfQ0dHxx/t8JzEBAicvEiBTko7e
+      4eEhWFhYyKheS0sLGBwcBMPDw6CpqQnpzmJraysYGhrK6H6ZEBMgcFLxz6K/n6Tnf3NzA2pr
+      a/H/+CQsChA48RUQOD8AYwf4OvuoqwsAAAAASUVORK5CYII=
     </thumbnail>
     <thumbnail height='384' name='Sheet 12' width='384'>
       iVBORw0KGgoAAAANSUhEUgAAAYAAAAGACAYAAACkx7W/AAAACXBIWXMAAA7DAAAOwwHHb6hk
