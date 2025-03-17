@@ -834,6 +834,84 @@
       </object-graph>
     </datasource>
   </datasources>
+  <shared-views>
+    <shared-view name='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+      <datasources>
+        <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+      </datasources>
+      <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+        <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+        <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+        <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+        <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+        <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+        <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+        <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+        <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+        <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+        <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+        <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+        <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+      </datasource-dependencies>
+      <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]'>
+        <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+          <groupfilter function='member' level='[none:Department:nk]' member='&quot;Customer Support&quot;' />
+          <groupfilter function='member' level='[none:Department:nk]' member='&quot;Engineering&quot;' />
+          <groupfilter function='member' level='[none:Department:nk]' member='&quot;Finance&quot;' />
+          <groupfilter function='member' level='[none:Department:nk]' member='&quot;HR&quot;' />
+          <groupfilter function='member' level='[none:Department:nk]' member='&quot;IT&quot;' />
+          <groupfilter function='member' level='[none:Department:nk]' member='&quot;Legal&quot;' />
+          <groupfilter function='member' level='[none:Department:nk]' member='&quot;Marketing&quot;' />
+          <groupfilter function='member' level='[none:Department:nk]' member='&quot;Operations&quot;' />
+          <groupfilter function='member' level='[none:Department:nk]' member='&quot;Sales&quot;' />
+        </groupfilter>
+      </filter>
+      <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]'>
+        <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+          <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Bachelor&quot;' />
+          <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;High School&quot;' />
+          <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Master&quot;' />
+          <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;PhD&quot;' />
+        </groupfilter>
+      </filter>
+      <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]'>
+        <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+          <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Female&quot;' />
+          <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Male&quot;' />
+          <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Other&quot;' />
+        </groupfilter>
+      </filter>
+      <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]'>
+        <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+          <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Analyst&quot;' />
+          <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Consultant&quot;' />
+          <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Developer&quot;' />
+          <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Engineer&quot;' />
+          <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Manager&quot;' />
+          <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Specialist&quot;' />
+          <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Technician&quot;' />
+        </groupfilter>
+      </filter>
+      <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]'>
+        <groupfilter function='level-members' level='[none:Resigned:nk]' />
+      </filter>
+      <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]'>
+        <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2014' />
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2015' />
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2016' />
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2017' />
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2018' />
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2019' />
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2020' />
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2021' />
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2022' />
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2023' />
+          <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2024' />
+        </groupfilter>
+      </filter>
+    </shared-view>
+  </shared-views>
   <worksheets>
     <worksheet name='Performance - Age'>
       <table>
@@ -859,63 +937,6 @@
             <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
             <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Customer Support&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Engineering&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Finance&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;HR&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;IT&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Legal&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Marketing&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Operations&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Sales&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Bachelor&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;High School&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Master&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;PhD&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Female&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Male&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Other&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Analyst&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Consultant&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Developer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Engineer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Manager&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Specialist&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Technician&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]'>
-            <groupfilter function='level-members' level='[none:Resigned:nk]' />
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2014' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2015' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2016' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2017' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2018' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2019' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2020' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2021' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2022' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2023' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2024' />
-            </groupfilter>
-          </filter>
           <slices>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
@@ -962,6 +983,79 @@
       </table>
       <simple-id uuid='{7CD39BA6-24B5-4BB2-A973-BF8075B00A1A}' />
     </worksheet>
+    <worksheet name='Performance - Average Salary'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column caption='Monthly Salary' datatype='integer' name='[Monthly_Salary]' role='measure' type='quantitative' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column-instance column='[Monthly_Salary]' derivation='Avg' name='[avg:Monthly_Salary:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Monthly_Salary:qk]' value='c&quot;$&quot;#,##0.00;-&quot;$&quot;#,##0.00' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Monthly_Salary:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text />
+            </customized-tooltip>
+            <customized-label>
+              <formatted-text>
+                <run bold='true' fontsize='12'>&lt;</run>
+                <run bold='true' fontsize='12'>[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Monthly_Salary:qk]</run>
+                <run bold='true' fontsize='12'>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='center' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{0B21A3C1-747C-4E6B-9016-516CDB69B529}' />
+    </worksheet>
     <worksheet name='Performance - Employee Trend'>
       <table>
         <view>
@@ -984,63 +1078,6 @@
             <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
             <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Customer Support&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Engineering&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Finance&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;HR&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;IT&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Legal&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Marketing&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Operations&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Sales&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Bachelor&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;High School&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Master&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;PhD&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Female&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Male&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Other&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Analyst&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Consultant&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Developer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Engineer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Manager&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Specialist&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Technician&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]'>
-            <groupfilter function='level-members' level='[none:Resigned:nk]' />
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2014' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2015' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2016' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2017' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2018' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2019' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2020' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2021' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2022' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2023' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2024' />
-            </groupfilter>
-          </filter>
           <slices>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
@@ -1100,63 +1137,6 @@
             <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
             <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Customer Support&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Engineering&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Finance&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;HR&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;IT&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Legal&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Marketing&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Operations&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Sales&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Bachelor&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;High School&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Master&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;PhD&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Female&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Male&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Other&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Analyst&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Consultant&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Developer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Engineer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Manager&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Specialist&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Technician&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]'>
-            <groupfilter function='level-members' level='[none:Resigned:nk]' />
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2014' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2015' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2016' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2017' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2018' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2019' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2020' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2021' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2022' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2023' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2024' />
-            </groupfilter>
-          </filter>
           <slices>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
@@ -1233,63 +1213,6 @@
             </column-instance>
             <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Customer Support&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Engineering&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Finance&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;HR&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;IT&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Legal&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Marketing&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Operations&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Sales&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Bachelor&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;High School&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Master&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;PhD&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Female&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Male&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Other&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Analyst&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Consultant&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Developer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Engineer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Manager&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Specialist&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Technician&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]'>
-            <groupfilter function='level-members' level='[none:Resigned:nk]' />
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2014' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2015' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2016' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2017' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2018' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2019' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2020' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2021' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2022' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2023' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2024' />
-            </groupfilter>
-          </filter>
           <slices>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
@@ -1370,63 +1293,6 @@
             </column-instance>
             <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Customer Support&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Engineering&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Finance&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;HR&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;IT&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Legal&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Marketing&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Operations&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Sales&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Bachelor&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;High School&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Master&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;PhD&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Female&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Male&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Other&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Analyst&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Consultant&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Developer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Engineer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Manager&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Specialist&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Technician&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]'>
-            <groupfilter function='level-members' level='[none:Resigned:nk]' />
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2014' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2015' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2016' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2017' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2018' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2019' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2020' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2021' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2022' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2023' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2024' />
-            </groupfilter>
-          </filter>
           <slices>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
@@ -1508,63 +1374,6 @@
             <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
           <computed-sort column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2625176428377280512:nk]' direction='DESC' using='[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Projects_Handled:qk]' />
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Customer Support&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Engineering&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Finance&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;HR&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;IT&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Legal&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Marketing&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Operations&quot;' />
-              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Sales&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Bachelor&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;High School&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Master&quot;' />
-              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;PhD&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Female&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Male&quot;' />
-              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Other&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Analyst&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Consultant&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Developer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Engineer&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Manager&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Specialist&quot;' />
-              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Technician&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]'>
-            <groupfilter function='level-members' level='[none:Resigned:nk]' />
-          </filter>
-          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2014' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2015' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2016' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2017' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2018' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2019' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2020' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2021' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2022' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2023' />
-              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2024' />
-            </groupfilter>
-          </filter>
           <slices>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
             <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
@@ -1621,6 +1430,366 @@
         <cols>[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Projects_Handled:qk]</cols>
       </table>
       <simple-id uuid='{F4780582-B695-44E2-B5EE-80E4F6C116DE}' />
+    </worksheet>
+    <worksheet name='Performance - Total Employees'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column caption='Employee ID' datatype='integer' name='[Employee_ID]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column-instance column='[Employee_ID]' derivation='Count' name='[cnt:Employee_ID:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_ID:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text />
+            </customized-tooltip>
+            <customized-label>
+              <formatted-text>
+                <run bold='true' fontsize='12'>&lt;</run>
+                <run bold='true' fontsize='12'>[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_ID:qk]</run>
+                <run bold='true' fontsize='12'>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='center' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{5ECF5ABD-F9D9-489F-814B-A97B89CF123D}' />
+    </worksheet>
+    <worksheet name='Productivity - Overtime Hrs'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column caption='Overtime Hours' datatype='integer' name='[Overtime_Hours]' role='measure' type='quantitative' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column-instance column='[Overtime_Hours]' derivation='Avg' name='[avg:Overtime_Hours:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Overtime_Hours:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text />
+            </customized-tooltip>
+            <customized-label>
+              <formatted-text>
+                <run>Æ&#10;</run>
+                <run bold='true' fontsize='12'><![CDATA[<[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Overtime_Hours:qk]> ]]></run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='center' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{107F37C6-31F4-42D8-A4B0-BFCA0CDBBAC4}' />
+    </worksheet>
+    <worksheet name='Productivity - Performance Score'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column caption='Performance Score' datatype='integer' name='[Performance_Score]' role='measure' type='quantitative' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column-instance column='[Performance_Score]' derivation='Avg' name='[avg:Performance_Score:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Performance_Score:qk]' value='n#,##0.00;-#,##0.00' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Performance_Score:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text />
+            </customized-tooltip>
+            <customized-label>
+              <formatted-text>
+                <run>Æ&#10;</run>
+                <run bold='true' fontsize='12'><![CDATA[<[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Performance_Score:qk]>]]></run>
+                <run bold='true' fontsize='12'>Æ </run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='center' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{4F88D61C-929B-4052-88C9-4DF7FE5329FF}' />
+    </worksheet>
+    <worksheet name='Productivity - Project Handled'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column caption='Projects Handled' datatype='integer' name='[Projects_Handled]' role='measure' type='quantitative' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Projects_Handled]' derivation='Sum' name='[sum:Projects_Handled:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Projects_Handled:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text />
+            </customized-tooltip>
+            <customized-label>
+              <formatted-text>
+                <run bold='true' fontsize='12'>Æ&#10;</run>
+                <run bold='true' fontsize='12'><![CDATA[<[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Projects_Handled:qk]>]]></run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='center' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{7EA92F6E-90FA-4305-B0C0-4148FD33AE92}' />
+    </worksheet>
+    <worksheet name='Productivity - Work Hrs per week'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column caption='Work Hours Per Week' datatype='integer' name='[Work_Hours_Per_Week]' role='dimension' type='quantitative' />
+            <column-instance column='[Work_Hours_Per_Week]' derivation='Avg' name='[avg:Work_Hours_Per_Week:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Work_Hours_Per_Week:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text />
+            </customized-tooltip>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='center' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{45887413-E53F-4C24-9BAA-4239E74A3DAC}' />
+    </worksheet>
+    <worksheet name='Sheet 12'>
+      <table>
+        <view>
+          <datasources />
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{834646F1-946E-4F89-AAB0-BCFE3A6C55C3}' />
     </worksheet>
   </worksheets>
   <windows source-height='30'>
@@ -1778,7 +1947,7 @@
       </viewpoint>
       <simple-id uuid='{98051D63-C0B9-458A-98A5-78278F389437}' />
     </window>
-    <window class='worksheet' maximized='true' name='Performance - Age'>
+    <window class='worksheet' name='Performance - Age'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -1941,6 +2110,175 @@
         </highlight>
       </viewpoint>
       <simple-id uuid='{60FF086C-3F31-408B-9ABA-2B19BAAAFD75}' />
+    </window>
+    <window class='worksheet' name='Performance - Total Employees'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{E3E351A4-ECD5-4439-BC84-04BF5BDC2ED2}' />
+    </window>
+    <window class='worksheet' name='Performance - Average Salary'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{1B6C7D61-7CDB-42B9-B26A-F26E82DAE859}' />
+    </window>
+    <window class='worksheet' name='Productivity - Project Handled'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{BBD8D62F-82C4-404B-804A-856EB646D1C6}' />
+    </window>
+    <window class='worksheet' name='Productivity - Overtime Hrs'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{C922F16B-1DFD-4D8B-819F-A6975CF145E4}' />
+    </window>
+    <window class='worksheet' name='Productivity - Performance Score'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{4EE42E94-C58F-4856-BCE2-0D8A25F18C59}' />
+    </window>
+    <window class='worksheet' maximized='true' name='Productivity - Work Hrs per week'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2625176428381224961:qk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Work_Hours_Per_Week:qk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{13E2785D-3E4B-4F79-9B29-FAD6DD5BA908}' />
+    </window>
+    <window class='worksheet' name='Sheet 12'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{561A3B0B-FE12-4B74-ACD2-16FC4B1E9071}' />
     </window>
   </windows>
   <thumbnails>
@@ -2192,6 +2530,52 @@
       djVbuYONsfuVjbkz1JuIChcZOZHB+M34B1RPVgEgehwlPLsiihOMVWHiRvwDqtl5YYqIiCqO
       BYCIKKVYAIiIUuqRFAClFC5duoR3330XAwMDj6ILRESp90gKwMTEBC5duoRt27bh5MmTj6IL
       RESp9/8BAJX0PH2ulDUAAAAASUVORK5CYII=
+    </thumbnail>
+    <thumbnail height='52' name='Performance - Average Salary' width='208'>
+      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
     </thumbnail>
     <thumbnail height='384' name='Performance - Employee Trend' width='384'>
       iVBORw0KGgoAAAANSUhEUgAAAYAAAAGACAYAAACkx7W/AAAACXBIWXMAAA7DAAAOwwHHb6hk
@@ -2887,6 +3271,187 @@
       7rbe/1B7DEEsFCRFUAiYLiSQea+2cKtfjDtGay0inoPjeZ5jXdfruVrryyef5+C39x77vsc0
       TTEMQ9Rav3Qy3hEA4Na2bbEsS5RSrh/EjOP469figwQAuHUcx7XP/9wDZHj7XwQAICkXwQCS
       EgCApAQAICkBAEhKAACSEgCApAQAICkBAEjqAacqhfLjP8khAAAAAElFTkSuQmCC
+    </thumbnail>
+    <thumbnail height='52' name='Performance - Total Employees' width='168'>
+      iVBORw0KGgoAAAANSUhEUgAAAKgAAAA0CAYAAAAe73OMAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAE+klEQVR4nO3cy6uNXxzH8ddxzy3HPUTERCKMjDBALimlMKD8BcjQZWBihEhKkolILoWZ
+      AcklJiYUco5E7iV3IZ3f4NfynL3PbT+/9umszu/7npz2Xs9e+31O3+fzrOdZa52GlpaWFkGQ
+      KX16WiAIOiMKNMiaKNAga6JAg6yJAg2yJgo0yJoo0CBrokCDrIkCDbImCjTImijQIGuiQIOs
+      iQINsiYKNMiaKNAga6JAg6yJAg2yJgo0yJoo0CBrokCDrIkCDbImCjTImijQIGv69bRArfz6
+      9Qt8+fIFjBo1qnQfL168AN++fQPTp08H/fqV+zMkl6amJjBixAgwYcKE0k5lyNG/Xk4dEQka
+      ZE22Cfrnzx9w6dIlcOzYMTBkyBBw9uzZmvppamqybds28Pr164q2gQMHgp07d4Lly5d32te5
+      c+fAvn37wO/fvyvap0yZAg4ePAgmTZpUk2NHpITLyb/eTl3RkNu/vrl69So4fPgweP78eUX7
+      1KlT0XWB/vz5E6xYscKnT5/A6tWrwZgxY8Dp06fBjx8/wPHjx8Hs2bMr+rp16xbYsmULGD58
+      OFi/fj149uwZuHLlChg/fjyKk6tPn3IXqtbu6FH/5F5vp1qJS3yQNdld4o8cOYIiOZcsWQJu
+      3rxZqp/r16/j3zN92bJlYPfu3RXHTJw4EezZswdcvHgRbc/29H5i165dYPHixRXvf/36Fdy+
+      fRvcvXsXLFiw4D+7o0f9k3u9nWolEjTImuwSdObMmWDHjh1g7ty5YOnSpaX6SWNZirFWNWk8
+      deDAAXDt2jUUCZNuIm7cuAHGjRuHtsmTWLduHYoESv2VTdDW7j3tn9zr5VSWSNAga7JL0DR2
+      qabsw4ZXr16BAQMGmDVrVrvHpIfJc+bMQTHOTWOxz58/o0ii+fPnd/qd1e0vX74s5Zxo7Y4s
+      /OvlNHTo0E4dqokEDbImuwStF2/fvgWNjY0aGho6PXbkyJEVr9+9e4cigRKNjY2d9jNo0CAw
+      ePBg8P79+9qFW9HaHVn418spEjToVfTaBE3jrpQKnVG9sCEtpkg/Ozquq/6qP18rZdzb8+oO
+      /3o5lSUSNMiaXpugo0ePRjF26oyPHz9WvE7zymnhQ0fHVZMWuKQlgdOmTatNtooy7u15dYd/
+      vZzKEgkaZE2vTdCxY8eCp0+f/p3Xnzx5crvHPnz4EPTt2xfFnWp1AqXjOuLRo0contkmh7K0
+      dkcW/vVyKkskaJA1vTZBFy5cCO7cuePChQtg69atFcekOee06HbRokUo1m+mZ3bz5s0D9+7d
+      Aw8ePEDb2ZTz58+361BNmpVJSZVWALXnjiz86+VUlkjQIGuyWVGfzrgzZ860255W0Kfna2vW
+      rKlonzFjBli5ciX4/v07WLVq1d8ZlbVr16IYD6XvSnetR48eRZE4ibQWcvv27Sg27KX+UiJe
+      vnwZxXgtrYXs378/+PDhA4ptEOmZYuo/0dodPeqf3OvtVCuRoEHWZJOg9+/fB5s3b/5Pn08r
+      7/fu3VvxfnNz89+9OG/evKloq/ems3RHe+jQIbTddHbq1Cmwf/9+sHHjRhR7happbm6uaO9p
+      /+5w6opI0CBrsknQ7iT9imn3YtpxmMataZxVK2le+cmTJ2DYsGHo+JlgYsOGDShmbE6ePIli
+      jWXu/t3p1BH/iwLtaR4/fgw2bdoETpw4gWJ7S9AxcYkPsuYfQi33oTzbyNgAAAAASUVORK5C
+      YII=
+    </thumbnail>
+    <thumbnail height='86' name='Productivity - Overtime Hrs' width='128'>
+      iVBORw0KGgoAAAANSUhEUgAAAIAAAABWCAYAAAAHWZ75AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAE3ElEQVR4nO2aTShlfxjHP96LJhqxEWpGZsGMlJe8bJDN1KxQ7CalaYyhRMpGU1ZKpCR5
+      ycrbwkaZxTQpRV5nho0FmjAshhFmpslQ97+Yfh3n4v6v68rN83w2p3s69znP7X7O95zz+/38
+      HA6HA0Us/nfdgHK3qADCUQGEowIIRwUQjgogHBVAOCqAcFQA4agAwlEBhKMCCEcFEI4KIBwV
+      QDgqgHBUAOGoAMJRAYSjAghHBRCOCiAcFUA4KoBwVADhqADCUQGEowIIRwUQjgogHBVAOCqA
+      cFQA4agAwlEBhKMCCEcFEI4KIBwVQDgqgHBUAOGoAMJRAYSjAghHBRCOCiAcFUA4KoBwVADh
+      qADCUQGEowIIRwUQjgogHBVAOCqAcALvugF3+fnzJwD+/v+cDQsL87jW2dmZ7bOpaba+zN7e
+      HgAPHz4EICAg4Eb1fP8XK7eKzybAwcEBAH19fQCMjY0B8PLlSwBevXp17ZofP34EoKGhwbY/
+      Pz8fgJaWFo96NVRUVADw5csXt47Py8tz67wrKyt0dnYCsLS0BMDIyAgAjx8/9qhXgyaAcHwm
+      AU5OTgDrih8aGgLgz58/N6799+9fADo6OgCIjo4G4Pv37zeufZ6trS0AHjx4AEB2drbL45OT
+      k13WaW9vB2BqaspbLV5AE0A4PpMA3759A6C/vx+A0NBQAAoLCwH48OGDx7WHh4cB2NnZAeDd
+      u3cANDU1eVzzPCalfvz4AUBWVhYAzc3NHtWbmJgArCv/0aNHhISEALC6unqjXp3RBBCOzyRA
+      cHAwAC9evACgqqoKgM3NTcCzBDg8PASsVMnIyAAgNzf3Zs06YZLFEBMTc6N6ERERANTV1QFQ
+      UlJCa2sroAmgeBmfSYDY2Fjg4n3ZJIAndHd3A/D7928AampqPK7liu3tbdtnM6K4sbEBQGRk
+      JGBd2f9HaWmpF7tzjSaAcHwmAbzJ169fAWv08Pnz5wA8efIEgKOjI6+ez7zBGEZHR21bkwgp
+      KSmANfJYXFwMQFBQkFf7uQ6aAMK5lwlgRtACA//9vDdv3tzq+cyI369fv2z7zeeVlRUAlpeX
+      Afj8+TNgJUd9ff2t9ucKTQDh3KsEmJ2dBWB6ehqAzMxMANbX123b4+Nj2/f29/cBmJmZASAp
+      KQmA8PBwt85rZuRev37t8jhz5ZtZw/HxccB63/fz83PrfN5EE0A49yoBnEcL5+bmbNurMPfo
+      6upqALq6ugBIT0/3an+pqamANeZhxg/MW4m74wTe5F4JUFZWBkBBQYHL48zDWWNjIwBPnz4F
+      rGg2r4vmOPNHmQmq+Ph4Wz0zdZ2TkwNAXFzcpeddW1uz1TN/+F388Qa9BQjHZxLATH1++vTJ
+      tt950YaJ8/MLRcxAT2JiIgAJCQkuz+U8EBQVFQVcXMBheqqtrQXg2bNngDW5ZJicnASgra0N
+      gLS0NFs/u7u7gPWQaSgqKrq0v97eXsD+Wum8zGxgYACwhpnN4tC3b99eWvMqNAGE4zMJsLi4
+      CMDg4KDL48wDm9mCdQ83V9x1uer1y3mZ+FVLsCsrKwHo6ekBYGFhAYD5+XnbcWZRR3l5OXD1
+      wlYzhO1qydr79+8v3W+m0d19pdQEEI6fw+Fw3HUT943T01PAeto3SWIWitzl5I8zmgDC0QQQ
+      jiaAcP4Doq9Tc7ER98kAAAAASUVORK5CYII=
+    </thumbnail>
+    <thumbnail height='86' name='Productivity - Performance Score' width='128'>
+      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
+      AElFTkSuQmCC
+    </thumbnail>
+    <thumbnail height='96' name='Productivity - Project Handled' width='208'>
+      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
+      QmCC
+    </thumbnail>
+    <thumbnail height='48' name='Productivity - Work Hrs per week' width='128'>
+      iVBORw0KGgoAAAANSUhEUgAAAIAAAAAwCAYAAADZ9HK+AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAEJ0lEQVR4nO3cTUhVWxjG8Z83+xJS7INqIpVBghVINItqUKNEcBbRx6yoiCbRxJGEVjio
+      URRBFFQoFQThIIuIIIKIGlQQ0aCkD8ooKbC01Du4rPbd3kv3HLsSh7X+kw1777X3i+d5n7Xe
+      dx1P2ejo6KhEtPzxuwNI/F6SACInCSBykgAiJwkgcpIAIicJIHKSACInCSBykgAiJwkgcpIA
+      IicJIHKSACInCSBykgAiJwkgcpIAIicJIHKSACInCSBykgAiJwkgcpIAIicJIHLKf3cA/wff
+      v38HIyMjYMqUKUWNHxwcBJMmTQLl5cX9WcJ7X758Caqrq8GMGTMKGj80NJQbP3v2bFBZWVlU
+      HOOhpAUQPrjNmzfnzl+4cKGg8Q8ePAC7d+8G27ZtAzt27Cho/MOHD0FrayuoqakBz58/B2vW
+      rAF79+791/Hnz58HXV1dYMmSJeDFixdg69atYMOGDQXFMx7SFBA5Je0AJ0+eBOvXrwfXrl0r
+      aNy3b99AR0cH2LRp07jef+DAAXD48GFQW1uLzNKDs9y6dQusXr0a3L17F9y8eROZA0ybNi33
+      /C9fvowrrmJIDhA5JesAz549+5FJx44dQ+EOcPr0abB27Vowf/588Pr164LGf/jwAYT/rA+Z
+      HwiL0C1btoDr168jc4DOzk6wc+dO/DPzA9OnTy8onl8hOUDklJwDhJKrvb3d/v37kZVv/0Vv
+      by+4ceMGOHPmDLh69WpRMVRVVSFzjLdv34K5c+fm7luwYAF49+5d7nwo9z5//gyOHj2KzFlW
+      rFgBmpqaQFlZWVHxFUNygMgpOQe4ePEi/qqZly5disJXy+3t7WDfvn0ovmEUCI4Tqoft27cj
+      q9dDJt++fRvMmjUrN76vrw90d3eDVatWgWXLliFzplevXoFdu3aNK85CSA4QOSXjACFrTpw4
+      Adra2jx69AhZRzAcw/nFixeDnp6e3PWpU6fm7gtzcpirnzx5Aurq6n4aU6jz6+vrc89btGgR
+      WLlyZe79gdDqDX2EsU7U0NCArBOYHCAxYZSMA7x58wZZVl2+fPnHteHhYdDf3w/Onj2LrKf/
+      6dMnZKv0cD0QVvNfv34Fly5dAi0tLQXFFvoJ4Rg4d+4cWLhwYe586Ds8fvwYWcYHZs6ciazi
+      mUiSA0ROyTjA8uXLc8e/E6qAMGceOnQod31sBo7lypUryJxg7G7g06dPkc3dIUMHBgZARUVF
+      7v6wXgm7ksePH89db2xsBKdOnQJHjhxBtg197949ZLuLE0lygMgpGQf4GaFTNlEds4MHD4Lm
+      5mZkHbqwp3Dnzh0wZ84cZI6xZ88eMG/evNzz1q1bB+7fvw82btyILOPD9wHGOtlEkBwgcsrS
+      j0X/Ou/fvwcfP35EtgcwefLkgsaHKiU8JzhBsV9NGw9JAJGTpoDI+RNwdlEgzwSWIwAAAABJ
+      RU5ErkJggg==
+    </thumbnail>
+    <thumbnail height='384' name='Sheet 12' width='384'>
+      iVBORw0KGgoAAAANSUhEUgAAAYAAAAGACAYAAACkx7W/AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAFXUlEQVR4nO3VMQEAIAzAMMC/5yFjRxMF/XpnZg4AOW87AIAdBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEfFxoG/IiMv0YAAAAASUVORK5CYII=
     </thumbnail>
   </thumbnails>
 </workbook>
