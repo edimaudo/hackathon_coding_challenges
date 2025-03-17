@@ -383,6 +383,9 @@
       <column caption='Team Size Calculation' datatype='string' name='[Calculation_2625176428377280512]' role='dimension' type='nominal'>
         <calculation class='tableau' formula='If [Team_Size] &lt;= 5 then &apos;Small Team&apos;&#10;ELSEIF [Team_Size] &lt;= 10 then &apos;Medium Team&apos;&#10;ELSEIF [Team_Size] &lt;= 15 then &apos;Large Team&apos;&#10;Else &apos;Very Large Team&apos;&#10;END' />
       </column>
+      <column caption='Sick Day Calculation' datatype='string' name='[Calculation_2625176428382527490]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='If [Sick_Days] &gt;= 0 and [Sick_Days] &lt;= 7 then &apos;Under 7 Days&apos;&#10;Else &apos;More than 7 Days&apos;&#10;End' />
+      </column>
       <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
       <column caption='Employee ID' datatype='integer' name='[Employee_ID]' role='measure' type='quantitative' />
       <column caption='Employee Satisfaction Score' datatype='real' name='[Employee_Satisfaction_Score]' role='measure' type='ordinal' />
@@ -407,10 +410,11 @@
       <column-instance column='[Employee_Satisfaction_Score]' derivation='Median' name='[med:Employee_Satisfaction_Score:qk]' pivot='key' type='quantitative' />
       <column-instance column='[Calculation_2506464356932198400]' derivation='None' name='[none:Calculation_2506464356932198400:nk]' pivot='key' type='nominal' />
       <column-instance column='[Calculation_2506464356940083202]' derivation='None' name='[none:Calculation_2506464356940083202:nk]' pivot='key' type='nominal' />
+      <column-instance column='[Calculation_2625176428382527490]' derivation='None' name='[none:Calculation_2625176428382527490:nk]' pivot='key' type='nominal' />
       <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
       <column-instance column='[Employee_Satisfaction_Score]' derivation='Sum' name='[sum:Employee_Satisfaction_Score:qk]' pivot='key' type='quantitative' />
       <extract _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' object-id='' units='records'>
-        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='/var/folders/w9/cv0lh9lj3_79503qn1046m_00000gn/T/tableau-temp/#TableauTemp_0n6oou00ejhdic18ffh3i1ulxmbi.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='03/17/2025 06:14:45 PM' username='tableau_internal_user'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='/var/folders/w9/cv0lh9lj3_79503qn1046m_00000gn/T/tableau-temp/#TableauTemp_0mj9ce8143ujay153pf5709ey60w.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='03/17/2025 06:21:38 PM' username='tableau_internal_user'>
           <relation name='Extract' table='[Extract].[Extract]' type='table' />
           <metadata-records>
             <metadata-record class='column'>
@@ -762,6 +766,17 @@
               <bucket>&quot;Male&quot;</bucket>
             </map>
           </encoding>
+          <encoding attr='color' field='[none:Calculation_2625176428382527490:nk]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;More than 7 Days&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Under 7 Days&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;No Sicks Days&quot;</bucket>
+            </map>
+          </encoding>
         </style-rule>
       </style>
       <semantic-values>
@@ -782,6 +797,7 @@
         <field-sort-custom-order field='Projects_Handled' />
         <field-sort-custom-order field='Overtime_Hours' />
         <field-sort-custom-order field='Sick_Days' />
+        <field-sort-custom-order field='Calculation_2625176428382527490' />
         <field-sort-custom-order field='Remote_Work_Frequency' />
         <field-sort-custom-order field='Team_Size' />
         <field-sort-custom-order field='Calculation_2625176428377280512' />
@@ -1709,6 +1725,72 @@
       </table>
       <simple-id uuid='{7EA92F6E-90FA-4305-B0C0-4148FD33AE92}' />
     </worksheet>
+    <worksheet name='Productivity - Sick Days'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column caption='Sick Day Calculation' datatype='string' name='[Calculation_2625176428382527490]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='If [Sick_Days] &gt;= 0 and [Sick_Days] &lt;= 7 then &apos;Under 7 Days&apos;&#10;Else &apos;More than 7 Days&apos;&#10;End' />
+            </column>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column caption='Sick Days' datatype='integer' name='[Sick_Days]' role='measure' type='quantitative' />
+            <column-instance column='[Calculation_2625176428382527490]' derivation='None' name='[none:Calculation_2625176428382527490:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Sick_Days]' derivation='Sum' name='[pcto:sum:Sick_Days:qk]' pivot='key' type='quantitative'>
+              <table-calc ordering-type='Rows' type='PctTotal' />
+            </column-instance>
+            <column-instance column='[Sick_Days]' derivation='Sum' name='[sum:Sick_Days:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Pie' />
+            <encodings>
+              <color column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2625176428382527490:nk]' />
+              <wedge-size column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Sick_Days:qk]' />
+              <size column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Sick_Days:qk]' />
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2625176428382527490:nk]' />
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[pcto:sum:Sick_Days:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{7949A3E9-4599-435E-B551-8A435D29BA57}' />
+    </worksheet>
     <worksheet name='Productivity - Work Hrs per week'>
       <table>
         <view>
@@ -2323,7 +2405,7 @@
       </viewpoint>
       <simple-id uuid='{13E2785D-3E4B-4F79-9B29-FAD6DD5BA908}' />
     </window>
-    <window class='worksheet' maximized='true' name='Productivity - Years At Company'>
+    <window class='worksheet' name='Productivity - Years At Company'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -2353,6 +2435,46 @@
         </highlight>
       </viewpoint>
       <simple-id uuid='{DE5E4E9D-5658-49A4-86F0-51874322F1AE}' />
+    </window>
+    <window class='worksheet' maximized='true' name='Productivity - Sick Days'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2625176428382527490:nk]' type='color' />
+            <card pane-specification-id='0' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Sick_Days:qk]' type='size' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <zoom type='fit-width' />
+        <highlight>
+          <color-one-way>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2625176428381224961:qk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2625176428382527490:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Work_Hours_Per_Week:qk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{E35CA351-1768-4507-A112-6C44935EA358}' />
     </window>
     <window class='worksheet' name='Sheet 12'>
       <cards>
@@ -3496,6 +3618,32 @@
       agPpfzhbgt+1a1cA+vbtC0S+t05mtr3CKon1yezLSWzxaKQt3/YlIbZdwzYMhm/Ek+hUgUQc
       kr4PlFGs72Pr1OL9EsBkYl+hG+nLB6Oxc2HbKlR5EqcKJOLwFxOtm7z9c7voAAAAAElFTkSu
       QmCC
+    </thumbnail>
+    <thumbnail height='328' name='Productivity - Sick Days' width='384'>
+      iVBORw0KGgoAAAANSUhEUgAAAYAAAAFICAYAAABZfClmAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAEmUlEQVR4nO3VMQEAIAzAMMC/5yFjRxMF/XpnZg4AOW87AIAdBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUR+GlwaMGi0g
+      4AAAAABJRU5ErkJggg==
     </thumbnail>
     <thumbnail height='48' name='Productivity - Work Hrs per week' width='128'>
       iVBORw0KGgoAAAANSUhEUgAAAIAAAAAwCAYAAADZ9HK+AAAACXBIWXMAAA7DAAAOwwHHb6hk
