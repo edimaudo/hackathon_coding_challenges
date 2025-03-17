@@ -375,9 +375,13 @@
       <column caption='Promotions Calc' datatype='string' name='[Calculation_2506464356932198400]' role='dimension' type='nominal'>
         <calculation class='tableau' formula='Case [Promotions] &#10;When 0 then &apos;No Promotion&apos;&#10;When 1 then &apos;Promoted Once&apos;&#10;When 2 then &apos;Promoted More than Once&apos;&#10;End' />
       </column>
+      <column caption='Employee Satisfaction Calc' datatype='string' name='[Calculation_2506464356940083202]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='If [Employee_Satisfaction_Score] &lt;= 3 then &apos;Low Satisfaction&apos;&#10;ELSEIF [Employee_Satisfaction_Score] &lt;= 4 then &apos;Medium Satisfaction&apos;&#10;Else &apos;High Satisfaction&apos;&#10;END' />
+      </column>
       <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
       <column caption='Employee ID' datatype='integer' name='[Employee_ID]' role='measure' type='quantitative' />
-      <column caption='Employee Satisfaction Score' datatype='real' name='[Employee_Satisfaction_Score]' role='measure' type='quantitative' />
+      <column caption='Employee Satisfaction Score' datatype='real' name='[Employee_Satisfaction_Score]' role='measure' type='ordinal' />
+      <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
       <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
       <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
       <column caption='Monthly Salary' datatype='integer' name='[Monthly_Salary]' role='measure' type='quantitative' />
@@ -392,8 +396,16 @@
       <column caption='Work Hours Per Week' datatype='integer' name='[Work_Hours_Per_Week]' role='dimension' type='quantitative' />
       <column caption='Years At Company' datatype='integer' name='[Years_At_Company]' role='measure' type='quantitative' />
       <column caption='Onyx Data - DataDNA Dataset Cha' datatype='table' name='[__tableau_internal_object_id__].[Onyx Data - DataDNA Dataset Cha_5AC9EF55554A40618033624FF1EC3DE3]' role='measure' type='quantitative' />
+      <column-instance column='[Employee_Satisfaction_Score]' derivation='Avg' name='[avg:Employee_Satisfaction_Score:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Monthly_Salary]' derivation='Avg' name='[avg:Monthly_Salary:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Employee_Satisfaction_Score]' derivation='Count' name='[cnt:Employee_Satisfaction_Score:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Employee_Satisfaction_Score]' derivation='Median' name='[med:Employee_Satisfaction_Score:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Calculation_2506464356932198400]' derivation='None' name='[none:Calculation_2506464356932198400:nk]' pivot='key' type='nominal' />
+      <column-instance column='[Calculation_2506464356940083202]' derivation='None' name='[none:Calculation_2506464356940083202:nk]' pivot='key' type='nominal' />
+      <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+      <column-instance column='[Employee_Satisfaction_Score]' derivation='Sum' name='[sum:Employee_Satisfaction_Score:qk]' pivot='key' type='quantitative' />
       <extract _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' object-id='' units='records'>
-        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='/var/folders/w9/cv0lh9lj3_79503qn1046m_00000gn/T/tableau-temp/#TableauTemp_0v5s0xl0ynjpe81gcmt5t0jqkfbg.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='03/17/2025 04:45:20 PM' username='tableau_internal_user'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='/var/folders/w9/cv0lh9lj3_79503qn1046m_00000gn/T/tableau-temp/#TableauTemp_19mptz70gajb2z15z800205ddqgk.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='03/17/2025 05:26:30 PM' username='tableau_internal_user'>
           <relation name='Extract' table='[Extract].[Extract]' type='table' />
           <metadata-records>
             <metadata-record class='column'>
@@ -684,6 +696,69 @@
         </connection>
       </extract>
       <layout dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[:Measure Names]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Monthly_Salary:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Employee_Satisfaction_Score:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_Satisfaction_Score:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.1w0f1om1b1ak1p19gy13c1aal088].[med:Employee_Satisfaction_Score:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Employee_Satisfaction_Score:qk]&quot;</bucket>
+            </map>
+          </encoding>
+          <encoding attr='color' field='[none:Calculation_2506464356940083202:nk]' palette='tableau10_10_0' type='palette'>
+            <map to='#2c5985'>
+              <bucket>&quot;Medium&quot;</bucket>
+            </map>
+            <map to='#45a2b9'>
+              <bucket>&quot;Low&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;High Satisfaction&quot;</bucket>
+            </map>
+            <map to='#bce4d8'>
+              <bucket>&quot;High&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Medium Satisfaction&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Low Satisfaction&quot;</bucket>
+            </map>
+          </encoding>
+          <encoding attr='color' field='[none:Calculation_2506464356932198400:nk]' palette='tableau10_10_0' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;No Promotion&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Promoted Once&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Promoted More than Once&quot;</bucket>
+            </map>
+          </encoding>
+          <encoding attr='color' field='[none:Gender:nk]' palette='tableau10_10_0' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;Female&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Other&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Male&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
       <semantic-values>
         <semantic-value key='[Country].[Name]' value='&quot;Canada&quot;' />
       </semantic-values>
@@ -708,6 +783,7 @@
         <field-sort-custom-order field='Promotions' />
         <field-sort-custom-order field='Calculation_2506464356932198400' />
         <field-sort-custom-order field='Employee_Satisfaction_Score' />
+        <field-sort-custom-order field='Calculation_2506464356940083202' />
         <field-sort-custom-order field='Resigned' />
         <field-sort-custom-order field='Geometry (generated)' />
         <field-sort-custom-order field='Latitude (generated)' />
@@ -753,6 +829,238 @@
     </datasource>
   </datasources>
   <worksheets>
+    <worksheet name='Performance - Employee Trend'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column caption='Employee ID' datatype='integer' name='[Employee_ID]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column-instance column='[Employee_ID]' derivation='Count' name='[cnt:Employee_ID:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Customer Support&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Engineering&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Finance&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;HR&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;IT&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Legal&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Marketing&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Operations&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Sales&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Bachelor&quot;' />
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;High School&quot;' />
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Master&quot;' />
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;PhD&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Female&quot;' />
+              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Male&quot;' />
+              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Other&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Analyst&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Consultant&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Developer&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Engineer&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Manager&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Specialist&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Technician&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]'>
+            <groupfilter function='level-members' level='[none:Resigned:nk]' />
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2014' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2015' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2016' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2017' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2018' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2019' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2020' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2021' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2022' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2023' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2024' />
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_ID:qk]' scope='rows' value='# of Employees' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+          <style-rule element='refline'>
+            <format attr='stroke-color' id='refline0' value='#000000' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <color column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]' />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_ID:qk]</rows>
+        <cols>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</cols>
+      </table>
+      <simple-id uuid='{8D2DB876-C619-4176-B31E-7A1A75692DDE}' />
+    </worksheet>
+    <worksheet name='Performance - Employee Trend (2)'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column caption='Employee ID' datatype='integer' name='[Employee_ID]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column-instance column='[Employee_ID]' derivation='Count' name='[cnt:Employee_ID:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Customer Support&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Engineering&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Finance&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;HR&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;IT&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Legal&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Marketing&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Operations&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Sales&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Bachelor&quot;' />
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;High School&quot;' />
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Master&quot;' />
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;PhD&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Female&quot;' />
+              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Male&quot;' />
+              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Other&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Analyst&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Consultant&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Developer&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Engineer&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Manager&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Specialist&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Technician&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]'>
+            <groupfilter function='level-members' level='[none:Resigned:nk]' />
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2014' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2015' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2016' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2017' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2018' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2019' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2020' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2021' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2022' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2023' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2024' />
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_ID:qk]' scope='rows' value='# of Employees' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+          <style-rule element='refline'>
+            <format attr='stroke-color' id='refline0' value='#000000' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <color column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]' />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_ID:qk]</rows>
+        <cols>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</cols>
+      </table>
+      <simple-id uuid='{7CD39BA6-24B5-4BB2-A973-BF8075B00A1A}' />
+    </worksheet>
     <worksheet name='Performance - Promotion'>
       <table>
         <view>
@@ -890,9 +1198,149 @@
       </table>
       <simple-id uuid='{D22B745E-B4E8-46B4-AEE5-735AF8F57895}' />
     </worksheet>
+    <worksheet name='Performance - Satisfaction'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Onyx Data - DataDNA Dataset Cha (Onyx Data - DataDNA Dataset Challenge - Employee Performance and Productivity Dataset - October 2024)' name='federated.1w0f1om1b1ak1p19gy13c1aal088' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1w0f1om1b1ak1p19gy13c1aal088'>
+            <column caption='Employee Satisfaction Calc' datatype='string' name='[Calculation_2506464356940083202]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='If [Employee_Satisfaction_Score] &lt;= 3 then &apos;Low Satisfaction&apos;&#10;ELSEIF [Employee_Satisfaction_Score] &lt;= 4 then &apos;Medium Satisfaction&apos;&#10;Else &apos;High Satisfaction&apos;&#10;END' />
+            </column>
+            <column datatype='string' name='[Department]' role='dimension' type='nominal' />
+            <column caption='Education Level' datatype='string' name='[Education_Level]' role='dimension' type='nominal' />
+            <column caption='Employee ID' datatype='integer' name='[Employee_ID]' role='measure' type='quantitative' />
+            <column caption='Employee Satisfaction Score' datatype='real' name='[Employee_Satisfaction_Score]' role='measure' type='ordinal' />
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Hire Date' datatype='datetime' name='[Hire_Date]' role='dimension' type='ordinal' />
+            <column caption='Job Title' datatype='string' name='[Job_Title]' role='dimension' type='nominal' />
+            <column datatype='boolean' name='[Resigned]' role='dimension' type='nominal' />
+            <column-instance column='[Employee_ID]' derivation='Count' name='[cnt:Employee_ID:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Calculation_2506464356940083202]' derivation='None' name='[none:Calculation_2506464356940083202:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Department]' derivation='None' name='[none:Department:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Education_Level]' derivation='None' name='[none:Education_Level:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Job_Title]' derivation='None' name='[none:Job_Title:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Resigned]' derivation='None' name='[none:Resigned:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Employee_ID]' derivation='Count' name='[pcto:cnt:Employee_ID:qk]' pivot='key' type='quantitative'>
+              <table-calc ordering-type='Rows' type='PctTotal' />
+            </column-instance>
+            <column-instance column='[Hire_Date]' derivation='Year' name='[yr:Hire_Date:ok]' pivot='key' type='ordinal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Customer Support&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Engineering&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Finance&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;HR&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;IT&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Legal&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Marketing&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Operations&quot;' />
+              <groupfilter function='member' level='[none:Department:nk]' member='&quot;Sales&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Bachelor&quot;' />
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;High School&quot;' />
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;Master&quot;' />
+              <groupfilter function='member' level='[none:Education_Level:nk]' member='&quot;PhD&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Female&quot;' />
+              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Male&quot;' />
+              <groupfilter function='member' level='[none:Gender:nk]' member='&quot;Other&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Analyst&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Consultant&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Developer&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Engineer&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Manager&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Specialist&quot;' />
+              <groupfilter function='member' level='[none:Job_Title:nk]' member='&quot;Technician&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]'>
+            <groupfilter function='level-members' level='[none:Resigned:nk]' />
+          </filter>
+          <filter class='categorical' column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2014' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2015' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2016' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2017' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2018' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2019' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2020' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2021' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2022' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2023' />
+              <groupfilter function='member' level='[yr:Hire_Date:ok]' member='2024' />
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</column>
+            <column>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Pie' />
+            <encodings>
+              <color column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356940083202:nk]' />
+              <wedge-size column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_ID:qk]' />
+              <size column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_ID:qk]' />
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[pcto:cnt:Employee_ID:qk]' />
+              <text column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356940083202:nk]' />
+              <tooltip column='[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_ID:qk]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text>
+                <run fontcolor='#787878'>Employee Satisfaction is </run>
+                <run bold='true'><![CDATA[<[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356940083202:nk]> - <[federated.1w0f1om1b1ak1p19gy13c1aal088].[cnt:Employee_ID:qk]> (<[federated.1w0f1om1b1ak1p19gy13c1aal088].[pcto:cnt:Employee_ID:qk]>)]]></run>
+              </formatted-text>
+            </customized-tooltip>
+            <customized-label>
+              <formatted-text>
+                <run>&lt;</run>
+                <run>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356940083202:nk]</run>
+                <run>&gt;&#10;&lt;</run>
+                <run>[federated.1w0f1om1b1ak1p19gy13c1aal088].[pcto:cnt:Employee_ID:qk]</run>
+                <run>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{5FCA0BBE-D46B-467B-BE40-6C7A67DCD9D1}' />
+    </worksheet>
   </worksheets>
   <windows source-height='30'>
-    <window class='worksheet' maximized='true' name='Performance - Promotion'>
+    <window class='worksheet' name='Performance - Promotion'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -914,12 +1362,12 @@
         </edge>
         <edge name='right'>
           <strip size='160'>
-            <card param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]' type='filter' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]' show-apply='true' type='filter' values='relevant' />
             <card mode='dropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]' type='filter' values='relevant' />
-            <card param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]' type='filter' />
-            <card param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]' type='filter' />
-            <card param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]' type='filter' />
-            <card param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]' type='filter' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]' show-apply='true' type='filter' values='relevant' />
           </strip>
         </edge>
       </cards>
@@ -940,9 +1388,633 @@
       </viewpoint>
       <simple-id uuid='{17488085-D9B7-46B8-A39D-1B30BB5C74C3}' />
     </window>
+    <window class='worksheet' name='Performance - Satisfaction'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]' show-apply='true' type='filter' values='relevant' />
+            <card mode='dropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]' show-apply='true' type='filter' values='relevant' />
+            <card pane-specification-id='0' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356940083202:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <zoom type='fit-width' />
+        <highlight>
+          <color-one-way>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356932198400:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356940083202:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Employee_ID:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Employee_Satisfaction_Score:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Promotions:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Employee_Satisfaction_Score:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{0DD109D4-FF22-45B3-8E15-5A45E13A558E}' />
+    </window>
+    <window class='worksheet' name='Performance - Employee Trend'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]' show-apply='true' type='filter' values='relevant' />
+            <card mode='dropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]' show-apply='true' type='filter' values='relevant' />
+            <card pane-specification-id='0' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[:Measure Names]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Employee_Satisfaction_Score:qk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356932198400:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356940083202:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Employee_ID:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Employee_Satisfaction_Score:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Promotions:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Employee_Satisfaction_Score:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Employee_Satisfaction_Score:qk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{98051D63-C0B9-458A-98A5-78278F389437}' />
+    </window>
+    <window class='worksheet' maximized='true' name='Performance - Employee Trend (2)'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]' show-apply='true' type='filter' values='relevant' />
+            <card mode='dropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Resigned:nk]' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]' show-apply='true' type='filter' values='relevant' />
+            <card mode='checkdropdown' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]' show-apply='true' type='filter' values='relevant' />
+            <card pane-specification-id='0' param='[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[:Measure Names]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[avg:Employee_Satisfaction_Score:qk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356932198400:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Calculation_2506464356940083202:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Department:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Education_Level:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Employee_ID:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Employee_Satisfaction_Score:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Gender:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Job_Title:nk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[none:Promotions:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Employee_Satisfaction_Score:ok]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[sum:Employee_Satisfaction_Score:qk]</field>
+            <field>[federated.1w0f1om1b1ak1p19gy13c1aal088].[yr:Hire_Date:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{A1B1C763-D81A-4A48-8207-82E072EF4F3B}' />
+    </window>
   </windows>
   <thumbnails>
+    <thumbnail height='384' name='Performance - Employee Trend' width='384'>
+      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
+      RK5CYII=
+    </thumbnail>
+    <thumbnail height='384' name='Performance - Employee Trend (2)' width='384'>
+      iVBORw0KGgoAAAANSUhEUgAAAYAAAAGACAYAAACkx7W/AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAgAElEQVR4nO3dWXAc6WEf8H93T88NzAAgbhAnL4AEsQC5JMFrseRSLO/KkRRJLtuVciQ9
+      uOy3vLgqTl70mEpcTuUhJVfKjrxRypVSKaUqydpoy0uuicXy5nJJHLxwEwRxY3ANZvrMA8Xx
+      ggcGw53uGfL7/16WxAzx/ffrnv5Pfz2HZNu2DSIiEo6c6wBERJQbLAAiIkGxAIiIBPVaFYBl
+      WbmOQET0xnitCsAwjFxHICJ6Y7xWBUBERNnDAiAiEhQLgIhIUCwAIiJBsQCIiATFAiAiEhQL
+      gIhIUCwAIiJBsQCIiATFAiAiEhQLgIhIUCwAIiJBsQCIiATFAiAiEhQLgIhIUCwAIiJBeXId
+      gIgoH90emsb/+viW4+N07KrEH7/X6vg4L8ICIBKcaVkwTOe/blWCBK+qvDZZVuIaHkwsOJ6l
+      aluB42O8jOsFYFkWJEmCJEkAgGQyCVVVIctcjSLKhc9uj+O//vyy4+NEw358+B++vel9LvY9
+      xF/9n0uOZykM+fCz//gdx8fJd64VgK7rGBgYwP379/H+++8jEAjg6tWrWFhYgCzLePfdd3Hj
+      xg20tbVhdnYW09PTePvtt1kMREQOca0AbNtGNBpFJBKBbdvQNA3z8/M4e/Ys+vr6MDo6ing8
+      jvn5efT29uL06dM8+FNWJTQDK/Gk4+MosoziwoDj4xB9Xa4VgNfrRV1dHQYHBwE8WQpSVRUe
+      jwdlZWWYmJjA4uIiPv74Y5w4cQLBYBAAYBgGLOvJmqBpmkgmnX8AU/YMTcZw/f6U4+OE/So+
+      ONK06X0+vTmKv/nVTcezlEaC+O//7qzj42SLoRsujWSnffzqLmWx7fRZDEN3JYtlWjk7ruX0
+      IrBlWbAsC4lEAl6vF9FoFDt37sTo6Ch2794NSZKgKAoU5cnFGtu24fV6cxmZMvRwdgX/98Id
+      x8epKA7jOyebN72Px+PS7i7htdpPXZsXSGnnxa0sUh5lkWU5bZb/8esbOP/FaNbHdq0ANE3D
+      wsICVlZWMDc3h9LSUpimiYmJCTx48ADt7e2Yn59HQ0MD1tfX0dfXh3379qUuFgPYcPGY6Fnp
+      9g0J7u076bKsxJOYjcUdz6EoEurKo5vfycWHVNpt5FYWKX0W1yZmC1l0w0JCy/7ZkasXgaem
+      plBVVYXl5WVs27YNBw8exPDwMBobG1FaWoo9e/YgGAzi4MGDGB8fh23bPODTG+na3Un8t19c
+      cXycksIA/ue//5bj49DrybUCCIVCeOuttzb8LBwOo7y8PPX36urq1J+bmjZfz803awkN526M
+      uDLWewcaEfSrL709ntDxyY1hx3OEA16c6mhwfBwicgbfCJYlK3ENf/cb5y8wAsDhlupNC2B1
+      3Z0sVdsKWABErzG+zpKISFAsACIiQbEAiIgExQIgIhIUC4CISFAsACIiQbEAiIgExQIgIhIU
+      C4CISFAsACIiQbEAiIgExQIgIhIUC4CISFAsACIiQbEAiIgExQIgIhIUC4CISFAsACIiQbEA
+      iIgExQIgIhIUC4CISFAsACIiQbEAiIgExQIgIhIUC4CISFAsACIiQeWsAGzbxujoKK5cuYLh
+      4WEAwOTkJHRdRyKRwNjYGGzbzlU8IqI3Xs4KYH19HX19fdi+fTsePHiA2dlZ3LlzB6urq7h8
+      +TJM08xVNCIiIXhyNbBhGDBNE6Wlpaivr8fk5CQMw8DAwAAAoLGxEQA2nAXYtp23ZwWu5rLT
+      jedelnzaHumy2JyXl9zBnRzAFraRW1nSPoZ+dyeX5Gp/yVkBBINBhEIh/OY3v8Hy8jJaW1ux
+      urqK6elpdHR0pO5nmiYsywIAWJaFZDKZq8ib0jXdtbE0TUMy+fJNp7mUxbbttNvDMAzhssBG
+      +iy6gPOC/Mli51EWy0x/XHNqRSRnBaAoCrq6upBMJnH9+nWUlpZiYWEBR48exdWrV1FTU4No
+      NAqP518iapoGr9ebq8ib8vrcehABXp8Xfr//5bevu7N8JknSpjkAbNh+uc6ielRXskBC+nlR
+      82de3MoCbGEb5dO8uLS/yIqcNouiKM6M7chv3QLTNHHp0iV0d3fDtm1UVlbC7/ejsLAQhw8f
+      xs2bN3kdgIjIQTk7A/B4POjs7ISu6/D7/ZAkCceOHQMAhEIhVFRU5CoaEZEQclYAwJMScGuJ
+      gIiINuIbwYiIBMUCICISFAuAiEhQLAAiIkGxAIiIBMUCICISFAuAiEhQLAAiIkGxAIiIBMUC
+      ICISFAuAiEhQLAAiIkGxAIiIBMUCICISFAuAiEhQLAAiIkGxAIiIBMUCICISFAuAiEhQLAAi
+      IkGxAIiIBMUCICISFAuAiEhQLAAiIkGxAIiIBMUCICISVE4LwLZtJBIJWJaVyxhERELy5Gpg
+      wzBw7tw5AEAymcTx48cxMDCA9vZ2TE9PY2ZmBocOHYIs8ySFiMgJOTu6GoYBTdPQ2dmJiooK
+      zM/PI5FIYHZ2Fv39/Whra+PBn4jIQTk7A/B6vVAUBf/4j/8ITdPwR3/0R/jyyy/x8ccfo6ur
+      C4FAAACg6zps2wYAmKaJRCKRq8ibSiaTro2lJbVN50HTNFdyPF3C24xhGHmTRTf0/Mmi508W
+      w6UswFbmRbz9xTKttFlM03Rk7JwVwPr6Omzbxve//30MDw9jYGAARUVF2LNnD4aGhrBz507I
+      sgyPZ2NEVVVzlHhzPq9bD6In5enz+Ta53Zmd5VmSJG2aA8Bz2y+3WdzZd7aSxa39eEvz4tpj
+      agvz4tb+kkdZZEVOm0VRFEfGzlkBeDweaJqGy5cvY3l5Gfv27cPCwgJqa2vh8Xhw8eJFdHZ2
+      Pvc/LklSjhKn4WYuKX/mIV9yAOmzuJn0dZoXN6XN4lbULT2G3Ju3XG2jnC4BffDBB1hbW4PP
+      50MgEEBVVRU8Hg8KCwuh6zqvARAROShnBSBJErxeL7xeb+pnXz0t/urPiYgo+/gUm4hIUCwA
+      IiJBsQCIiATFAiAiEhQLgIhIUCwAIiJBsQCIiATFAiAiEhQLgIhIUCwAIiJBsQCIiATFAiAi
+      EhQLgIhIUCwAIiJBsQCIiATFAiAiEhQLgIhIUCwAIiJBsQCIiATFAiAiEhQLgIhIUCwAIiJB
+      sQCIiATFAiAiEhQLgIhIUCwAIiJBsQCIiATlydXAlmVheXkZAGDbNoLBICzLgs/ng23bSCaT
+      CAQCkCQpVxGJiN5oOSsA0zTR19cHABgZGUFHRwempqZw6NAhDA0NQdd1HDx4MFfxiIjeeDlb
+      AlJVFcePH0dHRwei0Sh27doFy7IwOjqKx48f48CBA3z2T0TkoJydATw1PDyM2tpaqKqKWCyG
+      0dFRnDhxArL8pJt0XYdt2wCenDUkEolcxn2pZDLp4ljapvOgae5ksW077fbQDSN/sug6s7yA
+      4VIW4PWaF13XXMlibeG4ZpqmI2PntABs204d8AGguLgY7e3t6Ovrw86dO6EoClRVTd1f0zR4
+      vd5cxd2Uz+fOge7JWF74/f6X3u5dd2ZneZYkSZvmAADV484utqUsX9mXmOVfeFzKArxe86Kq
+      7hxrZEVJm0VRFGfGduS3btGDBw9QVlaGSCSS+ll5eTlaWlrQ3d3tWOsREVGOzwBqa2vR0NCQ
+      +ntnZyf8fj927NiBqqqq1DIQERFlX04L4NnTnmAwmPpzOBx2Ow4RkVD4FJuISFAsACIiQbEA
+      iIgExQIgIhIUC4CISFAsACIiQbEAiIgExQIgIhIUC4CISFAsACIiQbEAiIgExQIgIhIUC4CI
+      SFAsACIiQbEAiIgExQIgIhIUC4CISFAsACIiQbEAiIgExQIgIhIUC4CISFAsACIiQbEAiIgE
+      xQIgIhIUC4CISFAsACIiQeW8AEzThGmauY5BRCQcT6b/QNM0xONxGIaBkZER7Nu3D4FAIOOB
+      bdvG9PQ0vvjiC6iqikOHDmFiYgJNTU1IJpMYGRnB/v37Ics57ygiojdSxgVw+/ZtzM3NYXh4
+      GIlEAnNzc/i93/u9jAfWdR3Xr1/HqVOnEAgEYNs2pqamUFZWhkuXLuHkyZM8+BMROSjjApBl
+      GWNjY1hfX8fx48cxOzv7SgMbhoHZ2Vl8/vnn8Hg8OHToEFZXV3HhwgU0NTUhGo0CeLJEZNs2
+      AMCyLBiG8UrjOc3NXKZhbjqeabqUxbbT/n9bluVSlPRZTMu9pca08+Lismf6LO5sIyB9FtOt
+      LFvad93ZRraVPsvTY2C2ZVwAe/bswdTUFOrr66GqKiorK1958HA4jAMHDuDhw4e4c+cOPB4P
+      fD4fEokEbNuGJEkAkPpvPpOQTxnzKQu90GuwT9ObL+MCME0TExMTGB8fR0dHB8Lh8KsN/LuD
+      fSAQQCQSwczMDPx+P9rb23H58mVMTk6iuroaiqJsGNvjyTiyKxSPkv5OWRxrs3n46pw5SpLS
+      bg+3lvGkLWRRZPe2Ub7MC7CFLEr+ZFHcyrKlfded/UWS02dx6klwxrN9+/ZtNDY2IhqNQtd1
+      DA0NvdLAqqrirbfewvnz5zE4OIjW1lZUVlYiGAzi3XffxeTkJF8dRETkoIyfThcXF+OTTz7B
+      8vIyxsfHcfLkyVcaWJIk1NbWoqqqCrIsQ5ZltLS0pG5/++23X+n3EhHR1mRcADt37kQymcTw
+      8DBqamrQ1tb29QLk6ZIOEdGbLuMloKWlJfT09GBkZASJRAJ9fX1O5CIiIodlXAD37t3D7t27
+      U6/+mZyczHooIiJyXsYFUFpaii+++AL379/HhQsXUFVV5UQuIiJyWMYL8NXV1fjud7+LR48e
+      oaamBo2NjU7kIiIih2V8BjAzM4Of//znGB0dRSwWw/r6uhO5iIjIYRkXQF1dHf70T/8UkUgE
+      H374If76r/8aX375pWtv+SciouzIeAlofHwcP/3pT1FRUYEf/vCHqKqqwi9/+Uvs2bMHfr/f
+      iYxEROSAV3oj2A9/+EPEYjFUVlairKwMf/Znf+ZENiIiclDGS0ALCwv42c9+hoGBAXz44Yfo
+      7e11IhcRETks4wIYGxvDoUOH8Id/+Ic4ffo0BgcHnchFREQOy3gJqL6+Hn/7t3+LwcFBLCws
+      4Nvf/rYTuYiIyGEZFYBlWaiursZf/MVfYG5uDkVFRSgoKHAqGxEROSijAvjJT36C+fn5DT/7
+      /d//fbS3t2c1FBEROS+jAvjRj34Ey7JgWRZM04SiKHzpJxHRayqjAggEAhgfH8dPfvIT+Hw+
+      KIqCP/mTP0FdXZ1T+YiIyCEZXwR+9OgRjh07hrNnz+LatWvo6+tjARARvYYyLoCCggL89re/
+      xeLiImZmZrC6ugqv14uuri6oqupERiIickDGBVBXV4c/+IM/2PCzUCjk3heRExFRVmRcAPPz
+      8/joo49Sz/bfe+891NfXZzsXERE5LOMCmJiYQE1NTerL4KPRaNZDERGR8zIugKqqKvz6179G
+      LBYDAHR1daG5uTnrwYiybYc6gX8b/n+OjxMMbQPwrxwf503U4JlyZRv5ggUAvuP4OPku4wIY
+      GxvD3r17U2cAJSUlWQ9Fb45qzxze8193fJyIrwTANzfPosyhJHDD8SySj1+T+qrKlQWccWMb
+      +Yu2kGXRlX13t2oB6HR8nBfJuABKS0tx7do1DA0NAQC8Xi8/DoJeapf6EHUFv3V8HCm0HcBf
+      Oj5OtnR47+M/Ff2N4+N4CkoBfGvT+7R7H7iTJVQC4PX57LA6zxR+4MK+6/F7APyx4+O8cOxM
+      7mzbNioqKtDe3p76BjB+ExhR5kJyAjWeOcfHkbbw6ryglHQpi+NDvLFOBb7A7oJzWf+9GRXA
+      tWvX0NjYiIqKClRWVmJ9fR2xWAw1NTVZD0ZERE80eh5ju/9O1n9vRt8H0N/fj6WlJfT29mJ+
+      fh7T09OppSAiInq9ZHQGoOs6hoaGUgf+eDz+yu/+tW0bq6urSCQSkGUZhYWF0DQNgUAAtm0j
+      Ho8jHA5DkqRX+v1uU2CiUnH+NPrJWJsvu0XkNfxl5H87nsNfUA3gA8fHISJnZFQAe/fuxcDA
+      AMLhMB49egQAqVcDZcqyLPT09CAUCiEYDGL37t24evUqDh06hMHBQViWhY6Ojlf63blQIi/j
+      vxQ7fyENAELydwAUvvR2VTKw1zvqeA6Jn/xB9FrLqACOHj2Ko0ePZmVg0zSRTCbR0tKCyspK
+      eL1eWJaF4eFhTE9P4+zZs6/Ns38iotdRRgXw8OFDRKNRGIaB4uLirzWwoiioq6vDyMgIrl69
+      ilOnTiEWi2FsbAzHjh1LHfx1XYdt2wCelEYikfha4zrF1jTXxkpqSUibzIOdTLqSw7astNvD
+      0g13stj2FrLo7mRBHmXhvLw4Sx7Ny1aOa6ZpOjJ2RgXw93//9+jo6ICu66mln1Ao9EpfCiPL
+      Mvbv3w9ZltHX14fx8XEUFxejo6MDvb292LFjB1RV3XCNQdM0eL3ejMdyg5Xwwp1DHeDz+iBv
+      MueW5nMliyTLabe9pnrgzK77TBZJSptFV1V3siCPsnBeXpwlj+ZlK1+slVDSXfl7NRkVwJkz
+      Z/CrX/0K8Xg89eqfs2fPorW1NeOBdV3HuXPnUFhYiNnZWXR2dmJhYQFlZWXYt28furu70dXV
+      xU8ZJSJySEYFcOTIEbS0tGBiYgLxeBylpaXYvn37Kw2sqipOnjyJeDyO/fv3IxwO4/jx41BV
+      FY2NjaiqqoIsZ/QqVSIiykBGR1hJkrC4uIhf//rXGB0dxS9/+Uv09/e/0sCSJCEUCqG0tBQF
+      BQWQJAk+nw+yLEOWZQSDQV4EJiJyUMZPsUdHR9HZ2Ynvfe97OHPmDAYHB53IRUREDsv4w+B2
+      7tyJn/70p7h37x4WFxfxrW9t/kFTRESUnzIugMrKSvz5n/85YrEYCgoKsG3bNidyERGRwzIu
+      AAAoKipKvQ+A6/RERK+njApgbW0Nd+7cQVFREVZXV1FdXc0zACKi11RGBTA4OIiPPvoIHo8H
+      Kysr2L17N86cOYPq6mqn8hERkUMyKoDi4uLUa/RHR0dRW1uLUCjkVDYiInJQRgUgyzJWV1dx
+      9+5dzM7OwjRNNDY2IhqNOpWPiIgcklEBVFdX4/vf/z5UVcXs7CyKi4sRiUScykZERA7K+FVA
+      JSUlAIDCwpd/Hj0REeU/ftgOEZGgWABERIJiARARCYoFQEQkKBYAEZGgWABERIJiARARCYoF
+      QEQkKBYAEZGgWABERIJiARARCYoFQEQkKBYAEZGgWABERIJiARARCYoFQEQkKBYAEZGgcl4A
+      uq5jdXUVAKBpGizLgmVZSCaTsG07x+mIiN5cOS+Aa9eu4R/+4R8AAJ999hnW1tbQ19eHW7du
+      5TgZEdGbLWcFYNs2JiYmYBgGysvLAQCWZWF8fByPHj3CgQMHIElSruIREb3xMv5S+GzRdR23
+      bt3CoUOH8Pnnn8M0TcRiMYyOjuLEiRNQFCV1v6dLQaZpIpFI5CrypmxNc22spJaEtMk82Mmk
+      Kzlsy0q7PSzdcCeLbW8hi+5OFuRRFs7Li7Pk0bxs5bhmmqYjY+esAObn5zE1NYWrV69ieHgY
+      9+7dQ3FxMd566y309/dj165dkGUZqqqm/o2mafB6vbmKvCkr4YU7hzrA5/VB9vtfnkXzuZJF
+      kmX4N8kBAJrqgTO77jNZJCltFl1V3cmCPMrCeXlxljyaF0VR0mZJKAosB8bOWQFUVFTgRz/6
+      Ueqib3NzMx4/foyKigqYponu7m6cPHkSspzzyxRERG+knBXA0/V9WZbxzjvvQJIkHD58GIFA
+      ALt27UJFRQWvARAROShnBfCUJEkoLCwEAITD4dTPo9ForiIREQmB6ytERIJiARARCYoFQEQk
+      KBYAEZGgWABERIJiARARCYoFQEQkKBYAEZGgWABERIJiARARCYoFQEQkKBYAEZGgWABERIJi
+      ARARCYoFQEQkKBYAEZGgWABERIJiARARCYoFQEQkKBYAEZGgWABERIJiARARCYoFQEQkKBYA
+      EZGgWABERIJiARARCcqTy8Ft24ZpmlAUBZIkZfzvZ2Nr+Kv/c8mBZM/7y39zHNGw35WxiIjc
+      kLMCMAwDFy9exMrKCvx+P44fP46RkRHU19dD13UMDw+jtbUVsvzykxTNsHB3fM6lvJYr4xAR
+      uSVnS0CyLKOjowPvv/8+otEohoeH8ejRI6yuruLTTz9FbW3tpgd/IiL6enJ2BiDLMjRNw9Wr
+      VzE/P48PPvgAg4OD6Onpwfbt21FUVAQAsCwLtm2n/mwYRup3mKbpWl7TNDeM/Szb5SxWPmSx
+      7U3nBAAs060zp/RZTCt/suTTvFguzYsNvGZZ3Hkc2Vt5HP3uGJhtOb0GoCgKtm3bBk3TsLi4
+      CEmSoKoqDMOAbduQJAm2bacKAMCGP8OhSXkRGxtzPH+7e2zYm/6/b5Yz61lcHGtTdh5lQfos
+      tkt7jL2FeXErC9I8hgAXt+GW5sUt6efFqWNdzgrg6bP31tZWqKqKiYkJBAIBtLe349KlS3j8
+      +DGqqqqgKErq31iWBVVVU39XPO7F9yieDWM/y1IUJF3MIm+WxeNxJ8vvCnsztuLSMt4WskCW
+      obsTJn0WRXEli7SleXEpS17NC/JnXiQ5bRZTluHE+UhOC+DSpUvQdR0ejwcnTpzA6OgoAoEA
+      urq60NfXh/Ly8g0FQERE2ZOzAvB6vTh79iwMw4DH44EkSdi3b1/q9sOHD+cqGhGREHJ6DWBL
+      p6dEROQIvs6SiEhQLAAiIkGxAIiIBMUCICISFAuAiEhQLAAiIkGxAIiIBMUCICISFAuAiEhQ
+      LAAiIkGxAIiIBMUCICISFAuAiEhQLAAiIkGxAIiIBMUCICISFAuAiEhQLAAiIkGxAIiIBMUC
+      ICISFAuAiEhQLAAiIkGxAIiIBMUCICISFAuAiEhQLAAiIkF5cjWwbdsYHx/Ho0eP4PP50Nra
+      itnZWZSVlcE0TTx+/Bj19fWQJClXEYmI3mg5OwMwTRPLy8tobGxEMpnE4OAg7t69i9XVVVy8
+      eJEHfiIih+XsDMDj8aC1tRVra2tYXl5GfX09xsfH0dvbC4/Hg/r6egBPzhSesm17w9/x1T87
+      zMYzY7/gdteyPDsPL7jdpSDpx3JvWtJmcXsbfZ3bs4nz8oJxtjRWHs2LQ+PmrAAAYHl5Gf/0
+      T/+EtrY2VFVV4fLly5ibm0NbW1vqPqZpwrIsAIBlWdA0LXWbruuuZdV1fcPYz7JdziLlQRYb
+      2HROAMA0DXey2Hb6LIbpThbkUZYtzIuVR/NiGe7sL9jSvLiTxbLM9FlMZ7ZRzgrAMAz09PTg
+      +PHjKCsrAwBEIhEcPXoUV65cQU1NDYqKiuDx/EtETdPg9XpTf1e9m09aNnlVL3w+30tvt1Qv
+      3KoAr9cLebMsSXeySJK06ZwAgObxwI3Dy1ay6G5lwRayqPk1L24c6rY2L6o7WbY0L+5kkWUl
+      bRZbUWA5MbYDv3NLDMPAzMwMrly5go8++ggTExMIBoMoKCjAkSNHcOvWLZgOtR4REeXwDMDv
+      9+MHP/jBhp/V1NQAAEKhEMrLy3OQiohIHHwfABGRoFgARESCYgEQEQmKBUBEJCgWABGRoFgA
+      RESCYgEQEQmKBUBEJCgWABGRoHL6YXBflwQbPrj0eUCSix9rSUTkgte6ACqUBfxd6X92ZayQ
+      /A0AIVfGIiJyA5eAiIgExQIgIhIUC4CISFAsACIiQbEAiIgExQIgIhIUC4CISFAsACIiQbEA
+      iIgExQIgIhIUC4CISFAsACIiQbEAiIgExQIgIhIUC4CISFAsACIiQbEAiIgEldMC0DQN9+/f
+      x+rqKgBgenoauq4jmUzi0aNHsG1+DSMRkVNyVgCmaeLmzZvo7+/H/Pw8AKCvrw9ra2u4evUq
+      4vF4rqIREQkhZ98JLMsy3n77bdy+fTv1M9M0ce/ePei6jp07dwLAc2cBuTwryKczknzJkjaH
+      izHTZXFzxvJl+wDM8jLMksMCkCQJkiRt+Nny8jIePXqEQ4cOpX5mGEZqckzThGVZqdvspOZO
+      WADJZBKSmnzp7bbmYhYtCSm5SZZNbssm27KQTDOWZRjuZLHt9Fl03Z0syKMsnJcXZ8mjeTFN
+      M20W0zQdGTtnBfAiRUVF6OzsxPXr17F9+3YUFhZCVdXU7Zqmwev1pv5u+bxw5/AC+Hw+yH7/
+      S2+3Ei5m8abJovlcySLJMvyb5AAATfXAmV33mSySlDaLrqruZEEeZeG8vDhLHs2LoihpsyQU
+      Bdam93g1OSsAwzDQ09ODhw8fwufzwbIsqKqKSCSCgwcP4tq1a+jq6oKiKLmKSET0RstZAXg8
+      HnR1dW34WUNDAwAgHA6juro6B6mIiMTB9wEQEQmKBUBEJCgWABGRoFgARESCYgEQEQmKBUBE
+      JCgWABGRoFgARESCYgEQEQmKBUBEJCgWABGRoFgARESCYgEQEQmKBUBEJCgWABGRoPLqG8GI
+      nKQvFWDlbr3j4ygl5Qg7Pkr22JYMM+FNf8evSfao6e9EL2QZHke2EQuAHGWuBhEfq3R8HGVb
+      adqDrqWpMJYKHc9iqyHHx8gmfbEQy7f2OD6OHI3A+dl/M60/rMCaA9uIBZAltiUjOVvkylhB
+      a/OVO0tTsXhtn+M51MrKtAddM+5HcqrU8Sweu9jxMbJJm4u6so2U4uLX6mxEW4i4My8FhWnn
+      RV8sdCVLyFuDgOOjvBgLIEss3YP48HZXxorqaTabLQFpSiIbbBfGeFPZLm0jV8bIJtf2XSl/
+      sthbyOKQ12zvICKibGEBEBEJigVARCSonBWAbdtIJpOYnp7GysoKbNtGIpGAZVkwTRPxeBy2
+      becqHhHRGy9nBWBZFi5cuID79+/j/PnzWF1dxeeff461tTX09fWhv78/V9GIiISQswLQNA2m
+      aeLYsWNoaWnB8PAwLMvC6OgoJicnceDAAUhS7q6OExG96XK6BKQoCiRJQjAYRDKZRCwWw+XL
+      l9HQ0ABZ5uUJIiIn5ex9AJIkwTRN2LaN1dVVBAIBFBcXo729HX19fdi5cycURcqm11AAAA07
+      SURBVNn0d1i6B2vDNa7kDRqbZyEiet3krAC8Xi9kWcbFixcxOzuLM2fOYGZmBuXl5bAsC93d
+      3Th58uSmJWCbCrRZd94Byjc9EdGbJmcFIMsy3nnnHczPz6O1tRWhUAidnZ3w+/3YsWMHKisr
+      uQxEROSgnC4B+f1+VFdXp34WDAZTfy4oKMhFLCIiYeT9ZwEZhgHLsgAApmlC07TUbZbPj+C/
+      /o4rOUyPB9ZXxn6W5fO5lsXwqptmsb2qK1nkcHjD9ngRaXutO1lCofRZamrcyRIMps9SXe1K
+      FingT5sFVVXuZPH50meprHAni9ebPktFuStZ1O01abOobW0IRqNZH1uy8/zdVl+Np2kavF7n
+      P7d8K5jlebZtwzAMqGruP/edWV5O13VmeYF8eRyZpgkAaV8Ekw15fwbw1fcCSJKUN+8NYJaX
+      Y5YXy4csT59QMcvz8uVxJEkSbNt2JUveF8BXudGIW8UsL8YsL8YsL8Ysz3OziF6rl9lsdQPZ
+      tg1N01LPMCzLem6Nzbbt1LWFpyzL2vLnDzmdJRNOZjFNE4lEYkvzIknSlrM8Hfvp7zUMA4Zh
+      PHefV12h/LpZdF1/aZan87jVbeZ0lq1un6+bxTTN57Loup5asnj6+V75kOVpnkz2n1fN8qJx
+      n52HTPYXWZa3/ArIZx836bJYlrXh76/VGcBWzM/P48qVKzAMI/XS0u7ubpimiYqKCrS3t2N6
+      ehoXL17EW2+9haamJti2jcnJSVy4cAFnz55FSUlJ1rJcvXoVuq4jGAyis7MTPT09ME0TZWVl
+      6OjowPT0NC5duoTW1lbs3LkT/f39uHPnDvx+P1pbW1FXV5eVLAsLC6l5CQQC6OzsxOeffw7D
+      MFBaWooDBw5gZmYGly5dwt69e7Fr1y7Mzc3h4sWL8Pl8aG5uRm1tbVayDA0NYWBgALquY+fO
+      naiqqsJnn30GRVHQ2tqK+vp63L17F319fejq6oLf78fFixehaRqmpqZw+vRpNDQ0ZCXLyMgI
+      +vr6oOs6duzYgZqaGnR3d0NRFOzbtw8NDQ24d+8eent78c4776CkpASffvopdF1HIpHAmTNn
+      EApl5ysgR0dH0dvbC13X0dTUhLq6Onz66afweDzYu3cvGhsbcf/+fdy+fRsnT55EcXExuru7
+      UyV++vTprK2nj42N4datWzBNE/X19WhsbMT58+fh8XjQ0tKChoYGXLhwAWtra1hbW8M3v/lN
+      3LlzB9PT05AkCe+9917W1tPHx8fx5ZdfwjRN1NXVYceOHTh37hw8Hg+am5vR2NiI7u5urK6u
+      prLMzs7i+vXrOHLkCGpqsvdm0YcPH+LmzZswTRO1tbUoKCjAvXv3YJomTp8+Ddu20dPTA8uy
+      4PV6ceTIEVy8eBGGYaTmxefzZSXLjRs3MDk5iUQigWPHjmFtbQ13796FZVl49913IUlS6nij
+      qioOHz6Mnp4eeDweSJKEd999F8qPf/zjH2clTZ6wLAuNjY1obGzEwMAAJElCJBLBkSNHcPv2
+      bdTU1CCRSECSJKiqim3btsEwDFy5cgWBQAAVFRVZe0A/zdLU1IQ7d+5AkiSEw2F0dnait7cX
+      1dXVSCQSAABVVVFaWorbt2/jyJEjaG1tRVFR9r5i0jRNNDQ0YMeOHal5CYVCOHr0KHp7e1FV
+      VZWaF4/Hg5KSEnR3d+Pw4cPYtWsXioqKsnZaKkkSWlpaUFpaisHBQczOzuLgwYOora3FwMAA
+      Ghsbsby8DF3XUVxcjOLiYjQ1NaG+vh5TU1Noa2uDx5Od5y5Ps5SVleHBgweYnZ3FgQMHUF9f
+      j/7+fjQ1NWFlZQWGYaCoqAh+vx/9/f04ffo0YrEY/H4/Cguz9023LS0tKC8vx/3791NZGhoa
+      0NfXh6amJiwvL6eyrK+vY2FhAadOncLU1BS8Xm/Wszydl7m5OXR0dKChoQG9vb1oampCJBLB
+      /v37EYvFYNs2xsbGcPbsWcRisdTjLhts294wL0+zNDY24vbt22hqakJhYWEqi6qqkGUZlmUh
+      FApl9XFk2zaam5tRWVmJe/fuYX5+Hl1dXSgsLMTo6Ciqq6tRXV2NlpYWPHjwAOXl5airq8Pe
+      vXsxNjaG4uLirB1ffD4fWltbEQwGMTExgcnJSbzzzjuIRCIYGRlBTU0Nqqqq0NLSgsHBQVRV
+      VaG5uRkNDQ0YGhp68l6rrCTJI+Hwk2/67OnpQW1tLeLxOIqLi6EoCvx+PwzDQFVVFaJfeUnV
+      3bt3UV1dndUHz7NZtm/fjkQigeLiYsiyDL/fD13Xn8uiqiquXLmCjz/+GPPz81nNIkkSPvvs
+      M9TUPHnZWVFREWRZRjAYfC6LrutYWFjAjRs38Nvf/hbDw8NZy1JUVIS1tTVcuHABzc3NWF5e
+      RmlpKSKRSKoQGxsbEQhs/KbUmZkZFBYWZu0ZFABEo9HnspSVlaGwsDCVpaGhIZXF6/XC5/Ph
+      F7/4ReoB7lSWpaUllJWVoaCgAMlkMpXl6ftlwuEwHj58iP7+fkxPT2NhYSGrWeLxOLq7u7Fn
+      zx7EYjGUl5ejoKAAmqZBlmUUFxejt7cXc3NziEajiEQiUFUV5eXlWFxcdCTL7t27U1nC4TB0
+      XU9l6e/vx+zsLGpqalLPzrMtGo0ikUiksui6jnA4jMrKSszPz8Pv9yMYDOL8+fMoKipCSUkJ
+      CgsL0dPTA6/Xm7XVBQAoKSnB+Pg4rl+/jra2NmiahoKCAlRUVGBhYQE+nw+hUAjnz59HJBJB
+      UVERhoaG8OGHHyIQCCASibx5BaBpGj799FPU19ejvb0diqJA1/XU2vaza2srKyvo7e3F6uoq
+      hoeHMTg4mNUs//zP/4zt27dvKQsAHDt2DGfOnEFTUxN6e3uzmuXChQuoqalBR0cHFEVJrR2a
+      pvlcFlmWEQ6HcerUKRw7dgyjo6NZyzI/P49z587hvffeQ01NDRRFgaZp0HX9peuwpmmir68P
+      +/fvz+oFsoWFBZw7dw6nTp3C9u3bN2R50VnG0tISZFnGd7/7XbS1tWFkZCRrWRYXF3Hu3Dl0
+      dXWhtrYWHo8HmqbBMIwXzksoFMI3vvGN1BJjNg94sVgMn3zyCU6ePIm6uroXZrlx4wZisRg+
+      +OAD+P3+VGEmEomsvpxyaWkJn3zyCY4fP46GhoYNWZ7utzdv3sT8/Dy++c1vOnoxd3l5GZ98
+      8gk6OzvR2NgISZJgGAbW19fh+937HM6fP4/q6mocOnQo9bH3kUgEx48fz+qnGwwODuLu3bt4
+      //33EQqFUlkSicRzWQ4fPgxJkrBjxw5873vfQzwex9zc3Jt3DWB4eBg+nw+FhYVYWFhARUUF
+      7t+/D4/Hg2QyCVVVEYvFEIvFYFkWysvLcfr0aZimiYWFhaw29MjICFRVRTQaxfz8PMrLy3H3
+      7l34fL7URorFYlhaWoJpmlhcXMTs7GzqGc9X3xn9dY2OjsLj8aCoqAjz8/MoLS3F3bt3EQgE
+      EI/HN2TRdR3r6+vYtm0bhoaG4PF4svqsu7+/H3V1ddB1HcvLy6irq8OtW7fg9/tRVFQEy7Iw
+      Pz+PlZUVLC4uIhqNYm5uDn6/f8PZUjYMDAygtrYWhmFgaWkJ9fX1+PLLLxEMBhGJRGBZFhYW
+      FlJZZFmGrutYXV3F+vp6Vg+6AwMD2L59O0zTTGW5efMmwuHwhizLy8sIBoOpZbnq6mpMTEyg
+      rKwsq1lqampgWRaWlpbQ2NiImzdvoqCgAIWFhTBNE/fu3cPJkycRi8VQWFiIZDKJsbExDA0N
+      4dixY1nPYts2YrEYmpqa8MUXXyASiaCgoACmaeLOnTs4ceJEKks8Hsfy8jJM08Ta2lrWll0G
+      BgZQVVUFSZIQi8UQiUQwODiImZkZ1NfXY2ZmBuvr6ygpKUkdY2ZnZ9Hc3Jy6f7au0/T392PP
+      nj2Ix+OQJAnRaDS1pFpbW4u5uTmsra2hpKQkdUYWj8fh9/tT+/Ebdw1A0zQkEgksLS1hdXUV
+      O3fuRDKZxOTkJNra2hAOhzE+Pp46pVZVFdXV1SgoKEBBQQHKy8uztoGeXih8mmXHjh3QNA2T
+      k5PYv38/CgoK8PDhw9QzJ0VR4PV6MTIyAlmWsXfv3qxleXZempqaYBgGJiYm0NbWlsqyvr6e
+      enXGnj17MDY2hng8jn379sHv92cly/r6OtbX11MPkF27dmFqagqapqG1tRWKouDBgweps5Rw
+      OAxZllFVVfXcspAbWe7fv5/KUlxcjIKCAoyPjyMUCqG5uTlrz+oSiUQqi2ma2L17N6amppBM
+      JrFv3z54PB48ePAAsizDNE2EQiE8evQI09PT2L17N0pKSrJ2dvRslqfzkkgk0NraClmWkUgk
+      sLq6iqWlJUQiEVRUVKTWnqurqx3JYhhGal7W19dT2yiZTKayhMNhPH78GKZpwrIs+Hy+rBX1
+      V7Pouo5du3bh4cOHCAaD2LNnD0zTxPr6OpaXlxGPx1PLVCsrK1hbW0M0Gs3a2dHa2hri8TiW
+      lpbg8/lQV1eH8fFxBAIBNDc3b8iyvr6eWjKcnp5GdXU16uvr8f8BUNZ8014qkXAAAAAASUVO
+      RK5CYII=
+    </thumbnail>
     <thumbnail height='328' name='Performance - Promotion' width='384'>
+      iVBORw0KGgoAAAANSUhEUgAAAYAAAAFICAYAAABZfClmAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAEmUlEQVR4nO3VMQEAIAzAMMC/5yFjRxMF/XpnZg4AOW87AIAdBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUR+GlwaMGi0g
+      4AAAAABJRU5ErkJggg==
+    </thumbnail>
+    <thumbnail height='328' name='Performance - Satisfaction' width='384'>
       iVBORw0KGgoAAAANSUhEUgAAAYAAAAFICAYAAABZfClmAAAACXBIWXMAAA7DAAAOwwHHb6hk
       AAAEmUlEQVR4nO3VMQEAIAzAMMC/5yFjRxMF/XpnZg4AOW87AIAdBgAQZQAAUQYAEGUAAFEG
       ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
