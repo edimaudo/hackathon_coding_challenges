@@ -353,6 +353,16 @@
       <column caption='HR Metrics Calculation' datatype='real' name='[Calculation_4882042792364568580]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='Case [Parameters].[Parameter 1]&#10;When &quot;Headcount&quot; then SUM([Calculation_4758967858739871744])&#10;//When &quot;Retention Rate %&quot; then &quot;&quot;&#10;//When &quot;Turnover Rate %&quot; then &quot;&quot;&#10;When &quot;Salary&quot; Then Avg([Annual Salary])&#10;When &quot;Bonus %&quot; Then AVG([Bonus %])&#10;End' />
       </column>
+      <column caption='Retention Previous Year' datatype='integer' name='[Calculation_5342184010820333568]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='LOOKUP(sum([Calculation_4758967858739871744]), -12)'>
+          <table-calc ordering-type='Rows' />
+        </calculation>
+      </column>
+      <column caption='Retention YoY' datatype='integer' name='[Calculation_5342184010820624385]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='(sum([Calculation_4758967858739871744]) - [Calculation_5342184010820333568])///AVG()'>
+          <table-calc ordering-type='Rows' />
+        </calculation>
+      </column>
       <column datatype='string' name='[City]' role='dimension' semantic-role='[City].[Name]' type='nominal' />
       <column datatype='string' name='[Country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
       <column caption='Employee Calc Termination' datatype='integer' name='[Current Employee Calc (copy)_4882042792358432769]' role='measure' type='quantitative'>
@@ -669,6 +679,8 @@
         <field-sort-custom-order field='Exit Date' />
         <field-sort-custom-order field='Calculation_4809914829540769792' />
         <field-sort-custom-order field='Calculation_4758967858739871744' />
+        <field-sort-custom-order field='Calculation_5342184010820333568' />
+        <field-sort-custom-order field='Calculation_5342184010820624385' />
         <field-sort-custom-order field='Calculation_4882042792362950658' />
         <field-sort-custom-order field='Current Employee Calc (copy)_4882042792358432769' />
         <field-sort-custom-order field='Calculation_4882042792355631104' />
@@ -1459,6 +1471,73 @@
       </table>
       <simple-id uuid='{C4B923D5-2EC9-446F-A417-3C28A8794A98}' />
     </worksheet>
+    <worksheet name='Summary - Headcount - Retention'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontsize='12'>Avg. Tenure (Years)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Data (HR_data_analysis_dataset)' name='federated.0bbitle0q24ph0196br780dnz63s' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0bbitle0q24ph0196br780dnz63s'>
+            <column caption='Current Employee Calc' datatype='integer' name='[Calculation_4758967858739871744]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='If ISNULL([Exit Date]) then 1&#10;else 0&#10;END' />
+            </column>
+            <column caption='Current Employee Calc Filter' datatype='string' name='[Calculation_4758967858750894081]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='If [Calculation_4758967858739871744] = 0 then &apos;False&apos;&#10;Else &apos;True&apos;&#10;End' />
+            </column>
+            <column caption='Tenure Calculation' datatype='integer' name='[Calculation_4809914829540769792]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='If ISNULL([Exit Date]) then Year(TODAY()) - Year([Hire Date])&#10;else Year([Exit Date]) - YEAR([Hire Date])&#10;End' />
+            </column>
+            <column datatype='date' name='[Exit Date]' role='dimension' type='ordinal' />
+            <column datatype='date' name='[Hire Date]' role='dimension' type='ordinal' />
+            <column-instance column='[Calculation_4809914829540769792]' derivation='Avg' name='[avg:Calculation_4809914829540769792:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Calculation_4758967858750894081]' derivation='None' name='[none:Calculation_4758967858750894081:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.0bbitle0q24ph0196br780dnz63s].[none:Calculation_4758967858750894081:nk]'>
+            <groupfilter function='member' level='[none:Calculation_4758967858750894081:nk]' member='&quot;False&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.0bbitle0q24ph0196br780dnz63s].[none:Calculation_4758967858750894081:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.0bbitle0q24ph0196br780dnz63s].[avg:Calculation_4809914829540769792:qk]' value='n#,##0;-#,##0' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.0bbitle0q24ph0196br780dnz63s].[avg:Calculation_4809914829540769792:qk]' />
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run bold='true' fontcolor='#285391' fontsize='11'><![CDATA[<[federated.0bbitle0q24ph0196br780dnz63s].[avg:Calculation_4809914829540769792:qk]>]]></run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{A87D4447-E11D-4ACB-A925-D516D05E7220}' />
+    </worksheet>
     <worksheet name='Summary - Headcount - Salary'>
       <layout-options>
         <title>
@@ -1977,6 +2056,73 @@
       </table>
       <simple-id uuid='{64A621BC-5B9B-4E01-B23E-3E5FB10406F9}' />
     </worksheet>
+    <worksheet name='Summary - Termination - Turnover'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontsize='12'>Avg. Tenure (Years)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Data (HR_data_analysis_dataset)' name='federated.0bbitle0q24ph0196br780dnz63s' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0bbitle0q24ph0196br780dnz63s'>
+            <column caption='Current Employee Calc' datatype='integer' name='[Calculation_4758967858739871744]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='If ISNULL([Exit Date]) then 1&#10;else 0&#10;END' />
+            </column>
+            <column caption='Current Employee Calc Filter' datatype='string' name='[Calculation_4758967858750894081]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='If [Calculation_4758967858739871744] = 0 then &apos;False&apos;&#10;Else &apos;True&apos;&#10;End' />
+            </column>
+            <column caption='Tenure Calculation' datatype='integer' name='[Calculation_4809914829540769792]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='If ISNULL([Exit Date]) then Year(TODAY()) - Year([Hire Date])&#10;else Year([Exit Date]) - YEAR([Hire Date])&#10;End' />
+            </column>
+            <column datatype='date' name='[Exit Date]' role='dimension' type='ordinal' />
+            <column datatype='date' name='[Hire Date]' role='dimension' type='ordinal' />
+            <column-instance column='[Calculation_4809914829540769792]' derivation='Avg' name='[avg:Calculation_4809914829540769792:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Calculation_4758967858750894081]' derivation='None' name='[none:Calculation_4758967858750894081:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.0bbitle0q24ph0196br780dnz63s].[none:Calculation_4758967858750894081:nk]'>
+            <groupfilter function='member' level='[none:Calculation_4758967858750894081:nk]' member='&quot;False&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.0bbitle0q24ph0196br780dnz63s].[none:Calculation_4758967858750894081:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.0bbitle0q24ph0196br780dnz63s].[avg:Calculation_4809914829540769792:qk]' value='n#,##0;-#,##0' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.0bbitle0q24ph0196br780dnz63s].[avg:Calculation_4809914829540769792:qk]' />
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run bold='true' fontcolor='#285391' fontsize='11'><![CDATA[<[federated.0bbitle0q24ph0196br780dnz63s].[avg:Calculation_4809914829540769792:qk]>]]></run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{904E09F4-1D5A-4FEA-B928-90372F6214DC}' />
+    </worksheet>
     <worksheet name='Summary - Termination BarChart'>
       <layout-options>
         <title>
@@ -2405,7 +2551,7 @@
       </cards>
       <simple-id uuid='{95ABE264-59B9-484C-A18C-E44B895F3AA7}' />
     </window>
-    <window class='worksheet' maximized='true' name='Summary - Termination - Bonus' tab-color='#6e597f'>
+    <window class='worksheet' name='Summary - Termination - Bonus' tab-color='#6e597f'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -2544,6 +2690,62 @@
         </edge>
       </cards>
       <simple-id uuid='{7E88E2E6-0F67-4D8D-A145-9144CEF2683B}' />
+    </window>
+    <window class='worksheet' maximized='true' name='Summary - Headcount - Retention' tab-color='#6e597f'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card param='[federated.0bbitle0q24ph0196br780dnz63s].[none:Calculation_4758967858750894081:nk]' type='filter' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{84F43027-8973-4219-8CD9-BDACA1F7D84C}' />
+    </window>
+    <window class='worksheet' name='Summary - Termination - Turnover' tab-color='#6e597f'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card param='[federated.0bbitle0q24ph0196br780dnz63s].[none:Calculation_4758967858750894081:nk]' type='filter' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{3377875D-5195-47F5-BB57-5F2727DA44B5}' />
     </window>
     <window class='worksheet' name='HR Metrics - Trend' tab-color='#4f779a'>
       <cards>
@@ -4804,6 +5006,20 @@
       Gziwu4Lc9ES/HHkM/J9gsdrp6h2ixzLCyjgjWakJZKaYiI6MWDBPBFCcPwHEzFeNK35+/wAA
       AABJRU5ErkJggg==
     </thumbnail>
+    <thumbnail height='50' name='Summary - Headcount - Retention' width='128'>
+      iVBORw0KGgoAAAANSUhEUgAAAIAAAAAyCAYAAACUPNO1AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAACLklEQVR4nO3cv2tTUQDF8W+1pIbUtDY2Vm0r4i+qVQdR6+DgoAj+A25OncRNETo4Ogsu
+      Ljo4OAiCi9BRQRclg4P4m/6wYMWkJFD7w2rjcCvhhVi0S7ie81ke9+VyefBOTt57CWmpVqtV
+      TNa6Zh+ANZcDIM4BEOcAiHMAxDkA4hwAcQ6AOAdAnAMgzgEQ5wCIcwDEOQDiHABxDoA4B0Cc
+      AyDOARDnAIhzAMQ5AOIcAHEOgDgHQJwDIK612Qdga/N+sgTA5RujfzW/f2snADevnEvsdwOI
+      cwNE6sOn0ADvVppgcFcegM6N6Ybzc9nG+90A4twAkZqYriTG1y+eBmBPf+6f1nEDiHMDRGpy
+      upwY923pWNM6bgBxboBITXwODbChLZzCR0/fApBKhfHR/dsB6Mm1r7qOG0Bci/8kKk5nL90F
+      ak3wJwM7uwG4euEkAMcHexOvuwHEuQEiNTv/HYCFxR8ALC+H0/hxagaA56+mALj14AUA2Uwb
+      AM/uDAPQuj68990A4nwXEKn2dCqx/S3flQHgxKE+AN6MFwF4XBgDag2xb8dmwA0gzw0QmbmF
+      JaD2e4DDe3tWnf9lZjYx7qr7VtANIM4NEJli+RsA50fuA3DsQLivPzKwDYD0ypPBJ4VxAF6P
+      fQVg6GC4JujelEms5wYQ5+cAkVlc+gnA7YcFAO6NvgSgVJlvOP/M0G4Arg2fAiDXkbwGcAD+
+      E6XyHADFStj25rMAZOpuE+v5I0DcL/cfdJdcRrbMAAAAAElFTkSuQmCC
+    </thumbnail>
     <thumbnail height='50' name='Summary - Headcount - Tenure' width='128'>
       iVBORw0KGgoAAAANSUhEUgAAAIAAAAAyCAYAAACUPNO1AAAACXBIWXMAAA7DAAAOwwHHb6hk
       AAAEMUlEQVR4nO2bbUxbVRjH/9DKihRKeWsHha2SFUEnTIvZsqUby5wikUzFabKMxPgS0ahf
@@ -4830,45 +5046,44 @@
     </thumbnail>
     <thumbnail height='50' name='Summary - Termination - Bonus' width='128'>
       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
-      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
-      RU5ErkJggg==
+      AAAEiklEQVR4nO3bWaiVVRjG8d/xOByHNDOnNHNEOymRZNhIaabihaWJ4UA3UVBooVkXEWgD
+      hJameFEi0aCWlIUKjliWZUY2YIOGpuVJk8yJ43jseLpY+3Ozj0MU27xY63+z97f3Wnt9bJ71
+      rHe97/pKampqaiSipc7FvoHExSUJIHKSACInCSBykgAiJwkgcpIAIicJIHKSACInCSBykgAi
+      JwkgcpIAIicJIHKSACInCSBykgAiJwkgcpIAIicJIHKSACInCSBykgAiJwkgcpIAIicJ4H+g
+      +lSN6lP//QGsUxfw4a26F+yXI2bpup/A3A82gu27DoAG9cPffX35FWDi6JtBtw4tCvpvq9gH
+      Js1cBbZW7NMn12fq+IGgZfPGZx37+dc+BjtyY859+u7z3mtygMgpSQ+HFo/l67eCCdOXgzYt
+      moAht3YHByuPg8VrN4OmjRuAJTPGgBbNGoJhk94Gh49WgeH9y72+9BtwY68rwfQJgwvG3roz
+      uMY9jy9Afub3zbU/F8kBIifFAEVk9YZtoLROCXjr2XtB+1ZNC9p1btccTHvzU7Dxx13guu5t
+      weYde8Hzj9wJht1RrvLICfDOqu/POvZL8z8DQ24JbvNPMz8jOUDkJAcoIkdPnARNG5fhzJmf
+      Ud6pVcH18arQ748DRwo+79i2+en3ndpdBo4cqyp4zdzi25/2gGWzxv6re04OEDnJAYrIiP7X
+      gHVf/womv/ohGD34WnDwcNgFTH1zHWh9Wdgl3Na7Izh58lTB7+3YHfbyvXu0tWPXftCkYX3Q
+      qCy8vjgvrP2TxoacQoN6peCrLbtBh9bNcO68QXKAyEkOUET639AFjLuvL5j59udg4erCyL0s
+      lxGc91zYJTS/pGHB9317tQdT3whO8cV3FVbldhgjB/aC09d1S8Mc7nbV5WDAw2+AA5XHQGnu
+      +ykP3gGG51wqIzlA5KRMYBHJMoGTZq4Et+fW9mH9ypGPAV5570vkizzznhkO2lx+CTiUazdj
+      /nqwrWK/G3q2A6MGhXhixJPvgFefGgqmzAnxxomqavDCuAFgzvuhHrHmy+1g3dwHQKOyekgO
+      ED0pBigisxduAB3bXgpmPTEE1CkpKWiX5QGyvP27a34A40aG2KFZk5BHmPxQvzPGmDhjBejX
+      pzPo0j7kB77b9gcYn4s/ul4ZKowjBvREvkKZVSZ7dgn3kBwgcpIDFJG9B48iXwUsUXLWdvVz
+      e/WMfbl+52Pl5yHqX79pZ7iefT/y7pLVH6pOVhf0q32d7RoykgNETnKAInJX365gUW5Nn/hy
+      WK+H3tYDHDoSovssMs/I8gfnYt+hY6bM+Qg8Nuom5M8SZPS+OpwYWvLJFtC9Y8gLLFixCfmz
+      BlklMiM5QOSkPEAROZarBj47dy1YvDbMxtqHOrPZO2FMyN+PzEXq5+LRF5fZuecQWDTtPpy5
+      s/j5t1AreOC5xWDPn5WgrEEw+ZceG4T87iEjCeACUpk70lWx5yDyh0I7tAkFmnp1S8/esRbH
+      q/46HbzVDuJqU10dCkq//B7GbNcylKQzIdQmLQGR8zeRNECka5ZMBAAAAABJRU5ErkJggg==
     </thumbnail>
     <thumbnail height='50' name='Summary - Termination - Tenure' width='128'>
+      iVBORw0KGgoAAAANSUhEUgAAAIAAAAAyCAYAAACUPNO1AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAACLklEQVR4nO3cv2tTUQDF8W+1pIbUtDY2Vm0r4i+qVQdR6+DgoAj+A25OncRNETo4Ogsu
+      Ljo4OAiCi9BRQRclg4P4m/6wYMWkJFD7w2rjcCvhhVi0S7ie81ke9+VyefBOTt57CWmpVqtV
+      TNa6Zh+ANZcDIM4BEOcAiHMAxDkA4hwAcQ6AOAdAnAMgzgEQ5wCIcwDEOQDiHABxDoA4B0Cc
+      AyDOARDnAIhzAMQ5AOIcAHEOgDgHQJwDIK612Qdga/N+sgTA5RujfzW/f2snADevnEvsdwOI
+      cwNE6sOn0ADvVppgcFcegM6N6Ybzc9nG+90A4twAkZqYriTG1y+eBmBPf+6f1nEDiHMDRGpy
+      upwY923pWNM6bgBxboBITXwODbChLZzCR0/fApBKhfHR/dsB6Mm1r7qOG0Bci/8kKk5nL90F
+      ak3wJwM7uwG4euEkAMcHexOvuwHEuQEiNTv/HYCFxR8ALC+H0/hxagaA56+mALj14AUA2Uwb
+      AM/uDAPQuj68990A4nwXEKn2dCqx/S3flQHgxKE+AN6MFwF4XBgDag2xb8dmwA0gzw0QmbmF
+      JaD2e4DDe3tWnf9lZjYx7qr7VtANIM4NEJli+RsA50fuA3DsQLivPzKwDYD0ypPBJ4VxAF6P
+      fQVg6GC4JujelEms5wYQ5+cAkVlc+gnA7YcFAO6NvgSgVJlvOP/M0G4Arg2fAiDXkbwGcAD+
+      E6XyHADFStj25rMAZOpuE+v5I0DcL/cfdJdcRrbMAAAAAElFTkSuQmCC
+    </thumbnail>
+    <thumbnail height='50' name='Summary - Termination - Turnover' width='128'>
       iVBORw0KGgoAAAANSUhEUgAAAIAAAAAyCAYAAACUPNO1AAAACXBIWXMAAA7DAAAOwwHHb6hk
       AAAC2UlEQVR4nO2cXUiTURjH/3NbmzHzndByzvyYUaSF9iFIN0qSEBFBEEFRYHd10X1EQRBB
       N9Fd1E0QUUFUBAV10wfRB2jYp6JUztZc82PqNr916yKYO07U7ELOnv/vauc5zzm8sN97nnPO
