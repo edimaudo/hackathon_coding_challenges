@@ -18,6 +18,18 @@
     <preference name='ui.shelf.height' value='26' />
   </preferences>
   <datasources>
+    <datasource hasconnection='false' inline='true' name='Parameters' version='18.1'>
+      <aliases enabled='yes' />
+      <column caption='Business Metrics' datatype='string' name='[Parameter 1]' param-domain-type='list' role='measure' type='nominal' value='&quot;\# of Orders&quot;'>
+        <calculation class='tableau' formula='&quot;# of Orders&quot;' />
+        <members>
+          <member value='&quot;\# of Orders&quot;' />
+          <member value='&quot;Quantity Sold&quot;' />
+          <member value='&quot;Revenue&quot;' />
+          <member value='&quot;Total Sales&quot;' />
+        </members>
+      </column>
+    </datasource>
     <datasource caption='Data (Merchandise_Sales_Analysis)' inline='true' name='federated.0ffonwe0eqxojv105vn4i00p8e6o' version='18.1'>
       <connection class='federated'>
         <named-connections>
@@ -333,6 +345,9 @@
       <column caption='Age Group' datatype='string' name='[Calculation_6043901128136884226]' role='dimension' type='nominal'>
         <calculation class='tableau' formula='if [Buyer Age] &lt; 21 then &apos;18-20&apos;&#10;ELSEIF [Buyer Age] &lt; 26 then &apos;21-25&apos;&#10;ELSEIF [Buyer Age] &lt; 31 then &apos;26-30&apos;&#10;Else &apos;31-35&apos;&#10;End' />
       </column>
+      <column caption='Business Metrics Filter' datatype='integer' name='[Calculation_6043901128138358787]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='Case [Parameters].[Parameter 1]&#10;When &apos;# of Orders&apos; then countd([Order ID])&#10;When &apos;Quantity Sold&apos; then sum([Quantity])&#10;When &apos;Revenue&apos; then sum([Quantity] * [Sales Price])&#10;When &apos;Total Sales&apos; then sum([Total Sales])&#10;End' />
+      </column>
       <column aggregation='Avg' datatype='real' name='[Latitude]' role='measure' semantic-role='[Geographical].[Latitude]' type='quantitative' />
       <column aggregation='Avg' datatype='real' name='[Longitude]' role='measure' semantic-role='[Geographical].[Longitude]' type='quantitative' />
       <column datatype='integer' name='[Order ID]' role='dimension' type='ordinal' />
@@ -624,6 +639,11 @@
         <field-sort-custom-order field=':Measure Names' />
         <field-sort-custom-order field='Multiple Values' />
       </field-sort-info>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Business Metrics' datatype='string' name='[Parameter 1]' param-domain-type='list' role='measure' type='nominal' value='&quot;\# of Orders&quot;'>
+          <calculation class='tableau' formula='&quot;# of Orders&quot;' />
+        </column>
+      </datasource-dependencies>
       <object-graph>
         <objects>
           <object caption='Data' id='Data_1D4FA6A63641462180A21B2E9254A9CB'>
