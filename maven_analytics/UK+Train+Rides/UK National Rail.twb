@@ -1,0 +1,711 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20251.25.0313.2002                               -->
+<workbook original-version='18.1' source-build='2025.1.0 (20251.25.0313.2002)' source-platform='mac' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <AnimationOnByDefault />
+    <MarkAnimation />
+    <ObjectModelEncapsulateLegacy />
+    <ObjectModelExtractV2 />
+    <ObjectModelTableType />
+    <SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <_.fcp.VConnDownstreamExtractsWithWarnings.true...VConnDownstreamExtractsWithWarnings />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <datasources>
+    <datasource caption='railway' inline='true' name='federated.19c9c2b1679sqk12tnr2h0hvw286' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='railway' name='textscan.1ss151l0gqx8of12qajjq0u95f8i'>
+            <connection class='textscan' directory='/Users/edima/Documents/Coding/hackathon-coding-challenges/maven_analytics/UK+Train+Rides' filename='railway.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.1ss151l0gqx8of12qajjq0u95f8i' name='railway.csv' table='[railway#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_CA' separator=','>
+            <column datatype='string' name='Transaction ID' ordinal='0' />
+            <column datatype='date' name='Date of Purchase' ordinal='1' />
+            <column datatype='datetime' name='Time of Purchase' ordinal='2' />
+            <column datatype='string' name='Purchase Type' ordinal='3' />
+            <column datatype='string' name='Payment Method' ordinal='4' />
+            <column datatype='string' name='Railcard' ordinal='5' />
+            <column datatype='string' name='Ticket Class' ordinal='6' />
+            <column datatype='string' name='Ticket Type' ordinal='7' />
+            <column datatype='integer' name='Price' ordinal='8' />
+            <column datatype='string' name='Departure Station' ordinal='9' />
+            <column datatype='string' name='Arrival Destination' ordinal='10' />
+            <column datatype='date' name='Date of Journey' ordinal='11' />
+            <column datatype='datetime' name='Departure Time' ordinal='12' />
+            <column datatype='datetime' name='Arrival Time' ordinal='13' />
+            <column datatype='datetime' name='Actual Arrival Time' ordinal='14' />
+            <column datatype='string' name='Journey Status' ordinal='15' />
+            <column datatype='string' name='Reason for Delay' ordinal='16' />
+            <column datatype='string' name='Refund Request' ordinal='17' />
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_GB&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_CA&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Transaction ID</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Transaction ID]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Transaction ID</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Date of Purchase</remote-name>
+            <remote-type>133</remote-type>
+            <local-name>[Date of Purchase]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Date of Purchase</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Time of Purchase</remote-name>
+            <remote-type>134</remote-type>
+            <local-name>[Time of Purchase]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Time of Purchase</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>datetime</local-type>
+            <aggregation>Hour</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Purchase Type</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Purchase Type]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Purchase Type</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Payment Method</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Payment Method]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Payment Method</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Railcard</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Railcard]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Railcard</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Ticket Class</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Ticket Class]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Ticket Class</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Ticket Type</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Ticket Type]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Ticket Type</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Price</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[Price]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Price</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Departure Station</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Departure Station]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Departure Station</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Arrival Destination</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Arrival Destination]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Arrival Destination</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Date of Journey</remote-name>
+            <remote-type>133</remote-type>
+            <local-name>[Date of Journey]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Date of Journey</remote-alias>
+            <ordinal>11</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Departure Time</remote-name>
+            <remote-type>134</remote-type>
+            <local-name>[Departure Time]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Departure Time</remote-alias>
+            <ordinal>12</ordinal>
+            <local-type>datetime</local-type>
+            <aggregation>Hour</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Arrival Time</remote-name>
+            <remote-type>134</remote-type>
+            <local-name>[Arrival Time]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Arrival Time</remote-alias>
+            <ordinal>13</ordinal>
+            <local-type>datetime</local-type>
+            <aggregation>Hour</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Actual Arrival Time</remote-name>
+            <remote-type>134</remote-type>
+            <local-name>[Actual Arrival Time]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Actual Arrival Time</remote-alias>
+            <ordinal>14</ordinal>
+            <local-type>datetime</local-type>
+            <aggregation>Hour</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Journey Status</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Journey Status]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Journey Status</remote-alias>
+            <ordinal>15</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Reason for Delay</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Reason for Delay]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Reason for Delay</remote-alias>
+            <ordinal>16</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Refund Request</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Refund Request]</local-name>
+            <parent-name>[railway.csv]</parent-name>
+            <remote-alias>Refund Request</remote-alias>
+            <ordinal>17</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column aggregation='Hour' datatype='datetime' name='[Actual Arrival Time]' role='dimension' type='ordinal' />
+      <column aggregation='Hour' datatype='datetime' name='[Arrival Time]' role='dimension' type='ordinal' />
+      <column aggregation='Hour' datatype='datetime' name='[Departure Time]' role='dimension' type='ordinal' />
+      <column aggregation='Hour' datatype='datetime' name='[Time of Purchase]' role='dimension' type='ordinal' />
+      <column caption='railway.csv' datatype='table' name='[__tableau_internal_object_id__].[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]' role='measure' type='quantitative' />
+      <extract _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' object-id='' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='/var/folders/w9/cv0lh9lj3_79503qn1046m_00000gn/T/tableau-temp/#TableauTemp_0ougs0e0m2i78r1f2kv980ga7y4u.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='04/12/2025 07:23:47 PM' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+          <metadata-records>
+            <metadata-record class='column'>
+              <remote-name>Transaction ID</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Transaction ID]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Transaction ID</remote-alias>
+              <ordinal>0</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>31653</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Date of Purchase</remote-name>
+              <remote-type>133</remote-type>
+              <local-name>[Date of Purchase]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Date of Purchase</remote-alias>
+              <ordinal>1</ordinal>
+              <family>railway.csv</family>
+              <local-type>date</local-type>
+              <aggregation>Year</aggregation>
+              <approx-count>138</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Time of Purchase</remote-name>
+              <remote-type>134</remote-type>
+              <local-name>[Time of Purchase]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Time of Purchase</remote-alias>
+              <ordinal>2</ordinal>
+              <family>railway.csv</family>
+              <local-type>datetime</local-type>
+              <aggregation>Hour</aggregation>
+              <approx-count>16225</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Purchase Type</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Purchase Type]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Purchase Type</remote-alias>
+              <ordinal>3</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>2</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Payment Method</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Payment Method]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Payment Method</remote-alias>
+              <ordinal>4</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>3</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Railcard</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Railcard]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Railcard</remote-alias>
+              <ordinal>5</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>4</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Ticket Class</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Ticket Class]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Ticket Class</remote-alias>
+              <ordinal>6</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>2</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Ticket Type</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Ticket Type]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Ticket Type</remote-alias>
+              <ordinal>7</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>3</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Price</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[Price]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Price</remote-alias>
+              <ordinal>8</ordinal>
+              <family>railway.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>162</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Departure Station</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Departure Station]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Departure Station</remote-alias>
+              <ordinal>9</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>19</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Arrival Destination</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Arrival Destination]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Arrival Destination</remote-alias>
+              <ordinal>10</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>38</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Date of Journey</remote-name>
+              <remote-type>133</remote-type>
+              <local-name>[Date of Journey]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Date of Journey</remote-alias>
+              <ordinal>11</ordinal>
+              <family>railway.csv</family>
+              <local-type>date</local-type>
+              <aggregation>Year</aggregation>
+              <approx-count>130</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Departure Time</remote-name>
+              <remote-type>134</remote-type>
+              <local-name>[Departure Time]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Departure Time</remote-alias>
+              <ordinal>12</ordinal>
+              <family>railway.csv</family>
+              <local-type>datetime</local-type>
+              <aggregation>Hour</aggregation>
+              <approx-count>109</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Arrival Time</remote-name>
+              <remote-type>134</remote-type>
+              <local-name>[Arrival Time]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Arrival Time</remote-alias>
+              <ordinal>13</ordinal>
+              <family>railway.csv</family>
+              <local-type>datetime</local-type>
+              <aggregation>Hour</aggregation>
+              <approx-count>332</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Actual Arrival Time</remote-name>
+              <remote-type>134</remote-type>
+              <local-name>[Actual Arrival Time]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Actual Arrival Time</remote-alias>
+              <ordinal>14</ordinal>
+              <family>railway.csv</family>
+              <local-type>datetime</local-type>
+              <aggregation>Hour</aggregation>
+              <approx-count>604</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Journey Status</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Journey Status]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Journey Status</remote-alias>
+              <ordinal>15</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>3</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Reason for Delay</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Reason for Delay]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Reason for Delay</remote-alias>
+              <ordinal>16</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>9</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Refund Request</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[Refund Request]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Refund Request</remote-alias>
+              <ordinal>17</ordinal>
+              <family>railway.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>2</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RGB' />
+              <object-id>[railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658]</object-id>
+            </metadata-record>
+          </metadata-records>
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;Canada&quot;' />
+      </semantic-values>
+      <object-graph>
+        <objects>
+          <object caption='railway.csv' id='railway.csv_8BAECC0C9F774F1D8FEA29E0B82A3658'>
+            <properties context=''>
+              <relation connection='textscan.1ss151l0gqx8of12qajjq0u95f8i' name='railway.csv' table='[railway#csv]' type='table'>
+                <columns character-set='UTF-8' header='yes' locale='en_CA' separator=','>
+                  <column datatype='string' name='Transaction ID' ordinal='0' />
+                  <column datatype='date' name='Date of Purchase' ordinal='1' />
+                  <column datatype='datetime' name='Time of Purchase' ordinal='2' />
+                  <column datatype='string' name='Purchase Type' ordinal='3' />
+                  <column datatype='string' name='Payment Method' ordinal='4' />
+                  <column datatype='string' name='Railcard' ordinal='5' />
+                  <column datatype='string' name='Ticket Class' ordinal='6' />
+                  <column datatype='string' name='Ticket Type' ordinal='7' />
+                  <column datatype='integer' name='Price' ordinal='8' />
+                  <column datatype='string' name='Departure Station' ordinal='9' />
+                  <column datatype='string' name='Arrival Destination' ordinal='10' />
+                  <column datatype='date' name='Date of Journey' ordinal='11' />
+                  <column datatype='datetime' name='Departure Time' ordinal='12' />
+                  <column datatype='datetime' name='Arrival Time' ordinal='13' />
+                  <column datatype='datetime' name='Actual Arrival Time' ordinal='14' />
+                  <column datatype='string' name='Journey Status' ordinal='15' />
+                  <column datatype='string' name='Reason for Delay' ordinal='16' />
+                  <column datatype='string' name='Refund Request' ordinal='17' />
+                </columns>
+              </relation>
+            </properties>
+            <properties context='extract'>
+              <relation name='Extract' table='[Extract].[Extract]' type='table' />
+            </properties>
+          </object>
+        </objects>
+      </object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet 1'>
+      <table>
+        <view>
+          <datasources />
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{09AACAD3-05EA-4369-8399-42E662AEF1FD}' />
+    </worksheet>
+  </worksheets>
+  <windows source-height='30'>
+    <window class='worksheet' maximized='true' name='Sheet 1'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{5A0AF198-996D-4AAA-B271-B24228703BB7}' />
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='384' name='Sheet 1' width='384'>
+      iVBORw0KGgoAAAANSUhEUgAAAYAAAAGACAYAAACkx7W/AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAFXUlEQVR4nO3VMQEAIAzAMMC/5yFjRxMF/XpnZg4AOW87AIAdBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABR
+      BgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUA
+      AFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQ
+      ZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEG
+      ABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAA
+      UQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBl
+      AABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEGABBlAABRBgAQZQAAUQYA
+      EGUAAFEGABBlAABRBgAQZQAAUQYAEGUAAFEfFxoG/IiMv0YAAAAASUVORK5CYII=
+    </thumbnail>
+  </thumbnails>
+</workbook>
