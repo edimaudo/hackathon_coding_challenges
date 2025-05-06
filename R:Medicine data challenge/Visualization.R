@@ -115,7 +115,7 @@ if (!is.null(data$europe_cases)) {
   } else { message("Required columns (country, year, cases) not found in europe_cases.")}
 }
 
-# --- US Measles Cases ---
+#-----US Measles Cases by year-----
 if (!is.null(data$us_year)) {
   
   if (all(c("year", "cases") %in% names(data$us_year))) {
@@ -128,3 +128,21 @@ if (!is.null(data$us_year)) {
   } else { message("Required columns (year, cases) not found in us_year.")}
 }
 
+#-----2025 measles cases by age group----
+if (!is.null(data$us_age_2025)) {
+  
+  if (all(c("age_group", "cases") %in% names(data$us_age_2025))) {
+    age_levels <- c("< 5", "5_19", "> 20", "Unknown") # Adjust as per data
+    data$us_age_2025$age_group <- factor(data$us_age_2025$age_group, levels = age_levels)
+    
+    p7_1 <- plot_ly(data$us_age_2025, x = ~age_group, y = ~case_count, type = 'bar',
+                    text = ~paste("Age Group:", age_group, "<br>Cases:", case_count),
+                    hoverinfo = 'text') %>%
+      layout(title = "Age Distribution of US Measles Cases, 2025",
+             xaxis = list(title = "Age Group" , categoryorder = "array", categoryarray = ~levels(age_group) # Use if factor
+             ),
+             yaxis = list(title = "Number of Cases"))
+    print(p7_1)
+    
+  } else { message("Required columns (age_group, cases) not found in us_age_2025.")}
+}
