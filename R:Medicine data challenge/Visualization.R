@@ -101,7 +101,7 @@ if (!is.null(data$global_cases_update)) {
 if (!is.null(data$europe_cases)) {
   if (all(c("region_name", "time", "num_value") %in% names(data$europe_cases))) {
     europe_heatmap_data <- data$europe_cases %>% filter (indicator == 'Reported confirmed cases', 
-                                                         !region_name %in% c('EU/EEA (without UK)','EU/EEA (with UK until 2019)'))  %>%
+                                                         !region_name %in% c('EU/EEA (without UK)','EU/EEA (with UK until 2019)'))
       
     
     p3_1 <- plot_ly(europe_heatmap_data, x = ~time, y = ~region_name, z = ~num_value,
