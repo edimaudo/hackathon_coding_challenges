@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2025-05-05">
+
+<title>2025 R/Medicine Challenge: Measles Vaccinations and Outbreak Trends</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="r_medicine_data_challenge_files/libs/clipboard/clipboard.min.js"></script>
+<script src="r_medicine_data_challenge_files/libs/quarto-html/quarto.js"></script>
+<script src="r_medicine_data_challenge_files/libs/quarto-html/popper.min.js"></script>
+<script src="r_medicine_data_challenge_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="r_medicine_data_challenge_files/libs/quarto-html/anchor.min.js"></script>
+<link href="r_medicine_data_challenge_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="r_medicine_data_challenge_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="r_medicine_data_challenge_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="r_medicine_data_challenge_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="r_medicine_data_challenge_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="r_medicine_data_challenge_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="r_medicine_data_challenge_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="r_medicine_data_challenge_files/libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="r_medicine_data_challenge_files/libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="r_medicine_data_challenge_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="r_medicine_data_challenge_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="r_medicine_data_challenge_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="r_medicine_data_challenge_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="r_medicine_data_challenge_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration">Data Exploration</a>
+  <ul class="collapse">
+  <li><a href="#global-measles-vaccination-coverage" id="toc-global-measles-vaccination-coverage" class="nav-link" data-scroll-target="#global-measles-vaccination-coverage">1. Global Measles Vaccination Coverage</a></li>
+  <li><a href="#global-measles-cases" id="toc-global-measles-cases" class="nav-link" data-scroll-target="#global-measles-cases">2. Global Measles Cases</a></li>
+  <li><a href="#european-measles-cases" id="toc-european-measles-cases" class="nav-link" data-scroll-target="#european-measles-cases">3. European Measles Cases</a></li>
+  <li><a href="#us-measles-cases-by-year" id="toc-us-measles-cases-by-year" class="nav-link" data-scroll-target="#us-measles-cases-by-year">4. US Measles Cases by Year</a></li>
+  <li><a href="#us-measles-cases-by-age-group" id="toc-us-measles-cases-by-age-group" class="nav-link" data-scroll-target="#us-measles-cases-by-age-group">5. 2025 US Measles Cases by Age Group</a></li>
+  <li><a href="#top-5-2025-measles-cases-by-us-state" id="toc-top-5-2025-measles-cases-by-us-state" class="nav-link" data-scroll-target="#top-5-2025-measles-cases-by-us-state">6. Top 5 2025 Measles Cases by US State</a></li>
+  <li><a href="#top-5-2025-measles-cases-by-us-state-counties" id="toc-top-5-2025-measles-cases-by-us-state-counties" class="nav-link" data-scroll-target="#top-5-2025-measles-cases-by-us-state-counties">7. Top 5 2025 Measles Cases by US State Counties</a></li>
+  </ul></li>
+  <li><a href="#exploratory-analysis" id="toc-exploratory-analysis" class="nav-link" data-scroll-target="#exploratory-analysis">Exploratory Analysis</a></li>
+  <li><a href="#data-deep-dive" id="toc-data-deep-dive" class="nav-link" data-scroll-target="#data-deep-dive">Data Deep Dive</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">2025 R/Medicine Challenge: Measles Vaccinations and Outbreak Trends</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 5, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>load_data <span class="ot">&lt;-</span> <span class="cf">function</span>(url) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(url, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="co"># Standardize column names</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"Successfully loaded and cleaned data from: "</span>, <span class="fu">basename</span>(url))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(df)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"Failed to load data from: "</span>, url)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"Error: "</span>, e<span class="sc">$</span>message)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Data URLs ---</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>base_url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/fbranda/measles/main/"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>urls <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">global_coverage =</span> <span class="fu">paste0</span>(base_url, <span class="st">"Measles_vaccination_coverage_Global.csv"</span>),</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">global_cases =</span> <span class="fu">paste0</span>(base_url, <span class="st">"Measles_Global.csv"</span>),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">europe_cases =</span> <span class="fu">paste0</span>(base_url, <span class="st">"Measles_Europe.csv"</span>),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">us_coverage_cases =</span> <span class="fu">paste0</span>(base_url, <span class="st">"USA/data/all/measles-USA-by-mmr-coverage.csv"</span>),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">us_onset =</span> <span class="fu">paste0</span>(base_url, <span class="st">"USA/data/all/measles-USA-by-onset-date.csv"</span>),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">us_year =</span> <span class="fu">paste0</span>(base_url, <span class="st">"USA/data/all/measles-USA-by-year.csv"</span>),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">us_age_2025 =</span> <span class="fu">paste0</span>(base_url, <span class="st">"USA/data/2025/measles-USA-by-age.csv"</span>),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">us_county_2025 =</span> <span class="fu">paste0</span>(base_url, <span class="st">"USA/data/2025/measles-USA-by-county-timeline.csv"</span>),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">us_state_2025 =</span> <span class="fu">paste0</span>(base_url, <span class="st">"USA/data/2025/measles-USA-by-state-timeline.csv"</span>),</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">us_confirmed_2025 =</span> <span class="fu">paste0</span>(base_url, <span class="st">"USA/data/2025/measles-USA-confirmed-cases.csv"</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#----Load Data----</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">lapply</span>(urls, load_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Successfully loaded and cleaned data from: Measles_vaccination_coverage_Global.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Successfully loaded and cleaned data from: Measles_Global.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+Successfully loaded and cleaned data from: Measles_Europe.csv
+Successfully loaded and cleaned data from: measles-USA-by-mmr-coverage.csv
+Successfully loaded and cleaned data from: measles-USA-by-onset-date.csv
+Successfully loaded and cleaned data from: measles-USA-by-year.csv
+Successfully loaded and cleaned data from: measles-USA-by-age.csv
+Successfully loaded and cleaned data from: measles-USA-by-county-timeline.csv
+Successfully loaded and cleaned data from: measles-USA-by-state-timeline.csv
+Successfully loaded and cleaned data from: measles-USA-confirmed-cases.csv
+• `` -&gt; `...1`</code></pre>
+</div>
+</div>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Changing attitudes towards vaccination have led to declining MMR coverage, putting herd immunity at risk. This document explores trends in vaccination, outbreaks using <a href="https://github.com/fbranda/measles">data</a> from the 2025 R/Medicine Challenge.</p>
+</section>
+<section id="data-exploration" class="level1">
+<h1>Data Exploration</h1>
+<section id="global-measles-vaccination-coverage" class="level2">
+<h2 class="anchored" data-anchor-id="global-measles-vaccination-coverage">1. Global Measles Vaccination Coverage</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>coverage_summary <span class="ot">&lt;-</span> data<span class="sc">$</span>global_coverage <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(antigen) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(region)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(region, year) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">avg_coverage =</span> <span class="fu">mean</span>(coverage, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    p1_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(coverage_summary, <span class="at">x =</span> <span class="sc">~</span>year, <span class="at">y =</span> <span class="sc">~</span>avg_coverage, <span class="at">color =</span> <span class="sc">~</span>region,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines+markers'</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Region:"</span>, region, <span class="st">"&lt;br&gt;Year:"</span>, year, <span class="st">"&lt;br&gt;Coverage:"</span>, <span class="fu">round</span>(avg_coverage, <span class="dv">1</span>), <span class="st">"%"</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Avg. Vaccination Coverage by Region"</span>, <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>), <span class="at">title=</span><span class="st">"Avg Coverage (%)"</span>), <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title=</span><span class="st">"Year"</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    p1_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-92d38f766d1cf51ade61" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-92d38f766d1cf51ade61">{"x":{"visdat":{"ed2f3c1575bb":["function () ","plotlyVisDat"]},"cur_data":"ed2f3c1575bb","attrs":{"ed2f3c1575bb":{"x":{},"y":{},"mode":"lines+markers","text":{},"hoverinfo":"text","color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Avg. Vaccination Coverage by Region","yaxis":{"domain":[0,1],"automargin":true,"range":[0,100],"title":"Avg Coverage (%)"},"xaxis":{"domain":[0,1],"automargin":true,"title":"Year"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022],"y":[93.952500000000001,98.289999999999992,89.120000000000005,93.442000000000007,89.744,86.353333333333325,90.671666666666667,83.518333333333331,80.75,76.474999999999994,76.382499999999993,81.318333333333328],"mode":"lines+markers","text":["Region: AFR <br>Year: 2011 <br>Coverage: 94 %","Region: AFR <br>Year: 2012 <br>Coverage: 98.3 %","Region: AFR <br>Year: 2013 <br>Coverage: 89.1 %","Region: AFR <br>Year: 2014 <br>Coverage: 93.4 %","Region: AFR <br>Year: 2015 <br>Coverage: 89.7 %","Region: AFR <br>Year: 2016 <br>Coverage: 86.4 %","Region: AFR <br>Year: 2017 <br>Coverage: 90.7 %","Region: AFR <br>Year: 2018 <br>Coverage: 83.5 %","Region: AFR <br>Year: 2019 <br>Coverage: 80.8 %","Region: AFR <br>Year: 2020 <br>Coverage: 76.5 %","Region: AFR <br>Year: 2021 <br>Coverage: 76.4 %","Region: AFR <br>Year: 2022 <br>Coverage: 81.3 %"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"AFR","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022],"y":[93.262500000000003,87.638888888888886,84.265000000000001,94.212222222222223,97.964444444444439,96.123750000000001,95.11888888888889,95.51444444444445,95.406666666666666,86.862222222222229,91.351111111111109,80.363],"mode":"lines+markers","text":["Region: AMR <br>Year: 2011 <br>Coverage: 93.3 %","Region: AMR <br>Year: 2012 <br>Coverage: 87.6 %","Region: AMR <br>Year: 2013 <br>Coverage: 84.3 %","Region: AMR <br>Year: 2014 <br>Coverage: 94.2 %","Region: AMR <br>Year: 2015 <br>Coverage: 98 %","Region: AMR <br>Year: 2016 <br>Coverage: 96.1 %","Region: AMR <br>Year: 2017 <br>Coverage: 95.1 %","Region: AMR <br>Year: 2018 <br>Coverage: 95.5 %","Region: AMR <br>Year: 2019 <br>Coverage: 95.4 %","Region: AMR <br>Year: 2020 <br>Coverage: 86.9 %","Region: AMR <br>Year: 2021 <br>Coverage: 91.4 %","Region: AMR <br>Year: 2022 <br>Coverage: 80.4 %"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"AMR","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"line":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022],"y":[82.125,83.650000000000006,86.659999999999997,88.375,96.700000000000003,80.4375,80.990000000000009,84.672499999999999,80.825000000000003,81.482500000000002,81.052499999999995,93.882499999999993],"mode":"lines+markers","text":["Region: EMR <br>Year: 2011 <br>Coverage: 82.1 %","Region: EMR <br>Year: 2012 <br>Coverage: 83.7 %","Region: EMR <br>Year: 2013 <br>Coverage: 86.7 %","Region: EMR <br>Year: 2014 <br>Coverage: 88.4 %","Region: EMR <br>Year: 2015 <br>Coverage: 96.7 %","Region: EMR <br>Year: 2016 <br>Coverage: 80.4 %","Region: EMR <br>Year: 2017 <br>Coverage: 81 %","Region: EMR <br>Year: 2018 <br>Coverage: 84.7 %","Region: EMR <br>Year: 2019 <br>Coverage: 80.8 %","Region: EMR <br>Year: 2020 <br>Coverage: 81.5 %","Region: EMR <br>Year: 2021 <br>Coverage: 81.1 %","Region: EMR <br>Year: 2022 <br>Coverage: 93.9 %"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"EMR","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022],"y":[91.584000000000003,92.712999999999994,93.102000000000004,91.867000000000004,87.060909090909092,82.766666666666666,85.879166666666663,82.61615384615385,84.183846153846147,83.273846153846151,82.135714285714286,84.600909090909084],"mode":"lines+markers","text":["Region: EUR <br>Year: 2011 <br>Coverage: 91.6 %","Region: EUR <br>Year: 2012 <br>Coverage: 92.7 %","Region: EUR <br>Year: 2013 <br>Coverage: 93.1 %","Region: EUR <br>Year: 2014 <br>Coverage: 91.9 %","Region: EUR <br>Year: 2015 <br>Coverage: 87.1 %","Region: EUR <br>Year: 2016 <br>Coverage: 82.8 %","Region: EUR <br>Year: 2017 <br>Coverage: 85.9 %","Region: EUR <br>Year: 2018 <br>Coverage: 82.6 %","Region: EUR <br>Year: 2019 <br>Coverage: 84.2 %","Region: EUR <br>Year: 2020 <br>Coverage: 83.3 %","Region: EUR <br>Year: 2021 <br>Coverage: 82.1 %","Region: EUR <br>Year: 2022 <br>Coverage: 84.6 %"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"EUR","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"line":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022],"y":[86.5,84.5,88,100.5,88.004999999999995,86.049999999999997,77,84,72.5,61.604999999999997,60.099999999999994,83.647499999999994],"mode":"lines+markers","text":["Region: SEAR <br>Year: 2011 <br>Coverage: 86.5 %","Region: SEAR <br>Year: 2012 <br>Coverage: 84.5 %","Region: SEAR <br>Year: 2013 <br>Coverage: 88 %","Region: SEAR <br>Year: 2014 <br>Coverage: 100.5 %","Region: SEAR <br>Year: 2015 <br>Coverage: 88 %","Region: SEAR <br>Year: 2016 <br>Coverage: 86 %","Region: SEAR <br>Year: 2017 <br>Coverage: 77 %","Region: SEAR <br>Year: 2018 <br>Coverage: 84 %","Region: SEAR <br>Year: 2019 <br>Coverage: 72.5 %","Region: SEAR <br>Year: 2020 <br>Coverage: 61.6 %","Region: SEAR <br>Year: 2021 <br>Coverage: 60.1 %","Region: SEAR <br>Year: 2022 <br>Coverage: 83.6 %"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"SEAR","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"line":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022],"y":[84.325000000000003,97.389999999999986,98.25,98.049999999999997,98,97.599999999999994,97.299999999999997,96,97.049999999999997,80.590000000000003,91.540000000000006,91.655000000000001],"mode":"lines+markers","text":["Region: WPR <br>Year: 2011 <br>Coverage: 84.3 %","Region: WPR <br>Year: 2012 <br>Coverage: 97.4 %","Region: WPR <br>Year: 2013 <br>Coverage: 98.2 %","Region: WPR <br>Year: 2014 <br>Coverage: 98 %","Region: WPR <br>Year: 2015 <br>Coverage: 98 %","Region: WPR <br>Year: 2016 <br>Coverage: 97.6 %","Region: WPR <br>Year: 2017 <br>Coverage: 97.3 %","Region: WPR <br>Year: 2018 <br>Coverage: 96 %","Region: WPR <br>Year: 2019 <br>Coverage: 97 %","Region: WPR <br>Year: 2020 <br>Coverage: 80.6 %","Region: WPR <br>Year: 2021 <br>Coverage: 91.5 %","Region: WPR <br>Year: 2022 <br>Coverage: 91.7 %"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"WPR","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"line":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="global-measles-cases" class="level2">
+<h2 class="anchored" data-anchor-id="global-measles-cases">2. Global Measles Cases</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>global_cases_update <span class="ot">&lt;-</span> data<span class="sc">$</span>global_cases <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">!</span><span class="fu">c</span>(region,iso3,country, year), </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"month"</span>, </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"cases"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    global_cases_summary <span class="ot">&lt;-</span> data<span class="sc">$</span>global_cases_update <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">total_cases =</span> <span class="fu">sum</span>(cases, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    p2_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(global_cases_summary, <span class="at">x =</span> <span class="sc">~</span>year, <span class="at">y =</span> <span class="sc">~</span>total_cases,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines+markers'</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Year:"</span>, year, <span class="st">"&lt;br&gt;Total Cases:"</span>, scales<span class="sc">::</span><span class="fu">comma</span>(total_cases)),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Total Reported Global Measles Cases"</span>, <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title=</span><span class="st">"Total Cases"</span>), <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title=</span><span class="st">"Year"</span>)) </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    p2_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-7b9d1f5d664304d24486" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-7b9d1f5d664304d24486">{"x":{"visdat":{"ed2f4f5dbfa0":["function () ","plotlyVisDat"]},"cur_data":"ed2f4f5dbfa0","attrs":{"ed2f4f5dbfa0":{"x":{},"y":{},"mode":"lines+markers","text":{},"hoverinfo":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Total Reported Global Measles Cases","yaxis":{"domain":[0,1],"automargin":true,"title":"Total Cases"},"xaxis":{"domain":[0,1],"automargin":true,"title":"Year"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[153288,112548,178526,290888,247474,180015,168190,276157,541401,93840,59619,171156,280933,0],"mode":"lines+markers","text":["Year: 2011 <br>Total Cases: 153,288","Year: 2012 <br>Total Cases: 112,548","Year: 2013 <br>Total Cases: 178,526","Year: 2014 <br>Total Cases: 290,888","Year: 2015 <br>Total Cases: 247,474","Year: 2016 <br>Total Cases: 180,015","Year: 2017 <br>Total Cases: 168,190","Year: 2018 <br>Total Cases: 276,157","Year: 2019 <br>Total Cases: 541,401","Year: 2020 <br>Total Cases: 93,840","Year: 2021 <br>Total Cases: 59,619","Year: 2022 <br>Total Cases: 171,156","Year: 2023 <br>Total Cases: 280,933","Year: 2024 <br>Total Cases: 0"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="european-measles-cases" class="level2">
+<h2 class="anchored" data-anchor-id="european-measles-cases">3. European Measles Cases</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>europe_heatmap_data <span class="ot">&lt;-</span> data<span class="sc">$</span>europe_cases <span class="sc">%&gt;%</span> <span class="fu">filter</span> (indicator <span class="sc">==</span> <span class="st">'Reported confirmed cases'</span>, <span class="sc">!</span>region_name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'EU/EEA (without UK)'</span>,<span class="st">'EU/EEA (with UK until 2019)'</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>p3_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(europe_heatmap_data, <span class="at">x =</span> <span class="sc">~</span>time, <span class="at">y =</span> <span class="sc">~</span>region_name, <span class="at">z =</span> <span class="sc">~</span>num_value,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">"heatmap"</span>, <span class="at">colorscale =</span> <span class="st">"Viridis"</span>, <span class="co"># Choose a colorscale</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Country:"</span>, region_name, <span class="st">"&lt;br&gt;Year:"</span>, time, <span class="st">"&lt;br&gt;Cases:"</span>, num_value)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Measles Cases Heatmap in Europe"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Year"</span>, <span class="at">type =</span> <span class="st">"category"</span>), <span class="co"># Treat year as category for heatmap</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Country"</span>, <span class="at">type =</span> <span class="st">"category"</span>))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>p3_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-09812b1fd8839b0c5b8a" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-09812b1fd8839b0c5b8a">{"x":{"visdat":{"ed2f7a8f218c":["function () ","plotlyVisDat"]},"cur_data":"ed2f7a8f218c","attrs":{"ed2f7a8f218c":{"x":{},"y":{},"z":{},"colorscale":"Viridis","hoverinfo":"text","text":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"heatmap"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Measles Cases Heatmap in Europe","xaxis":{"domain":[0,1],"automargin":true,"title":"Year","type":"category"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Country","type":"category","categoryorder":"array","categoryarray":["Austria","Belgium","Bulgaria","Croatia","Cyprus","Czechia","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Iceland","Ireland","Italy","Latvia","Liechtenstein","Lithuania","Luxembourg","Malta","Netherlands","Norway","Poland","Portugal","Romania","Slovakia","Slovenia","Spain","Sweden","United Kingdom"]},"scene":{"zaxis":{"title":"num_value"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"num_value","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":"Viridis","showscale":true,"x":[1999,1999,1999,1999,1999,1999,1999,1999,1999,1999,2000,2000,2000,2000,2000,2000,2000,2000,2000,2000,2001,2001,2001,2001,2001,2001,2001,2001,2001,2001,2001,2001,2001,2001,2002,2002,2002,2002,2002,2002,2002,2002,2002,2002,2002,2002,2002,2002,2002,2003,2003,2003,2003,2003,2003,2003,2003,2003,2003,2003,2003,2003,2003,2003,2003,2004,2004,2004,2004,2004,2004,2004,2004,2004,2004,2004,2004,2004,2004,2004,2004,2004,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2005,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2006,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2007,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2008,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2009,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2010,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2011,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2012,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2013,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2015,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2018,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2019,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2020,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2021,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2022,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023,2023],"y":["Austria","Denmark","Greece","Finland","Ireland","Italy","Netherlands","Norway","Sweden","United Kingdom","Denmark","Greece","Finland","Ireland","Italy","Netherlands","Norway","Portugal","Sweden","United Kingdom","Germany","Denmark","Greece","Spain","Finland","Ireland","Italy","Luxembourg","Malta","Netherlands","Norway","Portugal","Sweden","United Kingdom","Austria","Germany","Denmark","Greece","Spain","Finland","Ireland","Italy","Luxembourg","Malta","Netherlands","Norway","Portugal","Sweden","United Kingdom","Austria","Belgium","Germany","Denmark","Greece","Spain","Finland","Ireland","Italy","Luxembourg","Malta","Netherlands","Norway","Portugal","Sweden","United Kingdom","Austria","Belgium","Czechia","Germany","Denmark","Greece","Spain","Finland","Ireland","Italy","Luxembourg","Malta","Netherlands","Norway","Portugal","Sweden","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","United Kingdom","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Liechtenstein","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia","Austria","Belgium","Bulgaria","Cyprus","Czechia","Germany","Denmark","Estonia","Greece","Spain","Finland","France","Croatia","Hungary","Ireland","Iceland","Italy","Liechtenstein","Lithuania","Luxembourg","Latvia","Malta","Netherlands","Norway","Poland","Portugal","Romania","Sweden","Slovenia","Slovakia"],"z":[null,3,null,0,null,2908,null,3,null,94,7,0,2,null,1435,null,0,0,null,109,2067,9,0,31,1,null,826,0,1,4,4,0,4,72,null,792,32,0,47,0,8,18020,0,0,1,5,1,6,312,14,7,201,0,0,239,0,97,11978,null,0,4,8,0,1,466,2,19,17,62,0,0,22,0,40,686,0,1,3,7,0,4,198,3,11,3,1,0,248,2,2,27,10,1,2,11,0,215,0,0,2,2,3,0,1,6,4800,8,0,0,76,15,8,1,0,7,835,26,27,214,297,0,17,1,23,0,571,0,0,6,0,1,0,90,0,2830,19,0,0,769,16,14,1,0,2,280,2,1,0,235,0,25,0,14,0,595,0,0,0,0,10,17,30,0,344,0,0,0,975,157,38,1,1,2,374,12,0,1,196,5,305,0,10,0,5311,1,0,3,1,50,3,89,1,11,19,0,0,1379,28,24,696,0,5,387,8,0,1,31,2,886,1,100,0,759,0,0,0,1,14,2,62,3,7,3,0,0,1154,15,30,22005,16,0,712,4,0,92,248,5,2677,0,228,0,3064,2,0,0,0,13,3,6,5,180,6,2,0,395,38,415,31,0,17,919,77,7,37,2142,27,4991,10,5,146,0,1905,7,6,1,6,35,39,29,2,1774,26,22,2,1111,20,51,1,1,22,121,2,4,3,822,4,396,0,2,26,0,216,2,2,3,0,10,4,50,5,3262,18,2,1,2068,51,31,13,0,14,1036,17,2,4,109,2,121,0,1,33,0,1244,35,0,0,1,882,8,56,1,884,50,1,0,1910,94,58,0,8,221,344,29,0,1,150,2,137,11,0,20,1,1016,11,2,35,0,116,3,87,0,47,26,51,0,142,230,35,0,0,9,1588,9,4,1,32,2,157,138,0,2,0,168,50,0,0,1,6,14,30,0,4,21,18,0,92,25,62,1,0,7,272,3,2,0,25,4,50,4,0,43,1,632,22,0,0,0,5,0,77,0,1362,3,1,0,571,83,243,123,3,140,643,4,1,568,149,10,339,7,36,23,3,4358,2,4,0,0,15,1,40,29,3901,41,8,6,280,70,95,13,15,200,459,8,10,1300,220,15,1462,23,14,73,0,2081,30,4,25,5,23,10,214,160,4778,41,9,399,953,140,382,1119,5,511,407,15,26,28,276,12,1659,52,23,42,9,1430,834,25,3,32,70,14,951,10,1270,19,48,273,881,20,20,238,1,4,57,4,0,2,90,5,186,0,0,2,0,83,2,0,0,2,2,4,15,7,724,5,6,0,84,1,4,0,1,0,6,0,0,0,2,3,12,0,0,0,0,5,0,0,0,0,0,0,7,0,0,0,0,0,1,8,1,0,0,10,0,0,0,1,1,15,0,0,1,0,12,0,0,0,0,0,6,1,7,0,8,3,0,0,186,52,0,0,1,73,5,4,0,10,1,101,3,1,1,0,39,3,3,0,1,0,6,2,20,null,1078,11,0,6],"hoverinfo":"text","text":["Country: Austria <br>Year: 1999 <br>Cases: NA","Country: Denmark <br>Year: 1999 <br>Cases: 3","Country: Greece <br>Year: 1999 <br>Cases: NA","Country: Finland <br>Year: 1999 <br>Cases: 0","Country: Ireland <br>Year: 1999 <br>Cases: NA","Country: Italy <br>Year: 1999 <br>Cases: 2908","Country: Netherlands <br>Year: 1999 <br>Cases: NA","Country: Norway <br>Year: 1999 <br>Cases: 3","Country: Sweden <br>Year: 1999 <br>Cases: NA","Country: United Kingdom <br>Year: 1999 <br>Cases: 94","Country: Denmark <br>Year: 2000 <br>Cases: 7","Country: Greece <br>Year: 2000 <br>Cases: 0","Country: Finland <br>Year: 2000 <br>Cases: 2","Country: Ireland <br>Year: 2000 <br>Cases: NA","Country: Italy <br>Year: 2000 <br>Cases: 1435","Country: Netherlands <br>Year: 2000 <br>Cases: NA","Country: Norway <br>Year: 2000 <br>Cases: 0","Country: Portugal <br>Year: 2000 <br>Cases: 0","Country: Sweden <br>Year: 2000 <br>Cases: NA","Country: United Kingdom <br>Year: 2000 <br>Cases: 109","Country: Germany <br>Year: 2001 <br>Cases: 2067","Country: Denmark <br>Year: 2001 <br>Cases: 9","Country: Greece <br>Year: 2001 <br>Cases: 0","Country: Spain <br>Year: 2001 <br>Cases: 31","Country: Finland <br>Year: 2001 <br>Cases: 1","Country: Ireland <br>Year: 2001 <br>Cases: NA","Country: Italy <br>Year: 2001 <br>Cases: 826","Country: Luxembourg <br>Year: 2001 <br>Cases: 0","Country: Malta <br>Year: 2001 <br>Cases: 1","Country: Netherlands <br>Year: 2001 <br>Cases: 4","Country: Norway <br>Year: 2001 <br>Cases: 4","Country: Portugal <br>Year: 2001 <br>Cases: 0","Country: Sweden <br>Year: 2001 <br>Cases: 4","Country: United Kingdom <br>Year: 2001 <br>Cases: 72","Country: Austria <br>Year: 2002 <br>Cases: NA","Country: Germany <br>Year: 2002 <br>Cases: 792","Country: Denmark <br>Year: 2002 <br>Cases: 32","Country: Greece <br>Year: 2002 <br>Cases: 0","Country: Spain <br>Year: 2002 <br>Cases: 47","Country: Finland <br>Year: 2002 <br>Cases: 0","Country: Ireland <br>Year: 2002 <br>Cases: 8","Country: Italy <br>Year: 2002 <br>Cases: 18020","Country: Luxembourg <br>Year: 2002 <br>Cases: 0","Country: Malta <br>Year: 2002 <br>Cases: 0","Country: Netherlands <br>Year: 2002 <br>Cases: 1","Country: Norway <br>Year: 2002 <br>Cases: 5","Country: Portugal <br>Year: 2002 <br>Cases: 1","Country: Sweden <br>Year: 2002 <br>Cases: 6","Country: United Kingdom <br>Year: 2002 <br>Cases: 312","Country: Austria <br>Year: 2003 <br>Cases: 14","Country: Belgium <br>Year: 2003 <br>Cases: 7","Country: Germany <br>Year: 2003 <br>Cases: 201","Country: Denmark <br>Year: 2003 <br>Cases: 0","Country: Greece <br>Year: 2003 <br>Cases: 0","Country: Spain <br>Year: 2003 <br>Cases: 239","Country: Finland <br>Year: 2003 <br>Cases: 0","Country: Ireland <br>Year: 2003 <br>Cases: 97","Country: Italy <br>Year: 2003 <br>Cases: 11978","Country: Luxembourg <br>Year: 2003 <br>Cases: NA","Country: Malta <br>Year: 2003 <br>Cases: 0","Country: Netherlands <br>Year: 2003 <br>Cases: 4","Country: Norway <br>Year: 2003 <br>Cases: 8","Country: Portugal <br>Year: 2003 <br>Cases: 0","Country: Sweden <br>Year: 2003 <br>Cases: 1","Country: United Kingdom <br>Year: 2003 <br>Cases: 466","Country: Austria <br>Year: 2004 <br>Cases: 2","Country: Belgium <br>Year: 2004 <br>Cases: 19","Country: Czechia <br>Year: 2004 <br>Cases: 17","Country: Germany <br>Year: 2004 <br>Cases: 62","Country: Denmark <br>Year: 2004 <br>Cases: 0","Country: Greece <br>Year: 2004 <br>Cases: 0","Country: Spain <br>Year: 2004 <br>Cases: 22","Country: Finland <br>Year: 2004 <br>Cases: 0","Country: Ireland <br>Year: 2004 <br>Cases: 40","Country: Italy <br>Year: 2004 <br>Cases: 686","Country: Luxembourg <br>Year: 2004 <br>Cases: 0","Country: Malta <br>Year: 2004 <br>Cases: 1","Country: Netherlands <br>Year: 2004 <br>Cases: 3","Country: Norway <br>Year: 2004 <br>Cases: 7","Country: Portugal <br>Year: 2004 <br>Cases: 0","Country: Sweden <br>Year: 2004 <br>Cases: 4","Country: United Kingdom <br>Year: 2004 <br>Cases: 198","Country: Austria <br>Year: 2005 <br>Cases: 3","Country: Belgium <br>Year: 2005 <br>Cases: 11","Country: Bulgaria <br>Year: 2005 <br>Cases: 3","Country: Cyprus <br>Year: 2005 <br>Cases: 1","Country: Czechia <br>Year: 2005 <br>Cases: 0","Country: Germany <br>Year: 2005 <br>Cases: 248","Country: Denmark <br>Year: 2005 <br>Cases: 2","Country: Estonia <br>Year: 2005 <br>Cases: 2","Country: Greece <br>Year: 2005 <br>Cases: 27","Country: Spain <br>Year: 2005 <br>Cases: 10","Country: Finland <br>Year: 2005 <br>Cases: 1","Country: Hungary <br>Year: 2005 <br>Cases: 2","Country: Ireland <br>Year: 2005 <br>Cases: 11","Country: Iceland <br>Year: 2005 <br>Cases: 0","Country: Italy <br>Year: 2005 <br>Cases: 215","Country: Lithuania <br>Year: 2005 <br>Cases: 0","Country: Luxembourg <br>Year: 2005 <br>Cases: 0","Country: Latvia <br>Year: 2005 <br>Cases: 2","Country: Malta <br>Year: 2005 <br>Cases: 2","Country: Netherlands <br>Year: 2005 <br>Cases: 3","Country: Norway <br>Year: 2005 <br>Cases: 0","Country: Poland <br>Year: 2005 <br>Cases: 1","Country: Portugal <br>Year: 2005 <br>Cases: 6","Country: Romania <br>Year: 2005 <br>Cases: 4800","Country: Sweden <br>Year: 2005 <br>Cases: 8","Country: Slovenia <br>Year: 2005 <br>Cases: 0","Country: Slovakia <br>Year: 2005 <br>Cases: 0","Country: United Kingdom <br>Year: 2005 <br>Cases: 76","Country: Austria <br>Year: 2006 <br>Cases: 15","Country: Belgium <br>Year: 2006 <br>Cases: 8","Country: Bulgaria <br>Year: 2006 <br>Cases: 1","Country: Cyprus <br>Year: 2006 <br>Cases: 0","Country: Czechia <br>Year: 2006 <br>Cases: 7","Country: Germany <br>Year: 2006 <br>Cases: 835","Country: Denmark <br>Year: 2006 <br>Cases: 26","Country: Estonia <br>Year: 2006 <br>Cases: 27","Country: Greece <br>Year: 2006 <br>Cases: 214","Country: Spain <br>Year: 2006 <br>Cases: 297","Country: Finland <br>Year: 2006 <br>Cases: 0","Country: France <br>Year: 2006 <br>Cases: 17","Country: Hungary <br>Year: 2006 <br>Cases: 1","Country: Ireland <br>Year: 2006 <br>Cases: 23","Country: Iceland <br>Year: 2006 <br>Cases: 0","Country: Italy <br>Year: 2006 <br>Cases: 571","Country: Lithuania <br>Year: 2006 <br>Cases: 0","Country: Luxembourg <br>Year: 2006 <br>Cases: 0","Country: Latvia <br>Year: 2006 <br>Cases: 6","Country: Malta <br>Year: 2006 <br>Cases: 0","Country: Netherlands <br>Year: 2006 <br>Cases: 1","Country: Norway <br>Year: 2006 <br>Cases: 0","Country: Poland <br>Year: 2006 <br>Cases: 90","Country: Portugal <br>Year: 2006 <br>Cases: 0","Country: Romania <br>Year: 2006 <br>Cases: 2830","Country: Sweden <br>Year: 2006 <br>Cases: 19","Country: Slovenia <br>Year: 2006 <br>Cases: 0","Country: Slovakia <br>Year: 2006 <br>Cases: 0","Country: United Kingdom <br>Year: 2006 <br>Cases: 769","Country: Austria <br>Year: 2007 <br>Cases: 16","Country: Belgium <br>Year: 2007 <br>Cases: 14","Country: Bulgaria <br>Year: 2007 <br>Cases: 1","Country: Cyprus <br>Year: 2007 <br>Cases: 0","Country: Czechia <br>Year: 2007 <br>Cases: 2","Country: Germany <br>Year: 2007 <br>Cases: 280","Country: Denmark <br>Year: 2007 <br>Cases: 2","Country: Estonia <br>Year: 2007 <br>Cases: 1","Country: Greece <br>Year: 2007 <br>Cases: 0","Country: Spain <br>Year: 2007 <br>Cases: 235","Country: Finland <br>Year: 2007 <br>Cases: 0","Country: France <br>Year: 2007 <br>Cases: 25","Country: Hungary <br>Year: 2007 <br>Cases: 0","Country: Ireland <br>Year: 2007 <br>Cases: 14","Country: Iceland <br>Year: 2007 <br>Cases: 0","Country: Italy <br>Year: 2007 <br>Cases: 595","Country: Lithuania <br>Year: 2007 <br>Cases: 0","Country: Luxembourg <br>Year: 2007 <br>Cases: 0","Country: Latvia <br>Year: 2007 <br>Cases: 0","Country: Malta <br>Year: 2007 <br>Cases: 0","Country: Netherlands <br>Year: 2007 <br>Cases: 10","Country: Norway <br>Year: 2007 <br>Cases: 17","Country: Poland <br>Year: 2007 <br>Cases: 30","Country: Portugal <br>Year: 2007 <br>Cases: 0","Country: Romania <br>Year: 2007 <br>Cases: 344","Country: Sweden <br>Year: 2007 <br>Cases: 0","Country: Slovenia <br>Year: 2007 <br>Cases: 0","Country: Slovakia <br>Year: 2007 <br>Cases: 0","Country: United Kingdom <br>Year: 2007 <br>Cases: 975","Country: Austria <br>Year: 2008 <br>Cases: 157","Country: Belgium <br>Year: 2008 <br>Cases: 38","Country: Bulgaria <br>Year: 2008 <br>Cases: 1","Country: Cyprus <br>Year: 2008 <br>Cases: 1","Country: Czechia <br>Year: 2008 <br>Cases: 2","Country: Germany <br>Year: 2008 <br>Cases: 374","Country: Denmark <br>Year: 2008 <br>Cases: 12","Country: Estonia <br>Year: 2008 <br>Cases: 0","Country: Greece <br>Year: 2008 <br>Cases: 1","Country: Spain <br>Year: 2008 <br>Cases: 196","Country: Finland <br>Year: 2008 <br>Cases: 5","Country: France <br>Year: 2008 <br>Cases: 305","Country: Hungary <br>Year: 2008 <br>Cases: 0","Country: Ireland <br>Year: 2008 <br>Cases: 10","Country: Iceland <br>Year: 2008 <br>Cases: 0","Country: Italy <br>Year: 2008 <br>Cases: 5311","Country: Lithuania <br>Year: 2008 <br>Cases: 1","Country: Luxembourg <br>Year: 2008 <br>Cases: 0","Country: Latvia <br>Year: 2008 <br>Cases: 3","Country: Malta <br>Year: 2008 <br>Cases: 1","Country: Netherlands <br>Year: 2008 <br>Cases: 50","Country: Norway <br>Year: 2008 <br>Cases: 3","Country: Poland <br>Year: 2008 <br>Cases: 89","Country: Portugal <br>Year: 2008 <br>Cases: 1","Country: Romania <br>Year: 2008 <br>Cases: 11","Country: Sweden <br>Year: 2008 <br>Cases: 19","Country: Slovenia <br>Year: 2008 <br>Cases: 0","Country: Slovakia <br>Year: 2008 <br>Cases: 0","Country: United Kingdom <br>Year: 2008 <br>Cases: 1379","Country: Austria <br>Year: 2009 <br>Cases: 28","Country: Belgium <br>Year: 2009 <br>Cases: 24","Country: Bulgaria <br>Year: 2009 <br>Cases: 696","Country: Cyprus <br>Year: 2009 <br>Cases: 0","Country: Czechia <br>Year: 2009 <br>Cases: 5","Country: Germany <br>Year: 2009 <br>Cases: 387","Country: Denmark <br>Year: 2009 <br>Cases: 8","Country: Estonia <br>Year: 2009 <br>Cases: 0","Country: Greece <br>Year: 2009 <br>Cases: 1","Country: Spain <br>Year: 2009 <br>Cases: 31","Country: Finland <br>Year: 2009 <br>Cases: 2","Country: France <br>Year: 2009 <br>Cases: 886","Country: Hungary <br>Year: 2009 <br>Cases: 1","Country: Ireland <br>Year: 2009 <br>Cases: 100","Country: Iceland <br>Year: 2009 <br>Cases: 0","Country: Italy <br>Year: 2009 <br>Cases: 759","Country: Lithuania <br>Year: 2009 <br>Cases: 0","Country: Luxembourg <br>Year: 2009 <br>Cases: 0","Country: Latvia <br>Year: 2009 <br>Cases: 0","Country: Malta <br>Year: 2009 <br>Cases: 1","Country: Netherlands <br>Year: 2009 <br>Cases: 14","Country: Norway <br>Year: 2009 <br>Cases: 2","Country: Poland <br>Year: 2009 <br>Cases: 62","Country: Portugal <br>Year: 2009 <br>Cases: 3","Country: Romania <br>Year: 2009 <br>Cases: 7","Country: Sweden <br>Year: 2009 <br>Cases: 3","Country: Slovenia <br>Year: 2009 <br>Cases: 0","Country: Slovakia <br>Year: 2009 <br>Cases: 0","Country: United Kingdom <br>Year: 2009 <br>Cases: 1154","Country: Austria <br>Year: 2010 <br>Cases: 15","Country: Belgium <br>Year: 2010 <br>Cases: 30","Country: Bulgaria <br>Year: 2010 <br>Cases: 22005","Country: Cyprus <br>Year: 2010 <br>Cases: 16","Country: Czechia <br>Year: 2010 <br>Cases: 0","Country: Germany <br>Year: 2010 <br>Cases: 712","Country: Denmark <br>Year: 2010 <br>Cases: 4","Country: Estonia <br>Year: 2010 <br>Cases: 0","Country: Greece <br>Year: 2010 <br>Cases: 92","Country: Spain <br>Year: 2010 <br>Cases: 248","Country: Finland <br>Year: 2010 <br>Cases: 5","Country: France <br>Year: 2010 <br>Cases: 2677","Country: Hungary <br>Year: 2010 <br>Cases: 0","Country: Ireland <br>Year: 2010 <br>Cases: 228","Country: Iceland <br>Year: 2010 <br>Cases: 0","Country: Italy <br>Year: 2010 <br>Cases: 3064","Country: Lithuania <br>Year: 2010 <br>Cases: 2","Country: Luxembourg <br>Year: 2010 <br>Cases: 0","Country: Latvia <br>Year: 2010 <br>Cases: 0","Country: Malta <br>Year: 2010 <br>Cases: 0","Country: Netherlands <br>Year: 2010 <br>Cases: 13","Country: Norway <br>Year: 2010 <br>Cases: 3","Country: Poland <br>Year: 2010 <br>Cases: 6","Country: Portugal <br>Year: 2010 <br>Cases: 5","Country: Romania <br>Year: 2010 <br>Cases: 180","Country: Sweden <br>Year: 2010 <br>Cases: 6","Country: Slovenia <br>Year: 2010 <br>Cases: 2","Country: Slovakia <br>Year: 2010 <br>Cases: 0","Country: United Kingdom <br>Year: 2010 <br>Cases: 395","Country: Austria <br>Year: 2011 <br>Cases: 38","Country: Belgium <br>Year: 2011 <br>Cases: 415","Country: Bulgaria <br>Year: 2011 <br>Cases: 31","Country: Cyprus <br>Year: 2011 <br>Cases: 0","Country: Czechia <br>Year: 2011 <br>Cases: 17","Country: Germany <br>Year: 2011 <br>Cases: 919","Country: Denmark <br>Year: 2011 <br>Cases: 77","Country: Estonia <br>Year: 2011 <br>Cases: 7","Country: Greece <br>Year: 2011 <br>Cases: 37","Country: Spain <br>Year: 2011 <br>Cases: 2142","Country: Finland <br>Year: 2011 <br>Cases: 27","Country: France <br>Year: 2011 <br>Cases: 4991","Country: Croatia <br>Year: 2011 <br>Cases: 10","Country: Hungary <br>Year: 2011 <br>Cases: 5","Country: Ireland <br>Year: 2011 <br>Cases: 146","Country: Iceland <br>Year: 2011 <br>Cases: 0","Country: Italy <br>Year: 2011 <br>Cases: 1905","Country: Lithuania <br>Year: 2011 <br>Cases: 7","Country: Luxembourg <br>Year: 2011 <br>Cases: 6","Country: Latvia <br>Year: 2011 <br>Cases: 1","Country: Malta <br>Year: 2011 <br>Cases: 6","Country: Netherlands <br>Year: 2011 <br>Cases: 35","Country: Norway <br>Year: 2011 <br>Cases: 39","Country: Poland <br>Year: 2011 <br>Cases: 29","Country: Portugal <br>Year: 2011 <br>Cases: 2","Country: Romania <br>Year: 2011 <br>Cases: 1774","Country: Sweden <br>Year: 2011 <br>Cases: 26","Country: Slovenia <br>Year: 2011 <br>Cases: 22","Country: Slovakia <br>Year: 2011 <br>Cases: 2","Country: United Kingdom <br>Year: 2011 <br>Cases: 1111","Country: Austria <br>Year: 2012 <br>Cases: 20","Country: Belgium <br>Year: 2012 <br>Cases: 51","Country: Bulgaria <br>Year: 2012 <br>Cases: 1","Country: Cyprus <br>Year: 2012 <br>Cases: 1","Country: Czechia <br>Year: 2012 <br>Cases: 22","Country: Germany <br>Year: 2012 <br>Cases: 121","Country: Denmark <br>Year: 2012 <br>Cases: 2","Country: Estonia <br>Year: 2012 <br>Cases: 4","Country: Greece <br>Year: 2012 <br>Cases: 3","Country: Spain <br>Year: 2012 <br>Cases: 822","Country: Finland <br>Year: 2012 <br>Cases: 4","Country: France <br>Year: 2012 <br>Cases: 396","Country: Croatia <br>Year: 2012 <br>Cases: 0","Country: Hungary <br>Year: 2012 <br>Cases: 2","Country: Ireland <br>Year: 2012 <br>Cases: 26","Country: Iceland <br>Year: 2012 <br>Cases: 0","Country: Italy <br>Year: 2012 <br>Cases: 216","Country: Lithuania <br>Year: 2012 <br>Cases: 2","Country: Luxembourg <br>Year: 2012 <br>Cases: 2","Country: Latvia <br>Year: 2012 <br>Cases: 3","Country: Malta <br>Year: 2012 <br>Cases: 0","Country: Netherlands <br>Year: 2012 <br>Cases: 10","Country: Norway <br>Year: 2012 <br>Cases: 4","Country: Poland <br>Year: 2012 <br>Cases: 50","Country: Portugal <br>Year: 2012 <br>Cases: 5","Country: Romania <br>Year: 2012 <br>Cases: 3262","Country: Sweden <br>Year: 2012 <br>Cases: 18","Country: Slovenia <br>Year: 2012 <br>Cases: 2","Country: Slovakia <br>Year: 2012 <br>Cases: 1","Country: United Kingdom <br>Year: 2012 <br>Cases: 2068","Country: Austria <br>Year: 2013 <br>Cases: 51","Country: Belgium <br>Year: 2013 <br>Cases: 31","Country: Bulgaria <br>Year: 2013 <br>Cases: 13","Country: Cyprus <br>Year: 2013 <br>Cases: 0","Country: Czechia <br>Year: 2013 <br>Cases: 14","Country: Germany <br>Year: 2013 <br>Cases: 1036","Country: Denmark <br>Year: 2013 <br>Cases: 17","Country: Estonia <br>Year: 2013 <br>Cases: 2","Country: Greece <br>Year: 2013 <br>Cases: 4","Country: Spain <br>Year: 2013 <br>Cases: 109","Country: Finland <br>Year: 2013 <br>Cases: 2","Country: France <br>Year: 2013 <br>Cases: 121","Country: Croatia <br>Year: 2013 <br>Cases: 0","Country: Hungary <br>Year: 2013 <br>Cases: 1","Country: Ireland <br>Year: 2013 <br>Cases: 33","Country: Iceland <br>Year: 2013 <br>Cases: 0","Country: Italy <br>Year: 2013 <br>Cases: 1244","Country: Lithuania <br>Year: 2013 <br>Cases: 35","Country: Luxembourg <br>Year: 2013 <br>Cases: 0","Country: Latvia <br>Year: 2013 <br>Cases: 0","Country: Malta <br>Year: 2013 <br>Cases: 1","Country: Netherlands <br>Year: 2013 <br>Cases: 882","Country: Norway <br>Year: 2013 <br>Cases: 8","Country: Poland <br>Year: 2013 <br>Cases: 56","Country: Portugal <br>Year: 2013 <br>Cases: 1","Country: Romania <br>Year: 2013 <br>Cases: 884","Country: Sweden <br>Year: 2013 <br>Cases: 50","Country: Slovenia <br>Year: 2013 <br>Cases: 1","Country: Slovakia <br>Year: 2013 <br>Cases: 0","Country: United Kingdom <br>Year: 2013 <br>Cases: 1910","Country: Austria <br>Year: 2014 <br>Cases: 94","Country: Belgium <br>Year: 2014 <br>Cases: 58","Country: Bulgaria <br>Year: 2014 <br>Cases: 0","Country: Cyprus <br>Year: 2014 <br>Cases: 8","Country: Czechia <br>Year: 2014 <br>Cases: 221","Country: Germany <br>Year: 2014 <br>Cases: 344","Country: Denmark <br>Year: 2014 <br>Cases: 29","Country: Estonia <br>Year: 2014 <br>Cases: 0","Country: Greece <br>Year: 2014 <br>Cases: 1","Country: Spain <br>Year: 2014 <br>Cases: 150","Country: Finland <br>Year: 2014 <br>Cases: 2","Country: France <br>Year: 2014 <br>Cases: 137","Country: Croatia <br>Year: 2014 <br>Cases: 11","Country: Hungary <br>Year: 2014 <br>Cases: 0","Country: Ireland <br>Year: 2014 <br>Cases: 20","Country: Iceland <br>Year: 2014 <br>Cases: 1","Country: Italy <br>Year: 2014 <br>Cases: 1016","Country: Lithuania <br>Year: 2014 <br>Cases: 11","Country: Luxembourg <br>Year: 2014 <br>Cases: 2","Country: Latvia <br>Year: 2014 <br>Cases: 35","Country: Malta <br>Year: 2014 <br>Cases: 0","Country: Netherlands <br>Year: 2014 <br>Cases: 116","Country: Norway <br>Year: 2014 <br>Cases: 3","Country: Poland <br>Year: 2014 <br>Cases: 87","Country: Portugal <br>Year: 2014 <br>Cases: 0","Country: Romania <br>Year: 2014 <br>Cases: 47","Country: Sweden <br>Year: 2014 <br>Cases: 26","Country: Slovenia <br>Year: 2014 <br>Cases: 51","Country: Slovakia <br>Year: 2014 <br>Cases: 0","Country: United Kingdom <br>Year: 2014 <br>Cases: 142","Country: Austria <br>Year: 2015 <br>Cases: 230","Country: Belgium <br>Year: 2015 <br>Cases: 35","Country: Bulgaria <br>Year: 2015 <br>Cases: 0","Country: Cyprus <br>Year: 2015 <br>Cases: 0","Country: Czechia <br>Year: 2015 <br>Cases: 9","Country: Germany <br>Year: 2015 <br>Cases: 1588","Country: Denmark <br>Year: 2015 <br>Cases: 9","Country: Estonia <br>Year: 2015 <br>Cases: 4","Country: Greece <br>Year: 2015 <br>Cases: 1","Country: Spain <br>Year: 2015 <br>Cases: 32","Country: Finland <br>Year: 2015 <br>Cases: 2","Country: France <br>Year: 2015 <br>Cases: 157","Country: Croatia <br>Year: 2015 <br>Cases: 138","Country: Hungary <br>Year: 2015 <br>Cases: 0","Country: Ireland <br>Year: 2015 <br>Cases: 2","Country: Iceland <br>Year: 2015 <br>Cases: 0","Country: Italy <br>Year: 2015 <br>Cases: 168","Country: Lithuania <br>Year: 2015 <br>Cases: 50","Country: Luxembourg <br>Year: 2015 <br>Cases: 0","Country: Latvia <br>Year: 2015 <br>Cases: 0","Country: Malta <br>Year: 2015 <br>Cases: 1","Country: Netherlands <br>Year: 2015 <br>Cases: 6","Country: Norway <br>Year: 2015 <br>Cases: 14","Country: Poland <br>Year: 2015 <br>Cases: 30","Country: Portugal <br>Year: 2015 <br>Cases: 0","Country: Romania <br>Year: 2015 <br>Cases: 4","Country: Sweden <br>Year: 2015 <br>Cases: 21","Country: Slovenia <br>Year: 2015 <br>Cases: 18","Country: Slovakia <br>Year: 2015 <br>Cases: 0","Country: United Kingdom <br>Year: 2015 <br>Cases: 92","Country: Austria <br>Year: 2016 <br>Cases: 25","Country: Belgium <br>Year: 2016 <br>Cases: 62","Country: Bulgaria <br>Year: 2016 <br>Cases: 1","Country: Cyprus <br>Year: 2016 <br>Cases: 0","Country: Czechia <br>Year: 2016 <br>Cases: 7","Country: Germany <br>Year: 2016 <br>Cases: 272","Country: Denmark <br>Year: 2016 <br>Cases: 3","Country: Estonia <br>Year: 2016 <br>Cases: 2","Country: Greece <br>Year: 2016 <br>Cases: 0","Country: Spain <br>Year: 2016 <br>Cases: 25","Country: Finland <br>Year: 2016 <br>Cases: 4","Country: France <br>Year: 2016 <br>Cases: 50","Country: Croatia <br>Year: 2016 <br>Cases: 4","Country: Hungary <br>Year: 2016 <br>Cases: 0","Country: Ireland <br>Year: 2016 <br>Cases: 43","Country: Iceland <br>Year: 2016 <br>Cases: 1","Country: Italy <br>Year: 2016 <br>Cases: 632","Country: Lithuania <br>Year: 2016 <br>Cases: 22","Country: Luxembourg <br>Year: 2016 <br>Cases: 0","Country: Latvia <br>Year: 2016 <br>Cases: 0","Country: Malta <br>Year: 2016 <br>Cases: 0","Country: Netherlands <br>Year: 2016 <br>Cases: 5","Country: Norway <br>Year: 2016 <br>Cases: 0","Country: Poland <br>Year: 2016 <br>Cases: 77","Country: Portugal <br>Year: 2016 <br>Cases: 0","Country: Romania <br>Year: 2016 <br>Cases: 1362","Country: Sweden <br>Year: 2016 <br>Cases: 3","Country: Slovenia <br>Year: 2016 <br>Cases: 1","Country: Slovakia <br>Year: 2016 <br>Cases: 0","Country: United Kingdom <br>Year: 2016 <br>Cases: 571","Country: Austria <br>Year: 2017 <br>Cases: 83","Country: Belgium <br>Year: 2017 <br>Cases: 243","Country: Bulgaria <br>Year: 2017 <br>Cases: 123","Country: Cyprus <br>Year: 2017 <br>Cases: 3","Country: Czechia <br>Year: 2017 <br>Cases: 140","Country: Germany <br>Year: 2017 <br>Cases: 643","Country: Denmark <br>Year: 2017 <br>Cases: 4","Country: Estonia <br>Year: 2017 <br>Cases: 1","Country: Greece <br>Year: 2017 <br>Cases: 568","Country: Spain <br>Year: 2017 <br>Cases: 149","Country: Finland <br>Year: 2017 <br>Cases: 10","Country: France <br>Year: 2017 <br>Cases: 339","Country: Croatia <br>Year: 2017 <br>Cases: 7","Country: Hungary <br>Year: 2017 <br>Cases: 36","Country: Ireland <br>Year: 2017 <br>Cases: 23","Country: Iceland <br>Year: 2017 <br>Cases: 3","Country: Italy <br>Year: 2017 <br>Cases: 4358","Country: Lithuania <br>Year: 2017 <br>Cases: 2","Country: Luxembourg <br>Year: 2017 <br>Cases: 4","Country: Latvia <br>Year: 2017 <br>Cases: 0","Country: Malta <br>Year: 2017 <br>Cases: 0","Country: Netherlands <br>Year: 2017 <br>Cases: 15","Country: Norway <br>Year: 2017 <br>Cases: 1","Country: Poland <br>Year: 2017 <br>Cases: 40","Country: Portugal <br>Year: 2017 <br>Cases: 29","Country: Romania <br>Year: 2017 <br>Cases: 3901","Country: Sweden <br>Year: 2017 <br>Cases: 41","Country: Slovenia <br>Year: 2017 <br>Cases: 8","Country: Slovakia <br>Year: 2017 <br>Cases: 6","Country: United Kingdom <br>Year: 2017 <br>Cases: 280","Country: Austria <br>Year: 2018 <br>Cases: 70","Country: Belgium <br>Year: 2018 <br>Cases: 95","Country: Bulgaria <br>Year: 2018 <br>Cases: 13","Country: Cyprus <br>Year: 2018 <br>Cases: 15","Country: Czechia <br>Year: 2018 <br>Cases: 200","Country: Germany <br>Year: 2018 <br>Cases: 459","Country: Denmark <br>Year: 2018 <br>Cases: 8","Country: Estonia <br>Year: 2018 <br>Cases: 10","Country: Greece <br>Year: 2018 <br>Cases: 1300","Country: Spain <br>Year: 2018 <br>Cases: 220","Country: Finland <br>Year: 2018 <br>Cases: 15","Country: France <br>Year: 2018 <br>Cases: 1462","Country: Croatia <br>Year: 2018 <br>Cases: 23","Country: Hungary <br>Year: 2018 <br>Cases: 14","Country: Ireland <br>Year: 2018 <br>Cases: 73","Country: Iceland <br>Year: 2018 <br>Cases: 0","Country: Italy <br>Year: 2018 <br>Cases: 2081","Country: Lithuania <br>Year: 2018 <br>Cases: 30","Country: Luxembourg <br>Year: 2018 <br>Cases: 4","Country: Latvia <br>Year: 2018 <br>Cases: 25","Country: Malta <br>Year: 2018 <br>Cases: 5","Country: Netherlands <br>Year: 2018 <br>Cases: 23","Country: Norway <br>Year: 2018 <br>Cases: 10","Country: Poland <br>Year: 2018 <br>Cases: 214","Country: Portugal <br>Year: 2018 <br>Cases: 160","Country: Romania <br>Year: 2018 <br>Cases: 4778","Country: Sweden <br>Year: 2018 <br>Cases: 41","Country: Slovenia <br>Year: 2018 <br>Cases: 9","Country: Slovakia <br>Year: 2018 <br>Cases: 399","Country: United Kingdom <br>Year: 2018 <br>Cases: 953","Country: Austria <br>Year: 2019 <br>Cases: 140","Country: Belgium <br>Year: 2019 <br>Cases: 382","Country: Bulgaria <br>Year: 2019 <br>Cases: 1119","Country: Cyprus <br>Year: 2019 <br>Cases: 5","Country: Czechia <br>Year: 2019 <br>Cases: 511","Country: Germany <br>Year: 2019 <br>Cases: 407","Country: Denmark <br>Year: 2019 <br>Cases: 15","Country: Estonia <br>Year: 2019 <br>Cases: 26","Country: Greece <br>Year: 2019 <br>Cases: 28","Country: Spain <br>Year: 2019 <br>Cases: 276","Country: Finland <br>Year: 2019 <br>Cases: 12","Country: France <br>Year: 2019 <br>Cases: 1659","Country: Croatia <br>Year: 2019 <br>Cases: 52","Country: Hungary <br>Year: 2019 <br>Cases: 23","Country: Ireland <br>Year: 2019 <br>Cases: 42","Country: Iceland <br>Year: 2019 <br>Cases: 9","Country: Italy <br>Year: 2019 <br>Cases: 1430","Country: Lithuania <br>Year: 2019 <br>Cases: 834","Country: Luxembourg <br>Year: 2019 <br>Cases: 25","Country: Latvia <br>Year: 2019 <br>Cases: 3","Country: Malta <br>Year: 2019 <br>Cases: 32","Country: Netherlands <br>Year: 2019 <br>Cases: 70","Country: Norway <br>Year: 2019 <br>Cases: 14","Country: Poland <br>Year: 2019 <br>Cases: 951","Country: Portugal <br>Year: 2019 <br>Cases: 10","Country: Romania <br>Year: 2019 <br>Cases: 1270","Country: Sweden <br>Year: 2019 <br>Cases: 19","Country: Slovenia <br>Year: 2019 <br>Cases: 48","Country: Slovakia <br>Year: 2019 <br>Cases: 273","Country: United Kingdom <br>Year: 2019 <br>Cases: 881","Country: Austria <br>Year: 2020 <br>Cases: 20","Country: Belgium <br>Year: 2020 <br>Cases: 20","Country: Bulgaria <br>Year: 2020 <br>Cases: 238","Country: Cyprus <br>Year: 2020 <br>Cases: 1","Country: Czechia <br>Year: 2020 <br>Cases: 4","Country: Germany <br>Year: 2020 <br>Cases: 57","Country: Denmark <br>Year: 2020 <br>Cases: 4","Country: Estonia <br>Year: 2020 <br>Cases: 0","Country: Greece <br>Year: 2020 <br>Cases: 2","Country: Spain <br>Year: 2020 <br>Cases: 90","Country: Finland <br>Year: 2020 <br>Cases: 5","Country: France <br>Year: 2020 <br>Cases: 186","Country: Croatia <br>Year: 2020 <br>Cases: 0","Country: Hungary <br>Year: 2020 <br>Cases: 0","Country: Ireland <br>Year: 2020 <br>Cases: 2","Country: Iceland <br>Year: 2020 <br>Cases: 0","Country: Italy <br>Year: 2020 <br>Cases: 83","Country: Lithuania <br>Year: 2020 <br>Cases: 2","Country: Luxembourg <br>Year: 2020 <br>Cases: 0","Country: Latvia <br>Year: 2020 <br>Cases: 0","Country: Malta <br>Year: 2020 <br>Cases: 2","Country: Netherlands <br>Year: 2020 <br>Cases: 2","Country: Norway <br>Year: 2020 <br>Cases: 4","Country: Poland <br>Year: 2020 <br>Cases: 15","Country: Portugal <br>Year: 2020 <br>Cases: 7","Country: Romania <br>Year: 2020 <br>Cases: 724","Country: Sweden <br>Year: 2020 <br>Cases: 5","Country: Slovenia <br>Year: 2020 <br>Cases: 6","Country: Slovakia <br>Year: 2020 <br>Cases: 0","Country: United Kingdom <br>Year: 2020 <br>Cases: 84","Country: Austria <br>Year: 2021 <br>Cases: 1","Country: Belgium <br>Year: 2021 <br>Cases: 4","Country: Bulgaria <br>Year: 2021 <br>Cases: 0","Country: Cyprus <br>Year: 2021 <br>Cases: 1","Country: Czechia <br>Year: 2021 <br>Cases: 0","Country: Germany <br>Year: 2021 <br>Cases: 6","Country: Denmark <br>Year: 2021 <br>Cases: 0","Country: Estonia <br>Year: 2021 <br>Cases: 0","Country: Greece <br>Year: 2021 <br>Cases: 0","Country: Spain <br>Year: 2021 <br>Cases: 2","Country: Finland <br>Year: 2021 <br>Cases: 3","Country: France <br>Year: 2021 <br>Cases: 12","Country: Croatia <br>Year: 2021 <br>Cases: 0","Country: Hungary <br>Year: 2021 <br>Cases: 0","Country: Ireland <br>Year: 2021 <br>Cases: 0","Country: Iceland <br>Year: 2021 <br>Cases: 0","Country: Italy <br>Year: 2021 <br>Cases: 5","Country: Lithuania <br>Year: 2021 <br>Cases: 0","Country: Luxembourg <br>Year: 2021 <br>Cases: 0","Country: Latvia <br>Year: 2021 <br>Cases: 0","Country: Malta <br>Year: 2021 <br>Cases: 0","Country: Netherlands <br>Year: 2021 <br>Cases: 0","Country: Norway <br>Year: 2021 <br>Cases: 0","Country: Poland <br>Year: 2021 <br>Cases: 7","Country: Portugal <br>Year: 2021 <br>Cases: 0","Country: Romania <br>Year: 2021 <br>Cases: 0","Country: Sweden <br>Year: 2021 <br>Cases: 0","Country: Slovenia <br>Year: 2021 <br>Cases: 0","Country: Slovakia <br>Year: 2021 <br>Cases: 0","Country: Austria <br>Year: 2022 <br>Cases: 1","Country: Belgium <br>Year: 2022 <br>Cases: 8","Country: Bulgaria <br>Year: 2022 <br>Cases: 1","Country: Cyprus <br>Year: 2022 <br>Cases: 0","Country: Czechia <br>Year: 2022 <br>Cases: 0","Country: Germany <br>Year: 2022 <br>Cases: 10","Country: Denmark <br>Year: 2022 <br>Cases: 0","Country: Estonia <br>Year: 2022 <br>Cases: 0","Country: Greece <br>Year: 2022 <br>Cases: 0","Country: Spain <br>Year: 2022 <br>Cases: 1","Country: Finland <br>Year: 2022 <br>Cases: 1","Country: France <br>Year: 2022 <br>Cases: 15","Country: Croatia <br>Year: 2022 <br>Cases: 0","Country: Hungary <br>Year: 2022 <br>Cases: 0","Country: Ireland <br>Year: 2022 <br>Cases: 1","Country: Iceland <br>Year: 2022 <br>Cases: 0","Country: Italy <br>Year: 2022 <br>Cases: 12","Country: Liechtenstein <br>Year: 2022 <br>Cases: 0","Country: Lithuania <br>Year: 2022 <br>Cases: 0","Country: Luxembourg <br>Year: 2022 <br>Cases: 0","Country: Latvia <br>Year: 2022 <br>Cases: 0","Country: Malta <br>Year: 2022 <br>Cases: 0","Country: Netherlands <br>Year: 2022 <br>Cases: 6","Country: Norway <br>Year: 2022 <br>Cases: 1","Country: Poland <br>Year: 2022 <br>Cases: 7","Country: Portugal <br>Year: 2022 <br>Cases: 0","Country: Romania <br>Year: 2022 <br>Cases: 8","Country: Sweden <br>Year: 2022 <br>Cases: 3","Country: Slovenia <br>Year: 2022 <br>Cases: 0","Country: Slovakia <br>Year: 2022 <br>Cases: 0","Country: Austria <br>Year: 2023 <br>Cases: 186","Country: Belgium <br>Year: 2023 <br>Cases: 52","Country: Bulgaria <br>Year: 2023 <br>Cases: 0","Country: Cyprus <br>Year: 2023 <br>Cases: 0","Country: Czechia <br>Year: 2023 <br>Cases: 1","Country: Germany <br>Year: 2023 <br>Cases: 73","Country: Denmark <br>Year: 2023 <br>Cases: 5","Country: Estonia <br>Year: 2023 <br>Cases: 4","Country: Greece <br>Year: 2023 <br>Cases: 0","Country: Spain <br>Year: 2023 <br>Cases: 10","Country: Finland <br>Year: 2023 <br>Cases: 1","Country: France <br>Year: 2023 <br>Cases: 101","Country: Croatia <br>Year: 2023 <br>Cases: 3","Country: Hungary <br>Year: 2023 <br>Cases: 1","Country: Ireland <br>Year: 2023 <br>Cases: 1","Country: Iceland <br>Year: 2023 <br>Cases: 0","Country: Italy <br>Year: 2023 <br>Cases: 39","Country: Liechtenstein <br>Year: 2023 <br>Cases: 3","Country: Lithuania <br>Year: 2023 <br>Cases: 3","Country: Luxembourg <br>Year: 2023 <br>Cases: 0","Country: Latvia <br>Year: 2023 <br>Cases: 1","Country: Malta <br>Year: 2023 <br>Cases: 0","Country: Netherlands <br>Year: 2023 <br>Cases: 6","Country: Norway <br>Year: 2023 <br>Cases: 2","Country: Poland <br>Year: 2023 <br>Cases: 20","Country: Portugal <br>Year: 2023 <br>Cases: NA","Country: Romania <br>Year: 2023 <br>Cases: 1078","Country: Sweden <br>Year: 2023 <br>Cases: 11","Country: Slovenia <br>Year: 2023 <br>Cases: 0","Country: Slovakia <br>Year: 2023 <br>Cases: 6"],"type":"heatmap","xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="us-measles-cases-by-year" class="level2">
+<h2 class="anchored" data-anchor-id="us-measles-cases-by-year">4. US Measles Cases by Year</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>    p4_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(data<span class="sc">$</span>us_year, <span class="at">x =</span> <span class="sc">~</span>year, <span class="at">y =</span> <span class="sc">~</span>cases, <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines+markers'</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Year:"</span>, year, <span class="st">"&lt;br&gt;Cases:"</span>, scales<span class="sc">::</span><span class="fu">comma</span>(cases)),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Total Reported US Measles Cases by Year"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Year"</span>), <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Number of Cases"</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    p4_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-456d927f2b5579c75404" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-456d927f2b5579c75404">{"x":{"visdat":{"ed2f658cb6f7":["function () ","plotlyVisDat"]},"cur_data":"ed2f658cb6f7","attrs":{"ed2f658cb6f7":{"x":{},"y":{},"mode":"lines+markers","text":{},"hoverinfo":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Total Reported US Measles Cases by Year","xaxis":{"domain":[0,1],"automargin":true,"title":"Year"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Number of Cases"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025],"y":[2822,6255,3652,3410,17914,27808,9643,2126,312,899,308,492,141,100,99,85,116,44,56,37,66,55,43,140,72,63,220,55,187,667,191,86,120,381,1274,13,49,121,59,285,164,85,116,44,56,37,66,55,43,140,72,63,220,55,187,667,191,86,120,381,1274,13,49,121,59,285,164],"mode":"lines+markers","text":["Year: 1985 <br>Cases: 2,822","Year: 1986 <br>Cases: 6,255","Year: 1987 <br>Cases: 3,652","Year: 1988 <br>Cases: 3,410","Year: 1989 <br>Cases: 17,914","Year: 1990 <br>Cases: 27,808","Year: 1991 <br>Cases: 9,643","Year: 1992 <br>Cases: 2,126","Year: 1993 <br>Cases: 312","Year: 1994 <br>Cases: 899","Year: 1995 <br>Cases: 308","Year: 1996 <br>Cases: 492","Year: 1997 <br>Cases: 141","Year: 1998 <br>Cases: 100","Year: 1999 <br>Cases: 99","Year: 2000 <br>Cases: 85","Year: 2001 <br>Cases: 116","Year: 2002 <br>Cases: 44","Year: 2003 <br>Cases: 56","Year: 2004 <br>Cases: 37","Year: 2005 <br>Cases: 66","Year: 2006 <br>Cases: 55","Year: 2007 <br>Cases: 43","Year: 2008 <br>Cases: 140","Year: 2009 <br>Cases: 72","Year: 2010 <br>Cases: 63","Year: 2011 <br>Cases: 220","Year: 2012 <br>Cases: 55","Year: 2013 <br>Cases: 187","Year: 2014 <br>Cases: 667","Year: 2015 <br>Cases: 191","Year: 2016 <br>Cases: 86","Year: 2017 <br>Cases: 120","Year: 2018 <br>Cases: 381","Year: 2019 <br>Cases: 1,274","Year: 2020 <br>Cases: 13","Year: 2021 <br>Cases: 49","Year: 2022 <br>Cases: 121","Year: 2023 <br>Cases: 59","Year: 2024 <br>Cases: 285","Year: 2025 <br>Cases: 164","Year: 2000 <br>Cases: 85","Year: 2001 <br>Cases: 116","Year: 2002 <br>Cases: 44","Year: 2003 <br>Cases: 56","Year: 2004 <br>Cases: 37","Year: 2005 <br>Cases: 66","Year: 2006 <br>Cases: 55","Year: 2007 <br>Cases: 43","Year: 2008 <br>Cases: 140","Year: 2009 <br>Cases: 72","Year: 2010 <br>Cases: 63","Year: 2011 <br>Cases: 220","Year: 2012 <br>Cases: 55","Year: 2013 <br>Cases: 187","Year: 2014 <br>Cases: 667","Year: 2015 <br>Cases: 191","Year: 2016 <br>Cases: 86","Year: 2017 <br>Cases: 120","Year: 2018 <br>Cases: 381","Year: 2019 <br>Cases: 1,274","Year: 2020 <br>Cases: 13","Year: 2021 <br>Cases: 49","Year: 2022 <br>Cases: 121","Year: 2023 <br>Cases: 59","Year: 2024 <br>Cases: 285","Year: 2025 <br>Cases: 164"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="us-measles-cases-by-age-group" class="level2">
+<h2 class="anchored" data-anchor-id="us-measles-cases-by-age-group">5. 2025 US Measles Cases by Age Group</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>    age_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"&lt; 5"</span>, <span class="st">"5_19"</span>, <span class="st">"&gt; 20"</span>, <span class="st">"Unknown"</span>) <span class="co"># Adjust as per data</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    data<span class="sc">$</span>us_age_2025<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">factor</span>(data<span class="sc">$</span>us_age_2025<span class="sc">$</span>age_group, <span class="at">levels =</span> age_levels)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    p5_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(data<span class="sc">$</span>us_age_2025, <span class="at">x =</span> <span class="sc">~</span>age_group, <span class="at">y =</span> <span class="sc">~</span>case_count, <span class="at">type =</span> <span class="st">'bar'</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Age Group:"</span>, age_group, <span class="st">"&lt;br&gt;Cases:"</span>, case_count),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Age Distribution of US Measles Cases, 2025"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Age Group"</span> , <span class="at">categoryorder =</span> <span class="st">"array"</span>, <span class="at">categoryarray =</span> <span class="sc">~</span><span class="fu">levels</span>(age_group) <span class="co"># Use if factor</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>             ),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Number of Cases"</span>))</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    p5_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-1c73eb1a639b54c6a725" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-1c73eb1a639b54c6a725">{"x":{"visdat":{"ed2f56814ce7":["function () ","plotlyVisDat"]},"cur_data":"ed2f56814ce7","attrs":{"ed2f56814ce7":{"x":{},"y":{},"text":{},"hoverinfo":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Age Distribution of US Measles Cases, 2025","xaxis":{"domain":[0,1],"automargin":true,"title":"Age Group","categoryorder":"array","categoryarray":["< 5","5_19","> 20","Unknown"],"type":"category"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Number of Cases"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["< 5","5_19","> 20","Unknown"],"y":[55,79,29,1],"text":["Age Group: < 5 <br>Cases: 55","Age Group: 5_19 <br>Cases: 79","Age Group: > 20 <br>Cases: 29","Age Group: Unknown <br>Cases: 1"],"hoverinfo":["text","text","text","text"],"type":"bar","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="top-5-2025-measles-cases-by-us-state" class="level2">
+<h2 class="anchored" data-anchor-id="top-5-2025-measles-cases-by-us-state">6. Top 5 2025 Measles Cases by US State</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>    state_data <span class="ot">&lt;-</span> data<span class="sc">$</span>us_state_2025 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(report_date))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Identify states with significant cases</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    top_states <span class="ot">&lt;-</span> state_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(state_name) <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(date <span class="sc">==</span> <span class="fu">max</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="fu">desc</span>(cases_count)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="co"># Adjust N</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(state_name)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    p6_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(state_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(state_name <span class="sc">%in%</span> top_states),</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="sc">~</span>date, <span class="at">y =</span> <span class="sc">~</span>cases_count, <span class="at">color =</span> <span class="sc">~</span>state_name,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines'</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"State:"</span>, state_name, <span class="st">"&lt;br&gt;Date:"</span>, date, <span class="st">"&lt;br&gt;Cases:"</span>, cases_count),</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Top 5 - 2025 Measles Cases by State"</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Date"</span>), <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Cases"</span>))</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    p6_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-99cbb6bde3315fb2ef03" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-99cbb6bde3315fb2ef03">{"x":{"visdat":{"ed2fdc37f29":["function () ","plotlyVisDat"]},"cur_data":"ed2fdc37f29","attrs":{"ed2fdc37f29":{"x":{},"y":{},"mode":"lines","text":{},"hoverinfo":"text","color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Top 5 - 2025 Measles Cases by State","xaxis":{"domain":[0,1],"automargin":true,"title":"Date"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Cases"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["2025-02-21","2025-02-26","2025-02-28","2025-03-11"],"y":[1,1,1,2],"mode":"lines","text":["State: California <br>Date: 2025-02-21 <br>Cases: 1","State: California <br>Date: 2025-02-26 <br>Cases: 1","State: California <br>Date: 2025-02-28 <br>Cases: 1","State: California <br>Date: 2025-03-11 <br>Cases: 2"],"hoverinfo":["text","text","text","text"],"type":"scatter","name":"California","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2025-01-31","2025-02-12"],"y":[1,2],"mode":"lines","text":["State: Georgia <br>Date: 2025-01-31 <br>Cases: 1","State: Georgia <br>Date: 2025-02-12 <br>Cases: 2"],"hoverinfo":["text","text"],"type":"scatter","name":"Georgia","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"line":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2025-02-21"],"y":[3],"mode":"lines","text":"State: New Jersey <br>Date: 2025-02-21 <br>Cases: 3","hoverinfo":"text","type":"scatter","name":"New Jersey","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2025-02-12","2025-02-21","2025-03-11"],"y":[1,8,24],"mode":"lines","text":["State: New Mexico <br>Date: 2025-02-12 <br>Cases: 1","State: New Mexico <br>Date: 2025-02-21 <br>Cases: 8","State: New Mexico <br>Date: 2025-03-11 <br>Cases: 24"],"hoverinfo":["text","text","text"],"type":"scatter","name":"New Mexico","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"line":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2025-01-31","2025-02-12","2025-02-14","2025-02-21","2025-02-26","2025-02-28","2025-03-04","2025-03-11"],"y":[4,23,23,42,33,24,13,65],"mode":"lines","text":["State: Texas <br>Date: 2025-01-31 <br>Cases: 4","State: Texas <br>Date: 2025-02-12 <br>Cases: 23","State: Texas <br>Date: 2025-02-14 <br>Cases: 23","State: Texas <br>Date: 2025-02-21 <br>Cases: 42","State: Texas <br>Date: 2025-02-26 <br>Cases: 33","State: Texas <br>Date: 2025-02-28 <br>Cases: 24","State: Texas <br>Date: 2025-03-04 <br>Cases: 13","State: Texas <br>Date: 2025-03-11 <br>Cases: 65"],"hoverinfo":["text","text","text","text","text","text","text","text"],"type":"scatter","name":"Texas","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"line":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="top-5-2025-measles-cases-by-us-state-counties" class="level2">
+<h2 class="anchored" data-anchor-id="top-5-2025-measles-cases-by-us-state-counties">7. Top 5 2025 Measles Cases by US State Counties</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>    county_data <span class="ot">&lt;-</span> data<span class="sc">$</span>us_county_2025 <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(report_date),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">county_state =</span> <span class="fu">paste</span>(county_name, state_name, <span class="at">sep=</span><span class="st">", "</span>)) <span class="co"># Unique identifier</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find top N counties by cases</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    top_counties <span class="ot">&lt;-</span> county_data <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(county_name) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(date <span class="sc">==</span> <span class="fu">max</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="fu">desc</span>(cases_count)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(county_name)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>p7_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(county_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(county_name <span class="sc">%in%</span> top_counties),</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="sc">~</span>date, <span class="at">y =</span> <span class="sc">~</span>cases_count, <span class="at">color =</span> <span class="sc">~</span>county_name,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines'</span>,</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"County:"</span>, county_name, <span class="st">"&lt;br&gt;Date:"</span>, date, <span class="st">"&lt;br&gt;Cases:"</span>, cases_count),</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Top 5 - 2025 Measles Cases by County"</span>,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Date"</span>), <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Cases"</span>))</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>p7_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-767dd7ba586392e537ec" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-767dd7ba586392e537ec">{"x":{"visdat":{"ed2f54dbb535":["function () ","plotlyVisDat"]},"cur_data":"ed2f54dbb535","attrs":{"ed2f54dbb535":{"x":{},"y":{},"mode":"lines","text":{},"hoverinfo":"text","color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Top 5 - 2025 Measles Cases by County","xaxis":{"domain":[0,1],"automargin":true,"title":"Date"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Cases"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["2025-01-31","2025-02-12","2025-02-14","2025-02-21","2025-02-26","2025-02-28","2025-03-04","2025-03-11"],"y":[2,22,18,15,23,18,9,49],"mode":"lines","text":["County: Gaines County <br>Date: 2025-01-31 <br>Cases: 2","County: Gaines County <br>Date: 2025-02-12 <br>Cases: 22","County: Gaines County <br>Date: 2025-02-14 <br>Cases: 18","County: Gaines County <br>Date: 2025-02-21 <br>Cases: 15","County: Gaines County <br>Date: 2025-02-26 <br>Cases: 23","County: Gaines County <br>Date: 2025-02-28 <br>Cases: 18","County: Gaines County <br>Date: 2025-03-04 <br>Cases: 9","County: Gaines County <br>Date: 2025-03-11 <br>Cases: 49"],"hoverinfo":["text","text","text","text","text","text","text","text"],"type":"scatter","name":"Gaines County","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2025-02-12","2025-02-21","2025-03-11"],"y":[1,8,23],"mode":"lines","text":["County: Lea County <br>Date: 2025-02-12 <br>Cases: 1","County: Lea County <br>Date: 2025-02-21 <br>Cases: 8","County: Lea County <br>Date: 2025-03-11 <br>Cases: 23"],"hoverinfo":["text","text","text"],"type":"scatter","name":"Lea County","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"line":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2025-02-26"],"y":[3],"mode":"lines","text":"County: Martin County <br>Date: 2025-02-26 <br>Cases: 3","hoverinfo":"text","type":"scatter","name":"Martin County","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2025-02-14","2025-02-21","2025-02-26","2025-03-04","2025-03-11"],"y":[3,17,1,1,10],"mode":"lines","text":["County: Terry County <br>Date: 2025-02-14 <br>Cases: 3","County: Terry County <br>Date: 2025-02-21 <br>Cases: 17","County: Terry County <br>Date: 2025-02-26 <br>Cases: 1","County: Terry County <br>Date: 2025-03-04 <br>Cases: 1","County: Terry County <br>Date: 2025-03-11 <br>Cases: 10"],"hoverinfo":["text","text","text","text","text"],"type":"scatter","name":"Terry County","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"line":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2025-02-14","2025-02-21","2025-02-26","2025-03-04","2025-03-11"],"y":[2,2,1,1,4],"mode":"lines","text":["County: Yoakum County <br>Date: 2025-02-14 <br>Cases: 2","County: Yoakum County <br>Date: 2025-02-21 <br>Cases: 2","County: Yoakum County <br>Date: 2025-02-26 <br>Cases: 1","County: Yoakum County <br>Date: 2025-03-04 <br>Cases: 1","County: Yoakum County <br>Date: 2025-03-11 <br>Cases: 4"],"hoverinfo":["text","text","text","text","text"],"type":"scatter","name":"Yoakum County","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"line":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<pre><code></code></pre>
+<pre><code></code></pre>
+</section>
+</section>
+<section id="exploratory-analysis" class="level1">
+<h1>Exploratory Analysis</h1>
+</section>
+<section id="data-deep-dive" class="level1">
+<h1>Data Deep Dive</h1>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>This exploratory analysis highlights concerning trends in MMR vaccination and measles resurgence in 2025. Low vaccination coverage correlates strongly with increased outbreak risk. Continued monitoring and policy support are essential to protect public health.</p>
+<!-- -->
+
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb14" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "2025 R/Medicine Challenge: Measles Vaccinations and Outbreak Trends"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2025-05-05"</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: cosmo</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup libraries, include=FALSE}</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="in"># Ensure these are installed: install.packages(c("plotly", "dplyr", "readr", "lubridate", "tidyr", "janitor", "scales", "DT"))</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="in">packages &lt;- c("plotly", "dplyr", "readr", "lubridate", "tidyr", "janitor", "scales", "DT")</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="in">for (package in packages) {</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="in">  if (!require(package, character.only=T, quietly=T)) {</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="in">    install.packages(package)</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="in">    library(package, character.only=T)</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="in">  }</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="in">```{r load data}</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="in">load_data &lt;- function(url) {</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="in">  tryCatch(</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="in">    {</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="in">      df &lt;- read_csv(url, show_col_types = FALSE) %&gt;%</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="in">        janitor::clean_names() # Standardize column names</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="in">      message("Successfully loaded and cleaned data from: ", basename(url))</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="in">      return(df)</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="in">    },</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="in">    error = function(e) {</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="in">      message("Failed to load data from: ", url)</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="in">      message("Error: ", e$message)</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="in">      return(NULL)</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="in">  )</span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="in"># --- Data URLs ---</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="in">base_url &lt;- "https://raw.githubusercontent.com/fbranda/measles/main/"</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="in">urls &lt;- list(</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="in">  global_coverage = paste0(base_url, "Measles_vaccination_coverage_Global.csv"),</span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="in">  global_cases = paste0(base_url, "Measles_Global.csv"),</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="in">  europe_cases = paste0(base_url, "Measles_Europe.csv"),</span></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="in">  us_coverage_cases = paste0(base_url, "USA/data/all/measles-USA-by-mmr-coverage.csv"),</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a><span class="in">  us_onset = paste0(base_url, "USA/data/all/measles-USA-by-onset-date.csv"),</span></span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a><span class="in">  us_year = paste0(base_url, "USA/data/all/measles-USA-by-year.csv"),</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="in">  us_age_2025 = paste0(base_url, "USA/data/2025/measles-USA-by-age.csv"),</span></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="in">  us_county_2025 = paste0(base_url, "USA/data/2025/measles-USA-by-county-timeline.csv"),</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="in">  us_state_2025 = paste0(base_url, "USA/data/2025/measles-USA-by-state-timeline.csv"),</span></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="in">  us_confirmed_2025 = paste0(base_url, "USA/data/2025/measles-USA-confirmed-cases.csv")</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="in">#----Load Data----</span></span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="in">data &lt;- lapply(urls, load_data)</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introduction</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>Changing attitudes towards vaccination have led to declining MMR coverage, putting herd immunity at risk. This document explores trends in vaccination, outbreaks using <span class="co">[</span><span class="ot">data</span><span class="co">](https://github.com/fbranda/measles)</span> from the 2025 R/Medicine Challenge.</span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data Exploration</span></span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Global Measles Vaccination Coverage</span></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>coverage_summary <span class="ot">&lt;-</span> data<span class="sc">$</span>global_coverage <span class="sc">%&gt;%</span></span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(antigen) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(region)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(region, year) <span class="sc">%&gt;%</span></span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">avg_coverage =</span> <span class="fu">mean</span>(coverage, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a>    p1_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(coverage_summary, <span class="at">x =</span> <span class="sc">~</span>year, <span class="at">y =</span> <span class="sc">~</span>avg_coverage, <span class="at">color =</span> <span class="sc">~</span>region,</span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines+markers'</span>,</span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Region:"</span>, region, <span class="st">"&lt;br&gt;Year:"</span>, year, <span class="st">"&lt;br&gt;Coverage:"</span>, <span class="fu">round</span>(avg_coverage, <span class="dv">1</span>), <span class="st">"%"</span>),</span>
+<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Avg. Vaccination Coverage by Region"</span>, <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>), <span class="at">title=</span><span class="st">"Avg Coverage (%)"</span>), <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title=</span><span class="st">"Year"</span>))</span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>    p1_1</span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Global Measles Cases</span></span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r global-measles-cases}</span></span>
+<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a><span class="in">data$global_cases_update &lt;- data$global_cases %&gt;% </span></span>
+<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a><span class="in">  pivot_longer(</span></span>
+<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a><span class="in">    cols = !c(region,iso3,country, year), </span></span>
+<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a><span class="in">    names_to = "month", </span></span>
+<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a><span class="in">    values_to = "cases"</span></span>
+<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a><span class="in">  )</span></span>
+<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a><span class="in">    global_cases_summary &lt;- data$global_cases_update %&gt;%</span></span>
+<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a><span class="in">      group_by(year) %&gt;%</span></span>
+<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a><span class="in">      summarise(total_cases = sum(cases, na.rm = TRUE), .groups = 'drop')</span></span>
+<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a><span class="in">    p2_1 &lt;- plot_ly(global_cases_summary, x = ~year, y = ~total_cases,</span></span>
+<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a><span class="in">                    type = 'scatter', mode = 'lines+markers',</span></span>
+<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a><span class="in">                    text = ~paste("Year:", year, "&lt;br&gt;Total Cases:", scales::comma(total_cases)),</span></span>
+<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a><span class="in">                    hoverinfo = 'text') %&gt;%</span></span>
+<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a><span class="in">      layout(title = "Total Reported Global Measles Cases", yaxis = list(title="Total Cases"), xaxis = list(title="Year")) </span></span>
+<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a><span class="in">    p2_1</span></span>
+<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. European Measles Cases</span></span>
+<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a><span class="in">```{r european-measles-cases}</span></span>
+<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a><span class="in">europe_heatmap_data &lt;- data$europe_cases %&gt;% filter (indicator == 'Reported confirmed cases', !region_name %in% c('EU/EEA (without UK)','EU/EEA (with UK until 2019)'))</span></span>
+<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a><span class="in">p3_1 &lt;- plot_ly(europe_heatmap_data, x = ~time, y = ~region_name, z = ~num_value,</span></span>
+<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a><span class="in">                    type = "heatmap", colorscale = "Viridis", # Choose a colorscale</span></span>
+<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a><span class="in">                    hoverinfo = 'text',</span></span>
+<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a><span class="in">                    text = ~paste("Country:", region_name, "&lt;br&gt;Year:", time, "&lt;br&gt;Cases:", num_value)) %&gt;%</span></span>
+<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a><span class="in">      layout(title = "Measles Cases Heatmap in Europe",</span></span>
+<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a><span class="in">             xaxis = list(title = "Year", type = "category"), # Treat year as category for heatmap</span></span>
+<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a><span class="in">             yaxis = list(title = "Country", type = "category"))</span></span>
+<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a><span class="in">p3_1</span></span>
+<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4. US Measles Cases by Year</span></span>
+<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a>    p4_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(data<span class="sc">$</span>us_year, <span class="at">x =</span> <span class="sc">~</span>year, <span class="at">y =</span> <span class="sc">~</span>cases, <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines+markers'</span>,</span>
+<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Year:"</span>, year, <span class="st">"&lt;br&gt;Cases:"</span>, scales<span class="sc">::</span><span class="fu">comma</span>(cases)),</span>
+<span id="cb14-133"><a href="#cb14-133" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-134"><a href="#cb14-134" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Total Reported US Measles Cases by Year"</span>,</span>
+<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a>             <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Year"</span>), <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Number of Cases"</span>))</span>
+<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a>    p4_1</span>
+<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. 2025 US Measles Cases by Age Group</span></span>
+<span id="cb14-140"><a href="#cb14-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a>    age_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"&lt; 5"</span>, <span class="st">"5_19"</span>, <span class="st">"&gt; 20"</span>, <span class="st">"Unknown"</span>) <span class="co"># Adjust as per data</span></span>
+<span id="cb14-145"><a href="#cb14-145" aria-hidden="true" tabindex="-1"></a>    data<span class="sc">$</span>us_age_2025<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">factor</span>(data<span class="sc">$</span>us_age_2025<span class="sc">$</span>age_group, <span class="at">levels =</span> age_levels)</span>
+<span id="cb14-146"><a href="#cb14-146" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-147"><a href="#cb14-147" aria-hidden="true" tabindex="-1"></a>    p5_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(data<span class="sc">$</span>us_age_2025, <span class="at">x =</span> <span class="sc">~</span>age_group, <span class="at">y =</span> <span class="sc">~</span>case_count, <span class="at">type =</span> <span class="st">'bar'</span>,</span>
+<span id="cb14-148"><a href="#cb14-148" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Age Group:"</span>, age_group, <span class="st">"&lt;br&gt;Cases:"</span>, case_count),</span>
+<span id="cb14-149"><a href="#cb14-149" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-150"><a href="#cb14-150" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Age Distribution of US Measles Cases, 2025"</span>,</span>
+<span id="cb14-151"><a href="#cb14-151" aria-hidden="true" tabindex="-1"></a>             <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Age Group"</span> , <span class="at">categoryorder =</span> <span class="st">"array"</span>, <span class="at">categoryarray =</span> <span class="sc">~</span><span class="fu">levels</span>(age_group) <span class="co"># Use if factor</span></span>
+<span id="cb14-152"><a href="#cb14-152" aria-hidden="true" tabindex="-1"></a>             ),</span>
+<span id="cb14-153"><a href="#cb14-153" aria-hidden="true" tabindex="-1"></a>             <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Number of Cases"</span>))</span>
+<span id="cb14-154"><a href="#cb14-154" aria-hidden="true" tabindex="-1"></a>    p5_1</span>
+<span id="cb14-155"><a href="#cb14-155" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-156"><a href="#cb14-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-157"><a href="#cb14-157" aria-hidden="true" tabindex="-1"></a><span class="fu">## 6. Top 5 2025 Measles Cases by US State </span></span>
+<span id="cb14-158"><a href="#cb14-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-161"><a href="#cb14-161" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb14-162"><a href="#cb14-162" aria-hidden="true" tabindex="-1"></a>    state_data <span class="ot">&lt;-</span> data<span class="sc">$</span>us_state_2025 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(report_date))</span>
+<span id="cb14-163"><a href="#cb14-163" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-164"><a href="#cb14-164" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Identify states with significant cases</span></span>
+<span id="cb14-165"><a href="#cb14-165" aria-hidden="true" tabindex="-1"></a>    top_states <span class="ot">&lt;-</span> state_data <span class="sc">%&gt;%</span></span>
+<span id="cb14-166"><a href="#cb14-166" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(state_name) <span class="sc">%&gt;%</span></span>
+<span id="cb14-167"><a href="#cb14-167" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(date <span class="sc">==</span> <span class="fu">max</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-168"><a href="#cb14-168" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb14-169"><a href="#cb14-169" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="fu">desc</span>(cases_count)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-170"><a href="#cb14-170" aria-hidden="true" tabindex="-1"></a>      <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="co"># Adjust N</span></span>
+<span id="cb14-171"><a href="#cb14-171" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(state_name)</span>
+<span id="cb14-172"><a href="#cb14-172" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-173"><a href="#cb14-173" aria-hidden="true" tabindex="-1"></a>    p6_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(state_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(state_name <span class="sc">%in%</span> top_states),</span>
+<span id="cb14-174"><a href="#cb14-174" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="sc">~</span>date, <span class="at">y =</span> <span class="sc">~</span>cases_count, <span class="at">color =</span> <span class="sc">~</span>state_name,</span>
+<span id="cb14-175"><a href="#cb14-175" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines'</span>,</span>
+<span id="cb14-176"><a href="#cb14-176" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"State:"</span>, state_name, <span class="st">"&lt;br&gt;Date:"</span>, date, <span class="st">"&lt;br&gt;Cases:"</span>, cases_count),</span>
+<span id="cb14-177"><a href="#cb14-177" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-178"><a href="#cb14-178" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Top 5 - 2025 Measles Cases by State"</span>,</span>
+<span id="cb14-179"><a href="#cb14-179" aria-hidden="true" tabindex="-1"></a>             <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Date"</span>), <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Cases"</span>))</span>
+<span id="cb14-180"><a href="#cb14-180" aria-hidden="true" tabindex="-1"></a>    p6_1</span>
+<span id="cb14-181"><a href="#cb14-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-182"><a href="#cb14-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-183"><a href="#cb14-183" aria-hidden="true" tabindex="-1"></a><span class="fu">## 7. Top 5 2025 Measles Cases by US State Counties</span></span>
+<span id="cb14-184"><a href="#cb14-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-187"><a href="#cb14-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb14-188"><a href="#cb14-188" aria-hidden="true" tabindex="-1"></a>    county_data <span class="ot">&lt;-</span> data<span class="sc">$</span>us_county_2025 <span class="sc">%&gt;%</span></span>
+<span id="cb14-189"><a href="#cb14-189" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(report_date),</span>
+<span id="cb14-190"><a href="#cb14-190" aria-hidden="true" tabindex="-1"></a>             <span class="at">county_state =</span> <span class="fu">paste</span>(county_name, state_name, <span class="at">sep=</span><span class="st">", "</span>)) <span class="co"># Unique identifier</span></span>
+<span id="cb14-191"><a href="#cb14-191" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-192"><a href="#cb14-192" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find top N counties by cases</span></span>
+<span id="cb14-193"><a href="#cb14-193" aria-hidden="true" tabindex="-1"></a>    top_counties <span class="ot">&lt;-</span> county_data <span class="sc">%&gt;%</span></span>
+<span id="cb14-194"><a href="#cb14-194" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(county_name) <span class="sc">%&gt;%</span></span>
+<span id="cb14-195"><a href="#cb14-195" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(date <span class="sc">==</span> <span class="fu">max</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-196"><a href="#cb14-196" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb14-197"><a href="#cb14-197" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="fu">desc</span>(cases_count)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-198"><a href="#cb14-198" aria-hidden="true" tabindex="-1"></a>      <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-199"><a href="#cb14-199" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(county_name)</span>
+<span id="cb14-200"><a href="#cb14-200" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-201"><a href="#cb14-201" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-202"><a href="#cb14-202" aria-hidden="true" tabindex="-1"></a>p7_1 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(county_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(county_name <span class="sc">%in%</span> top_counties),</span>
+<span id="cb14-203"><a href="#cb14-203" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="sc">~</span>date, <span class="at">y =</span> <span class="sc">~</span>cases_count, <span class="at">color =</span> <span class="sc">~</span>county_name,</span>
+<span id="cb14-204"><a href="#cb14-204" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines'</span>,</span>
+<span id="cb14-205"><a href="#cb14-205" aria-hidden="true" tabindex="-1"></a>                    <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"County:"</span>, county_name, <span class="st">"&lt;br&gt;Date:"</span>, date, <span class="st">"&lt;br&gt;Cases:"</span>, cases_count),</span>
+<span id="cb14-206"><a href="#cb14-206" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-207"><a href="#cb14-207" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"Top 5 - 2025 Measles Cases by County"</span>,</span>
+<span id="cb14-208"><a href="#cb14-208" aria-hidden="true" tabindex="-1"></a>             <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Date"</span>), <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Cases"</span>))</span>
+<span id="cb14-209"><a href="#cb14-209" aria-hidden="true" tabindex="-1"></a>p7_1</span>
+<span id="cb14-210"><a href="#cb14-210" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-211"><a href="#cb14-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-212"><a href="#cb14-212" aria-hidden="true" tabindex="-1"></a><span class="in">```{}</span></span>
+<span id="cb14-213"><a href="#cb14-213" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-214"><a href="#cb14-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-215"><a href="#cb14-215" aria-hidden="true" tabindex="-1"></a><span class="in">```{}</span></span>
+<span id="cb14-216"><a href="#cb14-216" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-217"><a href="#cb14-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-218"><a href="#cb14-218" aria-hidden="true" tabindex="-1"></a><span class="fu"># Exploratory Analysis</span></span>
+<span id="cb14-219"><a href="#cb14-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-220"><a href="#cb14-220" aria-hidden="true" tabindex="-1"></a><span class="in">```{r }</span></span>
+<span id="cb14-221"><a href="#cb14-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-222"><a href="#cb14-222" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-223"><a href="#cb14-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-224"><a href="#cb14-224" aria-hidden="true" tabindex="-1"></a><span class="in">```{r }</span></span>
+<span id="cb14-225"><a href="#cb14-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-226"><a href="#cb14-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-227"><a href="#cb14-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-228"><a href="#cb14-228" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data Deep Dive</span></span>
+<span id="cb14-229"><a href="#cb14-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-230"><a href="#cb14-230" aria-hidden="true" tabindex="-1"></a><span class="in">```{r }</span></span>
+<span id="cb14-231"><a href="#cb14-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-232"><a href="#cb14-232" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-233"><a href="#cb14-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-234"><a href="#cb14-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r }</span></span>
+<span id="cb14-235"><a href="#cb14-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-236"><a href="#cb14-236" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-237"><a href="#cb14-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-238"><a href="#cb14-238" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusion</span></span>
+<span id="cb14-239"><a href="#cb14-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-240"><a href="#cb14-240" aria-hidden="true" tabindex="-1"></a>This exploratory analysis highlights concerning trends in MMR vaccination and measles resurgence in 2025. Low vaccination coverage correlates strongly with increased outbreak risk. Continued monitoring and policy support are essential to protect public health.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
