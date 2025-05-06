@@ -67,7 +67,7 @@ Changing attitudes towards vaccination have led to declining MMR coverage, putti
 
 ## 1. Global Measles Vaccination Coverage
 
-```{r global-measles-vaccination-coverage-plot}
+```{r}
 coverage_summary <- data$global_coverage %>%
       filter(!is.na(antigen) & !is.na(region)) %>%
       group_by(region, year) %>%
@@ -105,32 +105,98 @@ data$global_cases_update <- data$global_cases %>%
 
 ## 3. European Measles Cases
 
-```{r }
+```{r european-measles-cases}
+europe_heatmap_data <- data$europe_cases %>% filter (indicator == 'Reported confirmed cases', !region_name %in% c('EU/EEA (without UK)','EU/EEA (with UK until 2019)'))
+      
+    
+p3_1 <- plot_ly(europe_heatmap_data, x = ~time, y = ~region_name, z = ~num_value,
+                    type = "heatmap", colorscale = "Viridis", # Choose a colorscale
+                    hoverinfo = 'text',
+                    text = ~paste("Country:", region_name, "<br>Year:", time, "<br>Cases:", num_value)) %>%
+      layout(title = "Measles Cases Heatmap in Europe",
+             xaxis = list(title = "Year", type = "category"), # Treat year as category for heatmap
+             yaxis = list(title = "Country", type = "category"))
+p3_1
+
 
 ```
 
 ## 4. US Measles Cases by Year
 
-```{r }
-
+```{r}
+    p4_1 <- plot_ly(data$us_year, x = ~year, y = ~cases, type = 'scatter', mode = 'lines+markers',
+                    text = ~paste("Year:", year, "<br>Cases:", scales::comma(cases)),
+                    hoverinfo = 'text') %>%
+      layout(title = "Total Reported US Measles Cases by Year",
+             xaxis = list(title = "Year"), yaxis = list(title = "Number of Cases"))
+    p4_1
 ```
 
 ## 5. 2025 US Measles Cases by Age Group
 
 ```{r}
-
+    age_levels <- c("< 5", "5_19", "> 20", "Unknown") # Adjust as per data
+    data$us_age_2025$age_group <- factor(data$us_age_2025$age_group, levels = age_levels)
+    
+    p5_1 <- plot_ly(data$us_age_2025, x = ~age_group, y = ~case_count, type = 'bar',
+                    text = ~paste("Age Group:", age_group, "<br>Cases:", case_count),
+                    hoverinfo = 'text') %>%
+      layout(title = "Age Distribution of US Measles Cases, 2025",
+             xaxis = list(title = "Age Group" , categoryorder = "array", categoryarray = ~levels(age_group) # Use if factor
+             ),
+             yaxis = list(title = "Number of Cases"))
+    p5_1
 ```
 
-## 6. Top 10 2025 Measles Cases by US State 
+## 6. Top 5 2025 Measles Cases by US State 
 
 ```{r}
-
+    state_data <- data$us_state_2025 %>% mutate(date = as.Date(report_date))
+    
+    # Identify states with significant cases
+    top_states <- state_data %>%
+      group_by(state_name) %>%
+      filter(date == max(date)) %>%
+      ungroup() %>%
+      arrange(desc(cases_count)) %>%
+      slice_head(n = 5) %>% # Adjust N
+      pull(state_name)
+    
+    p6_1 <- plot_ly(state_data %>% filter(state_name %in% top_states),
+                    x = ~date, y = ~cases_count, color = ~state_name,
+                    type = 'scatter', mode = 'lines',
+                    text = ~paste("State:", state_name, "<br>Date:", date, "<br>Cases:", cases_count),
+                    hoverinfo = 'text') %>%
+      layout(title = "Top 5 - 2025 Measles Cases by State",
+             xaxis = list(title = "Date"), yaxis = list(title = "Cases"))
+    p6_1
 ```
 
-## 7. Top 10 2025 Measles Cases by US State Counties
+## 7. Top 5 2025 Measles Cases by US State Counties
 
 ```{r}
-
+    county_data <- data$us_county_2025 %>%
+      mutate(date = as.Date(report_date),
+             county_state = paste(county_name, state_name, sep=", ")) # Unique identifier
+    
+    # Find top N counties by cases
+    top_counties <- county_data %>%
+      group_by(county_name) %>%
+      filter(date == max(date)) %>%
+      ungroup() %>%
+      arrange(desc(cases_count)) %>%
+      slice_head(n = 5) %>%
+      pull(county_name)
+    
+    
+p7_1 <- plot_ly(county_data %>% filter(county_name %in% top_counties),
+                    x = ~date, y = ~cases_count, color = ~county_name,
+                    type = 'scatter', mode = 'lines',
+                    text = ~paste("County:", county_name, "<br>Date:", date, "<br>Cases:", cases_count),
+                    hoverinfo = 'text') %>%
+      layout(title = "Top 5 - 2025 Measles Cases by County",
+             xaxis = list(title = "Date"), yaxis = list(title = "Cases"))
+p7_1
 ```
 
 ```{}
@@ -139,7 +205,7 @@ data$global_cases_update <- data$global_cases %>%
 ```{}
 ```
 
-# 4. Exploratory Analysis
+# Exploratory Analysis
 
 ```{r }
 
@@ -149,7 +215,7 @@ data$global_cases_update <- data$global_cases %>%
 
 ```
 
-## 5. Data Deep Dive
+# Data Deep Dive
 
 ```{r }
 
