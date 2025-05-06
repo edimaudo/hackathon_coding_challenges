@@ -47,11 +47,11 @@ urls <- list(
   us_confirmed_2025 = paste0(base_url, "USA/data/2025/measles-USA-confirmed-cases.csv")
 )
 
-#----Load Data---
+#----Load Data----
 data <- lapply(urls, load_data)
 
 ###### Visualization #####
-#----Global Vaccine Coverage
+#----Global Measles Vaccination Coverage----
 if (!is.null(data$global_coverage)) {
   
   if (all(c("region", "year", "antigen") %in% names(data$global_coverage))) {
@@ -70,4 +70,47 @@ if (!is.null(data$global_coverage)) {
   
 }
 
+#----- Global Measles Cases ----
+# Pivot data
+data$global_cases_update <- data$global_cases %>% 
+  pivot_longer(
+    cols = !c(region,iso3,country, year), 
+    names_to = "month", 
+    values_to = "cases"
+  )
 
+if (!is.null(data$global_cases_update)) {
+  
+  # Example: Line plot of total global cases
+  # Assumes columns: year, cases
+  if (all(c("year", "cases") %in% names(data$global_cases_update))) {
+    global_cases_summary <- data$global_cases_update %>%
+      group_by(year) %>%
+      summarise(total_cases = sum(cases, na.rm = TRUE), .groups = 'drop')
+    
+    p2_1 <- plot_ly(global_cases_summary, x = ~year, y = ~total_cases,
+                    type = 'scatter', mode = 'lines+markers',
+                    text = ~paste("Year:", year, "<br>Total Cases:", scales::comma(total_cases)),
+                    hoverinfo = 'text') %>%
+      layout(title = "Total Reported Global Measles Cases", yaxis = list(title="Total Cases")) # Consider type='log' for yaxis if range is huge
+    print(p2_1)
+  } else { message("Required columns (year, cases) not found in global_cases.")}
+  
+  # Example: Bar chart of top N countries by cases in the latest year
+  # Assumes columns: country, year, cases
+  # if (all(c("country", "year", "cases") %in% names(data$global_cases_update))) {
+  #   latest_year <- max(data$global_cases_update$year, na.rm = TRUE)-1 # no data in 2024
+  #   top_countries <- data$global_cases_update %>%
+  #     filter(year == latest_year , !is.na(cases)) %>%
+  #     arrange(desc(cases)) %>%
+  #     slice_head(n = 15)
+  #   
+  #   p2_2 <- plot_ly(top_countries, x = ~cases, y = ~reorder(country, cases), type = 'bar', orientation = 'h',
+  #                   text = ~paste(country, "<br>Cases:"),
+  #                   hoverinfo = 'text') %>%
+  #     layout(title = paste("Top 15 Countries by Measles Cases", latest_year),
+  #            yaxis = list(title = ""), xaxis = list(title = "Reported Cases"))
+  #   print(p2_2)
+  # } else { message("Required columns (country, year, cases) not found in global_cases.")}
+  
+}
