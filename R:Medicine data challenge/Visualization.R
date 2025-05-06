@@ -81,8 +81,6 @@ data$global_cases_update <- data$global_cases %>%
 
 if (!is.null(data$global_cases_update)) {
   
-  # Example: Line plot of total global cases
-  # Assumes columns: year, cases
   if (all(c("year", "cases") %in% names(data$global_cases_update))) {
     global_cases_summary <- data$global_cases_update %>%
       group_by(year) %>%
@@ -96,21 +94,23 @@ if (!is.null(data$global_cases_update)) {
     print(p2_1)
   } else { message("Required columns (year, cases) not found in global_cases.")}
   
-  # Example: Bar chart of top N countries by cases in the latest year
-  # Assumes columns: country, year, cases
-  # if (all(c("country", "year", "cases") %in% names(data$global_cases_update))) {
-  #   latest_year <- max(data$global_cases_update$year, na.rm = TRUE)-1 # no data in 2024
-  #   top_countries <- data$global_cases_update %>%
-  #     filter(year == latest_year , !is.na(cases)) %>%
-  #     arrange(desc(cases)) %>%
-  #     slice_head(n = 15)
-  #   
-  #   p2_2 <- plot_ly(top_countries, x = ~cases, y = ~reorder(country, cases), type = 'bar', orientation = 'h',
-  #                   text = ~paste(country, "<br>Cases:"),
-  #                   hoverinfo = 'text') %>%
-  #     layout(title = paste("Top 15 Countries by Measles Cases", latest_year),
-  #            yaxis = list(title = ""), xaxis = list(title = "Reported Cases"))
-  #   print(p2_2)
-  # } else { message("Required columns (country, year, cases) not found in global_cases.")}
-  
+}
+
+
+# --- European Measles cases ---
+if (!is.null(data$europe_cases)) {
+  if (all(c("region_name", "time", "num_value") %in% names(data$europe_cases))) {
+    europe_heatmap_data <- data$europe_cases %>% filter (indicator == 'Reported confirmed cases', 
+                                                         !region_name %in% c('EU/EEA (without UK)','EU/EEA (with UK until 2019)'))  %>%
+      
+    
+    p3_1 <- plot_ly(europe_heatmap_data, x = ~time, y = ~region_name, z = ~num_value,
+                    type = "heatmap", colorscale = "Viridis", # Choose a colorscale
+                    hoverinfo = 'text',
+                    text = ~paste("Country:", region_name, "<br>Year:", time, "<br>Cases:", num_value)) %>%
+      layout(title = "Measles Cases Heatmap in Europe",
+             xaxis = list(title = "Year", type = "category"), # Treat year as category for heatmap
+             yaxis = list(title = "Country", type = "category"))
+    print(p3_1)
+  } else { message("Required columns (country, year, cases) not found in europe_cases.")}
 }
