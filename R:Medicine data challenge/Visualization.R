@@ -3,50 +3,50 @@
 ## Environment setup
 rm(list = ls())
 
-# Load libraries
-library(tidyverse)
-library(plotly)
-library(janitor)
-library(lubridate)
+###### Libraries ######
+# Ensure these are installed: install.packages(c("plotly", "dplyr", "readr", "lubridate", "tidyr", "janitor", "scales", "DT"))
+packages <- c("plotly", "dplyr", "readr", "lubridate", "tidyr", "janitor", "scales", "DT")
+for (package in packages) {
+  if (!require(package, character.only=T, quietly=T)) {
+    install.packages(package)
+    library(package, character.only=T)
+  }
+}
 
-# 1. Global MMR Coverage Line Chart
-coverage_global <- read_csv("https://raw.githubusercontent.com/fbranda/measles/main/Measles_vaccination_coverage_Global.csv") %>%
-  clean_names()
+###### Data ######
 
-plot_ly(coverage_global, x = ~year, y = ~coverage, color = ~country,
-        type = 'scatter', mode = 'lines') %>%
-  layout(title = "Global MMR Coverage Over Time")
+## Data load helper
+load_data <- function(url) {
+  tryCatch(
+    {
+      df <- read_csv(url, show_col_types = FALSE) %>%
+        janitor::clean_names() # Standardize column names
+      message("Successfully loaded and cleaned data from: ", basename(url))
+      return(df)
+    },
+    error = function(e) {
+      message("Failed to load data from: ", url)
+      message("Error: ", e$message)
+      return(NULL)
+    }
+  )
+}
 
-# 2. Heatmap of Country-Level MMR by Year
-coverage_heatmap <- coverage_global %>%
-  filter(!is.na(coverage))
+# --- Data URLs ---
+base_url <- "https://raw.githubusercontent.com/fbranda/measles/main/"
+urls <- list(
+  global_coverage = paste0(base_url, "Measles_vaccination_coverage_Global.csv"),
+  global_cases = paste0(base_url, "Measles_Global.csv"),
+  europe_cases = paste0(base_url, "Measles_Europe.csv"),
+  us_coverage_cases = paste0(base_url, "USA/data/all/measles-USA-by-mmr-coverage.csv"),
+  us_onset = paste0(base_url, "USA/data/all/measles-USA-by-onset-date.csv"),
+  us_year = paste0(base_url, "USA/data/all/measles-USA-by-year.csv"),
+  us_age_2025 = paste0(base_url, "USA/data/2025/measles-USA-by-age.csv"),
+  us_county_2025 = paste0(base_url, "USA/data/2025/measles-USA-by-county-timeline.csv"),
+  us_state_2025 = paste0(base_url, "USA/data/2025/measles-USA-by-state-timeline.csv"),
+  us_confirmed_2025 = paste0(base_url, "USA/data/2025/measles-USA-confirmed-cases.csv")
+)
 
-plot_ly(coverage_heatmap, x = ~year, y = ~country, z = ~coverage, 
-        type = 'heatmap', colors = 'Blues') %>%
-  layout(title = "MMR Coverage Heatmap by Country and Year")
-
-# 3. US State-Level MMR Choropleth
-us_coverage <- read_csv("https://raw.githubusercontent.com/fbranda/measles/main/USA/data/all/measles-USA-by-mmr-coverage.csv") %>%
-  clean_names()
-
-latest_us_coverage <- us_coverage %>% filter(year == max(year))
-
-plot_ly(latest_us_coverage, locations = ~state, locationmode = 'USA-states',
-        z = ~coverage, type = 'choropleth', colorscale = 'Viridis') %>%
-  layout(title = "Latest MMR Coverage by US State", geo = list(scope = 'usa'))
-
-# 4. US Measles Onset Timeline
-onset_data <- read_csv("https://raw.githubusercontent.com/fbranda/measles/main/USA/data/all/measles-USA-by-onset-date.csv") %>%
-  clean_names() %>% mutate(date_onset = ymd(date_onset))
-
-grouped_onset <- onset_data %>% group_by(date_onset) %>% summarise(cases = sum(cases, na.rm = TRUE))
-
-plot_ly(grouped_onset, x = ~date_onset, y = ~cases, type = 'scatter', mode = 'lines') %>%
-  layout(title = "US Measles Onset Timeline")
-
-# 5. US Measles by Age
-age_data <- read_csv("https://raw.githubusercontent.com/fbranda/measles/main/USA/data/2025/measles-USA-by-age.csv") %>%
-  clean_names()
-
-plot_ly(age_data, x = ~age_group, y = ~case_count, type = 'bar') %>%
-  layout(title = "Measles Cases by Age Group (2025)")
+# --- Load Data ---
+# Replace with local paths if needed. Check names(data) after loading.
+data <- lapply(urls, load_data)
