@@ -115,4 +115,16 @@ if (!is.null(data$europe_cases)) {
   } else { message("Required columns (country, year, cases) not found in europe_cases.")}
 }
 
+# --- US Measles Cases ---
+if (!is.null(data$us_year)) {
+  
+  if (all(c("year", "cases") %in% names(data$us_year))) {
+    p6_2 <- plot_ly(data$us_year, x = ~year, y = ~cases, type = 'scatter', mode = 'lines+markers',
+                    text = ~paste("Year:", year, "<br>Cases:", scales::comma(cases)),
+                    hoverinfo = 'text') %>%
+      layout(title = "Total Reported US Measles Cases by Year",
+             xaxis = list(title = "Year"), yaxis = list(title = "Number of Cases"))
+    print(p6_2)
+  } else { message("Required columns (year, cases) not found in us_year.")}
+}
 
