@@ -146,3 +146,32 @@ if (!is.null(data$us_age_2025)) {
     
   } else { message("Required columns (age_group, cases) not found in us_age_2025.")}
 }
+
+#-----Measles Cases by Count-----
+if (!is.null(data$us_county_2025)) {
+  if (all(c("county_name", "state_name", "report_date", "cases_count") %in% names(data$us_county_2025))) {
+    county_data <- data$us_county_2025 %>%
+      mutate(date = as.Date(report_date),
+             county_state = paste(county_name, state_name, sep=", ")) # Unique identifier
+    
+    # Find top N counties by cases
+    top_counties <- county_data %>%
+      group_by(county_name) %>%
+      filter(date == max(date)) %>%
+      ungroup() %>%
+      arrange(desc(cases_count)) %>%
+      slice_head(n = 10) %>%
+      pull(county_name)
+    
+    
+    p8_1 <- plot_ly(county_data %>% filter(county_name %in% top_counties),
+                    x = ~date, y = ~cases_count, color = ~county_name,
+                    type = 'scatter', mode = 'lines',
+                    text = ~paste("County:", county_name, "<br>Date:", date, "<br>Cases:", cases_count),
+                    hoverinfo = 'text') %>%
+      layout(title = "Measles Cases by County, 2025 (Top 10 Counties)",
+             xaxis = list(title = "Date"), yaxis = list(title = "Cases"))
+    print(p8_1)
+    
+  } else { message("Required columns (county, state, date, cumulative_cases) not found in us_county_2025.")}
+}
