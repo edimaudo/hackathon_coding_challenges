@@ -50,3 +50,21 @@ urls <- list(
 # --- Load Data ---
 # Replace with local paths if needed. Check names(data) after loading.
 data <- lapply(urls, load_data)
+
+###### Visualization #####
+if (!is.null(data$global_coverage)) {
+  
+  if (all(c("region", "year", "antigen") %in% names(data$global_coverage))) {
+    coverage_summary <- data$global_coverage %>%
+      filter(!is.na(antigen) & !is.na(region)) %>%
+      group_by(region, year) %>%
+      summarise(avg_coverage = mean(coverage, na.rm = TRUE), .groups = 'drop')
+    
+    p1_1 <- plot_ly(coverage_summary, x = ~year, y = ~avg_coverage, color = ~region,
+                    type = 'scatter', mode = 'lines+markers',
+                    text = ~paste("Region:", region, "<br>Year:", year, "<br>Coverage:", round(avg_coverage, 1), "%"),
+                    hoverinfo = 'text') %>%
+      layout(title = "Avg Coverage by WHO Region", yaxis = list(range = c(0,100), title="Avg Coverage (%)"))
+    print(p1_1)
+  } else { message("Required columns (region, year, antigen) not found in global_coverage.")}
+}
