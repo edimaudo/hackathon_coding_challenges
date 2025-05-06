@@ -47,11 +47,11 @@ urls <- list(
   us_confirmed_2025 = paste0(base_url, "USA/data/2025/measles-USA-confirmed-cases.csv")
 )
 
-# --- Load Data ---
-# Replace with local paths if needed. Check names(data) after loading.
+#----Load Data---
 data <- lapply(urls, load_data)
 
 ###### Visualization #####
+#----Global Vaccine Coverage
 if (!is.null(data$global_coverage)) {
   
   if (all(c("region", "year", "antigen") %in% names(data$global_coverage))) {
@@ -67,4 +67,7 @@ if (!is.null(data$global_coverage)) {
       layout(title = "Avg Coverage by WHO Region", yaxis = list(range = c(0,100), title="Avg Coverage (%)"))
     print(p1_1)
   } else { message("Required columns (region, year, antigen) not found in global_coverage.")}
+  
 }
+
+
