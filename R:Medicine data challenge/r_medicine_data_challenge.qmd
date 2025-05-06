@@ -68,10 +68,7 @@ Changing attitudes towards vaccination have led to declining MMR coverage, putti
 ## 1. Global Measles Vaccination Coverage
 
 ```{r global-measles-vaccination-coverage-plot}
-if (!is.null(data$global_coverage)) {
-  
-  if (all(c("region", "year", "antigen") %in% names(data$global_coverage))) {
-    coverage_summary <- data$global_coverage %>%
+coverage_summary <- data$global_coverage %>%
       filter(!is.na(antigen) & !is.na(region)) %>%
       group_by(region, year) %>%
       summarise(avg_coverage = mean(coverage, na.rm = TRUE), .groups = 'drop')
@@ -80,11 +77,8 @@ if (!is.null(data$global_coverage)) {
                     type = 'scatter', mode = 'lines+markers',
                     text = ~paste("Region:", region, "<br>Year:", year, "<br>Coverage:", round(avg_coverage, 1), "%"),
                     hoverinfo = 'text') %>%
-      layout(title = "Avg Coverage by WHO Region", yaxis = list(range = c(0,100), title="Avg Coverage (%)"))
-    print(p1_1)
-  } else { message("Required columns (region, year, antigen) not found in global_coverage.")}
-  
-}
+      layout(title = "Avg. Vaccination Coverage by Region", yaxis = list(range = c(0,100), title="Avg Coverage (%)"))
+    p1_1
 ```
 
 ## 2. Global Measles Cases
