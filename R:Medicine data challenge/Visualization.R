@@ -147,7 +147,7 @@ if (!is.null(data$us_age_2025)) {
   } else { message("Required columns (age_group, cases) not found in us_age_2025.")}
 }
 
-#-----Measles Cases by Count-----
+#-----2025 Measles Cases by US Counties top 10-----
 if (!is.null(data$us_county_2025)) {
   if (all(c("county_name", "state_name", "report_date", "cases_count") %in% names(data$us_county_2025))) {
     county_data <- data$us_county_2025 %>%
@@ -174,4 +174,32 @@ if (!is.null(data$us_county_2025)) {
     print(p8_1)
     
   } else { message("Required columns (county, state, date, cumulative_cases) not found in us_county_2025.")}
+}
+
+#-----2025 Measles cases by state top 10-----
+if (!is.null(data$us_state_2025)) {
+  
+  if (all(c("state", "report_date", "cases_count") %in% names(data$us_state_2025))) {
+    state_data <- data$us_state_2025 %>% mutate(date = as.Date(report_date))
+    
+    # Identify states with significant cases
+    top_states <- state_data %>%
+      group_by(state_name) %>%
+      filter(date == max(date)) %>%
+      ungroup() %>%
+      arrange(desc(cases_count)) %>%
+      slice_head(n = 10) %>% # Adjust N
+      pull(state_name)
+    
+    p9_1 <- plot_ly(state_data %>% filter(state_name %in% top_states),
+                    x = ~date, y = ~cases_count, color = ~state_name,
+                    type = 'scatter', mode = 'lines',
+                    text = ~paste("State:", state_name, "<br>Date:", date, "<br>Cases:", cases_count),
+                    hoverinfo = 'text') %>%
+      layout(title = "Measles Cases by State, 2025 (Top 10 States)",
+             xaxis = list(title = "Date"), yaxis = list(title = "Cases"))
+    print(p9_1)
+  } else { message("Required columns (state, date, case count) not found in us_state_2025.")}
+  
+  
 }
