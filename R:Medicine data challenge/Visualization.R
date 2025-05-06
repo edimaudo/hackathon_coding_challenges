@@ -70,7 +70,7 @@ if (!is.null(data$global_coverage)) {
   
 }
 
-#----- Global Measles Cases ----
+#-----Global Measles Cases----
 # Pivot data
 data$global_cases_update <- data$global_cases %>% 
   pivot_longer(
@@ -97,7 +97,7 @@ if (!is.null(data$global_cases_update)) {
 }
 
 
-# --- European Measles cases ---
+#-----European Measles cases----
 if (!is.null(data$europe_cases)) {
   if (all(c("region_name", "time", "num_value") %in% names(data$europe_cases))) {
     europe_heatmap_data <- data$europe_cases %>% filter (indicator == 'Reported confirmed cases', 
@@ -114,3 +114,5 @@ if (!is.null(data$europe_cases)) {
     print(p3_1)
   } else { message("Required columns (country, year, cases) not found in europe_cases.")}
 }
+
+
