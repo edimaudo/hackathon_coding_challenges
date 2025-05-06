@@ -77,14 +77,30 @@ coverage_summary <- data$global_coverage %>%
                     type = 'scatter', mode = 'lines+markers',
                     text = ~paste("Region:", region, "<br>Year:", year, "<br>Coverage:", round(avg_coverage, 1), "%"),
                     hoverinfo = 'text') %>%
-      layout(title = "Avg. Vaccination Coverage by Region", yaxis = list(range = c(0,100), title="Avg Coverage (%)"))
+      layout(title = "Avg. Vaccination Coverage by Region", yaxis = list(range = c(0,100), title="Avg Coverage (%)"), xaxis = list(title="Year"))
     p1_1
 ```
 
 ## 2. Global Measles Cases
 
-```{r }
-
+```{r global-measles-cases}
+data$global_cases_update <- data$global_cases %>% 
+  pivot_longer(
+    cols = !c(region,iso3,country, year), 
+    names_to = "month", 
+    values_to = "cases"
+  )
+    global_cases_summary <- data$global_cases_update %>%
+      group_by(year) %>%
+      summarise(total_cases = sum(cases, na.rm = TRUE), .groups = 'drop')
+    
+    p2_1 <- plot_ly(global_cases_summary, x = ~year, y = ~total_cases,
+                    type = 'scatter', mode = 'lines+markers',
+                    text = ~paste("Year:", year, "<br>Total Cases:", scales::comma(total_cases)),
+                    hoverinfo = 'text') %>%
+      layout(title = "Total Reported Global Measles Cases", yaxis = list(title="Total Cases"), xaxis = list(title="Year")) 
+    p2_1
+  
 ```
 
 ## 3. European Measles Cases
