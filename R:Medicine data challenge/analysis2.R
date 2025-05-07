@@ -65,34 +65,6 @@ message("\n--- EDA 1: Summary Coverage Trends ---")
   
 
 
-
-# --- EDA 2: Global Measles Incidence Trends & Hotspots ---
-message("\n--- EDA 2: Global Incidence Trends ---")
-if (!is.null(data$global_cases) && all(c("country", "year", "cases") %in% names(data$global_cases))) {
-  # Reuse global cases line plot
-  global_cases_summary <- data$global_cases_update %>%
-    group_by(year) %>%
-    summarise(total_cases = sum(cases, na.rm = TRUE), .groups = 'drop')
-  p22_1 <- plot_ly(global_cases_summary, x = ~year, y = ~total_cases, type = 'scatter', mode = 'lines+markers') %>%
-    layout(title = "Total Reported Global Measles Cases")
-  print(p22_1)
-  
-  # Reuse top N countries bar chart
-  latest_year_global_cases <- max(data$global_cases_update$year, na.rm = TRUE)
-  top_countries <- data$global_cases_update %>%
-    filter(year == latest_year_global_cases, !is.na(cases)) %>%
-    arrange(desc(cases)) %>%
-    slice_head(n = 15)
-  p22_2 <- plot_ly(top_countries, x = ~cases, y = ~reorder(country, cases), type = 'bar', orientation = 'h') %>%
-    layout(title = paste("Top 15 Countries by Measles Cases", latest_year_global_cases))
-  print(p22_2)
-  
-  # Identify countries with recent large increases (requires population data for rates)
-  message("Further hotspot analysis would ideally use cases per capita.")
-  
-} else { message("Skipping EDA 2: Missing data or columns.")}
-
-
 # --- EDA 3: European Measles Outbreak Patterns ---
 message("\n--- EDA 3: European Patterns ---")
 # Reuse plots from visualization script (e.g., heatmap)
