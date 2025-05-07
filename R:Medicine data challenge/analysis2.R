@@ -60,7 +60,7 @@ message("\n--- EDA 1: Summary Coverage Trends ---")
   regions_below_90 <- coverage_summary %>%
     filter(year == latest_year_global_cov & avg_coverage < 90) %>%
     arrange(avg_coverage)
-  message(paste("\nRegions with <90% Avg MCV1 Coverage in", latest_year_global_cov, ":"))
+  message(paste("\nRegions with <90% Avg Coverage in", latest_year_global_cov, ":"))
   print(regions_below_90)
   
 
@@ -70,22 +70,22 @@ message("\n--- EDA 1: Summary Coverage Trends ---")
 message("\n--- EDA 2: Global Incidence Trends ---")
 if (!is.null(data$global_cases) && all(c("country", "year", "cases") %in% names(data$global_cases))) {
   # Reuse global cases line plot
-  global_cases_summary <- data$global_cases %>%
+  global_cases_summary <- data$global_cases_update %>%
     group_by(year) %>%
     summarise(total_cases = sum(cases, na.rm = TRUE), .groups = 'drop')
-  p2_1 <- plot_ly(global_cases_summary, x = ~year, y = ~total_cases, type = 'scatter', mode = 'lines+markers') %>%
+  p22_1 <- plot_ly(global_cases_summary, x = ~year, y = ~total_cases, type = 'scatter', mode = 'lines+markers') %>%
     layout(title = "Total Reported Global Measles Cases")
-  print(p2_1)
+  print(p22_1)
   
   # Reuse top N countries bar chart
-  latest_year_global_cases <- max(data$global_cases$year, na.rm = TRUE)
-  top_countries <- data$global_cases %>%
+  latest_year_global_cases <- max(data$global_cases_update$year, na.rm = TRUE)
+  top_countries <- data$global_cases_update %>%
     filter(year == latest_year_global_cases, !is.na(cases)) %>%
     arrange(desc(cases)) %>%
     slice_head(n = 15)
-  p2_2 <- plot_ly(top_countries, x = ~cases, y = ~reorder(country, cases), type = 'bar', orientation = 'h') %>%
+  p22_2 <- plot_ly(top_countries, x = ~cases, y = ~reorder(country, cases), type = 'bar', orientation = 'h') %>%
     layout(title = paste("Top 15 Countries by Measles Cases", latest_year_global_cases))
-  print(p2_2)
+  print(p22_2)
   
   # Identify countries with recent large increases (requires population data for rates)
   message("Further hotspot analysis would ideally use cases per capita.")
