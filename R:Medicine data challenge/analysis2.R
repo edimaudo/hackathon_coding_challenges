@@ -44,24 +44,16 @@ data <- lapply(urls, load_data)
 # Combining visualizations with summary statistics or specific filtering
 
 # --- EDA 1: Global and Regional Coverage Trends ---
-message("\n--- EDA 1: Global Coverage Trends ---")
-if (!is.null(data$global_coverage) && all(c("who_region", "year", "mcv1") %in% names(data$global_coverage))) {
-  # Reuse line plot from visualization script (or regenerate)
-  coverage_summary <- data$global_coverage %>%
-    filter(!is.na(mcv1) & !is.na(who_region)) %>%
-    group_by(who_region, year) %>%
-    summarise(avg_coverage = mean(mcv1, na.rm = TRUE), .groups = 'drop')
-  p1_1 <- plot_ly(coverage_summary, x = ~year, y = ~avg_coverage, color = ~who_region,
-                  type = 'scatter', mode = 'lines+markers', name="Coverage Trend") %>%
-    layout(title = "Avg MCV1 Coverage by WHO Region")
-  print(p1_1)
+message("\n--- EDA 1: Summary Coverage Trends ---")
+
+
   
   # Add summary stats
   latest_year_global_cov <- max(coverage_summary$year, na.rm = TRUE)
   coverage_stats <- coverage_summary %>%
     filter(year == latest_year_global_cov) %>%
     summarise(Min = min(avg_coverage), Mean = mean(avg_coverage), Max = max(avg_coverage))
-  message(paste("Summary MCV1 Coverage Stats for", latest_year_global_cov, ":"))
+  message(paste("Summary Coverage Stats for", latest_year_global_cov, ":"))
   print(coverage_stats)
   
   # Regions below a threshold (e.g., 90%) in the latest year
@@ -71,7 +63,7 @@ if (!is.null(data$global_coverage) && all(c("who_region", "year", "mcv1") %in% n
   message(paste("\nRegions with <90% Avg MCV1 Coverage in", latest_year_global_cov, ":"))
   print(regions_below_90)
   
-} else { message("Skipping EDA 1: Missing data or columns.")}
+
 
 
 # --- EDA 2: Global Measles Incidence Trends & Hotspots ---
