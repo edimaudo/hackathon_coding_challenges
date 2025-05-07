@@ -81,6 +81,8 @@ coverage_summary <- data$global_coverage %>%
     p1_1
 ```
 
+Average Vaccination rate has been pretty consistent across the years. The 2020 Covid pandemic seems to have had a massive impact on measles vaccination rates.
+
 ## Global Measles Cases
 
 ```{r global-measles-cases}
@@ -123,7 +125,9 @@ p3_1
 
 ```
 
-## 4. US Measles Cases by Year
+Europe
+
+## US Measles Cases by Year
 
 ```{r}
     p4_1 <- plot_ly(data$us_year, x = ~year, y = ~cases, type = 'scatter', mode = 'lines+markers',
@@ -145,7 +149,7 @@ p3_1
     p5_1 <- plot_ly(data$us_age_2025, x = ~age_group, y = ~case_count, type = 'bar',
                     text = ~paste("Age Group:", age_group, "<br>Cases:", case_count),
                     hoverinfo = 'text') %>%
-      layout(title = "Age Distribution of US Measles Cases, 2025",
+      layout(title = "2025 Age Distribution of US Measles Cases",
              xaxis = list(title = "Age Group" , categoryorder = "array", categoryarray = ~levels(age_group) # Use if factor
              ),
              yaxis = list(title = "Number of Cases"))
@@ -203,22 +207,6 @@ p7_1 <- plot_ly(county_data %>% filter(county_name %in% top_counties),
 p7_1
 ```
 
-```{r }
-
-```
-
-```{r }
-
-```
-
-```{r }
-
-```
-
-```{r }
-
-```
-
 # Conclusion
 
-This exploratory analysis highlights concerning trends in MMR vaccination and measles resurgence in 2025. Low vaccination coverage correlates strongly with increased outbreak risk. Continued monitoring and policy support are essential to protect public health.
+This exploratory analysis highlights concerning trends around the measles resurgence in 2025. The 2020 covid pandemic impacted vaccination coverage especially in .\_\_\_ . In the US Texas is seeing the highest number of cases. Continued monitoring and policy support are essential to protect public health.
