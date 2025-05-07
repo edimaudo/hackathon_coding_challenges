@@ -10,11 +10,7 @@ library(lubridate)
 global <- read_csv("https://raw.githubusercontent.com/fbranda/measles/main/Measles_vaccination_coverage_Global.csv") %>% clean_names()
 us <- read_csv("https://raw.githubusercontent.com/fbranda/measles/main/USA/data/all/measles-USA-by-mmr-coverage.csv") %>% clean_names()
 
-plot_ly(global, x = ~year, y = ~coverage, color = ~country, type = 'scatter', mode = 'lines') %>%
-  layout(title = "Global MMR Coverage Trends")
 
-plot_ly(us, x = ~year, y = ~coverage, color = ~state, type = 'scatter', mode = 'lines') %>%
-  layout(title = "US MMR Coverage Trends")
 
 # 2. Spatiotemporal Spread in US (2025)
 state_timeline <- read_csv("https://raw.githubusercontent.com/fbranda/measles/main/USA/data/2025/measles-USA-by-state-timeline.csv") %>% clean_names()
