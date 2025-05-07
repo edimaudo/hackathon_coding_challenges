@@ -65,7 +65,7 @@ Changing attitudes towards vaccination have led to declining MMR coverage, putti
 
 # Exploratory Data Analysis
 
-## 1. Global Measles Vaccination Coverage
+## Global Measles Vaccination Coverage
 
 ```{r}
 coverage_summary <- data$global_coverage %>%
@@ -81,11 +81,7 @@ coverage_summary <- data$global_coverage %>%
     p1_1
 ```
 
-```{r}
-
-```
-
-## 2. Global Measles Cases
+## Global Measles Cases
 
 ```{r global-measles-cases}
 data$global_cases_update <- data$global_cases %>% 
@@ -107,7 +103,9 @@ data$global_cases_update <- data$global_cases %>%
   
 ```
 
-## 3. European Measles Cases
+Global measles cases saw a massive spike in 2019 but have been trending downwards.
+
+## European Measles Cases
 
 ```{r european-measles-cases}
 europe_heatmap_data <- data$europe_cases %>% filter (indicator == 'Reported confirmed cases', !region_name %in% c('EU/EEA (without UK)','EU/EEA (with UK until 2019)'))
@@ -135,6 +133,8 @@ p3_1
              xaxis = list(title = "Year"), yaxis = list(title = "Number of Cases"))
     p4_1
 ```
+
+2025 Measles Landscape in the US
 
 ## 5. 2025 US Measles Cases by Age Group
 
