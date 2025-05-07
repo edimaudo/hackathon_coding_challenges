@@ -105,7 +105,7 @@ data$global_cases_update <- data$global_cases %>%
   
 ```
 
-Global measles cases saw a massive spike in 2019 but have been trending downwards.
+Add blurb here
 
 ## European Measles Cases
 
@@ -118,14 +118,15 @@ p3_1 <- plot_ly(europe_heatmap_data, x = ~time, y = ~region_name, z = ~num_value
                     hoverinfo = 'text',
                     text = ~paste("Country:", region_name, "<br>Year:", time, "<br>Cases:", num_value)) %>%
       layout(title = "Measles Cases Heatmap in Europe",
-             xaxis = list(title = "Year", type = "category"), # Treat year as category for heatmap
-             yaxis = list(title = "Country", type = "category"))
+             xaxis = list(title = "Year", type = "category"),
+             yaxis = list(title = "Country", type = "category"),
+             zaxis = list(title = "Numnber of cases"))
 p3_1
 
 
 ```
 
-Europe
+European cases have been ....
 
 ## US Measles Cases by Year
 
@@ -138,9 +139,9 @@ Europe
     p4_1
 ```
 
-2025 Measles Landscape in the US
+Measles cases have been down significantly since 1990.
 
-## 5. 2025 US Measles Cases by Age Group
+## 2025 US Measles Cases by Age Group
 
 ```{r}
     age_levels <- c("< 5", "5_19", "> 20", "Unknown") # Adjust as per data
@@ -156,7 +157,9 @@ Europe
     p5_1
 ```
 
-## 6. Top 5 2025 Measles Cases by US State
+Those between the ages of 5 and 19 are seem to be most impacted by the measles outbreak in 2025.
+
+## Top 5 2025 Measles Cases by US State
 
 ```{r}
     state_data <- data$us_state_2025 %>% mutate(date = as.Date(report_date))
@@ -180,7 +183,9 @@ Europe
     p6_1
 ```
 
-## 7. Top 5 2025 Measles Cases by US State Counties
+add blurb here
+
+## Top 5 2025 Measles Cases by US State Counties
 
 ```{r}
     county_data <- data$us_county_2025 %>%
@@ -206,6 +211,8 @@ p7_1 <- plot_ly(county_data %>% filter(county_name %in% top_counties),
              xaxis = list(title = "Date"), yaxis = list(title = "Cases"))
 p7_1
 ```
+
+add blurb here
 
 # Conclusion
 
