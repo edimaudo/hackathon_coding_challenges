@@ -89,7 +89,17 @@ coverage_summary <- data$global_coverage %>%
     p1_1
 ```
 
-Average Vaccination rate has been pretty consistent across the years. The 2020 Covid pandemic seems to have had a massive impact on measles vaccination rates.
+```{r}
+latest_year_global_cov <- max(coverage_summary$year, na.rm = TRUE)
+coverage_stats <- coverage_summary %>%
+  filter(year == latest_year_global_cov) %>%
+  summarise(Min = min(avg_coverage), Mean = mean(avg_coverage), Max = max(avg_coverage))
+paste("Summary Coverage Stats for", latest_year_global_cov, ":")
+coverage_stats
+
+```
+
+Average Vaccination rate has fluctuated over the years. The 2020 saw a drop in many regions. Overall vaccination rate for 2022 is around 83.65%.
 
 ## Global Measles Cases
 
@@ -113,7 +123,7 @@ data$global_cases_update <- data$global_cases %>%
   
 ```
 
-Add blurb here
+Highest number of cases peaked in 2019 but has been on the decline. There has been an uptick since 2021.
 
 ## European Measles Cases
 
@@ -134,7 +144,7 @@ p3_1
 
 ```
 
-European cases have been ....
+Europe has seen relatively low number of measles cases. It has had an average vaccination rate of over 80%.
 
 ## US Measles Cases by Year
 
@@ -191,7 +201,7 @@ Those between the ages of 5 and 19 are seem to be most impacted by the measles o
     p6_1
 ```
 
-add blurb here
+Since early February 2025, Texas has been seeing a growing number of measles cases.
 
 ## Top 5 2025 Measles Cases by US State Counties
 
@@ -220,8 +230,12 @@ p7_1 <- plot_ly(county_data %>% filter(county_name %in% top_counties),
 p7_1
 ```
 
-add blurb here
+Gaines County, Texas seems to be the epicenter of the measles outbreak since early February 2025.
 
 # Conclusion
 
-This exploratory analysis highlights concerning trends around the measles resurgence in 2025. The 2020 covid pandemic impacted vaccination coverage especially in .\_\_\_ . In the US Texas is seeing the highest number of cases. Continued monitoring and policy support are essential to protect public health.
+This exploratory analysis highlights measles trends based on the [data](https://github.com/fbranda/measles).
+
+-   Average vaccination rates have fluctuated over the years. It has been trending downwards since 2020 with the exception of Asia & Oceania and the Carribean region.
+
+-   In 2025, Gaines Country, Texas looks like the epicentre of the 2025 US measles outbreak. It is mostly impacting children between the ages of 5 and 19.
