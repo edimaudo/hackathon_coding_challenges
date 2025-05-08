@@ -13,7 +13,7 @@ editor: visual
 
 ```{r setup libraries, include=FALSE}
 # Ensure these are installed: install.packages(c("plotly", "dplyr", "readr", "lubridate", "tidyr", "janitor", "scales", "DT"))
-packages <- c("plotly", "dplyr", "readr", "lubridate", "tidyr", "janitor", "scales", "DT")
+packages <- c("plotly", "dplyr", "readr", "lubridate", "tidyr", "janitor", "scales", "DT",'readxl')
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
     install.packages(package)
@@ -57,6 +57,12 @@ urls <- list(
 #----Load Data----
 data <- lapply(urls, load_data)
 
+girai_data <- read_excel("GIRAI_2024_Edition_Data.xlsx")
+girai_data2 <- girai_data %>%
+  rename(iso3 = ISO3, region = GIRAI_region) %>%
+  group_by(iso3,region) %>%
+  distinct(iso3,region) %>%
+  select(iso3,region)
 ```
 
 # Introduction
@@ -68,14 +74,16 @@ Changing attitudes towards vaccination have led to declining MMR coverage, putti
 ## Global Measles Vaccination Coverage
 
 ```{r}
+data$global_coverage <- 
+  inner_join(data$global_coverage ,girai_data2, by="iso3")
 coverage_summary <- data$global_coverage %>%
-      filter(!is.na(antigen) & !is.na(region)) %>%
-      group_by(region, year) %>%
+      filter(!is.na(antigen) & !is.na(region.y)) %>%
+      group_by(region.y, year) %>%
       summarise(avg_coverage = mean(coverage, na.rm = TRUE), .groups = 'drop')
     
-    p1_1 <- plot_ly(coverage_summary, x = ~year, y = ~avg_coverage, color = ~region,
+    p1_1 <- plot_ly(coverage_summary, x = ~year, y = ~avg_coverage, color = ~region.y,
                     type = 'scatter', mode = 'lines+markers',
-                    text = ~paste("Region:", region, "<br>Year:", year, "<br>Coverage:", round(avg_coverage, 1), "%"),
+                    text = ~paste("Region:", region.y, "<br>Year:", year, "<br>Coverage:", round(avg_coverage, 1), "%"),
                     hoverinfo = 'text') %>%
       layout(title = "Avg. Vaccination Coverage by Region", yaxis = list(range = c(0,100), title="Avg Coverage (%)"), xaxis = list(title="Year"))
     p1_1
