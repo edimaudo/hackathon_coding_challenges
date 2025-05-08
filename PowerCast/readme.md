@@ -56,6 +56,10 @@ Power Generation: Several files contain data on power generation from various so
 
 Balancing Services: Some files track the activation and procurement of balancing services, which are used to maintain the stability of the electricity grid. This includes data on the volume and price of balancing energy and reserves.
 
+Data quality is of the utmost importance. Consequently, data provided in this challenge is sourced from "Strommarktdaten" (SMARD), which receives the data directly from the European Network of Transmission System Operators for Electricity (ENTSO-E). Only data verified by the "Bundesnetzagentur" is published on SMARD. The "Bundesnetzagentur" is constantly exchanging information with the transmission network operators (TSOs) in order to continuously improve data quality.
+
+
+Source: Bundesnetzagentur | SMARD.de
 
 
 # Evaluation Criteria
