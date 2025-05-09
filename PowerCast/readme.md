@@ -58,7 +58,6 @@ Balancing Services: Some files track the activation and procurement of balancing
 
 Data quality is of the utmost importance. Consequently, data provided in this challenge is sourced from "Strommarktdaten" (SMARD), which receives the data directly from the European Network of Transmission System Operators for Electricity (ENTSO-E). Only data verified by the "Bundesnetzagentur" is published on SMARD. The "Bundesnetzagentur" is constantly exchanging information with the transmission network operators (TSOs) in order to continuously improve data quality.
 
-
 Source: Bundesnetzagentur | SMARD.de
 
 
@@ -67,38 +66,31 @@ Source: Bundesnetzagentur | SMARD.de
 ## Exploratory Data Analysis (EDA)
 
 Must analyze the dataset to understand key market trends, correlations, and feature importance for forecasting electricity prices.
-
 1. Market Trends & Price Fluctuations (10 points)
 - How do electricity prices fluctuate hourly, daily, and weekly across differt countries?
 - How do electricity consumption patterns change in the same timeframes, and how does this impact pricing?
 - How does electricity generation (actual vs. forecast) align with price trends?
 - What patterns emerge from scheduled commercial exchanges and cross-border physical flows?
-
 2. Correlation & Feature Relationships (10 Points)
 - What features have the strongest correlation with electricity prices?
 - How do electricity prices correlate between different countries?
 - What is the relationship between forecasted vs. actual electricity generation and consumption?
 - How do balancing reserves and TSO costs impact electricity prices?
-
 3. Price & Consumption Impact Analysis (10 Points)
 - How do scheduled commercial exchanges influence price fluctuations?
 - What is the impact of cross-border physical flows on electricity prices?
 
 ## Market-Driven Prediction Accuracy
-
 Models should be optimized for real-world decision-making, not just low RMSE.
 
 1. Directional Accuracy (10 Points)
 - What percentage of predictions are correct when classified as rising, falling, or stable?
-
 2. Volatility Capture (10 Points)
 - How well does the model capture the volatility observed in the data?
-
 3. Extreme Price Movement Detection (5 Points)
 - Can the model correctly predict sharp price spikes (>15% increase or decrease)?
 
 ## Business Usability & Interpretability
-
 For commercial viability, the model must be trustworthy, explainable, and actionable.
 How often does the model correctly predict whether prices will increase or decrease?
 
@@ -109,16 +101,14 @@ How often does the model correctly predict whether prices will increase or decre
 - Is there a clear explanation of why prices changed?
 
 ## Deployment Readiness & Scalability
-
 The winning model should be ready for integration.
 
-- Does the model effectively forecast electricity prices for a chosen time period (15-minute, 1-hour, or 1-day ahead)?***
+- Does the model effectively forecast electricity prices for a chosen time period (15-minute, 1-hour, or 1-day ahead)?
 - How well does it perform within the selected timeframe in terms of accuracy and reliability?
 *** Choose 15-minute, 1-hour, or 1-day so you do not have to build multiple models
 
 
 ## Report if needed
-20 points
 Can submit a structured report summarizing their work and findings.
 
 1. Exploratory Data Analysis (EDA)
@@ -137,4 +127,3 @@ Can submit a structured report summarizing their work and findings.
 - What are the model’s strengths and limitations?
 - How could this model be improved or commercialized in the future?
 - Reports will be evaluated based on clarity, depth of analysis, and business relevance.
-- Reports will be evaluated based on clarity, depth of analysis, and business relevance
