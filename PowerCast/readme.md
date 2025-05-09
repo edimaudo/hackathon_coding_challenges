@@ -24,8 +24,12 @@ Your report should target an audience without a statistics or data analysis back
 
 **Key Findings**
 - Present the main insights and discoveries in a clear, straightforward manner.
+ - Describe key trends, feature correlations, and insights from the dataset.
+ - Justify which features were selected and why.
 - Explain any analytical concepts or findings using layman's terms.
 - Create a section/subsection for each question of the evaluation criteria.
+ - Present accuracy scores, volatility capture rates, and interpretability insights.
+ - Show feature importance and uncertainty measures.
 
 **Data Visualizations:**
 - Include intuitive, visually appealing charts, graphs, and tables that enhance understanding.
@@ -33,7 +37,12 @@ Your report should target an audience without a statistics or data analysis back
 
 **In-depth Analysis:**
 - Break down the analysis of each question, ensuring clarity and simplicity.
-- Use analogies, examples, or simple comparisons to make complex ideas relatable and easy to grasp.
+ - Outline the machine learning techniques used.
+ - Use analogies, examples, or simple comparisons to make complex ideas relatable and easy to grasp.
+ - How can energy traders, industrial consumers, and grid operators use these predictions?
+ - What are the model’s strengths and limitations?
+ - How could this model be improved or commercialized in the future?
+ - Reports will be evaluated based on clarity, depth of analysis, and business relevance.
 
 **Conclusion:**
 - Summarize the key takeaways and implications of your analysis.
@@ -106,24 +115,3 @@ The winning model should be ready for integration.
 - Does the model effectively forecast electricity prices for a chosen time period (15-minute, 1-hour, or 1-day ahead)?
 - How well does it perform within the selected timeframe in terms of accuracy and reliability?
 *** Choose 15-minute, 1-hour, or 1-day so you do not have to build multiple models
-
-
-## Report if needed
-Can submit a structured report summarizing their work and findings.
-
-1. Exploratory Data Analysis (EDA)
-- Describe key trends, feature correlations, and insights from the dataset.
-- Justify which features were selected and why.
-
-2. Modeling Approach
-- Outline the machine learning techniques used.
-
-3. Results & Performance Metrics
-- Present accuracy scores, volatility capture rates, and interpretability insights.
-- Show feature importance and uncertainty measures.
-
-4. Key Business Takeaways
-- How can energy traders, industrial consumers, and grid operators use these predictions?
-- What are the model’s strengths and limitations?
-- How could this model be improved or commercialized in the future?
-- Reports will be evaluated based on clarity, depth of analysis, and business relevance.
