@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM RAG Environmental Analysis Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ibm-blue: #0f62fe;
+            --ibm-blue-60: #0043ce;
+            --ibm-blue-10: #edf5ff;
+            --ibm-gray-100: #161616;
+            --ibm-gray-90: #262626;
+            --ibm-gray-70: #525252;
+            --ibm-gray-50: #8d8d8d;
+            --ibm-gray-20: #e0e0e0;
+            --ibm-gray-10: #f4f4f4;
+            --ibm-white: #ffffff;
+            --ibm-green: #198038;
+            --ibm-orange: #ff832b;
+            --ibm-red: #da1e28;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--ibm-gray-10);
+            color: var(--ibm-gray-100);
+            line-height: 1.6;
+        }
+
+        .deck-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: var(--ibm-white);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            min-height: 600px;
+            position: relative;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            border-left: 4px solid var(--ibm-blue);
+        }
+
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .ibm-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--ibm-blue);
+            letter-spacing: 0.16em;
+        }
+
+        .slide-number {
+            background: var(--ibm-blue-10);
+            color: var(--ibm-blue);
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 300;
+            color: var(--ibm-gray-100);
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 36px;
+            font-weight: 400;
+            color: var(--ibm-gray-100);
+            margin-bottom: 32px;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--ibm-blue);
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: var(--ibm-gray-70);
+            font-weight: 400;
+            margin-bottom: 40px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            flex: 1;
+        }
+
+        .content-section {
+            background: var(--ibm-gray-10);
+            padding: 32px;
+            border-radius: 8px;
+            border-left: 3px solid var(--ibm-green);
+        }
+
+        .icon-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .icon {
+            width: 48px;
+            height: 48px;
+            background: var(--ibm-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .bullet-point {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .bullet {
+            width: 8px;
+            height: 8px;
+            background: var(--ibm-blue);
+            border-radius: 50%;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+
+        .process-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0;
+            gap: 20px;
+        }
+
+        .process-step {
+            background: var(--ibm-blue-10);
+            padding: 24px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            border: 2px solid var(--ibm-blue);
+            position: relative;
+        }
+
+        .process-step::after {
+            content: '→';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: var(--ibm-blue);
+            font-weight: bold;
+        }
+
+        .process-step:last-child::after {
+            display: none;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, var(--ibm-blue), var(--ibm-blue-60));
+            color: white;
+            padding: 32px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .metric-number {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .benefit-card {
+            background: var(--ibm-white);
+            border: 2px solid var(--ibm-gray-20);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            border-color: var(--ibm-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(15, 98, 254, 0.15);
+        }
+
+        .cta-section {
+            background: var(--ibm-gray-100);
+            color: white;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .cta-button {
+            background: var(--ibm-blue);
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: var(--ibm-blue-60);
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: var(--ibm-blue);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            background: var(--ibm-blue-60);
+        }
+
+        .nav-btn:disabled {
+            background: var(--ibm-gray-50);
+            cursor: not-allowed;
+        }
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus indicators */
+        button:focus,
+        .cta-button:focus {
+            outline: 3px solid var(--ibm-blue);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .slide {
+                border: 2px solid var(--ibm-gray-100);
+            }
+            
+            .benefit-card {
+                border-width: 3px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .navigation {
+                display: none;
+            }
+            
+            .slide {
+                page-break-after: always;
+                box-shadow: none;
+                border: 1px solid var(--ibm-gray-50);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()" id="prevBtn">← Previous</button>
+        <button class="nav-btn" onclick="nextSlide()" id="nextBtn">Next →</button>
+    </div>
+
+    <div class="deck-container" role="main">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide" id="slide-1" role="article" aria-labelledby="slide-1-title">
+            <div class="slide-header">
+                <div class="ibm-logo" aria-label="IBM Logo">IBM</div>
+                <div class="slide-number" aria-label="Slide 1 of 8">01</div>
+            </div>
+            <h1 id="slide-1-title">RAG-Powered Environmental Intelligence</h1>
+            <p class="subtitle">Transforming Environmental Data into Actionable Insights with Retrieval-Augmented Generation</p>
+            <div class="cta-section">
+                <h3>Executive Summary Presentation</h3>
+                <p>Leveraging AI to solve critical environmental challenges through intelligent data synthesis</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Problem Statement -->
+        <div class="slide" id="slide-2" role="article" aria-labelledby="slide-2-title" style="display: none;">
+            <div class="slide-header">
+                <div class="ibm-logo" aria-label="IBM Logo">IBM</div>
+                <div class="slide-number" aria-label="Slide 2 of 8">02</div>
+            </div>
+            <h2 id="slide-2-title">Environmental Data Challenge</h2>
+            <div class="content-grid">
+                <div class="content-section">
+                    <div class="icon-section">
+                        <div class="icon" aria-hidden="true">📊</div>
+                        <h3>Data Fragmentation</h3>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Environmental data scattered across multiple sources, formats, and systems</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Limited cross-referencing capabilities between datasets</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Time-consuming manual analysis processes</p>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <div class="icon-section">
+                        <div class="icon" aria-hidden="true">⚡</div>
+                        <h3>Decision Latency</h3>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Critical environmental decisions delayed by information silos</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Inability to synthesize real-time insights from historical patterns</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Missed opportunities for proactive environmental management</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: RAG Solution Overview -->
+        <div class="slide" id="slide-3" role="article" aria-labelledby="slide-3-title" style="display: none;">
+            <div class="slide-header">
+                <div class="ibm-logo" aria-label="IBM Logo">IBM</div>
+                <div class="slide-number" aria-label="Slide 3 of 8">03</div>
+            </div>
+            <h2 id="slide-3-title">RAG: Environmental Intelligence Engine</h2>
+            <p class="subtitle">Retrieval-Augmented Generation for Environmental Data Analysis</p>
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="icon" aria-hidden="true">🔍</div>
+                    <h3>Retrieve</h3>
+                    <p>Query environmental databases, reports, and real-time sensors</p>
+                </div>
+                <div class="process-step">
+                    <div class="icon" aria-hidden="true">🧠</div>
+                    <h3>Augment</h3>
+                    <p>Enhance AI responses with relevant environmental context</p>
+                </div>
+                <div class="process-step">
+                    <div class="icon" aria-hidden="true">📝</div>
+                    <h3>Generate</h3>
+                    <p>Produce actionable insights and recommendations</p>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number">85%</div>
+                <div class="metric-label">Reduction in analysis time for environmental assessments</div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Technical Architecture -->
+        <div class="slide" id="slide-4" role="article" aria-labelledby="slide-4-title" style="display: none;">
+            <div class="slide-header">
+                <div class="ibm-logo" aria-label="IBM Logo">IBM</div>
+                <div class="slide-number" aria-label="Slide 4 of 8">04</div>
+            </div>
+            <h2 id="slide-4-title">Technical Architecture</h2>
+            <div class="content-grid">
+                <div class="content-section" style="border-left-color: var(--ibm-blue);">
+                    <h3>Data Sources</h3>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Satellite imagery and remote sensing data</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>IoT environmental sensors</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Scientific publications and research papers</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Government environmental databases</p>
+                    </div>
+                </div>
+                <div class="content-section" style="border-left-color: var(--ibm-green);">
+                    <h3>AI Components</h3>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Vector database for semantic search</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Large Language Model for generation</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Embedding models for data indexing</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Natural language query interface</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Use Cases -->
+        <div class="slide" id="slide-5" role="article" aria-labelledby="slide-5-title" style="display: none;">
+            <div class="slide-header">
+                <div class="ibm-logo" aria-label="IBM Logo">IBM</div>
+                <div class="slide-number" aria-label="Slide 5 of 8">05</div>
+            </div>
+            <h2 id="slide-5-title">Environmental Use Cases</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="icon" aria-hidden="true">🌡️</div>
+                    <h3>Climate Monitoring</h3>
+                    <p>Real-time analysis of temperature trends, weather patterns, and climate anomalies with predictive insights</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon" aria-hidden="true">💧</div>
+                    <h3>Water Quality</h3>
+                    <p>Comprehensive water quality assessment combining sensor data with historical contamination patterns</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon" aria-hidden="true">🌫️</div>
+                    <h3>Air Quality</h3>
+                    <p>Multi-source air pollution analysis with health impact assessments and mitigation recommendations</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon" aria-hidden="true">🌳</div>
+                    <h3>Biodiversity</h3>
+                    <p>Species population tracking and habitat analysis using satellite imagery and research data</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon" aria-hidden="true">🏭</div>
+                    <h3>Emissions</h3>
+                    <p>Industrial emissions monitoring with regulatory compliance tracking and reduction strategies</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon" aria-hidden="true">🌍</div>
+                    <h3>Sustainability</h3>
+                    <p>ESG reporting automation with comprehensive environmental impact assessments</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Business Impact -->
+        <div class="slide" id="slide-6" role="article" aria-labelledby="slide-6-title" style="display: none;">
+            <div class="slide-header">
+                <div class="ibm-logo" aria-label="IBM Logo">IBM</div>
+                <div class="slide-number" aria-label="Slide 6 of 8">06</div>
+            </div>
+            <h2 id="slide-6-title">Business Impact & ROI</h2>
+            <div class="content-grid">
+                <div>
+                    <div class="metric-card">
+                        <div class="metric-number">60%</div>
+                        <div class="metric-label">Faster Environmental Reporting</div>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, var(--ibm-green), #0e6027);">
+                        <div class="metric-number">40%</div>
+                        <div class="metric-label">Reduction in Compliance Costs</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="content-section">
+                        <h3>Key Benefits</h3>
+                        <div class="bullet-point">
+                            <div class="bullet" aria-hidden="true"></div>
+                            <p>Proactive risk identification and mitigation</p>
+                        </div>
+                        <div class="bullet-point">
+                            <div class="bullet" aria-hidden="true"></div>
+                            <p>Enhanced regulatory compliance monitoring</p>
+                        </div>
+                        <div class="bullet-point">
+                            <div class="bullet" aria-hidden="true"></div>
+                            <p>Data-driven sustainability strategy development</p>
+                        </div>
+                        <div class="bullet-point">
+                            <div class="bullet" aria-hidden="true"></div>
+                            <p>Improved stakeholder reporting accuracy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Implementation Roadmap -->
+        <div class="slide" id="slide-7" role="article" aria-labelledby="slide-7-title" style="display: none;">
+            <div class="slide-header">
+                <div class="ibm-logo" aria-label="IBM Logo">IBM</div>
+                <div class="slide-number" aria-label="Slide 7 of 8">07</div>
+            </div>
+            <h2 id="slide-7-title">Implementation Roadmap</h2>
+            <div class="process-flow">
+                <div class="process-step">
+                    <h3>Phase 1</h3>
+                    <p><strong>Q1 2025</strong></p>
+                    <p>Data source integration and RAG foundation setup</p>
+                </div>
+                <div class="process-step">
+                    <h3>Phase 2</h3>
+                    <p><strong>Q2 2025</strong></p>
+                    <p>Pilot deployment with key environmental use cases</p>
+                </div>
+                <div class="process-step">
+                    <h3>Phase 3</h3>
+                    <p><strong>Q3 2025</strong></p>
+                    <p>Full-scale deployment and team training</p>
+                </div>
+            </div>
+            <div class="content-section">
+                <h3>Success Metrics</h3>
+                <div class="bullet-point">
+                    <div class="bullet" aria-hidden="true"></div>
+                    <p>Query response accuracy > 95% for environmental data requests</p>
+                </div>
+                <div class="bullet-point">
+                    <div class="bullet" aria-hidden="true"></div>
+                    <p>User adoption rate > 80% across environmental teams</p>
+                </div>
+                <div class="bullet-point">
+                    <div class="bullet" aria-hidden="true"></div>
+                    <p>Report generation time reduced by > 50%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Next Steps -->
+        <div class="slide" id="slide-8" role="article" aria-labelledby="slide-8-title" style="display: none;">
+            <div class="slide-header">
+                <div class="ibm-logo" aria-label="IBM Logo">IBM</div>
+                <div class="slide-number" aria-label="Slide 8 of 8">08</div>
+            </div>
+            <h2 id="slide-8-title">Next Steps & Recommendations</h2>
+            <div class="content-grid">
+                <div class="content-section">
+                    <h3>Immediate Actions</h3>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Conduct environmental data audit and source mapping</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Establish cross-functional RAG implementation team</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Define pilot use case priorities and success criteria</p>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>Resource Requirements</h3>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>AI/ML engineering team (3-4 FTEs)</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Environmental domain experts (2-3 SMEs)</p>
+                    </div>
+                    <div class="bullet-point">
+                        <div class="bullet" aria-hidden="true"></div>
+                        <p>Cloud infrastructure and AI model licensing</p>
+                    </div>
+                </div>
+            </div>
+            <div class="cta-section">
+                <h3>Ready to Transform Environmental Intelligence?</h3>
+                <p>Let's discuss how RAG can accelerate your environmental sustainability goals</p>
+                <a href="#" class="cta-button" role="button">Schedule Strategic Discussion</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+
+        function showSlide(n) {
+            // Hide all slides
+            for (let i = 1; i <= totalSlides; i++) {
+                const slide = document.getElementById(`slide-${i}`);
+                if (slide) {
+                    slide.style.display = 'none';
+                }
+            }
+            
+            // Show current slide
+            const currentSlideElement = document.getElementById(`slide-${n}`);
+            if (currentSlideElement) {
+                currentSlideElement.style.display = 'flex';
+                // Announce slide change for screen readers
+                const slideTitle = currentSlideElement.querySelector('h1, h2');
+                if (slideTitle) {
+                    // Create a live region announcement
+                    const announcement = document.createElement('div');
+                    announcement.setAttribute('aria-live', 'polite');
+                    announcement.setAttribute('aria-atomic', 'true');
+                    announcement.className = 'sr-only';
+                    announcement.textContent = `Slide ${n} of ${totalSlides}: ${slideTitle.textContent}`;
+                    document.body.appendChild(announcement);
+                    
+                    // Remove announcement after it's been read
+                    setTimeout(() => {
+                        document.body.removeChild(announcement);
+                    }, 1000);
+                }
+            }
+            
+            // Update navigation buttons
+            updateNavigation();
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentSlide === 1;
+            nextBtn.disabled = currentSlide === totalSlides;
+            
+            // Update button text to be more descriptive
+            prevBtn.setAttribute('aria-label', currentSlide === 1 ? 'Previous slide (not available)' : `Previous slide (${currentSlide - 1} of ${totalSlides})`);
+            nextBtn.setAttribute('aria-label', currentSlide === totalSlides ? 'Next slide (not available)' : `Next slide (${currentSlide + 1} of ${totalSlides})`);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+                case 'ArrowRight':
+                case 'Space':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    previousSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    currentSlide = 1;
+                    showSlide(currentSlide);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    currentSlide = totalSlides;
+                    showSlide(currentSlide);
+                    break;
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showSlide(1);
+            
+            // Add focus management
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                slide.setAttribute('tabindex', '-1');
+            });
+        });
+
+        // Add touch support for mobile
+        let startX = 0;
+        let endX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            startX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            endX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left - next slide
+                    nextSlide();
+                } else {
+                    // Swipe right - previous slide
+                    previousSlide();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
