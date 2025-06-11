@@ -48,24 +48,65 @@ g <- crm %>%
               axis.title = element_text(size = 14),
               axis.text = element_text(size = 12))
       
-g
+ggplotly(g)
 ```
 
 
 ### CRM Interaction Over Time
 ```{r}
 crm <- crm %>%
-        mutate(Year = lubridate::year(INTERACTION_DATE),
-               Quarter = lubridate::quarter(INTERACTION_DATE),
-               Month = lubridate::month(INTERACTION_DATE, label = TRUE),
-               DOW = lubridate::wday(INTERACTION_DATE, label=TRUE))
+        mutate(Year = lubridate::year(CRM_INTERACTION_DATE),
+               Quarter = lubridate::quarter(CRM_INTERACTION_DATE),
+               Month = lubridate::month(CRM_INTERACTION_DATE, label = TRUE),
+               DOW = lubridate::wday(CRM_INTERACTION_DATE, label=TRUE))
 ```
 
 #### CRM Interaction by Year
 ```{r}
-   g <- ggplot(trend, aes(Year, Total, group=`Gas Type`, colour = `Gas Type`)) + 
-      geom_line( size=1) + theme_minimal() +
-      labs(x = "Year", y = "Total", color="Gas Type") + 
+crm_year <- crm %>%
+group_by(Year, CRM_INTERACTION_TYPE) %>%
+        summarise(Total = n()) %>%
+        select(Year,CRM_INTERACTION_TYPE, Total)
+
+   g <- ggplot(crm_year, aes(as.factor(Year), Total, group=CRM_INTERACTION_TYPE, colour = CRM_INTERACTION_TYPE)) + 
+      geom_line( linewidth=1) + theme_minimal() +
+      labs(x = "Year", y = "Total", color="CRM Interaction Type") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+ggplotly(g)
+```
+
+#### CRM Interaction by Quarter
+```{r}
+crm %>%
+group_by(Quarter, CRM_INTERACTION_TYPE) %>%
+        summarise(Total = n()) %>%
+        select(Quarter,CRM_INTERACTION_TYPE, Total) %>% 
+      ggplot(aes(as.factor(Quarter), Total, group=CRM_INTERACTION_TYPE, colour = CRM_INTERACTION_TYPE)) + 
+      geom_line( linewidth=1) + theme_minimal() +
+      labs(x = "Quarter", y = "Total", color="CRM Interaction Type") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+
+```
+
+#### CRM Interaction by Month
+```{r}
+crm %>%
+group_by(Month, CRM_INTERACTION_TYPE) %>%
+        summarise(Total = n()) %>%
+        select(Month,CRM_INTERACTION_TYPE, Total) %>% 
+      ggplot(aes(as.factor(Month), Total, group=CRM_INTERACTION_TYPE, colour = CRM_INTERACTION_TYPE)) + 
+      geom_line( linewidth=1) + theme_minimal() +
+      labs(x = "Month", y = "Total", color="CRM Interaction Type") + 
       scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
@@ -74,19 +115,21 @@ crm <- crm %>%
             axis.text.x = element_text(angle = 0, hjust = 1))
 ```
 
-#### CRM Interaction by Quarter
-```{r}
-
-```
-
-#### CRM Interaction by Month
-```{r}
-
-```
-
 
 #### CRM Interaction by Day of Week
 ```{r}
-
+crm %>%
+group_by(DOW, CRM_INTERACTION_TYPE) %>%
+        summarise(Total = n()) %>%
+        select(DOW,CRM_INTERACTION_TYPE, Total) %>% 
+      ggplot(aes(as.factor(DOW), Total, group=CRM_INTERACTION_TYPE, colour = CRM_INTERACTION_TYPE)) + 
+      geom_line( linewidth=1) + theme_minimal() +
+      labs(x = "Day of Week", y = "Total", color="CRM Interaction Type") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
 ```
 
