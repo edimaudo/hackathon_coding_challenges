@@ -29,14 +29,36 @@ for (package in packages) {
 }
 ```
 
-# 
-
 ```{r}
 ## Load Data
 crm <- read_csv("CRM_interacions_table.csv")
 gift <- read_csv("gift_transactions_table.csv")
 video <- read_csv("video_email_data_table.csv")
 constituent <- read_csv("constituent_profiles_table.csv")
+```
+
+**CRM Exploration**
+
+```{r}
+
+## CRM Interaction Type
+     g <- crm %>%
+        group_by(CRM_INTERACTION_TYPE) %>%
+        summarise(Total = n()) %>%
+        select(CRM_INTERACTION_TYPE, Total) %>%
+        ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        scale_y_continuous(labels = scales::comma) +
+        labs(x ="CRM Interaction Type", y = "Count") + coord_flip() +
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
+      
+
+```
+
+```{r}
 ```
 
 ```{r}
@@ -46,4 +68,12 @@ constituent <- read_csv("constituent_profiles_table.csv")
 ```{}
 ```
 
+```{glimpse(crm)}
+
+```
+
 # Part 1: The Untapped Potential: Understanding Our Donor Landscape
+
+```{r}
+
+```
