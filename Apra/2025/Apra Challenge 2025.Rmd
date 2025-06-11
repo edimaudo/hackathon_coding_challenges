@@ -3,8 +3,6 @@ title: "Apra Data Science Challenge 2025"
 output: html_notebook
 ---
 
-
-
 ```{r}
 # Load Libraries
 packages <- c(
@@ -25,5 +23,70 @@ for (package in packages) {
 
 
 ```{r}
-plot(cars)
+# Load data
+crm <- read_csv("CRM_interacions_table.csv")
+gift <- read_csv("gift_transactions_table.csv")
+video <- read_csv("video_email_data_table.csv")
+constituent <- read_csv("constituent_profiles_table.csv")
 ```
+
+# Data Exploration
+
+## CRM Exploration
+```{r}
+## CRM Interaction Type
+g <- crm %>%
+        group_by(CRM_INTERACTION_TYPE) %>%
+        summarise(Total = n()) %>%
+        select(CRM_INTERACTION_TYPE, Total) %>%
+        ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        scale_y_continuous(labels = scales::comma) +
+        labs(x ="CRM Interaction Type", y = "Count") + coord_flip() +
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
+      
+g
+```
+
+
+### CRM Interaction Over Time
+```{r}
+crm <- crm %>%
+        mutate(Year = lubridate::year(INTERACTION_DATE),
+               Quarter = lubridate::quarter(INTERACTION_DATE),
+               Month = lubridate::month(INTERACTION_DATE, label = TRUE),
+               DOW = lubridate::wday(INTERACTION_DATE, label=TRUE))
+```
+
+#### CRM Interaction by Year
+```{r}
+   g <- ggplot(trend, aes(Year, Total, group=`Gas Type`, colour = `Gas Type`)) + 
+      geom_line( size=1) + theme_minimal() +
+      labs(x = "Year", y = "Total", color="Gas Type") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+```
+
+#### CRM Interaction by Quarter
+```{r}
+
+```
+
+#### CRM Interaction by Month
+```{r}
+
+```
+
+
+#### CRM Interaction by Day of Week
+```{r}
+
+```
+
