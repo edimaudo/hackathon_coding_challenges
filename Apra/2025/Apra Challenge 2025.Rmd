@@ -142,7 +142,7 @@ gift <- gift %>%
                DOW = lubridate::wday(GIFT_DATE, label=TRUE))
 ```
 
-
+#### Gift by Year
 ```{r}
 g <- gift %>%
 group_by(Year) %>%
@@ -161,7 +161,7 @@ group_by(Year) %>%
 ggplotly(g)
 ```
 
-
+#### Gift by Quarter
 ```{r}
 g <- gift %>%
 group_by(Quarter) %>%
@@ -180,7 +180,7 @@ group_by(Quarter) %>%
 ggplotly(g)
 ```
 
-
+Gift by Month
 ```{r}
 g <- gift %>%
 group_by(Month) %>%
@@ -199,7 +199,7 @@ group_by(Month) %>%
 ggplotly(g)
 ```
 
-
+Gift by Day of Week
 ```{r}
 g <- gift %>%
 group_by(DOW) %>%
@@ -218,27 +218,90 @@ group_by(DOW) %>%
 ggplotly(g)
 ```
 
+## Video Overview
+### Video Views over time
 ```{r}
-
+video <- video %>%
+        mutate(Year = lubridate::year(SENT_DATE),
+               Quarter = lubridate::quarter(SENT_DATE),
+               Month = lubridate::month(SENT_DATE, label = TRUE),
+               DOW = lubridate::wday(SENT_DATE, label=TRUE))
 ```
 
+#### Video views by year
 ```{r}
-
+g <- video %>%
+group_by(Year) %>%
+        summarise(Total = sum(VIDEO_VIEWS)) %>%
+        select(Year, Total) %>% 
+        na.omit() %>%
+      ggplot(aes(as.factor(Year), Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Year", y = "Total") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+ggplotly(g)
 ```
 
-
+#### Video Views by Quarter
 ```{r}
-
+g <- video %>%
+group_by(Quarter) %>%
+        summarise(Total = sum(VIDEO_VIEWS)) %>%
+        select(Quarter, Total) %>% 
+        na.omit() %>%
+      ggplot(aes(Quarter, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Quarter", y = "Total") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+ggplotly(g)
 ```
 
-
+#### Video Views by Month
 ```{r}
-
+g <- video %>%
+group_by(Month) %>%
+        summarise(Total = sum(VIDEO_VIEWS)) %>%
+        select(Month, Total) %>% 
+        na.omit() %>%
+      ggplot(aes(Month, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Month", y = "Total") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+ggplotly(g)
 ```
 
-
+#### Video Views by Day of Week
 ```{r}
-
+g <- video %>%
+group_by(DOW) %>%
+        summarise(Total = sum(VIDEO_VIEWS)) %>%
+        select(DOW, Total) %>% 
+        na.omit() %>%
+      ggplot(aes(DOW, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Day of the week", y = "Total") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+ggplotly(g)
 ```
 
 
