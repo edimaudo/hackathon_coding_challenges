@@ -32,9 +32,9 @@ constituent <- read_csv("constituent_profiles_table.csv")
 
 # Data Exploration
 
-## CRM Exploration
+## CRM Data Overview
 ```{r}
-## CRM Interaction Type
+# CRM Interaction Type
 g <- crm %>%
         group_by(CRM_INTERACTION_TYPE) %>%
         summarise(Total = n()) %>%
@@ -132,4 +132,134 @@ group_by(DOW, CRM_INTERACTION_TYPE) %>%
             axis.text = element_text(size = 10),
             axis.text.x = element_text(angle = 0, hjust = 1))
 ```
+## Gift Overview
+### Gifts overtime
+```{r}
+gift <- gift %>%
+        mutate(Year = lubridate::year(GIFT_DATE),
+               Quarter = lubridate::quarter(GIFT_DATE),
+               Month = lubridate::month(GIFT_DATE, label = TRUE),
+               DOW = lubridate::wday(GIFT_DATE, label=TRUE))
+```
+
+
+```{r}
+g <- gift %>%
+group_by(Year) %>%
+        summarise(Total = sum(AMOUNT)) %>%
+        select(Year, Total) %>% 
+        na.omit() %>%
+      ggplot(aes(Year, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Year", y = "Total") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 90, hjust = 1))
+ggplotly(g)
+```
+
+
+```{r}
+g <- gift %>%
+group_by(Quarter) %>%
+        summarise(Total = sum(AMOUNT)) %>%
+        select(Quarter, Total) %>% 
+        na.omit() %>%
+      ggplot(aes(Quarter, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Quarter", y = "Total") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+ggplotly(g)
+```
+
+
+```{r}
+g <- gift %>%
+group_by(Month) %>%
+        summarise(Total = sum(AMOUNT)) %>%
+        select(Month, Total) %>% 
+        na.omit() %>%
+      ggplot(aes(Month, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Month", y = "Total") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+ggplotly(g)
+```
+
+
+```{r}
+g <- gift %>%
+group_by(DOW) %>%
+        summarise(Total = sum(AMOUNT)) %>%
+        select(DOW, Total) %>% 
+        na.omit() %>%
+      ggplot(aes(DOW, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Day of Week", y = "Total") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+ggplotly(g)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
 
