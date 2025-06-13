@@ -351,7 +351,25 @@ segment_titles <- c("First Grade", "Loyal", "Likely to be Loyal",
 
 divisions<-rfm_segment(report, segment_titles, r_low, r_high, f_low, f_high, m_low, m_high)
 
+#names(divisions)[names(divisions) == 'customer_id'] <- 'CONSTITUENT_ID'
+
 division_count <- divisions %>% count(segment) %>% arrange(desc(n)) %>% rename(Segment = segment, Count = n)
+```
+
+### RFM heatmap
+```{r}
+rfm_plot_heatmap(report)
+```
+
+```{r}
+rfm_plot_bar_chart(report)
+```
+```{r}
+rfm_plot_histogram(report)
+```
+
+```{r}
+
 ```
 
 ## Donor Lifetime Value
