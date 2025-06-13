@@ -61,7 +61,7 @@ crm <- crm %>%
                DOW = lubridate::wday(CRM_INTERACTION_DATE, label=TRUE))
 ```
 
-#### CRM Interaction by Year
+### CRM Interaction by Year
 ```{r}
 crm_year <- crm %>%
 group_by(Year, CRM_INTERACTION_TYPE) %>%
@@ -80,7 +80,7 @@ group_by(Year, CRM_INTERACTION_TYPE) %>%
 ggplotly(g)
 ```
 
-#### CRM Interaction by Quarter
+### CRM Interaction by Quarter
 ```{r}
 crm %>%
 group_by(Quarter, CRM_INTERACTION_TYPE) %>%
@@ -98,7 +98,7 @@ group_by(Quarter, CRM_INTERACTION_TYPE) %>%
 
 ```
 
-#### CRM Interaction by Month
+### CRM Interaction by Month
 ```{r}
 crm %>%
 group_by(Month, CRM_INTERACTION_TYPE) %>%
@@ -116,7 +116,7 @@ group_by(Month, CRM_INTERACTION_TYPE) %>%
 ```
 
 
-#### CRM Interaction by Day of Week
+### CRM Interaction by Day of Week
 ```{r}
 crm %>%
 group_by(DOW, CRM_INTERACTION_TYPE) %>%
@@ -134,6 +134,24 @@ group_by(DOW, CRM_INTERACTION_TYPE) %>%
 ```
 ## Gift Overview
 
+### Gifts by CRM Interaction Type
+```{r}
+left_join(gift,crm,by='CONSTITUENT_ID') %>%
+  group_by(CRM_INTERACTION_TYPE) %>%
+  summarise(Total = sum(AMOUNT)) %>%
+  select(CRM_INTERACTION_TYPE,Total) %>%
+  ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        scale_y_continuous(labels = scales::comma) +
+        labs(x ="CRM Interaction Type", y = "Donations") + coord_flip() +
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
+
+
+```
+
 ### Gifts overtime
 ```{r}
 gift <- gift %>%
@@ -143,7 +161,7 @@ gift <- gift %>%
                DOW = lubridate::wday(GIFT_DATE, label=TRUE))
 ```
 
-#### Gift by Year
+### Gift by Year
 ```{r}
 g <- gift %>%
 group_by(Year) %>%
@@ -162,7 +180,7 @@ group_by(Year) %>%
 ggplotly(g)
 ```
 
-#### Gift by Quarter
+### Gift by Quarter
 ```{r}
 g <- gift %>%
 group_by(Quarter) %>%
@@ -181,7 +199,7 @@ group_by(Quarter) %>%
 ggplotly(g)
 ```
 
-Gift by Month
+### Gift by Month
 ```{r}
 g <- gift %>%
 group_by(Month) %>%
@@ -229,7 +247,7 @@ video <- video %>%
                DOW = lubridate::wday(SENT_DATE, label=TRUE))
 ```
 
-#### Video views by year
+### Video views by year
 ```{r}
 g <- video %>%
 group_by(Year) %>%
@@ -248,7 +266,7 @@ group_by(Year) %>%
 ggplotly(g)
 ```
 
-#### Video Views by Quarter
+### Video Views by Quarter
 ```{r}
 g <- video %>%
 group_by(Quarter) %>%
@@ -267,7 +285,7 @@ group_by(Quarter) %>%
 ggplotly(g)
 ```
 
-#### Video Views by Month
+### Video Views by Month
 ```{r}
 g <- video %>%
 group_by(Month) %>%
@@ -286,7 +304,7 @@ group_by(Month) %>%
 ggplotly(g)
 ```
 
-#### Video Views by Day of Week
+### Video Views by Day of Week
 ```{r}
 g <- video %>%
 group_by(DOW) %>%
@@ -303,26 +321,6 @@ group_by(DOW) %>%
             axis.text = element_text(size = 10),
             axis.text.x = element_text(angle = 0, hjust = 1))
 ggplotly(g)
-```
-
-## Donor & Engagement Insights
-
-### Donations by CRM Interaction Type
-```{r}
-left_join(gift,crm,by='CONSTITUENT_ID') %>%
-  group_by(CRM_INTERACTION_TYPE) %>%
-  summarise(Total = sum(AMOUNT)) %>%
-  select(CRM_INTERACTION_TYPE,Total) %>%
-  ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total))  +
-        geom_bar(stat = "identity",width = 0.5, fill='black')  +
-        scale_y_continuous(labels = scales::comma) +
-        labs(x ="CRM Interaction Type", y = "Donations") + coord_flip() +
-        theme(legend.text = element_text(size = 12),
-              legend.title = element_text(size = 12),
-              axis.title = element_text(size = 14),
-              axis.text = element_text(size = 12))
-
-
 ```
 
 # Part 2: A Tale of Portfolios/Customer Segmentation
