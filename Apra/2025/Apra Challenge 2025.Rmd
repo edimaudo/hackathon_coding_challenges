@@ -9,7 +9,7 @@ output: html_notebook
 packages <- c(
   'ggplot2','tidyverse','plotly','leaflet',
   'shiny','shinyWidgets','shinydashboard',
-  'xts','forecast','TTR',
+  'xts','forecast','TTR','treemapify',
   'DT','lubridate','RColorBrewer','scales','stopwords',
   'tidytext','stringr','wordcloud','wordcloud2','scales','dplyr','rfm',
   'SnowballC','textmineR','topicmodels','textclean','tm'
@@ -367,7 +367,15 @@ rfm_plot_bar_chart(report)
 ```{r}
 rfm_plot_histogram(report)
 ```
+### Full Constituent Base Segmentation
+```{r}
+`segment groups` <- c(unique(division_count$Segment))
+ggplot(division_count, aes(area = division_count$Count, fill = `segment groups`, label = division_count$Segment)) +
+  # 1. Draw type_2 borders and fill colors
+  geom_treemap()
+```
 
+### Donor Assignment Flow Diagram
 ```{r}
 
 ```
@@ -395,12 +403,6 @@ group_by(CONSTITUENT_ID) %>%
 ```
 
 
-
-
-
-```{r}
-
-```
 
 
 ```{r}
