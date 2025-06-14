@@ -399,41 +399,7 @@ group_by(CONSTITUENT_ID) %>%
 
 
 ```{r}
-## CLV version 2
-# 2. Calculate key metrics for each customer
-customer_data <- transactions %>%
-  group_by(customer_id) %>%
-  summarise(
-    frequency = n() - 1, # Number of repeat purchases
-    recency = as.numeric(difftime(max(date), min(date), units = "days")),
-    total_revenue = sum(revenue),
-    monetary = total_revenue / n()
-  )
 
-# 3. Calculate components for historical CLV
-# Average Purchase Value (APV)
-apv <- sum(transactions$revenue) / nrow(transactions)
-
-# Average Purchase Frequency Rate (APFR)
-total_purchases <- nrow(transactions)
-total_customers <- length(unique(transactions$customer_id))
-apfr <- total_purchases / total_customers
-
-# Customer Value (CV)
-cv <- apv * apfr
-
-# 4. Calculate a simple historical CLV
-# We need to assume a customer lifetime. Let's assume an average customer lifetime of 365 days.
-# And a profit margin of 20%
-profit_margin <- 0.20
-average_customer_lifetime <- 365 # in days
-
-# Average customer lifespan in relation to the observation period
-# Here we calculate average lifespan based on recency
-average_lifespan <- mean(customer_data$recency)
-
-# Simple CLV
-clv_simple <- cv * average_lifespan * profit_margin
 ```
 
 
