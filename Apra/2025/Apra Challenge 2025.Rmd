@@ -323,7 +323,7 @@ group_by(DOW) %>%
 ggplotly(g)
 ```
 
-# Part 2: A Tale of Portfolios/Customer Segmentation
+# Part 2: Customer Segmentation
 ## Donor RFM Analysis
 ```{r}
 
@@ -370,14 +370,8 @@ rfm_plot_histogram(report)
 ### Full Constituent Base Segmentation
 ```{r}
 `segment groups` <- c(unique(division_count$Segment))
-ggplot(division_count, aes(area = division_count$Count, fill = `segment groups`, label = division_count$Segment)) +
-  # 1. Draw type_2 borders and fill colors
+ggplot(division_count, aes(area = Count, fill = `segment groups`, label = division_count$Segment)) +
   geom_treemap()
-```
-
-### Donor Assignment Flow Diagram
-```{r}
-
 ```
 
 ## Donor Lifetime Value
@@ -402,35 +396,18 @@ group_by(CONSTITUENT_ID) %>%
 
 ```
 
-
-
-
-```{r}
-
-```
-
-
-```{r}
-
-```
-
-
-```{r}
-
-```
-
 # Part 3: The Path Forward: Activating Our Strategy
-
+## Top donor prioritization matrix
 ```{r}
 
 ```
 
-
+## Donation Forecasting
 ```{r}
 
 ```
 
-
+## Predictive Modeling for Next-Best Gift
 ```{r}
 
 ```
