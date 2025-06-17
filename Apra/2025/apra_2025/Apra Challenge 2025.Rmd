@@ -362,12 +362,12 @@ division_count <- divisions %>% count(segment) %>% arrange(desc(n)) %>% rename(S
 ### rfm metrics - monetary
 divisions %>%
 group_by(segment) %>%
-  summarise(Total = sum(amount)) %>%
+  summarise(Total = mean(amount)) %>%
   select(segment,Total) %>%
   ggplot(aes(x = reorder(segment,Total) ,y = Total))  +
         geom_bar(stat = "identity",width = 0.5, fill='black')  +
         scale_y_continuous(labels = scales::comma) +
-        labs(x ="Segment", y = "Monetary") + coord_flip() +
+        labs(x ="Segment", y = "Avg. Monetary") + coord_flip() +
         theme(legend.text = element_text(size = 12),
               legend.title = element_text(size = 12),
               axis.title = element_text(size = 14),
@@ -379,12 +379,12 @@ group_by(segment) %>%
 ### rfm metrics - frequency
 division_count %>%
 group_by(Segment) %>%
-  summarise(Total = sum(Count)) %>%
+  summarise(Total = mean(Count)) %>%
   select(Segment,Total) %>%
   ggplot(aes(x = reorder(Segment,Total) ,y = Total))  +
         geom_bar(stat = "identity",width = 0.5, fill='black')  +
         scale_y_continuous(labels = scales::comma) +
-        labs(x ="Segment", y = "Frequency") + coord_flip() +
+        labs(x ="Segment", y = "Avg. Frequency") + coord_flip() +
         theme(legend.text = element_text(size = 12),
               legend.title = element_text(size = 12),
               axis.title = element_text(size = 14),
@@ -394,7 +394,18 @@ group_by(Segment) %>%
 
 ```{r}
 ### rfm metrics - recency
-
+divisions %>%
+group_by(segment) %>%
+  summarise(Total = mean(recency_days)) %>%
+  select(segment,Total) %>%
+  ggplot(aes(x = reorder(segment,Total) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        scale_y_continuous(labels = scales::comma) +
+        labs(x ="Segment", y = "Avg. Recency") + coord_flip() +
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
 ```
 
 ```{r}
