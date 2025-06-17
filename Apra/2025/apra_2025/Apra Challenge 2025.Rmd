@@ -360,11 +360,35 @@ division_count <- divisions %>% count(segment) %>% arrange(desc(n)) %>% rename(S
 ### RFM Metrics
 ```{r}
 ### rfm metrics - monetary
+divisions %>%
+group_by(segment) %>%
+  summarise(Total = sum(amount)) %>%
+  select(segment,Total) %>%
+  ggplot(aes(x = reorder(segment,Total) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        scale_y_continuous(labels = scales::comma) +
+        labs(x ="Segment", y = "Monetary") + coord_flip() +
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
 
 ```
 
 ```{r}
-### rfm metrics - transaction
+### rfm metrics - frequency
+division_count %>%
+group_by(Segment) %>%
+  summarise(Total = sum(Count)) %>%
+  select(Segment,Total) %>%
+  ggplot(aes(x = reorder(Segment,Total) ,y = Total))  +
+        geom_bar(stat = "identity",width = 0.5, fill='black')  +
+        scale_y_continuous(labels = scales::comma) +
+        labs(x ="Segment", y = "Frequency") + coord_flip() +
+        theme(legend.text = element_text(size = 12),
+              legend.title = element_text(size = 12),
+              axis.title = element_text(size = 14),
+              axis.text = element_text(size = 12))
 
 ```
 
