@@ -452,6 +452,7 @@ group_by(CONSTITUENT_ID) %>%
 
 ### Donor Forecasting
 ```{r}
+# Forecast info
 aggregate_info <- c("daily",'weekly','monthly')
 horizon_info <- c(1:50) #default 14
 frequency_info <- c(7, 12, 52, 365)
@@ -459,19 +460,46 @@ difference_info <- c("Yes","No")
 log_info <- c("Yes","No")
 model_info <- c('auto-arima','auto-exponential','simple-exponential',
                 'double-exponential','triple-exponential', 'tbat','manual-arima')
-note_info <- "Using only data from 2010 onwards"
+note_info <- "Using only data from 2015 onwards"
 forecast_info <- "Series: forecast data"
 gift_train_df <- as.data.frame(tibble())
 gift_test_df <- as.data.frame(tibble())
 ```
 ```{r}
+# generating range of dates 
+start_date <- as.Date("2015-01-01") 
+end_date <- as.Date(today()) 
+date_range <- data.frame(seq(start_date, end_date,"days")) 
+gift_data <- data.frame(data=c(1:nrow(date_range)))
+colnames(date_range) <- "GIFT_DATE"
+date_range <- cbind(date_range,gift_data)
 ```
 ```{r}
+# Generate gift date
+transaction_f1 <- gift %>%
+  filter(GIFT_DATE >= '2015-01-01',GIFT_DATE <= today()) %>%
+  group_by(GIFT_DATE) %>%
+  summarise(Total = sum(AMOUNT)) %>%
+  right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
+  replace(is.na(.), 0) %>%
+  select(GIFT_DATE,Total)
+
 
 ```
 
 ```{r}
+transaction_f <- transaction_f1 %>%
+  right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
+  replace(is.na(.), 0) %>%
+  select(GIFT_DATE,Total)
+```
 
+
+```{r}
+gift_xts <- xts(x = transaction_f$Total, order.by = transaction_f$GIFT_DATE) 
+gift_daily <- apply.daily(gift_xts,colMeans)
+gift_weekly <- apply.weekly(gift_xts, colMeans) 
+gift_monthly <- apply.monthly(gift_xts, colMeans) 
 ```
 ```{r}
 
