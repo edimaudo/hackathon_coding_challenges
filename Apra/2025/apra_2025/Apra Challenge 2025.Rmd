@@ -332,7 +332,7 @@ rfm_df <- gift %>%
   select(CONSTITUENT_ID,GIFT_DATE,AMOUNT) %>%
   na.omit()
 
-names(rfm_df)[names(rfm_df) == 'CONSTITUENT_ID'] <- 'customer_id'
+#names(rfm_df)[names(rfm_df) == 'CONSTITUENT_ID'] <- 'customer_id'
 
 #rfm model setup
 analysis_date <- lubridate::as_date(today(), tz = "UTC")
@@ -355,6 +355,9 @@ divisions<-rfm_segment(report, segment_titles, r_low, r_high, f_low, f_high, m_l
 #names(divisions)[names(divisions) == 'customer_id'] <- 'CONSTITUENT_ID'
 
 division_count <- divisions %>% count(segment) %>% arrange(desc(n)) %>% rename(Segment = segment, Count = n)
+```
+```{r}
+
 ```
 
 ### RFM Metrics
@@ -453,122 +456,33 @@ group_by(CONSTITUENT_ID) %>%
 ### Donor Forecasting
 ```{r}
 # Forecast info
-aggregate_info <- c("daily",'weekly','monthly')
-horizon_info <- c(1:50) #default 14
-frequency_info <- c(7,30, 12, 52, 365)
-difference_info <- c("Yes","No")
-log_info <- c("Yes","No")
-model_info <- c('auto-arima','auto-exponential','simple-exponential',
-                'double-exponential','triple-exponential', 'tbat','manual-arima')
-note_info <- "Using only data from 2015 onwards"
-forecast_info <- "Series: forecast data"
-gift_train_df <- as.data.frame(tibble())
-gift_test_df <- as.data.frame(tibble())
+
 ```
 ```{r}
 # generating range of dates 
-start_date <- as.Date("2015-01-01") 
-end_date <- as.Date(today()) 
-date_range <- data.frame(seq(start_date, end_date,"days")) 
-gift_data <- data.frame(data=c(1:nrow(date_range)))
-colnames(date_range) <- "GIFT_DATE"
-date_range <- cbind(date_range,gift_data)
+
 ```
 ```{r}
-# Generate gift date
-transaction_f1 <- gift %>%
-  filter(GIFT_DATE >= '2015-01-01',GIFT_DATE <= today()) %>%
-  group_by(GIFT_DATE) %>%
-  summarise(Total = sum(AMOUNT)) %>%
-  right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
-  replace(is.na(.), 0) %>%
-  select(GIFT_DATE,Total)
+
 
 
 ```
 
 ```{r}
-transaction_f <- transaction_f1 %>%
-  right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
-  replace(is.na(.), 0) %>%
-  select(GIFT_DATE,Total)
+
 ```
 
 
 ```{r}
-gift_xts <- xts(x = transaction_f$Total, order.by = transaction_f$GIFT_DATE) 
-gift_daily <- apply.daily(gift_xts,colMeans)
-gift_weekly <- apply.weekly(gift_xts, colMeans) 
-gift_monthly <- apply.monthly(gift_xts, colMeans) 
+
 ```
 ```{r}
-forecast_df <- function (ts_df,aggregateInput,frequencyInput,dataType) {
-  if(aggregateInput == 'daily'){
-    gift_data <- apply.daily(ts_df,colMeans)
-    gift_end <- floor(0.8*length(gift_data)) 
-    gift_train <- gift_data[1:gift_end,] 
-    gift_test <- gift_data[(gift_end+1):length(gift_data),]
-    gift_start <- c(year (start(gift_train)), month(start(gift_train)),
-                    day(start(gift_train)))
-    gift_end <- c(year(end(gift_train)), month(end(gift_train)), 
-                  day(end(gift_train)))
-    gift_train <- ts(as.numeric(gift_train), start = gift_start, 
-                     end = gift_end, frequency = as.numeric(frequencyInput) )
-    gift_start <- c(year (start(gift_test)), month(start(gift_test)),
-                    day(start(gift_test)))
-    gift_end <- c(year(end(gift_test)), month(end(gift_test)), 
-                  day(end(gift_test)))
-    gift_test <- ts(as.numeric(gift_test), start = gift_start, 
-                    end = gift_end, frequency = as.numeric(frequencyInput))
-  } else if(aggregateInput == 'weekly'){
-    gift_data <- apply.weekly(ts_df, colMeans) 
-    gift_end <- floor(0.8*length(gift_data)) 
-    gift_train <- gift_data[1:gift_end,] 
-    gift_test <- gift_data[(gift_end+1):length(gift_data),]
-    gift_start <- c(year (start(gift_train)), month(start(gift_train)),
-                    week(start(gift_train)))
-    gift_end <- c(year(end(gift_train)), month(end(gift_train)), 
-                  week(end(gift_train)))
-    gift_train <- ts(as.numeric(gift_train), start = gift_start, 
-                     end = gift_end, frequency = as.numeric(frequencyInput) )
-    gift_start <- c(year (start(gift_test)), month(start(gift_test)),
-                    week(start(gift_test)))
-    gift_end <- c(year(end(gift_test)), month(end(gift_test)), 
-                  week(end(gift_test)))
-    gift_test <- ts(as.numeric(gift_test), start = gift_start, 
-                    end = gift_end, frequency = as.numeric(frequencyInput))
-  } else {
-    gift_data <- apply.monthly(ts_df, colMeans) 
-    gift_end <- floor(0.8*length(gift_data)) 
-    gift_train <- gift_data[1:gift_end,] 
-    gift_test <- gift_data[(gift_end+1):length(gift_data),]
-    gift_start <- c(year (start(gift_train)), month(start(gift_train)))
-    gift_end <- c(year(end(gift_train)), month(end(gift_train)))
-    gift_train <- ts(as.numeric(gift_train), start = gift_start, 
-                     end = gift_end, frequency = as.numeric(frequencyInput) )
-    gift_start <- c(year (start(gift_test)), month(start(gift_test)))
-    gift_end <- c(year(end(gift_test)), month(end(gift_test)))
-    gift_test <- ts(as.numeric(gift_test), start = gift_start, 
-                    end = gift_end, frequency = as.numeric(frequencyInput))
-  }
-  
-  if (dataType == "train") {
-    output <- gift_train
-  } else {
-    output <- gift_test
-  }
-  output
-  
-}
+
 ```
 
 ```{r}
-numeric_update <- function(df){
-  rownames(df) <- c()
-  is.num <- sapply(df, is.numeric)
-  df[is.num] <- lapply(df[is.num], round, 0)           
-  return (df)
-}
+
+
 ```
 
 
@@ -598,171 +512,147 @@ numeric_update <- function(df){
       ggplotly(g)
 ```
 ```{r}
-forecast.horizon <- 52
-train <- forecast_df(gift_monthly,'monthly',24,"train")
+gifts_df <- gift %>%
+  filter(GIFT_DATE >= '2015-01-01') %>%
+  select(CONSTITUENT_ID,GIFT_DATE,AMOUNT) #%>%
+  #na.omit()
+```
+```{r}
+# --- 2. Data Preparation for Forecasting ---
+print("Aggregating gift data to monthly totals...")
+monthly_donations <- gifts_df %>%
+  mutate(GIFT_DATE = ymd(GIFT_DATE)) %>%
+  # Extract year and month for grouping
+  mutate(year_month = floor_date(GIFT_DATE, "month")) %>%
+  group_by(year_month) %>%
+  summarise(total_donations = sum(AMOUNT, na.rm = TRUE), .groups = 'drop') %>%
+  arrange(year_month)
+
+if (nrow(monthly_donations) == 0) {
+  stop("No monthly donation data could be aggregated. Check 'GIFT_DATE' and 'AMOUNT' columns.")
+}
+
+print(str_glue("Aggregated {nrow(monthly_donations)} monthly donation records."))
+print("Sample of monthly donations:")
+print(head(monthly_donations))
+print(tail(monthly_donations))
 ```
 
 
 ```{r}
-      # models
-      auto_exp_model <- train %>% ets %>% forecast(h=forecast.horizon)
-      auto_arima_model <- train %>% auto.arima() %>% forecast(h=forecast.horizon)
-      simple_exp_model <- train %>% HoltWinters(beta=FALSE, gamma=FALSE) %>% 
-        forecast(h=forecast.horizon)
-      double_exp_model <- train %>% HoltWinters(beta = TRUE, gamma=FALSE) %>% 
-        forecast(h=forecast.horizon)
-      triple_exp_model <- train %>% HoltWinters(beta = TRUE, gamma = TRUE) %>% 
-        forecast(h=forecast.horizon)
-      tbat_model <- train %>% tbats %>% forecast(h=forecast.horizon)
-      
-      autoplot(train) +
-        autolayer(auto_arima_model,series="auto arima", alpha=0.2) +
-        autolayer(auto_exp_model, series = "auto exponential", alpha=0.2) +
-        autolayer(simple_exp_model, series= "simple exponential", alpha=0.5) +
-        autolayer(double_exp_model, series = "double exponential", alpha=0.25) +
-        autolayer(triple_exp_model, series = "triple exponential", alpha=0.25) +
-        autolayer(tbat_model, series = "tbat", alpha=0.7) + 
-        guides(colour = guide_legend("Models")) + scale_y_continuous(labels = scales::comma) + 
-        labs(x ="Gift Date", y = "Gift Amount", title = "Gift Amt. Forecast") + 
-        theme(plot.title = element_text(hjust=0.5))
-```
-```{r}
-train
+# --- 3. Create Time Series Object ---
+# Determine start year and month for the time series
+start_year <- lubridate::year(min(monthly_donations$year_month))
+start_month <- lubridate::month(min(monthly_donations$year_month))
+
+# Create a ts object
+# Ensure no gaps in the time series if possible, or handle them
+# For direct aggregation, gaps won't be explicitly in the data frame if no donations occur
+# but the ts object can represent them.
+donations_ts <- ts(monthly_donations$total_donations,
+                    start = c(start_year, start_month),
+                    frequency = 12)
+
+print(str_glue("Created time series object starting from {start_year}-{start_month}."))
+print(donations_ts)
 ```
 
 ```{r}
-      #forecast.horizon <- as.numeric(input$horizonInput)
-      
-      train <- forecast_df(gift_monthly,'monthly',24,"train")
-      test <- forecast_df(gift_monthly,'monthly',24,"test")
-      
-      # models
-      gift_train_auto_exp_forecast <- ets(train) %>% 
-        forecast(h=forecast.horizon)    
-      
-      gift_train_auto_arima_forecast <- auto.arima(train) %>% 
-        forecast(h=forecast.horizon)             
-      
-      gift_train_simple_exp_forecast <- HoltWinters(train,
-                                                    beta=FALSE, 
-                                                    gamma=FALSE) %>% 
-        forecast(h=forecast.horizon)             
-      
-      gift_train_double_exp_forecast <- HoltWinters(train,
-                                                    beta=TRUE, 
-                                                    gamma=FALSE) %>% 
-        forecast(h=forecast.horizon)  
-      
-      gift_train_triple_exp_forecast <- HoltWinters(train,
-                                                    beta=TRUE, 
-                                                    gamma=TRUE) %>% 
-        forecast(h=forecast.horizon)  
-      
-      gift_train_tbat_forecast <-  tbats(train) %>% forecast(h=forecast.horizon)
-      
-      
-      
-      # forecast output
-      auto_exp_forecast <- as.data.frame(gift_train_auto_exp_forecast$mean)
-      auto_arima_forecast <- as.data.frame(gift_train_auto_arima_forecast$mean)
-      simple_exp_forecast <- as.data.frame(gift_train_simple_exp_forecast$mean)
-      double_exp_forecast <- as.data.frame(gift_train_double_exp_forecast$mean)
-      triple_exp_forecast <- as.data.frame(gift_train_triple_exp_forecast$mean)
-      tbat_forecast <- as.data.frame(gift_train_tbat_forecast$mean)
-      
-      auto_exp_forecast <- numeric_update(auto_exp_forecast)
-      auto_arima_forecast <- numeric_update(auto_arima_forecast)
-      simple_exp_forecast <- numeric_update(simple_exp_forecast)
-      double_exp_forecast <- numeric_update(double_exp_forecast)
-      triple_exp_forecast <- numeric_update(triple_exp_forecast)
-      tbat_forecast <- numeric_update(tbat_forecast)
-      
-      models <- c("auto-exponential","auto-arima","simple-exponential","double-exponential",
-                  "triple-exponential","tbat")
-      
-      outputInfo <- cbind(auto_exp_forecast,auto_arima_forecast,
-                          simple_exp_forecast,double_exp_forecast,
-                          triple_exp_forecast,tbat_forecast)
-      
-      colnames(outputInfo) <- models 
-      
-      
-      DT::datatable(outputInfo, options = list(scrollX = TRUE))
+# --- 4. Model Training (Automatic ARIMA) ---
+print("Training an automatic ARIMA model...")
+# auto.arima automatically selects the best ARIMA model
+# It handles seasonality by default
+arima_model <- auto.arima(donations_ts)
+print("ARIMA Model Summary:")
+print(summary(arima_model))
 ```
 
 
 ```{r}
-# models
-      gift_train_auto_exp_forecast <- ets(train) %>% 
-        forecast(h=forecast.horizon)    
-      
-      gift_train_auto_arima_forecast <- auto.arima(train) %>% 
-        forecast(h=forecast.horizon)             
-      
-      gift_train_simple_exp_forecast <- HoltWinters(train,
-                                                    beta=FALSE, 
-                                                    gamma=FALSE) %>% 
-        forecast(h=forecast.horizon)             
-      
-      gift_train_double_exp_forecast <- HoltWinters(train,
-                                                    beta=TRUE, 
-                                                    gamma=FALSE) %>% 
-        forecast(h=forecast.horizon)  
-      
-      gift_train_triple_exp_forecast <- HoltWinters(train,
-                                                    beta=TRUE, 
-                                                    gamma=TRUE) %>% 
-        forecast(h=forecast.horizon)  
-      
-      gift_train_tbat_forecast <-  tbats(train) %>% forecast(h=forecast.horizon)
-      
-      auto_exp_accuracy <- as.data.frame(accuracy( gift_train_auto_exp_forecast ,test))
-      auto_arima_accuracy <- as.data.frame(accuracy(gift_train_auto_arima_forecast ,test))
-      simple_exp_accuracy <- as.data.frame(accuracy(gift_train_simple_exp_forecast ,test))
-      double_exp_accuracy <- as.data.frame(accuracy(gift_train_double_exp_forecast ,test))
-      triple_exp_accuracy <- as.data.frame(accuracy(gift_train_triple_exp_forecast ,test))
-      tbat_accuracy <- as.data.frame(accuracy(gift_train_tbat_forecast ,test))
-      
-      auto_exp_accuracy <- numeric_update(auto_exp_accuracy)
-      auto_arima_accuracy <- numeric_update(auto_arima_accuracy)
-      simple_exp_accuracy <- numeric_update(simple_exp_accuracy)
-      double_exp_accuracy <- numeric_update(double_exp_accuracy)
-      triple_exp_accuracy <- numeric_update(triple_exp_accuracy)
-      tbat_accuracy <- numeric_update(tbat_accuracy)
-      
-      models<- c("auto-exponential","auto-exponential",
-                 "auto-arima","auto-arima",
-                 "simple-exponential","simple-exponential",
-                 "double-exponential","double-exponential",
-                 "triple-exponential","triple-exponential",
-                 "tbat","tbat")
-      
-      data<- c("Training set", 'Test set',
-               "Training set", 'Test set',
-               "Training set", 'Test set',
-               "Training set", 'Test set',
-               "Training set", 'Test set',
-               "Training set", 'Test set')
-      
-      outputInfo <- rbind(auto_exp_accuracy,auto_arima_accuracy,
-                          simple_exp_accuracy,double_exp_accuracy,
-                          triple_exp_accuracy,tbat_accuracy)           
-      
+# --- 5. Forecast Future Monthly Donations ---
+FORECAST_HORIZON <- 12
+print(str_glue("Forecasting for the next {FORECAST_HORIZON} months..."))
+forecast_result <- forecast(arima_model, h = FORECAST_HORIZON)
 
-      outputInfo <- cbind(models, data, outputInfo)
-      
-      DT::datatable(outputInfo, options = list(scrollX = TRUE))
+print("Forecast Summary:")
+print(summary(forecast_result))
+
+# Extracting forecast values and confidence intervals
+forecast_df <- as_data_frame(forecast_result) %>%
+  rename(
+    `Forecasted Donation` = `Point Forecast`,
+    `Lo 80` = `Lo 80`,
+    `Hi 80` = `Hi 80`,
+    `Lo 95` = `Lo 95`,
+    `Hi 95` = `Hi 95`
+  ) %>%
+  mutate(
+    Month = seq(from = max(monthly_donations$year_month) + months(1),
+                by = "month",
+                length.out = FORECAST_HORIZON)
+  ) %>%
+  select(Month, `Forecasted Donation`, `Lo 80`, `Hi 80`, `Lo 95`, `Hi 95`)
+
+print("Detailed Forecast (first 5 rows):")
+print(head(forecast_df))
+print("Detailed Forecast (last 5 rows):")
+print(tail(forecast_df))
+```
+
+
+```{r}
 ```
 
 ```{r}
-start_date <- as.Date(today() + 1) 
-end_date <- as.Date(today() + 32) 
-date_range <- data.frame(seq(start_date, end_date,"days")) 
+
+
+
+
+
+
+
+
+
+
+# --- 6. Visualization ---
+print("Generating forecast plot (forecast_plot.png)...")
+png("forecast_plot.png", width = 800, height = 500)
+plot(forecast_result,
+     main = "Monthly Donation Forecast",
+     xlab = "Year",
+     ylab = "Total Donations ($)",
+     flty = 1, fcol = "blue")
+lines(fitted(arima_model), col = "red")
+legend("topleft",
+       legend = c("Historical Data", "Fitted Values", "Forecasted Values", "80% CI", "95% CI"),
+       col = c("black", "red", "blue", "grey", "lightgrey"),
+       lty = c(1,1,1,NA,NA), pch = c(NA,NA,NA,22,22),
+       pt.bg = c(NA,NA,NA,"grey","lightgrey"), bty = "n")
+dev.off()
+print("Forecast plot saved as 'forecast_plot.png'.")
+
+print("--- Forecasting Model Generation Complete ---")
 ```
 
 ```{r}
-# 30 day forecast
-forecast(gift_test_tbat_forecast,h=30)
+
+```
+
+```{r}
+     
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
 ```
 
 ```{r}
