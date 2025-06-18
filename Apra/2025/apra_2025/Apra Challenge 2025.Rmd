@@ -502,18 +502,108 @@ gift_weekly <- apply.weekly(gift_xts, colMeans)
 gift_monthly <- apply.monthly(gift_xts, colMeans) 
 ```
 ```{r}
-
+forecast_df <- function (ts_df,aggregateInput,frequencyInput,dataType) {
+  if(aggregateInput == 'daily'){
+    gift_data <- apply.daily(ts_df,mean)
+    gift_end <- floor(0.8*length(gift_data)) 
+    gift_train <- gift_data[1:gift_end,] 
+    gift_test <- gift_data[(gift_end+1):length(gift_data),]
+    gift_start <- c(year (start(gift_train)), month(start(gift_train)),
+                    day(start(gift_train)))
+    gift_end <- c(year(end(gift_train)), month(end(gift_train)), 
+                  day(end(gift_train)))
+    gift_train <- ts(as.numeric(gift_train), start = gift_start, 
+                     end = gift_end, frequency = as.numeric(frequencyInput) )
+    gift_start <- c(year (start(gift_test)), month(start(gift_test)),
+                    day(start(gift_test)))
+    gift_end <- c(year(end(gift_test)), month(end(gift_test)), 
+                  day(end(gift_test)))
+    gift_test <- ts(as.numeric(gift_test), start = gift_start, 
+                    end = gift_end, frequency = as.numeric(frequencyInput))
+  } else if(aggregateInput == 'weekly'){
+    gift_data <- apply.weekly(ts_df, mean) 
+    gift_end <- floor(0.8*length(gift_data)) 
+    gift_train <- gift_data[1:gift_end,] 
+    gift_test <- gift_data[(gift_end+1):length(gift_data),]
+    gift_start <- c(year (start(gift_train)), month(start(gift_train)),
+                    week(start(gift_train)))
+    gift_end <- c(year(end(gift_train)), month(end(gift_train)), 
+                  week(end(gift_train)))
+    gift_train <- ts(as.numeric(gift_train), start = gift_start, 
+                     end = gift_end, frequency = as.numeric(frequencyInput) )
+    gift_start <- c(year (start(gift_test)), month(start(gift_test)),
+                    week(start(gift_test)))
+    gift_end <- c(year(end(gift_test)), month(end(gift_test)), 
+                  week(end(gift_test)))
+    gift_test <- ts(as.numeric(gift_test), start = gift_start, 
+                    end = gift_end, frequency = as.numeric(frequencyInput))
+  } else {
+    gift_data <- apply.monthly(ts_df, mean) 
+    gift_end <- floor(0.8*length(gift_data)) 
+    gift_train <- gift_data[1:gift_end,] 
+    gift_test <- gift_data[(gift_end+1):length(gift_data),]
+    gift_start <- c(year (start(gift_train)), month(start(gift_train)))
+    gift_end <- c(year(end(gift_train)), month(end(gift_train)))
+    gift_train <- ts(as.numeric(gift_train), start = gift_start, 
+                     end = gift_end, frequency = as.numeric(frequencyInput) )
+    gift_start <- c(year (start(gift_test)), month(start(gift_test)))
+    gift_end <- c(year(end(gift_test)), month(end(gift_test)))
+    gift_test <- ts(as.numeric(gift_test), start = gift_start, 
+                    end = gift_end, frequency = as.numeric(frequencyInput))
+  }
+  
+  if (dataType == "train") {
+    output <- gift_train
+  } else {
+    output <- gift_test
+  }
+  output
+  
+}
 ```
+
+```{r}
+numeric_update <- function(df){
+  rownames(df) <- c()
+  is.num <- sapply(df, is.numeric)
+  df[is.num] <- lapply(df[is.num], round, 0)           
+  return (df)
+}
+```
+
+
+```{r}
+  g <- autoplot(gift_daily) +   
+        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount",
+                                                          title = "Daily Gift Chart") + 
+        theme(plot.title = element_text(hjust=0.5))
+      ggplotly(g)
+```
+
+```{r}
+    gift_weekly <- apply.weekly(gift_xts, mean) 
+      g <- autoplot(gift_weekly) +   
+        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount",
+                                                          title = "Weekly Gift Chart") +
+        theme(plot.title = element_text(hjust=0.5))
+      ggplotly(g)
+```
+
+```{r}
+      gift_monthly <- apply.monthly(gift_xts, mean)
+      g <- autoplot(gift_monthly) +   
+        scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount",
+                                                          title = "Monthly Gift Chart") + 
+        theme(plot.title = element_text(hjust=0.5))
+      ggplotly(g)
+```
+
 
 ```{r}
 ```
 
-
 ```{r}
-```
 
-
-```{r}
 ```
 
 
