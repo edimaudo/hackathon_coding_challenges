@@ -105,9 +105,9 @@ ui <- dashboardPage(
                 ),
                 mainPanel(
                   fluidRow(
-                    valueBox(title="Avg. Recency",value=uiOutput("valueRecency")), #theme="bg-gradient-blue"
-                    valueBox(title="Avg. Frequency",value=uiOutput("valueFrequency")),
-                    valueBox(title="Avg. Monetary",value=uiOutput("valueMonetary")),
+                    value_box(title="Avg. Recency",value=uiOutput("valueRecency")), #theme="bg-gradient-blue"
+                    value_box(title="Avg. Frequency",value=uiOutput("valueFrequency")),
+                    value_box(title="Avg. Monetary",value=uiOutput("valueMonetary")),
                   ),
                   fluidRow(
                     plotlyOutput("rfmTreemap")),
@@ -137,19 +137,54 @@ server <- function(input, output,session) {
   # Donor Portfolio
   #========
   
-  forecast_analysis_df1  <- reactive({
+  rfm_info  <- reactive({
+    rfm_df <- gift %>%
+      filter(GIFT_DATE >= '2015-01-01') %>%
+      select(CONSTITUENT_ID,GIFT_DATE,AMOUNT) %>%
+      na.omit()
+    
+    names(rfm_df)[names(rfm_df) == 'CONSTITUENT_ID'] <- 'customer_id' ## due to rfm library
+    analysis_date <- lubridate::as_date(today(), tz = "UTC")
+    report <- rfm_table_order(rfm_df, customer_id,GIFT_DATE,AMOUNT, analysis_date)
+    
+    # numerical thresholds
+    r_low <- c(4, 2, 3, 4, 3, 2, 2, 1, 1, 1)
+    r_high <- c(5, 5, 5, 5, 4, 3, 3, 2, 1, 2)
+    f_low <- c(4, 3, 1, 1, 1, 2, 1, 2, 4, 1)
+    f_high <- c(5, 5, 3, 1, 1, 3, 2, 5, 5, 2)
+    m_low <- c(4, 3, 1, 1, 1, 2, 1, 2, 4, 1)
+    m_high  <- c(5, 5, 3, 1, 1, 3, 2, 5, 5, 2)
+    
+    divisions<-rfm_segment(report, segment_titles, r_low, r_high, f_low, f_high, m_low, m_high)
     
   })
-    forecast_data <- df2 %>%
-      filter(Country %in% c(input$countryInput) , 
-             Industry %in% c(input$industryInput),
-             `Gas Type` %in% c(input$gasInput)) %>%
-      group_by(Year) %>%
-      summarize(Total = sum(Total)) %>%
-      select(Year, Total)
+  
+  output$valueRecency <- renderText({
+    value <- rfm_info() %>%
+      filter(segment %in% input$rfmInput) %>%
+      summarize(average_value = mean(recency_days)) %>%
+      select(average_value)
     
-    df_xts <- xts(x = forecast_data$Total, 
-                  order.by = (forecast_data$Year))
+      #print (sprintf(value, fmt = '%.0f') )
+     glue::glue("{sprintf(value$average_value, fmt = '%.0f')} days")
+    
+  })
+  
+  output$valueFrequency <- renderText({
+    
+  })
+  
+  output$valueMonetary <- renderText({
+    
+  })
+  
+  output$rfmTreemap <- renderPlotly({
+    
+  })
+  
+  output$rfmBarChart <- renderPlotly({
+    
+  })
     
     
   
