@@ -72,13 +72,12 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("th")),
       menuItem("Overview", tabName = "overview", icon = icon("list")),
-      menuSubItem("Weekly", tabName = "weekly"),
-      menuSubItem("Monthly", tabName = "monthly"),
-      menuSubItem("Yearly", tabName = "yearly"),
+      menuSubItem("Weekly Insights", tabName = "weekly"),
+      menuSubItem("Monthly Insights", tabName = "monthly"),
+      menuSubItem("Yearly Insights", tabName = "yearly"),
       menuItem("Donor Portfolio", tabName = "segment", icon = icon("list")),
-      menuItem("Donor Prediction", tabName = "forecast_overview", icon = icon("list")),
-      menuSubItem("Donation Forecasting ", tabName = "donation_forecast"),
-      menuSubItem("Next Best Donation", tabName = "donation_prediction")
+      menuItem("Donation Forecasting ", tabName = "donation_forecast",icon = icon("list")),
+      menuItem("Next Best Donation", tabName = "donation_prediction",icon = icon("list"))
     )
   ),
   dashboardBody(
@@ -120,10 +119,28 @@ ui <- dashboardPage(
                   )
                 )
               )
-      )
+      ),
       #======== 
       # Donor Prediction
       #======== 
+      tabItem(tabName = "donation_forecast",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                             selectInput("forecastPortfolioInput", "Portfolios", 
+                                         choices = segment_titles, selected = segment_titles, multiple = TRUE),
+                             sliderInput("forecastHorizon", "Forcast Period (months)", 
+                                         min = 1, max = 24, value = 1), 
+                             submitButton("Submit")
+                ),
+                mainPanel(
+                  fluidRow(),
+                  layout_columns(
+                    plotlyOutput("rfmRecencyChart"),
+                  )
+                )
+              )
+      )
+      
     )
   )
 )
@@ -264,7 +281,6 @@ server <- function(input, output,session) {
     rfm_output <- rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
       select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
-    
     colnames(rfm_output) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
     rfm_output
     
