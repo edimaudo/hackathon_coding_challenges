@@ -517,8 +517,9 @@ gifts_df <- gift %>%
   select(CONSTITUENT_ID,GIFT_DATE,AMOUNT) #%>%
   #na.omit()
 ```
+
 ```{r}
-# --- 2. Data Preparation for Forecasting ---
+# --- . Data Preparation for Forecasting ---
 print("Aggregating gift data to monthly totals...")
 monthly_donations <- gifts_df %>%
   mutate(GIFT_DATE = ymd(GIFT_DATE)) %>%
@@ -527,6 +528,7 @@ monthly_donations <- gifts_df %>%
   group_by(year_month) %>%
   summarise(total_donations = sum(AMOUNT, na.rm = TRUE), .groups = 'drop') %>%
   arrange(year_month)
+
 
 if (nrow(monthly_donations) == 0) {
   stop("No monthly donation data could be aggregated. Check 'GIFT_DATE' and 'AMOUNT' columns.")
@@ -538,9 +540,8 @@ print(head(monthly_donations))
 print(tail(monthly_donations))
 ```
 
-
 ```{r}
-# --- 3. Create Time Series Object ---
+# --- . Create Time Series Object ---
 # Determine start year and month for the time series
 start_year <- lubridate::year(min(monthly_donations$year_month))
 start_month <- lubridate::month(min(monthly_donations$year_month))
@@ -557,6 +558,95 @@ print(str_glue("Created time series object starting from {start_year}-{start_mon
 print(donations_ts)
 ```
 
+
+```{r}
+# --- . Validate Seasonality ---
+png("donations_ts_plot.png", width=800, height=500)
+plot(donations_ts, main = "Monthly Donations Time Series",
+     xlab = "Year", ylab = "Total Donations", col = "steelblue", lwd = 2)
+dev.off()
+print("Time series plot saved as 'donations_ts_plot.png'.")
+
+```
+
+```{r}
+
+# --- Time Series Decomposition (Additive and Multiplicative) ---
+# Use additive if seasonal fluctuations are roughly constant over time
+# Use multiplicative if seasonal fluctuations increase/decrease with the level of the series
+tryCatch({
+  decomp_add <- decompose(donations_ts, type = "additive")
+  png("donations_decomp_additive.png", width=800, height=600)
+  plot(decomp_add)
+  dev.off()
+  print("Additive decomposition plot saved as 'donations_decomp_additive.png'.")
+}, error = function(e) {
+  message("Could not perform additive decomposition (e.g., if series is too short): ", e$message)
+})
+
+tryCatch({
+  decomp_mult <- decompose(donations_ts, type = "multiplicative")
+  png("donations_decomp_multiplicative.png", width=800, height=600)
+  plot(decomp_mult)
+  dev.off()
+  print("Multiplicative decomposition plot saved as 'donations_decomp_multiplicative.png'.")
+}, error = function(e) {
+  message("Could not perform multiplicative decomposition (e.g., if series is too short or has zeros/negatives): ", e$message)
+})
+
+
+```
+
+
+```{r}
+# ---Seasonal Subseries Plots ---
+png("donations_seasonal_subseries_plot.png", width=800, height=500)
+seasonplot(donations_ts, year.labels = TRUE, year.labels.left = TRUE,
+           main = "Seasonal Subseries Plot of Monthly Donations",
+           xlab = "Month", ylab = "Total Donations", col = rainbow(length(unique(year(time(donations_ts)))))
+)
+dev.off()
+print("Seasonal subseries plot saved as 'donations_seasonal_subseries_plot.png'.")
+```
+
+
+```{r}
+# ---STL Decomposition (Robust Decomposition)
+tryCatch({
+  stl_decomp <- stl(donations_ts, s.window = "periodic")
+  png("donations_stl_decomp_plot.png", width=800, height=600)
+  plot(stl_decomp)
+  dev.off()
+  print("STL decomposition plot saved as 'donations_stl_decomp_plot.png'.")
+
+  # Print summary of STL decomposition (e.g., seasonal, trend, remainder components)
+  print("\nSTL Decomposition Summary:")
+  print(summary(stl_decomp))
+
+}, error = function(e) {
+  message("Could not perform STL decomposition (e.g., if series is too short): ", e$message)
+})
+```
+
+```{r}
+# ---Stationarity Test (Optional, for ARIMA) --
+# ADF test for stationarity (null hypothesis: series has a unit root, i.e., non-stationary)
+# KPSS test for stationarity (null hypothesis: series is trend-stationary)
+print("\nStationarity Tests (for ARIMA suitability):")
+adf_result <- adf.test(donations_ts)
+print("ADF Test:")
+print(adf_result)
+
+kpss_result <- kpss.test(donations_ts)
+print("KPSS Test:")
+print(kpss_result)
+```
+
+
+```{r}
+
+```
+
 ```{r}
 # --- 4. Model Training (Automatic ARIMA) ---
 print("Training an automatic ARIMA model...")
@@ -567,18 +657,70 @@ print("ARIMA Model Summary:")
 print(summary(arima_model))
 ```
 
+```{r}
+png("arima_residuals_check.png", width=800, height=500)
+checkresiduals(arima_model)
+dev.off()
+print("ARIMA residuals plot saved as 'arima_residuals_check.png'.")
+```
+
+
+```{r}
+# ---Using ets for automatic ETS model selection
+print("\nFitting ETS Model with ets:")
+fit_ets <- ets(donations_ts)
+print(summary(fit_ets))
+```
+
+```{r}
+# --- Check residuals for white noise
+png("ets_residuals_check.png", width=800, height=500)
+checkresiduals(fit_ets)
+dev.off()
+print("ETS residuals plot saved as 'ets_residuals_check.png'.")
+```
+
+
+```{r}
+
+```
+
 
 ```{r}
 # --- 5. Forecast Future Monthly Donations ---
 FORECAST_HORIZON <- 12
 print(str_glue("Forecasting for the next {FORECAST_HORIZON} months..."))
-forecast_result <- forecast(arima_model, h = FORECAST_HORIZON)
+forecast_arima <- forecast(arima_model, h = FORECAST_HORIZON)
+forecast_ets <- forecast(fit_ets, h = FORECAST_HORIZON)
 
+print("\nARIMA Forecast (next 12 months):")
+print(forecast_arima)
+print("\nETS Forecast (next 12 months):")
+print(forecast_ets)
+```
+
+```{r}
+# Plot forecasts
+png("arima_forecast_plot.png", width=800, height=500)
+plot(forecast_arima, main = "ARIMA Forecast of Monthly Donations",
+     xlab = "Year", ylab = "Total Donations")
+dev.off()
+print("ARIMA forecast plot saved as 'arima_forecast_plot.png'.")
+
+png("ets_forecast_plot.png", width=800, height=500)
+plot(forecast_ets, main = "ETS Forecast of Monthly Donations",
+     xlab = "Year", ylab = "Total Donations")
+dev.off()
+print("ETS forecast plot saved as 'ets_forecast_plot.png'.")
+```
+
+
+```{r}
 print("Forecast Summary:")
-print(summary(forecast_result))
+print(summary(forecast_arima))
 
 # Extracting forecast values and confidence intervals
-forecast_df <- as_data_frame(forecast_result) %>%
+forecast_df <- as_data_frame(forecast_arima) %>%
   rename(
     `Forecasted Donation` = `Point Forecast`,
     `Lo 80` = `Lo 80`,
@@ -604,20 +746,10 @@ print(tail(forecast_df))
 ```
 
 ```{r}
-
-
-
-
-
-
-
-
-
-
-# --- 6. Visualization ---
+# --- Visualization ---
 print("Generating forecast plot (forecast_plot.png)...")
 png("forecast_plot.png", width = 800, height = 500)
-plot(forecast_result,
+plot(forecast_arima,
      main = "Monthly Donation Forecast",
      xlab = "Year",
      ylab = "Total Donations ($)",
