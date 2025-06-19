@@ -104,17 +104,17 @@ ui <- dashboardPage(
                 ),
                 mainPanel(
                   layout_column_wrap(
-                    value_box(title="Avg. Recency",value=uiOutput("valueRecency"),theme="bg-gradient-blue-purple"),
-                    value_box(title="Avg. Frequency",value=uiOutput("valueFrequency"),theme="bg-gradient-blue-purple"),
-                    value_box(title="Avg. Monetary",value=uiOutput("valueMonetary"),theme="bg-gradient-blue-purple"),
+                    value_box(title="Avg. # of days",value=uiOutput("valueRecency"),theme="bg-gradient-blue-purple"),
+                    value_box(title="Avg. # of Gifts",value=uiOutput("valueFrequency"),theme="bg-gradient-blue-purple"),
+                    value_box(title="Avg. Amount",value=uiOutput("valueMonetary"),theme="bg-gradient-blue-purple"),
                   ),
-                  
-                  layout_column_wrap(
-                    #plotOutput("rfmTreemap"),
+                  fluidRow(),
+                  layout_columns(
                     plotlyOutput("rfmRecencyChart"),
                     plotlyOutput("rfmFrequencyChart"),
                     plotlyOutput("rfmMonetaryChart"),
                   ),
+                  fluidRow(),
                   fluidRow(
                     DT::dataTableOutput("rfmTable")
                   )
@@ -202,22 +202,29 @@ server <- function(input, output,session) {
     
   })
   
-  
-  output$rfmRecencyChart <- renderPlotly({
-    df <- rfm_info() %>%
+  rfm_chart <- reactive({
+    rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
       group_by(segment) %>%
-      summarise(Total = mean(recency_days)) %>%
-      select(segment,Total)
-      
-    g <- ggplot(df, aes(x = reorder(segment,Total) ,y = Total))  +
+      summarise(Recency_avg = mean(recency_days),
+                Frequency_avg =mean(transaction_count),
+                Monetary_avg = mean(amount)
+                ) %>%
+      select(segment,Recency_avg,Frequency_avg,Monetary_avg)
+    
+  })
+
+  
+  output$rfmRecencyChart <- renderPlotly({
+
+    g <- ggplot(rfm_chart(), aes(x = reorder(segment,Recency_avg) ,y = Recency_avg))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
-      labs(x ="Segment", y = "Avg. Recency") + coord_flip() +
-      theme(legend.text = element_text(size = 12),
-            legend.title = element_text(size = 12),
-            axis.title = element_text(size = 14),
-            axis.text = element_text(size = 12))
+      labs(x ="Segment", y = "Avg. # of days") + coord_flip() +
+      theme(legend.text = element_text(size = 8),
+            legend.title = element_text(size = 8),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 8))
     ggplotly(g)
     
   })
@@ -225,9 +232,30 @@ server <- function(input, output,session) {
   
   output$rfmFrequencyChart <- renderPlotly({
     
+    g <- ggplot(rfm_chart(), aes(x = reorder(segment,Frequency_avg) ,y = Frequency_avg))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      scale_y_continuous(labels = scales::comma) +
+      labs(x ="Segment", y = "Avg. # of Gifts") + coord_flip() +
+      theme(legend.text = element_text(size = 8),
+            legend.title = element_text(size = 8),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 8))
+    ggplotly(g)
+    
   })  
   
   output$rfmMonetaryChart <- renderPlotly({
+    
+    g <- ggplot(rfm_chart(), aes(x = reorder(segment,Monetary_avg) ,y = Monetary_avg))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      scale_y_continuous(labels = scales::comma) +
+      labs(x ="Segment", y = "Avg. Amount") + coord_flip() +
+      theme(legend.text = element_text(size = 8),
+            legend.title = element_text(size = 8),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 8))
+    ggplotly(g)  
+    
     
   })
     
