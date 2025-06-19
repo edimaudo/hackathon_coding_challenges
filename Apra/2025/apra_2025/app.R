@@ -104,12 +104,13 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(
-                  fluidRow(
-                    value_box(title="Avg. Recency",value=uiOutput("valueRecency")), #theme="bg-gradient-blue"
-                    value_box(title="Avg. Frequency",value=uiOutput("valueFrequency")),
-                    value_box(title="Avg. Monetary",value=uiOutput("valueMonetary")),
+                  layout_column_wrap(
+                    value_box(title="Avg. Recency",value=uiOutput("valueRecency"),theme="bg-gradient-blue-purple"), #theme="bg-gradient-blue"
+                    value_box(title="Avg. Frequency",value=uiOutput("valueFrequency"),theme="bg-gradient-blue-purple"),
+                    value_box(title="Avg. Monetary",value=uiOutput("valueMonetary"),theme="bg-gradient-blue-purple"),
                   ),
-                  fluidRow(
+                  
+                  layout_column_wrap(
                     plotlyOutput("rfmTreemap")),
                     plotlyOutput("rfmBarChart")),
                   ),
@@ -156,26 +157,32 @@ server <- function(input, output,session) {
     m_high  <- c(5, 5, 3, 1, 1, 3, 2, 5, 5, 2)
     
     divisions<-rfm_segment(report, segment_titles, r_low, r_high, f_low, f_high, m_low, m_high)
+    #names(rfm_df)[names(rfm_df) == 'customer_id'] <- 'CONSTITUENT_ID'
     
   })
   
-  output$valueRecency <- renderText({
-    value <- rfm_info() %>%
+  value_box_calculations <- reactive({
+    rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
-      summarize(average_value = mean(recency_days)) %>%
-      select(average_value)
-    
-      #print (sprintf(value, fmt = '%.0f') )
-     glue::glue("{sprintf(value$average_value, fmt = '%.0f')} days")
+      summarize(average_recency = mean(recency_days),
+                average_frequency = mean(transaction_count),
+                average_monetary = mean(amount)
+      ) %>%
+      select(average_recency,average_frequency,average_monetary)
+  })
+  
+  
+  output$valueRecency <- renderText({
+     glue::glue("{sprintf(value_box_calculations()$average_recency, fmt = '%.0f')} days")
     
   })
   
   output$valueFrequency <- renderText({
-    
+    glue::glue("{sprintf(value_box_calculations()$average_frequency, fmt = '%.0f')} gifts")
   })
   
   output$valueMonetary <- renderText({
-    
+    glue::glue("{sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')} $")
   })
   
   output$rfmTreemap <- renderPlotly({
@@ -189,8 +196,12 @@ server <- function(input, output,session) {
     
   
   output$rfmTable <- renderDataTable({
+    rfm_output <- rfm_info() %>%
+      filter(segment %in% input$rfmInput) %>%
+      select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
     
- 
+    colnames(rfm_output) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
+    rfm_output
     
   }) 
 
