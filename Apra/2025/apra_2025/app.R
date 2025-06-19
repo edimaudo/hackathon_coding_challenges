@@ -111,7 +111,7 @@ ui <- dashboardPage(
                   ),
                   
                   layout_column_wrap(
-                    plotlyOutput("rfmTreemap")),
+                    plotOutput("rfmTreemap")),
                     plotlyOutput("rfmBarChart")),
                   ),
                   fluidRow(
@@ -185,7 +185,16 @@ server <- function(input, output,session) {
     glue::glue("{sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')} $")
   })
   
-  output$rfmTreemap <- renderPlotly({
+  output$rfmTreemap <- renderPlot({
+    division_count <- rfm_info() %>% 
+      filter(segment %in% input$rfmInput) %>%
+      count(segment) %>% 
+      arrange(desc(n)) %>% rename(Segment = segment, Count = n)
+    `Portfolios` <- c(unique(division_count$Segment))
+    ggplot(division_count, aes(area = Count, fill = `Portfolios`, label = `Segment`) ) +
+      geom_treemap(stat = "identity",
+                   position = "identity") +
+      geom_treemap_text(place = "centre",size = 12)
     
   })
   
