@@ -766,46 +766,154 @@ print("Forecast plot saved as 'forecast_plot.png'.")
 print("--- Forecasting Model Generation Complete ---")
 ```
 
-```{r}
-
-```
-
-```{r}
-     
-```
-
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-
-```{r}
-```
-
 ### Donor Prediction --> Next Best Donation
 ```{r}
 
 ```
 
+```{r}
+rfm_metrics <- divisions   %>%
+  select("customer_id","segment","transaction_count","recency_days","amount" )
+colnames(rfm_metrics) <- c('CONSTITUENT_ID', "segment","transaction_count","recency_days","amount")
+```
+
+
+```{r}
+reference_date <- ymd('2015-01-01') # Keeping user's specified date
+    
+    crm_agg <- crm %>%
+      group_by(CONSTITUENT_ID) %>%
+      summarise(
+        total_interactions = n(),
+        last_interaction_date = max(CRM_INTERACTION_DATE),
+        first_interaction_date = min(CRM_INTERACTION_DATE),
+        unique_interaction_types = n_distinct(CRM_INTERACTION_TYPE),
+        interaction_span_days = as.numeric(difftime(max(CRM_INTERACTION_DATE), min(CRM_INTERACTION_DATE), units = "days")),
+        .groups = 'drop'
+      ) %>%
+      mutate(
+        interaction_span_days = ifelse(is.na(interaction_span_days), 0, interaction_span_days),
+        interaction_frequency = total_interactions / (interaction_span_days + 1),
+        days_since_last_interaction = as.numeric(difftime(reference_date, last_interaction_date, units = "days"))
+      ) %>%
+      select("CONSTITUENT_ID","total_interactions","unique_interaction_types")
+      
+    
+    # ## Most common interaction type
+    # crm_type_mode <- crm %>%
+    #   group_by(CONSTITUENT_ID) %>%
+    #   summarise(
+    #     most_common_interaction_type = {
+    #       modes <- names(sort(table(CRM_INTERACTION_TYPE), decreasing = TRUE))[1]
+    #       ifelse(length(modes) > 0, modes, 'Unknown')
+    #     },
+    #     .groups = 'drop'
+    #   )
+    # 
+    # crm_agg <- crm_agg %>%
+    #   left_join(crm_type_mode, by = "CONSTITUENT_ID") %>%
+      
+```
+
+```{r}
+# combine crm and rfm
+crm_rfm <- left_join(rfm_metrics,crm_agg, "CONSTITUENT_ID") %>%
+  group_by(CONSTITUENT_ID) %>%
+  select(CONSTITUENT_ID,segment,transaction_count,recency_days,total_interactions, unique_interaction_types,amount) %>%
+  na.omit()
+
+```
+
+```{r}
+#Label Encoder
+labelEncoder <-function(x){
+  as.numeric(factor(x))-1
+}
+#normalize data
+normalize <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}
+```
+
+```{r}
+
+```
+
+```{r}
+df_cts <- crm_rfm %>%
+  select(CONSTITUENT_ID,transaction_count,recency_days,total_interactions,unique_interaction_types)
+
+df_cat <- crm_rfm %>%
+  select(CONSTITUENT_ID,segment)
+
+df_amount <- crm_rfm %>%
+  select(CONSTITUENT_ID,amount)
+
+df_cts <- as.data.frame(lapply(df_cts, normalize))
+df_cat <- as.data.frame(lapply(df_cat, labelEncoder))
+
+df_new <- cbind(df_cts,df_cat,df_amount)
+
+df_new$CONSTITUENT_ID <- NULL
+df_new$CONSTITUENT_ID <- NULL
+df_new$CONSTITUENT_ID <- NULL
+```
+
+```{r}
+#create train and test data
+set.seed(2021)
+sample <- sample.split(df_new,SplitRatio = 0.75)
+train <- subset(df_new,sample ==TRUE)
+test <- subset(df_new, sample==FALSE)
+```
+
+```{r}
+
+```
+
+
+```{r}
+#cl <- makePSOCKcluster(4)
+#registerDoParallel(cl)
+#train_X <- 
+#traun_Y <- data.matrix(train[, c('mpg', 'wt', 'drat', 'qsec')])
+fit <- glmnet(train[,c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")], train$amount, alpha = 0)
+
+#stopCluster(cl)
+```
+
+
+```{r}
+summary(fit)
+```
+```{r}
+cv_model <- cv.glmnet(data.matrix(train[,c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")]), train$amount, alpha = 0)
+
+#find optimal lambda value that minimizes test MSE
+best_lambda <- cv_model$lambda.min
+best_lambda
+```
+```{r}
+plot(cv_model) 
+```
+
+
+```{r}
+best_model <- glmnet(data.matrix(train[,c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")]), train$amount, alpha = 0, lambda = best_lambda)
+coef(best_model)
+```
+
+
+```{r}
+y_predicted <- predict(best_model, s = best_lambda, newx = data.matrix(test[,c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")]))
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+```
 
