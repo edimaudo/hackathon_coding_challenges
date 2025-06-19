@@ -54,7 +54,6 @@ video <- read_csv("video_email_data_table.csv")
 constituent <- read_csv("constituent_profiles_table.csv")
 
 # Data Information
-# RFM
 segment_titles <- c("First Grade", "Loyal", "Likely to be Loyal",
                     "New Ones", "Could be Promising", "Require Assistance", "Getting Less Frequent",
                     "Almost Out", "Can't Lose Them", "Don’t Show Up at All")
@@ -105,26 +104,29 @@ ui <- dashboardPage(
                 ),
                 mainPanel(
                   layout_column_wrap(
-                    value_box(title="Avg. Recency",value=uiOutput("valueRecency"),theme="bg-gradient-blue-purple"), #theme="bg-gradient-blue"
+                    value_box(title="Avg. Recency",value=uiOutput("valueRecency"),theme="bg-gradient-blue-purple"),
                     value_box(title="Avg. Frequency",value=uiOutput("valueFrequency"),theme="bg-gradient-blue-purple"),
                     value_box(title="Avg. Monetary",value=uiOutput("valueMonetary"),theme="bg-gradient-blue-purple"),
                   ),
                   
                   layout_column_wrap(
-                    plotOutput("rfmTreemap")),
-                    plotlyOutput("rfmBarChart")),
+                    #plotOutput("rfmTreemap"),
+                    plotlyOutput("rfmRecencyChart"),
+                    plotlyOutput("rfmFrequencyChart"),
+                    plotlyOutput("rfmMonetaryChart"),
                   ),
                   fluidRow(
                     DT::dataTableOutput("rfmTable")
                   )
                 )
               )
-      ),
+      )
       #======== 
       # Donor Prediction
       #======== 
     )
-  
+  )
+)
 
  
       
@@ -138,6 +140,7 @@ server <- function(input, output,session) {
   # Donor Portfolio
   #========
   
+  ##### RFM Calculation ####
   rfm_info  <- reactive({
     rfm_df <- gift %>%
       filter(GIFT_DATE >= '2015-01-01') %>%
@@ -157,10 +160,10 @@ server <- function(input, output,session) {
     m_high  <- c(5, 5, 3, 1, 1, 3, 2, 5, 5, 2)
     
     divisions<-rfm_segment(report, segment_titles, r_low, r_high, f_low, f_high, m_low, m_high)
-    #names(rfm_df)[names(rfm_df) == 'customer_id'] <- 'CONSTITUENT_ID'
     
   })
   
+  ##### RFM Metrics ####
   value_box_calculations <- reactive({
     rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
@@ -185,6 +188,7 @@ server <- function(input, output,session) {
     glue::glue("{sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')} $")
   })
   
+  ##### RFM Charts ####
   output$rfmTreemap <- renderPlot({
     division_count <- rfm_info() %>% 
       filter(segment %in% input$rfmInput) %>%
@@ -198,12 +202,36 @@ server <- function(input, output,session) {
     
   })
   
-  output$rfmBarChart <- renderPlotly({
+  
+  output$rfmRecencyChart <- renderPlotly({
+    df <- rfm_info() %>%
+      filter(segment %in% input$rfmInput) %>%
+      group_by(segment) %>%
+      summarise(Total = mean(recency_days)) %>%
+      select(segment,Total)
+      
+    g <- ggplot(df, aes(x = reorder(segment,Total) ,y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      scale_y_continuous(labels = scales::comma) +
+      labs(x ="Segment", y = "Avg. Recency") + coord_flip() +
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
+    ggplotly(g)
+    
+  })
+  
+  
+  output$rfmFrequencyChart <- renderPlotly({
+    
+  })  
+  
+  output$rfmMonetaryChart <- renderPlotly({
     
   })
     
-    
-  
+  ##### RFM Table ####
   output$rfmTable <- renderDataTable({
     rfm_output <- rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
