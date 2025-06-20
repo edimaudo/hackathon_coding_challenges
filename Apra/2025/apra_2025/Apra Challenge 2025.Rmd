@@ -4,6 +4,7 @@ output: html_notebook
 ---
 
 # Load Libraries
+
 ```{r}
 
 packages <- c(
@@ -23,6 +24,7 @@ for (package in packages) {
 ```
 
 # Load data
+
 ```{r}
 crm <- read_csv("CRM_interacions_table.csv")
 gift <- read_csv("gift_transactions_table.csv")
@@ -33,6 +35,7 @@ constituent <- read_csv("constituent_profiles_table.csv")
 # Part 1: The Untapped Potential: Understanding Our Donor Landscape
 
 ## CRM Data Overview
+
 ```{r}
 # CRM Interaction Type
 g <- crm %>%
@@ -51,8 +54,8 @@ g <- crm %>%
 ggplotly(g)
 ```
 
-
 ### CRM Interaction Over Time
+
 ```{r}
 crm <- crm %>%
         mutate(Year = lubridate::year(CRM_INTERACTION_DATE),
@@ -62,6 +65,7 @@ crm <- crm %>%
 ```
 
 ### CRM Interaction by Year
+
 ```{r}
 crm_year <- crm %>%
 group_by(Year, CRM_INTERACTION_TYPE) %>%
@@ -81,6 +85,7 @@ ggplotly(g)
 ```
 
 ### CRM Interaction by Quarter
+
 ```{r}
 crm %>%
 group_by(Quarter, CRM_INTERACTION_TYPE) %>%
@@ -99,6 +104,7 @@ group_by(Quarter, CRM_INTERACTION_TYPE) %>%
 ```
 
 ### CRM Interaction by Month
+
 ```{r}
 crm %>%
 group_by(Month, CRM_INTERACTION_TYPE) %>%
@@ -115,8 +121,8 @@ group_by(Month, CRM_INTERACTION_TYPE) %>%
             axis.text.x = element_text(angle = 0, hjust = 1))
 ```
 
-
 ### CRM Interaction by Day of Week
+
 ```{r}
 crm %>%
 group_by(DOW, CRM_INTERACTION_TYPE) %>%
@@ -132,9 +138,11 @@ group_by(DOW, CRM_INTERACTION_TYPE) %>%
             axis.text = element_text(size = 10),
             axis.text.x = element_text(angle = 0, hjust = 1))
 ```
+
 ## Gift Overview
 
 ### Gifts by CRM Interaction Type
+
 ```{r}
 left_join(gift,crm,by='CONSTITUENT_ID') %>%
   group_by(CRM_INTERACTION_TYPE) %>%
@@ -153,6 +161,7 @@ left_join(gift,crm,by='CONSTITUENT_ID') %>%
 ```
 
 ### Gifts overtime
+
 ```{r}
 gift <- gift %>%
         mutate(Year = lubridate::year(GIFT_DATE),
@@ -162,6 +171,7 @@ gift <- gift %>%
 ```
 
 ### Gift by Year
+
 ```{r}
 g <- gift %>%
 group_by(Year) %>%
@@ -181,6 +191,7 @@ ggplotly(g)
 ```
 
 ### Gift by Quarter
+
 ```{r}
 g <- gift %>%
 group_by(Quarter) %>%
@@ -200,6 +211,7 @@ ggplotly(g)
 ```
 
 ### Gift by Month
+
 ```{r}
 g <- gift %>%
 group_by(Month) %>%
@@ -219,6 +231,7 @@ ggplotly(g)
 ```
 
 Gift by Day of Week
+
 ```{r}
 g <- gift %>%
 group_by(DOW) %>%
@@ -238,7 +251,9 @@ ggplotly(g)
 ```
 
 ## Video Overview
+
 ### Video Views over time
+
 ```{r}
 video <- video %>%
         mutate(Year = lubridate::year(SENT_DATE),
@@ -248,6 +263,7 @@ video <- video %>%
 ```
 
 ### Video views by year
+
 ```{r}
 g <- video %>%
 group_by(Year) %>%
@@ -267,6 +283,7 @@ ggplotly(g)
 ```
 
 ### Video Views by Quarter
+
 ```{r}
 g <- video %>%
 group_by(Quarter) %>%
@@ -286,6 +303,7 @@ ggplotly(g)
 ```
 
 ### Video Views by Month
+
 ```{r}
 g <- video %>%
 group_by(Month) %>%
@@ -305,6 +323,7 @@ ggplotly(g)
 ```
 
 ### Video Views by Day of Week
+
 ```{r}
 g <- video %>%
 group_by(DOW) %>%
@@ -324,7 +343,9 @@ ggplotly(g)
 ```
 
 # Part 2: Donations Portfolio
+
 ## Donor RFM Analysis
+
 ```{r}
 
 rfm_df <- gift %>%
@@ -356,11 +377,13 @@ divisions<-rfm_segment(report, segment_titles, r_low, r_high, f_low, f_high, m_l
 
 division_count <- divisions %>% count(segment) %>% arrange(desc(n)) %>% rename(Segment = segment, Count = n)
 ```
+
 ```{r}
 
 ```
 
 ### RFM Metrics
+
 ```{r}
 ### rfm metrics - monetary
 divisions %>%
@@ -417,8 +440,8 @@ group_by(segment) %>%
 ### transaction, recency, monntary
 ```
 
-
 ### Donor Segmentation
+
 ```{r}
 `Portfolios` <- c(unique(division_count$Segment))
 ggplot(division_count, aes(area = Count, fill = `Portfolios`, label = `Segment`) ) +
@@ -428,6 +451,7 @@ ggplot(division_count, aes(area = Count, fill = `Portfolios`, label = `Segment`)
 ```
 
 ### Donor Lifetime Value
+
 ```{r}
 # Calculate average donation per customer
 avg_donation_per_customer <- gift %>%
@@ -450,18 +474,20 @@ group_by(CONSTITUENT_ID) %>%
 
 ```
 
-
 ## Part 3: Donation Prediction
 
 ### Donor Forecasting
+
 ```{r}
 # Forecast info
 
 ```
+
 ```{r}
 # generating range of dates 
 
 ```
+
 ```{r}
 
 
@@ -472,19 +498,18 @@ group_by(CONSTITUENT_ID) %>%
 
 ```
 
-
-```{r}
-
-```
 ```{r}
 
 ```
 
 ```{r}
 
-
 ```
 
+```{r}
+
+
+```
 
 ```{r}
   g <- autoplot(gift_daily) +   
@@ -511,6 +536,7 @@ group_by(CONSTITUENT_ID) %>%
         theme(plot.title = element_text(hjust=0.5))
       ggplotly(g)
 ```
+
 ```{r}
 gifts_df <- gift %>%
   filter(GIFT_DATE >= '2015-01-01') %>%
@@ -558,7 +584,6 @@ print(str_glue("Created time series object starting from {start_year}-{start_mon
 print(donations_ts)
 ```
 
-
 ```{r}
 # --- . Validate Seasonality ---
 #png("donations_ts_plot.png", width=800, height=500)
@@ -597,7 +622,6 @@ tryCatch({
 
 ```
 
-
 ```{r}
 # ---Seasonal Subseries Plots ---
 png("donations_seasonal_subseries_plot.png", width=800, height=500)
@@ -608,7 +632,6 @@ seasonplot(donations_ts, year.labels = TRUE, year.labels.left = TRUE,
 dev.off()
 print("Seasonal subseries plot saved as 'donations_seasonal_subseries_plot.png'.")
 ```
-
 
 ```{r}
 # ---STL Decomposition (Robust Decomposition)
@@ -642,7 +665,6 @@ print("KPSS Test:")
 print(kpss_result)
 ```
 
-
 ```{r}
 
 ```
@@ -664,7 +686,6 @@ dev.off()
 print("ARIMA residuals plot saved as 'arima_residuals_check.png'.")
 ```
 
-
 ```{r}
 # ---Using ets for automatic ETS model selection
 print("\nFitting ETS Model with ets:")
@@ -680,11 +701,9 @@ dev.off()
 print("ETS residuals plot saved as 'ets_residuals_check.png'.")
 ```
 
-
 ```{r}
 
 ```
-
 
 ```{r}
 # --- 5. Forecast Future Monthly Donations ---
@@ -714,7 +733,6 @@ dev.off()
 print("ETS forecast plot saved as 'ets_forecast_plot.png'.")
 ```
 
-
 ```{r}
 print("Forecast Summary:")
 print(summary(forecast_arima))
@@ -741,7 +759,6 @@ print("Detailed Forecast (last 5 rows):")
 print(tail(forecast_df))
 ```
 
-
 ```{r}
 ```
 
@@ -766,7 +783,8 @@ print("Forecast plot saved as 'forecast_plot.png'.")
 print("--- Forecasting Model Generation Complete ---")
 ```
 
-### Donor Prediction --> Next Best Donation
+### Donor Prediction --\> Next Best Donation
+
 ```{r}
 
 ```
@@ -776,7 +794,6 @@ rfm_metrics <- divisions   %>%
   select("customer_id","segment","transaction_count","recency_days","amount" )
 colnames(rfm_metrics) <- c('CONSTITUENT_ID', "segment","transaction_count","recency_days","amount")
 ```
-
 
 ```{r}
 reference_date <- ymd('2015-01-01') # Keeping user's specified date
@@ -871,7 +888,6 @@ test <- subset(df_new, sample==FALSE)
 
 ```
 
-
 ```{r}
 #cl <- makePSOCKcluster(4)
 #registerDoParallel(cl)
@@ -882,10 +898,10 @@ fit <- glmnet(train[,c("transaction_count","recency_days","total_interactions","
 #stopCluster(cl)
 ```
 
-
 ```{r}
 summary(fit)
 ```
+
 ```{r}
 cv_model <- cv.glmnet(data.matrix(train[,c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")]), train$amount, alpha = 0)
 
@@ -893,21 +909,19 @@ cv_model <- cv.glmnet(data.matrix(train[,c("transaction_count","recency_days","t
 best_lambda <- cv_model$lambda.min
 best_lambda
 ```
+
 ```{r}
 plot(cv_model) 
 ```
-
 
 ```{r}
 best_model <- glmnet(data.matrix(train[,c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")]), train$amount, alpha = 0, lambda = best_lambda)
 coef(best_model)
 ```
 
-
 ```{r}
 y_predicted <- predict(best_model, s = best_lambda, newx = data.matrix(test[,c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")]))
 ```
-
 
 ```{r}
 cl <- makePSOCKcluster(4)
@@ -917,7 +931,6 @@ lm_fit <- train(amount ~ .,
                 method = "lm")
 stopCluster(cl)
 ```
-
 
 ```{r}
 amount_pred_lm <- predict(lm_fit, test)
@@ -931,6 +944,7 @@ varImp(lm_fit)
 ```
 
 #### Random forest
+
 ```{r}
 cl <- makePSOCKcluster(4)
 registerDoParallel(cl)
@@ -940,7 +954,6 @@ rf_fit <- train(amount ~ .,
 stopCluster(cl)
 ```
 
-
 ```{r}
 amount_pred_rf <- predict(rf_fit, test)
 
@@ -948,11 +961,9 @@ amount_pred_rf <- predict(rf_fit, test)
 postResample(pred = amount_pred_rf, obs = test$amount)
 ```
 
-
 ```{r}
 varImp(rf_fit)
 ```
-
 
 ```{r}
 library(xgboost)
@@ -971,7 +982,6 @@ amount_pred_xgboost <- predict(xgbtree_fit, test)
 postResample(pred = amount_pred_xgboost, obs = test$amount)
 ```
 
-
 ```{r}
 varImp(xgbtree_fit)
 ```
@@ -980,17 +990,15 @@ varImp(xgbtree_fit)
 xgbtree_fit
 ```
 
-
 ```{r}
 saveRDS(xgbtree_fit,"~/Documents/Coding/hackathon-coding-challenges/Apra/2025/apra_2025/model.rda")
 ```
-
-
 
 ```{r}
 model_load = readRDS("model.rda")
 print(model_load)
 ```
+
 ```{r}
 
 columns = c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")
@@ -1003,17 +1011,15 @@ colnames(df) = columns
 
 ```
 
-
 ```{r}
 df <- rbind(df, c(0.0000000000,0.75,0.003154574,0.00,2))
 
 ```
+
 ```{r}
 colnames(df) = columns
 ```
 
-
 ```{r}
 final_predictions <- predict(model_load, df)
 ```
-
