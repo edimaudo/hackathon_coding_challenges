@@ -211,19 +211,92 @@ server <- function(input, output,session) {
   
   ##### =====Donor Overview==== #####
   
+ 
+  
   output$giftCRMPlot <- renderPlotly({
-    
+    gift %>%
+      filter(GIFT_DATE >= '2015-01-01') %>%
+      left_join(crm,by='CONSTITUENT_ID') %>%
+      group_by(CRM_INTERACTION_TYPE) %>%
+      summarise(Total = mean(AMOUNT)) %>%
+      select(CRM_INTERACTION_TYPE,Total) %>%
+      na.omit() %>%
+      ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      scale_y_continuous(labels = scales::comma) +
+      labs(x ="CRM Interaction Type", y = "Avg. Gift Amount") + coord_flip() +
+      theme(legend.text = element_text(size = 12),
+            legend.title = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            axis.text = element_text(size = 12))
   })
+  
+  gift_df <- reactive({
+    df <- gift %>%
+      mutate(Year = lubridate::year(GIFT_DATE),
+             Month = lubridate::month(GIFT_DATE, label = TRUE),
+             DOW = lubridate::wday(GIFT_DATE, label=TRUE))
+      
+    df
+      
+  })
+
   
   output$giftYearPlot <- renderPlotly({
+    g <- gift_df() %>%
+      filter((Year >= input$YearInput[1] & Year <= input$YearInput[2]), Month %in% input$monthInput) %>%
+    group_by(Year) %>%
+      summarise(Total = mean(AMOUNT)) %>%
+      select(Year, Total) %>% 
+      na.omit() %>%
+      ggplot(aes(Year, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Year", y = "Avg. Gift Amount") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    ggplotly(g)
     
   })
   
   output$giftMonthPlot <- renderPlotly({
+    g <- gift_df() %>%
+      group_by(Month) %>%
+      summarise(Total = mean(AMOUNT)) %>%
+      select(Month, Total) %>% 
+      na.omit() %>%
+      ggplot(aes(Month, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Month", y = "Avg. Gift Amount") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    ggplotly(g)
     
   })
   
-  output$giftMonthPlot <- renderPlotly({
+  output$giftDOWPlot <- renderPlotly({
+    g <- gift_df() %>%
+      group_by(DOW) %>%
+      summarise(Total = mean(AMOUNT)) %>%
+      select(DOW, Total) %>% 
+      na.omit() %>%
+      ggplot(aes(DOW, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
+      labs(x = "Day Of Week", y = "Avg. Gift Amount") + 
+      scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    ggplotly(g)
     
   })
   
