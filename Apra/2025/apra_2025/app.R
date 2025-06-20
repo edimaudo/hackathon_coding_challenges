@@ -127,9 +127,9 @@ ui <- dashboardPage(
       tabItem(tabName = "donation_forecast",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                             selectInput("forecastPortfolioInput", "Portfolios", 
+                             selectInput("forecastSegmentInput", "Portfolios", 
                                          choices = segment_titles, selected = segment_titles, multiple = TRUE),
-                             sliderInput("forecastHorizonInput", "Forcast Period (months)", 
+                             sliderInput("forecastHorizonInput", "Forecast Period (in months)", 
                                          min = 1, max = 24, value = 1), 
                              submitButton("Submit")
                 ),
@@ -180,7 +180,7 @@ ui <- dashboardPage(
 ################
 server <- function(input, output,session) {
 
-  #===== Donor Portfolio =====#
+  ##### =====Donor Portfolio==== #####
   ##### RFM Calculation #####
   rfm_info  <- reactive({
     rfm_df <- gift %>%
@@ -301,20 +301,88 @@ server <- function(input, output,session) {
   })
     
   ##### RFM Table ######
+  rfm_output <- reactive({
+      df <- rfm_info() %>%
+        filter(segment %in% input$rfmInput) %>%
+        select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
+        colnames(df) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
+  })
+   
   output$rfmTable <- renderDataTable({
-    rfm_output <- rfm_info() %>%
-      filter(segment %in% input$rfmInput) %>%
-      select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
-    colnames(rfm_output) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
-    rfm_output
+    rfm_output()
   })    
   
-  #===== Donation Forecasting =====# 
-  output$donationForecastPlot <- renderPlotly({
-      
+  ##### =====Donation Forecasting ==== #####
+  ##### Donation Forecast setup ######
+  gifts_df <- reactive ({
+    gift %>%
+      filter(GIFT_DATE >= '2015-01-01') %>%
+      inner_join(rfm_output(),'CONSTITUENT_ID') %>%
+      group_by(CONSTITUENT_ID) %>%
+      select(CONSTITUENT_ID,Segment,GIFT_DATE,AMOUNT) %>%
+      na.omit()
+  })
+  
+  monthly_donations <- reactive({
+    gifts_df() %>%
+      filter(segment %in% input$forecastSegmentInput) %>%
+      mutate(GIFT_DATE = ymd(GIFT_DATE)) %>%
+      # Extract year and month for grouping
+      mutate(year_month = floor_date(GIFT_DATE, "month")) %>%
+      group_by(year_month) %>%
+      summarise(total_donations = sum(AMOUNT, na.rm = TRUE), .groups = 'drop') %>%
+      arrange(year_month)
+  })
+  
+  start_year <- reactive({lubridate::year(min(monthly_donations()$year_month))})
+  start_month <- reactive({lubridate::month(min(monthly_donations()$year_month))})
+  
+  donations_ts <- reactive({
+    ts(monthly_donations()$total_donations,
+       start = c(start_year(), start_month()),
+       frequency = 12)
+  }) 
+  
+  arima_model <- reactive({auto.arima(donations_ts)})
+  
+  forecast_arima <- reactive({
+    forecast(arima_model(), h = forecastHorizonInput)
+  })
+  
+  # Extracting forecast values
+  forecast_df <- reactive({
+    as_data_frame(forecast_arima) %>%
+      rename(
+        `Forecasted Donation` = `Point Forecast`,
+      ) %>%
+      mutate(
+        Month = seq(from = max(monthly_donations$year_month) + months(1),
+                    by = "month",
+                    length.out = input$forecastHorizonInput)
+      ) %>%
+      select(Month, `Forecasted Donation`)
   })
     
-  output$donationForecastTable <- renderDataTable({})
+    
+
+  
+  output$donationForecastPlot <- renderPlotly({
+    g <- forecast_df() %>%
+      select(Month, `Forecasted Donation`) %>%
+      ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
+      geom_line(stat ="identity")  + 
+      labs(x ="Date", y = "Forecasted Donations") + scale_y_continuous(labels = scales::comma) + 
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 12),
+            axis.text = element_text(size = 10))
+    
+    ggplotly(g)
+  })
+    
+  output$donationForecastTable <- renderDataTable({
+    forecast_df()
+  })
     
   #===== Next Best Donation =====#
     
