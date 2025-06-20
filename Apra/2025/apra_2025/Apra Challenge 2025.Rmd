@@ -910,10 +910,110 @@ y_predicted <- predict(best_model, s = best_lambda, newx = data.matrix(test[,c("
 
 
 ```{r}
+cl <- makePSOCKcluster(4)
+registerDoParallel(cl)
+lm_fit <- train(amount ~ .,
+                data = train, 
+                method = "lm")
+stopCluster(cl)
+```
+
+
+```{r}
+amount_pred_lm <- predict(lm_fit, test)
+
+# View model RMSE, Rsquared and MAE values 
+postResample(pred = amount_pred_lm, obs = test$amount)
+```
+
+```{r}
+varImp(lm_fit)
+```
+
+#### Random forest
+```{r}
+cl <- makePSOCKcluster(4)
+registerDoParallel(cl)
+rf_fit <- train(amount ~ .,
+                data = train, 
+                method = "rf")
+stopCluster(cl)
+```
+
+
+```{r}
+amount_pred_rf <- predict(rf_fit, test)
+
+# View model RMSE, Rsquared and MAE values 
+postResample(pred = amount_pred_rf, obs = test$amount)
+```
+
+
+```{r}
+varImp(rf_fit)
+```
+
+
+```{r}
+library(xgboost)
+cl <- makePSOCKcluster(4)
+registerDoParallel(cl)
+xgbtree_fit <- train(amount ~ .,
+                data = train, 
+                method = "xgbTree")
+stopCluster(cl)
+```
+
+```{r}
+amount_pred_xgboost <- predict(xgbtree_fit, test)
+
+# View model RMSE, Rsquared and MAE values 
+postResample(pred = amount_pred_xgboost, obs = test$amount)
+```
+
+
+```{r}
+varImp(xgbtree_fit)
+```
+
+```{r}
+xgbtree_fit
+```
+
+
+```{r}
+saveRDS(xgbtree_fit,"~/Documents/Coding/hackathon-coding-challenges/Apra/2025/apra_2025/model.rda")
+```
+
+
+
+```{r}
+model_load = readRDS("model.rda")
+print(model_load)
+```
+```{r}
+
+columns = c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")
+
+#Create a Empty DataFrame with 0 rows and n columns
+df = data.frame(matrix(nrow = 0, ncol = length(columns))) 
+
+# Assign column names
+colnames(df) = columns
 
 ```
 
 
 ```{r}
+df <- rbind(df, c(0.0000000000,0.75,0.003154574,0.00,2))
+
+```
+```{r}
+colnames(df) = columns
+```
+
+
+```{r}
+final_predictions <- predict(model_load, df)
 ```
 
