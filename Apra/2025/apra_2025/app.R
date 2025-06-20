@@ -57,7 +57,7 @@ constituent <- read_csv("constituent_profiles_table.csv")
 segment_titles <- c("Champions", "Loyal Customers", "Potential Loyalist",
                     "Recent Ones", "Could be Promising", "Requires Assistance", "Getting Less Frequent",
                     "At Risk", "Can't Lose Them", "Lost")
-
+month_titles <- c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
 #Label Encoder
 labelEncoder <-function(x){
   as.numeric(factor(x))-1
@@ -84,9 +84,10 @@ ui <- dashboardPage(
       menuSubItem("Weekly Insights", tabName = "weekly"),
       menuSubItem("Monthly Insights", tabName = "monthly"),
       menuSubItem("Yearly Insights", tabName = "yearly"),
-      menuItem("Donor Portfolio", tabName = "segment", icon = icon("list")),
-      menuItem("Donation Forecasting ", tabName = "donation_forecast",icon = icon("list")),
-      menuItem("Next Best Donation", tabName = "donation_prediction",icon = icon("list"))
+      menuItem("Donations", tabName = "donations_overview", icon = icon("list")),
+      menuSubItem("Donor Portfolio", tabName = "segment", icon = icon("list")),
+      menuSubItem("Donation Forecasting ", tabName = "donation_forecast",icon = icon("list")),
+      menuSubItem("Next Best Donation", tabName = "donation_prediction",icon = icon("list"))
     )
   ),
   dashboardBody(
@@ -96,6 +97,33 @@ ui <- dashboardPage(
       
       ######### Overview ######### 
       
+      ######### Donor Overview ######### 
+      tabItem(tabName = "donations_overview",
+              sidebarLayout(
+                sidebarPanel(width = 2,
+                             sliderInput("yearInput","Year",min = 2015, max = 2025, value = 1),
+                             selectInput("monthInput", "Month", 
+                                         choices = segment_titles, selected = segment_titles, multiple = TRUE)
+                             submitButton("Submit")
+                ),
+                mainPanel(width = 10,
+                          fluidRow(
+                            column(width = 12,
+                                   plotlyOutput("giftCRMPlot"),
+                                   plotlyOutput("giftYearPlot")
+                            )
+                          ),
+                          br(),br(),
+                          fluidRow(
+                            column(width = 12,
+                                   plotlyOutput("giftMonthPlot"),
+                                   plotlyOutput("giftDOWPlot"),
+                            )
+                          )
+                )
+              )
+                
+      ),
       ######### Donor Portfolio ######### 
       tabItem(tabName = "segment",
               sidebarLayout(
@@ -113,10 +141,12 @@ ui <- dashboardPage(
                     )
                   ),
                   br(),br(),
-                  layout_columns(
-                    plotlyOutput("rfmRecencyChart"),
-                    plotlyOutput("rfmFrequencyChart"),
-                    plotlyOutput("rfmMonetaryChart"),
+                  fluidRow(
+                    column(width = 12,
+                           plotlyOutput("rfmRecencyChart"),
+                           plotlyOutput("rfmFrequencyChart"),
+                           plotlyOutput("rfmMonetaryChart"),
+                    )
                   ),
                   br(),br(),
                   fluidRow(
@@ -179,8 +209,28 @@ ui <- dashboardPage(
 # Server
 ################
 server <- function(input, output,session) {
-
+  
+  ##### =====Donor Overview==== #####
+  
+  output$giftCRMPlot <- renderPlotly({
+    
+  })
+  
+  output$giftYearPlot <- renderPlotly({
+    
+  })
+  
+  output$giftMonthPlot <- renderPlotly({
+    
+  })
+  
+  output$giftMonthPlot <- renderPlotly({
+    
+  })
+  
   ##### =====Donor Portfolio==== #####
+  
+  
   ##### RFM Calculation #####
   rfm_info  <- reactive({
     rfm_df <- gift %>%
