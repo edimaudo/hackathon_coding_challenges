@@ -319,7 +319,7 @@ server <- function(input, output,session) {
     gift %>%
       filter(GIFT_DATE >= '2015-01-01') %>%
       inner_join(rfm_output(),'CONSTITUENT_ID') %>%
-      group_by(CONSTITUENT_ID) %>%
+      #group_by(CONSTITUENT_ID) %>%
       select(CONSTITUENT_ID,Segment,GIFT_DATE,AMOUNT) %>%
       na.omit()
   })
@@ -347,12 +347,12 @@ server <- function(input, output,session) {
   arima_model <- reactive({auto.arima(donations_ts)})
   
   forecast_arima <- reactive({
-    forecast(arima_model(), h = forecastHorizonInput)
+    forecast(arima_model(), h = input$forecastHorizonInput)
   })
   
   # Extracting forecast values
   forecast_df <- reactive({
-    as_data_frame(forecast_arima) %>%
+    as_data_frame(forecast_arima()) %>%
       rename(
         `Forecasted Donation` = `Point Forecast`,
       ) %>%
@@ -371,14 +371,14 @@ server <- function(input, output,session) {
     g <- forecast_df() %>%
       select(Month, `Forecasted Donation`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
-      geom_line(stat ="identity")  + 
-      labs(x ="Date", y = "Forecasted Donations") + scale_y_continuous(labels = scales::comma) + 
+      geom_line(stat ="identity")  +
+      labs(x ="Date", y = "Forecasted Donations") + scale_y_continuous(labels = scales::comma) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             axis.title = element_text(size = 12),
             axis.text = element_text(size = 10))
     
-    ggplotly(g)
+    #ggplotly(g)
   })
     
   output$donationForecastTable <- renderDataTable({
