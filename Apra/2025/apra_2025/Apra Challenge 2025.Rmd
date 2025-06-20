@@ -146,7 +146,7 @@ group_by(DOW, CRM_INTERACTION_TYPE) %>%
 ```{r}
 left_join(gift,crm,by='CONSTITUENT_ID') %>%
   group_by(CRM_INTERACTION_TYPE) %>%
-  summarise(Total = sum(AMOUNT)) %>%
+  summarise(Total = mean(AMOUNT)) %>%
   select(CRM_INTERACTION_TYPE,Total) %>%
   ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total))  +
         geom_bar(stat = "identity",width = 0.5, fill='black')  +
