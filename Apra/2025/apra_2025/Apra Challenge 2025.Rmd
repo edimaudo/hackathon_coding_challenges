@@ -541,6 +541,7 @@ group_by(CONSTITUENT_ID) %>%
 gifts_df <- gift %>%
   filter(GIFT_DATE >= '2015-01-01') %>%
   select(CONSTITUENT_ID,GIFT_DATE,AMOUNT) #%>%
+  inner_join(rfm_info,'CONSTI)
   #na.omit()
 ```
 
@@ -760,6 +761,11 @@ print(tail(forecast_df))
 ```
 
 ```{r}
+saveRDS(forecast_arima,"forecast_model.rda")
+```
+```{r}
+forecast_model = readRDS("forecast_model.rda")
+print(forecast_model)
 ```
 
 ```{r}
