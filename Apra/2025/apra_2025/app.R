@@ -91,18 +91,12 @@ ui <- dashboardPage(
   ),
   dashboardBody(
     tabItems(
-      #======== 
-      # About
-      #======== 
+      #========  About =====#
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
       
-      #======== 
-      # Overview
-      #======== 
+      #======== Overview ========# 
       
-      #======== 
-      # Donor Portfolio
-      #======== 
+      #======== Donor Portfolio ========# 
       tabItem(tabName = "segment",
               sidebarLayout(
                 sidebarPanel(width = 3,
@@ -129,9 +123,7 @@ ui <- dashboardPage(
                 )
               )
       ),
-      #======== 
-      # Donor Forecasting
-      #======== 
+      #======== Donor Forecasting ========#
       tabItem(tabName = "donation_forecast",
               sidebarLayout(
                 sidebarPanel(width = 3,
@@ -144,19 +136,18 @@ ui <- dashboardPage(
                 mainPanel(
                   fluidRow(),
                   layout_columns(
-                    plotlyOutput("rfmRecencyChart"),
+                    plotlyOutput("donationForecastPlot"),
+                    DT::dataTableOutput("donationForecastTable")
                   )
                 )
               )
       ),
-      #======== 
-      # Donor Prediction
-      #======== 
+      #======== Donor Prediction ========# 
       tabItem(tabName = "donation_prediction",
               sidebarLayout(
                 sidebarPanel(width = 3,
                              selectInput("predictionSegmentInput", "Portfolios", 
-                                         choices = segment_titles, selected = segment_titles[0], multiple = False),
+                                         choices = segment_titles, selected = segment_titles[0]),
                              sliderInput("predictionCRMInput", "# of CRM Interactions", 
                                          min = 0, max = 100, value = 1), 
                              sliderInput("predictionCRMInteractionInput", "Unique CRM Interactions", 
@@ -166,7 +157,7 @@ ui <- dashboardPage(
                              sliderInput("predictionGiftInput", "# of Gifts", 
                                          min = 0, max = 50, value = 1), 
                              sliderInput("predictionDayInput", "# of Days Since last gift", 
-                                         min = 0, max = 1000, value = 50), 
+                                         min = 0, max = 3000, value = 100), 
                              submitButton("Submit")
                 ),
                 mainPanel(
@@ -189,11 +180,8 @@ ui <- dashboardPage(
 ################
 server <- function(input, output,session) {
 
-  #======== 
-  # Donor Portfolio
-  #========
-  
-  ##### RFM Calculation ####
+  #===== Donor Portfolio =====#
+  ##### RFM Calculation #####
   rfm_info  <- reactive({
     rfm_df <- gift %>%
       filter(GIFT_DATE >= '2015-01-01') %>%
@@ -216,7 +204,7 @@ server <- function(input, output,session) {
     
   })
   
-  ##### RFM Metrics ####
+  ###### RFM Metrics ######
   value_box_calculations <- reactive({
     rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
@@ -312,25 +300,26 @@ server <- function(input, output,session) {
     
   })
     
-  ##### RFM Table ####
+  ##### RFM Table ######
   output$rfmTable <- renderDataTable({
     rfm_output <- rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
       select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
     colnames(rfm_output) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
     rfm_output
+  })    
+  
+  #===== Donation Forecasting =====# 
+  output$donationForecastPlot <- renderPlotly({
+      
+  })
     
-    #======== 
-    # Donor Forecasting
-    #========  
+  output$donationForecastTable <- renderDataTable({})
+    
+  #===== Next Best Donation =====#
     
     
-    #======== 
-    # Next Best Donation
-    #========
-    
-    
-  }) 
+  
 
 }
 
