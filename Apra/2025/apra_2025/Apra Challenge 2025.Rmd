@@ -474,6 +474,16 @@ group_by(CONSTITUENT_ID) %>%
 
 ```
 
+```{r}
+# Calculate CLV for different groups
+avg_donation_per_customer <- divisions %>%
+  group_by(CONSTITUENT_ID) %>%
+  summarize(avg_revenue = mean(amount))
+
+
+```
+
+
 ## Part 3: Donation Prediction
 
 ### Donor Forecasting
