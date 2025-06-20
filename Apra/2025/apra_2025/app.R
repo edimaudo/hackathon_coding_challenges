@@ -34,7 +34,7 @@ rm(list = ls())
 # library(bslib)
 
 packages <- c(
-  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','bslib','DT',
+  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT',
   'mlbench','caTools','gridExtra','doParallel','grid','reshape2',
   'caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
   'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify'
@@ -99,24 +99,26 @@ ui <- dashboardPage(
       ######### Donor Portfolio ######### 
       tabItem(tabName = "segment",
               sidebarLayout(
-                sidebarPanel(width = 3,
-                             selectInput("rfmInput", "Portfolios", 
+                sidebarPanel(width = 2,
+                             selectInput("rfmInput", "Donor Portfolios", 
                                          choices = segment_titles, selected = segment_titles, multiple = TRUE),
                              submitButton("Submit")
                 ),
-                mainPanel(
-                  layout_column_wrap(
-                    value_box(title="Avg. # of days",value=uiOutput("valueRecency"),theme="bg-gradient-blue-purple"),
-                    value_box(title="Avg. # of Gifts",value=uiOutput("valueFrequency"),theme="bg-gradient-blue-purple"),
-                    value_box(title="Avg. Amount",value=uiOutput("valueMonetary"),theme="bg-gradient-blue-purple"),
+                mainPanel(width = 10,
+                  fluidRow(
+                    column(width = 12,
+                           valueBoxOutput("valueRecency"),
+                           valueBoxOutput("valueFrequency"),
+                           valueBoxOutput("valueMonetary"),
+                    )
                   ),
-                  fluidRow(),
+                  br(),
                   layout_columns(
                     plotlyOutput("rfmRecencyChart"),
                     plotlyOutput("rfmFrequencyChart"),
                     plotlyOutput("rfmMonetaryChart"),
                   ),
-                  fluidRow(),
+                  br(),
                   fluidRow(
                     DT::dataTableOutput("rfmTable")
                   )
@@ -152,8 +154,6 @@ ui <- dashboardPage(
                                          min = 0, max = 100, value = 1), 
                              sliderInput("predictionCRMInteractionInput", "Unique CRM Interactions", 
                                          min = 0, max = 5, value = 1), 
-                             sliderInput("predictionCRMInput", "# of CRM Interactions", 
-                                         min = 0, max = 100, value = 1), 
                              sliderInput("predictionGiftInput", "# of Gifts", 
                                          min = 0, max = 50, value = 1), 
                              sliderInput("predictionDayInput", "# of Days Since last gift", 
@@ -216,17 +216,35 @@ server <- function(input, output,session) {
   })
   
   
-  output$valueRecency <- renderText({
-     glue::glue("{sprintf(value_box_calculations()$average_recency, fmt = '%.0f')} days")
+  output$valueRecency <- renderValueBox({
+  
+    valueBox(
+      value = tags$p("Avg. # of Days since last gift", style = "font-size: 18px;"),
+      subtitle = tags$p((sprintf(value_box_calculations()$average_recency, fmt = '%.0f')), style = "font-size: 100%;"),
+      #icon = icon("calendar"),
+      color = "aqua"
+    )
     
   })
   
-  output$valueFrequency <- renderText({
-    glue::glue("{sprintf(value_box_calculations()$average_frequency, fmt = '%.0f')} gifts")
+  output$valueFrequency <- renderValueBox({
+    valueBox(
+      value = tags$p("Avg. # of Gifts", style = "font-size: 18px;"),
+      subtitle = tags$p((sprintf(value_box_calculations()$average_frequency, fmt = '%.0f')), style = "font-size: 100%;"),
+      #icon = icon("thumbs-up"),
+      color = "aqua"
+      )
   })
   
-  output$valueMonetary <- renderText({
-    glue::glue("{sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')} $")
+  output$valueMonetary <- renderValueBox({
+    valueBox(
+      value = tags$p("Avg. Donation Amount", style = "font-size: 18px;"),
+      subtitle = tags$p((sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')), style = "font-size: 100%;"),
+      #icon = icon("credit-card"),
+      color = "aqua"
+    )
+    
+  
   })
   
   ##### RFM Charts ####
@@ -261,10 +279,10 @@ server <- function(input, output,session) {
     g <- ggplot(rfm_chart(), aes(x = reorder(segment,Recency_avg) ,y = Recency_avg))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
-      labs(x ="Segment", y = "Avg. # of days") + coord_flip() +
+      labs(x ="Segment", y = "Days", title="Average # of Days since last gift") + coord_flip() +
       theme(legend.text = element_text(size = 8),
             legend.title = element_text(size = 8),
-            axis.title = element_text(size = 10),
+            axis.title = element_text(size = 6),
             axis.text = element_text(size = 8))
     ggplotly(g)
     
@@ -276,10 +294,10 @@ server <- function(input, output,session) {
     g <- ggplot(rfm_chart(), aes(x = reorder(segment,Frequency_avg) ,y = Frequency_avg))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
-      labs(x ="Segment", y = "Avg. # of Gifts") + coord_flip() +
+      labs(x ="Segment", y = "Gifts", title = "Average # of Gifts") + coord_flip() +
       theme(legend.text = element_text(size = 8),
             legend.title = element_text(size = 8),
-            axis.title = element_text(size = 10),
+            axis.title = element_text(size = 8),
             axis.text = element_text(size = 8))
     ggplotly(g)
     
@@ -290,10 +308,10 @@ server <- function(input, output,session) {
     g <- ggplot(rfm_chart(), aes(x = reorder(segment,Monetary_avg) ,y = Monetary_avg))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
-      labs(x ="Segment", y = "Avg. Amount") + coord_flip() +
+      labs(x ="Segment", y = "Amount", title = "Average Donation Amount") + coord_flip() +
       theme(legend.text = element_text(size = 8),
             legend.title = element_text(size = 8),
-            axis.title = element_text(size = 10),
+            axis.title = element_text(size = 8),
             axis.text = element_text(size = 8))
     ggplotly(g)  
     
@@ -319,7 +337,7 @@ server <- function(input, output,session) {
     gift %>%
       filter(GIFT_DATE >= '2015-01-01') %>%
       inner_join(rfm_output(),'CONSTITUENT_ID') %>%
-      #group_by(CONSTITUENT_ID) %>%
+      group_by(CONSTITUENT_ID) %>%
       select(CONSTITUENT_ID,Segment,GIFT_DATE,AMOUNT) %>%
       na.omit()
   })
@@ -354,7 +372,7 @@ server <- function(input, output,session) {
   forecast_df <- reactive({
     as_data_frame(forecast_arima()) %>%
       rename(
-        `Forecasted Donation` = `Point Forecast`,
+        `Forecasted Donation` = `Point Forecast`
       ) %>%
       mutate(
         Month = seq(from = max(monthly_donations$year_month) + months(1),
