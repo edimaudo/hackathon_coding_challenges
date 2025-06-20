@@ -58,6 +58,15 @@ segment_titles <- c("First Grade", "Loyal", "Likely to be Loyal",
                     "New Ones", "Could be Promising", "Require Assistance", "Getting Less Frequent",
                     "Almost Out", "Can't Lose Them", "Don’t Show Up at All")
 
+#Label Encoder
+labelEncoder <-function(x){
+  as.numeric(factor(x))-1
+}
+#normalize data
+normalize <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}
+
 ################
 # UI
 ################
@@ -121,14 +130,14 @@ ui <- dashboardPage(
               )
       ),
       #======== 
-      # Donor Prediction
+      # Donor Forecasting
       #======== 
       tabItem(tabName = "donation_forecast",
               sidebarLayout(
                 sidebarPanel(width = 3,
                              selectInput("forecastPortfolioInput", "Portfolios", 
                                          choices = segment_titles, selected = segment_titles, multiple = TRUE),
-                             sliderInput("forecastHorizon", "Forcast Period (months)", 
+                             sliderInput("forecastHorizonInput", "Forcast Period (months)", 
                                          min = 1, max = 24, value = 1), 
                              submitButton("Submit")
                 ),
@@ -139,8 +148,35 @@ ui <- dashboardPage(
                   )
                 )
               )
+      ),
+      #======== 
+      # Donor Prediction
+      #======== 
+      tabItem(tabName = "donation_prediction",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                             selectInput("predictionSegmentInput", "Portfolios", 
+                                         choices = segment_titles, selected = segment_titles[0], multiple = False),
+                             sliderInput("predictionCRMInput", "# of CRM Interactions", 
+                                         min = 0, max = 100, value = 1), 
+                             sliderInput("predictionCRMInteractionInput", "Unique CRM Interactions", 
+                                         min = 0, max = 5, value = 1), 
+                             sliderInput("predictionCRMInput", "# of CRM Interactions", 
+                                         min = 0, max = 100, value = 1), 
+                             sliderInput("predictionGiftInput", "# of Gifts", 
+                                         min = 0, max = 50, value = 1), 
+                             sliderInput("predictionDayInput", "# of Days Since last gift", 
+                                         min = 0, max = 1000, value = 50), 
+                             submitButton("Submit")
+                ),
+                mainPanel(
+                  fluidRow(),
+                  layout_columns(
+                    #plotlyOutput("rfmRecencyChart"),
+                  )
+            )
+          )
       )
-      
     )
   )
 )
@@ -283,6 +319,16 @@ server <- function(input, output,session) {
       select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
     colnames(rfm_output) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
     rfm_output
+    
+    #======== 
+    # Donor Forecasting
+    #========  
+    
+    
+    #======== 
+    # Next Best Donation
+    #========
+    
     
   }) 
 
