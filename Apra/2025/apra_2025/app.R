@@ -91,12 +91,12 @@ ui <- dashboardPage(
   ),
   dashboardBody(
     tabItems(
-      #========  About =====#
+      ######### About #########
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
       
-      #======== Overview ========# 
+      ######### Overview ######### 
       
-      #======== Donor Portfolio ========# 
+      ######### Donor Portfolio ######### 
       tabItem(tabName = "segment",
               sidebarLayout(
                 sidebarPanel(width = 3,
@@ -123,14 +123,14 @@ ui <- dashboardPage(
                 )
               )
       ),
-      #======== Donor Forecasting ========#
+      ######### Donor Forecasting #########
       tabItem(tabName = "donation_forecast",
               sidebarLayout(
                 sidebarPanel(width = 3,
                              selectInput("forecastSegmentInput", "Portfolios", 
                                          choices = segment_titles, selected = segment_titles, multiple = TRUE),
                              sliderInput("forecastHorizonInput", "Forecast Period (in months)", 
-                                         min = 1, max = 24, value = 1), 
+                                         min = 1, max = 24, value = 12), 
                              submitButton("Submit")
                 ),
                 mainPanel(
@@ -142,7 +142,7 @@ ui <- dashboardPage(
                 )
               )
       ),
-      #======== Donor Prediction ========# 
+      ######### Donor Prediction ######### 
       tabItem(tabName = "donation_prediction",
               sidebarLayout(
                 sidebarPanel(width = 3,
@@ -306,6 +306,7 @@ server <- function(input, output,session) {
         filter(segment %in% input$rfmInput) %>%
         select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
         colnames(df) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
+        df
   })
    
   output$rfmTable <- renderDataTable({
@@ -381,7 +382,7 @@ server <- function(input, output,session) {
   })
     
   output$donationForecastTable <- renderDataTable({
-    forecast_df()
+    #forecast_df()
   })
     
   #===== Next Best Donation =====#
