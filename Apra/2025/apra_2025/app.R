@@ -79,15 +79,14 @@ ui <- dashboardPage(
                           class = "dropdown")),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("About", tabName = "about", icon = icon("th")),
-      menuItem("Overview", tabName = "overview", icon = icon("list")),
-      menuSubItem("Weekly Insights", tabName = "weekly"),
-      menuSubItem("Monthly Insights", tabName = "monthly"),
-      menuSubItem("Yearly Insights", tabName = "yearly"),
-      menuItem("Donations", tabName = "donations_overview", icon = icon("list")),
-      menuSubItem("Donor Portfolio", tabName = "segment", icon = icon("list")),
-      menuSubItem("Donation Forecasting ", tabName = "donation_forecast",icon = icon("list")),
-      menuSubItem("Next Best Donation", tabName = "donation_prediction",icon = icon("list"))
+      menuItem("About", tabName = "about", icon = icon("house")),
+      menuItem("Weekly Insights", tabName = "weekly", icon = icon("th")),
+      menuItem("Monthly Insights", tabName = "monthly",icon = icon("th")),
+      menuItem("Yearly Insights", tabName = "yearly",icon = icon("th")),
+      menuItem("Gifts", tabName = "donations_overview", icon = icon("th")),
+      menuSubItem("Gift Portfolio", tabName = "segment", icon = icon("pencil")),
+      menuSubItem("Gift Forecasting ", tabName = "donation_forecast",icon = icon("pencil")),
+      menuSubItem("Next Best Gift", tabName = "donation_prediction",icon = icon("pencil"))
     )
   ),
   dashboardBody(
@@ -100,17 +99,17 @@ ui <- dashboardPage(
       ######### Donor Overview ######### 
       tabItem(tabName = "donations_overview",
               sidebarLayout(
-                sidebarPanel(width = 2,
+                sidebarPanel(width = 3,
                              sliderInput("yearInput","Year",min = 2015, max = 2025, value = 1),
                              selectInput("monthInput", "Month", 
-                                         choices = segment_titles, selected = segment_titles, multiple = TRUE)
+                                         choices = month_titles, selected = month_titles, multiple = TRUE),
                              submitButton("Submit")
                 ),
                 mainPanel(width = 10,
                           fluidRow(
                             column(width = 12,
                                    plotlyOutput("giftCRMPlot"),
-                                   plotlyOutput("giftYearPlot")
+                                   plotlyOutput("giftYearPlot"),
                             )
                           ),
                           br(),br(),
