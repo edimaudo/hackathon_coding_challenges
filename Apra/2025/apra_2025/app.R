@@ -54,9 +54,9 @@ video <- read_csv("video_email_data_table.csv")
 constituent <- read_csv("constituent_profiles_table.csv")
 
 # Data Information
-segment_titles <- c("First Grade", "Loyal", "Likely to be Loyal",
-                    "New Ones", "Could be Promising", "Require Assistance", "Getting Less Frequent",
-                    "Almost Out", "Can't Lose Them", "Don’t Show Up at All")
+segment_titles <- c("Champions", "Loyal Customers", "Potential Loyalist",
+                    "Recent Ones", "Could be Promising", "Requires Assistance", "Getting Less Frequent",
+                    "At Risk", "Can't Lose Them", "Lost")
 
 #Label Encoder
 labelEncoder <-function(x){
@@ -112,13 +112,13 @@ ui <- dashboardPage(
                            valueBoxOutput("valueMonetary"),
                     )
                   ),
-                  br(),
+                  br(),br(),
                   layout_columns(
                     plotlyOutput("rfmRecencyChart"),
                     plotlyOutput("rfmFrequencyChart"),
                     plotlyOutput("rfmMonetaryChart"),
                   ),
-                  br(),
+                  br(),br(),
                   fluidRow(
                     DT::dataTableOutput("rfmTable")
                   )
@@ -219,29 +219,29 @@ server <- function(input, output,session) {
   output$valueRecency <- renderValueBox({
   
     valueBox(
-      value = tags$p("Avg. # of Days since last gift", style = "font-size: 18px;"),
+      value = tags$p("Avg. # of Days since last gift", style = "font-size: 24px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_recency, fmt = '%.0f')), style = "font-size: 100%;"),
       #icon = icon("calendar"),
-      color = "aqua"
+      color = "black"
     )
     
   })
   
   output$valueFrequency <- renderValueBox({
     valueBox(
-      value = tags$p("Avg. # of Gifts", style = "font-size: 18px;"),
+      value = tags$p("Avg. # of Gifts", style = "font-size: 24px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_frequency, fmt = '%.0f')), style = "font-size: 100%;"),
       #icon = icon("thumbs-up"),
-      color = "aqua"
+      color = "black"
       )
   })
   
   output$valueMonetary <- renderValueBox({
     valueBox(
-      value = tags$p("Avg. Donation Amount", style = "font-size: 18px;"),
+      value = tags$p("Avg. Gift Amount", style = "font-size: 24px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')), style = "font-size: 100%;"),
       #icon = icon("credit-card"),
-      color = "aqua"
+      color = "black"
     )
     
   
@@ -276,13 +276,14 @@ server <- function(input, output,session) {
   
   output$rfmRecencyChart <- renderPlotly({
 
-    g <- ggplot(rfm_chart(), aes(x = reorder(segment,Recency_avg) ,y = Recency_avg))  +
+    g <- ggplot(rfm_chart(), aes(x = reorder(segment,desc(Recency_avg)) ,y = Recency_avg))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Days", title="Average # of Days since last gift") + coord_flip() +
       theme(legend.text = element_text(size = 8),
+            plot.title = element_text(size = 10),
             legend.title = element_text(size = 8),
-            axis.title = element_text(size = 6),
+            axis.title = element_text(size = 8),
             axis.text = element_text(size = 8))
     ggplotly(g)
     
@@ -296,6 +297,7 @@ server <- function(input, output,session) {
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Gifts", title = "Average # of Gifts") + coord_flip() +
       theme(legend.text = element_text(size = 8),
+            plot.title = element_text(size = 10),
             legend.title = element_text(size = 8),
             axis.title = element_text(size = 8),
             axis.text = element_text(size = 8))
@@ -310,10 +312,11 @@ server <- function(input, output,session) {
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Amount", title = "Average Donation Amount") + coord_flip() +
       theme(legend.text = element_text(size = 8),
+            plot.title = element_text(size = 10),
             legend.title = element_text(size = 8),
             axis.title = element_text(size = 8),
             axis.text = element_text(size = 8))
-    ggplotly(g)  
+    ggplotly(g)
     
     
   })
