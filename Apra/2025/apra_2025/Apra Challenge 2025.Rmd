@@ -168,6 +168,14 @@ gift <- gift %>%
                Quarter = lubridate::quarter(GIFT_DATE),
                Month = lubridate::month(GIFT_DATE, label = TRUE),
                DOW = lubridate::wday(GIFT_DATE, label=TRUE))
+
+```
+```{r}
+    df <- gift %>%
+      mutate(Year = lubridate::year(GIFT_DATE),
+             Month = lubridate::month(GIFT_DATE, label = TRUE),
+             DOW = lubridate::wday(GIFT_DATE, label=TRUE)) %>%
+      filter( Year >= as.double(2015), Month %in% c('Jan','Feb'))
 ```
 
 ### Gift by Year
