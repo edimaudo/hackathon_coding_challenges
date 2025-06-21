@@ -519,23 +519,24 @@ server <- function(input, output,session) {
 
   
   output$donationForecastPlot <- renderPlotly({
-    # g <- forecast_df() %>%
-    #   select(Month, `Forecasted Donation`) %>%
-    #   ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
-    #   geom_line(stat ="identity")  +
-    #   labs(x ="Date", y = "Forecasted Donations") + scale_y_continuous(labels = scales::comma) +
-    #   theme(legend.text = element_text(size = 10),
-    #         legend.title = element_text(size = 10),
-    #         axis.title = element_text(size = 12),
-    #         axis.text = element_text(size = 10))
+    g <- forecast_df() %>%
+      select(Month, `Forecasted Donation`) %>%
+      ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
+      geom_line(stat ="identity")  +
+      labs(x ="Date", y = "Forecasted Donations") + scale_y_continuous(labels = scales::comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 12),
+            axis.text = element_text(size = 10))
     
-    # ggplotly(g)
+     ggplotly(g)
   })
     
   output$donationForecastTable <- renderDataTable({
     #forecast_df()
     #donations_ts()
-    forecast_arima()
+    print(forecast_df)
+    
   })
     
   #===== Next Best Donation =====#
