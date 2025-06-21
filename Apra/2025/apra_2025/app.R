@@ -31,10 +31,10 @@ rm(list = ls())
 # library(xts)
 # library(dplyr)
 # library(treemapify)
-# library(bslib)
+# library(shinycssloader)
 
 packages <- c(
-  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT',
+  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders','DT',
   'mlbench','caTools','gridExtra','doParallel','grid','reshape2',
   'caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
   'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify'
@@ -154,14 +154,13 @@ ui <- dashboardPage(
               sidebarLayout(
                 sidebarPanel(width = 3,
                              selectInput("forecastSegmentInput", "Portfolios", 
-                                         choices = segment_titles, selected = segment_titles, multiple = TRUE),
+                                         choices = segment_titles, selected = segment_titles[1], multiple = TRUE),
                              sliderInput("forecastHorizonInput", "Forecast Period (in months)", 
                                          min = 1, max = 24, value = 12), 
                              submitButton("Submit")
                 ),
                 mainPanel(
-                    plotlyOutput("donationForecastPlot")
-
+                    plotlyOutput("donationForecastPlot") %>% withSpinner()
                   )
                 )
       ),
@@ -183,9 +182,8 @@ ui <- dashboardPage(
                 ),
                 mainPanel(
                   fluidRow(),
-                  layout_columns(
+                  
                     #plotlyOutput("rfmRecencyChart"),
-                  )
             )
           )
       )
@@ -516,6 +514,12 @@ server <- function(input, output,session) {
 
   
   output$donationForecastPlot <- renderPlotly({
+    
+      #input$go
+      Sys.sleep(1.5)
+      #plot(runif(10))
+    
+    
     g <- forecast_df() %>%
       select(Month, `Forecasted Donation`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
