@@ -511,14 +511,11 @@ server <- function(input, output,session) {
        select(Month, `Forecasted Donation`)
    })
   
-   forecast_df_update <- reactive({
-     
-   })  
+
     
 
   
   output$donationForecastPlot <- renderPlotly({
-    #forecast_df()$`Forecasted Donation` <- format(round(forecast_df()$`Forecasted Donation`, 2), nsmall = 2)
     g <- forecast_df() %>%
       select(Month, `Forecasted Donation`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
