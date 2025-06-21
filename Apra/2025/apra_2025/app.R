@@ -160,14 +160,10 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(
-                  fluidRow(),
-                  layout_columns(
-                    plotlyOutput("donationForecastPlot"),
-                    br(),br(),
-                    DT::dataTableOutput("donationForecastTable")
+                    plotlyOutput("donationForecastPlot")
+
                   )
                 )
-              )
       ),
       ######### Donor Prediction ######### 
       tabItem(tabName = "donation_prediction",
@@ -508,34 +504,41 @@ server <- function(input, output,session) {
          `Forecasted Donation` = `Point Forecast`
        ) %>%
        mutate(
-         Month = seq(from = max(monthly_donations$year_month) + months(1),
+         Month = seq(from = max(monthly_donations()$year_month) + months(1),
                      by = "month",
                      length.out = input$forecastHorizonInput)
        ) %>%
        select(Month, `Forecasted Donation`)
    })
-    
+  
+   forecast_df_update <- reactive({
+     
+   })  
     
 
   
   output$donationForecastPlot <- renderPlotly({
+    #forecast_df()$`Forecasted Donation` <- format(round(forecast_df()$`Forecasted Donation`, 2), nsmall = 2)
     g <- forecast_df() %>%
       select(Month, `Forecasted Donation`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
-      geom_line(stat ="identity")  +
-      labs(x ="Date", y = "Forecasted Donations") + scale_y_continuous(labels = scales::comma) +
+      geom_bar(stat = "identity",width = 8, fill='black')  +
+      labs(x ="Date", y = "Gift Amount", title = "Forecasted Donations") + scale_y_continuous(labels = scales::comma) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
-            axis.title = element_text(size = 12),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
     
      ggplotly(g)
   })
     
+
+  
+  
   output$donationForecastTable <- renderDataTable({
+    #forecast_df()$`Forecasted Donation` <- format(round(forecast_df()$`Forecasted Donation`, 2), nsmall = 2)
     #forecast_df()
-    #donations_ts()
-    print(forecast_df)
     
   })
     
