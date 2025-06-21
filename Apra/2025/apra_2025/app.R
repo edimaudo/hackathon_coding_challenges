@@ -81,11 +81,11 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("house")),
-      menuItem("Weekly Insights", tabName = "weekly", icon = icon("th")),
-      menuItem("Monthly Insights", tabName = "monthly",icon = icon("th")),
-      menuItem("Yearly Insights", tabName = "yearly",icon = icon("th")),
-      menuItem("Gifts", tabName = "donations_overview", icon = icon("th")),
-      menuSubItem("Gift Portfolio", tabName = "segment", icon = icon("pencil")),
+      menuItem("Weekly Donation Insights", tabName = "weekly", icon = icon("th")),
+      menuItem("Monthly Donation Insights", tabName = "monthly",icon = icon("th")),
+      menuItem("Yearly Donation Insights", tabName = "yearly",icon = icon("th")),
+      menuItem("Donation Overiew", tabName = "donations_overview", icon = icon("th")),
+      menuSubItem("Donor Portfolio", tabName = "segment", icon = icon("pencil")),
       menuSubItem("Gift Forecasting ", tabName = "donation_forecast",icon = icon("pencil")),
       menuSubItem("Next Best Gift", tabName = "donation_prediction",icon = icon("pencil"))
     )
@@ -203,7 +203,7 @@ ui <- dashboardPage(
 ################
 server <- function(input, output,session) {
   
-  ##### =====Donor Overview==== #####
+  ##### =====Gift Overview==== #####
   
   gift_df <- reactive({
     df <- gift %>%
@@ -528,11 +528,11 @@ server <- function(input, output,session) {
             axis.title = element_text(size = 12),
             axis.text = element_text(size = 10))
     
-    #ggplotly(g)
+    ggplotly(g)
   })
     
   output$donationForecastTable <- renderDataTable({
-    #forecast_df()
+    forecast_df()
   })
     
   #===== Next Best Donation =====#
