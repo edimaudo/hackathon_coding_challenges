@@ -58,6 +58,7 @@ segment_titles <- c("Champions", "Loyal Customers", "Potential Loyalist",
                     "Recent Ones", "Could be Promising", "Requires Assistance", "Getting Less Frequent",
                     "At Risk", "Can't Lose Them", "Lost")
 month_titles <- c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
+
 #Label Encoder
 labelEncoder <-function(x){
   as.numeric(factor(x))-1
@@ -100,24 +101,17 @@ ui <- dashboardPage(
       tabItem(tabName = "donations_overview",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                             sliderInput("yearInput","Year",min = 2015, max = 2025, value = 1),
-                             selectInput("monthInput", "Month", 
+                             sliderInput("yearDonationInput","Year", min = 2015, max = 2025, value = c(2015,2025), step = 1),
+                             selectInput("monthDonationInput", "Month", 
                                          choices = month_titles, selected = month_titles, multiple = TRUE),
                              submitButton("Submit")
                 ),
-                mainPanel(width = 10,
+                mainPanel(width = 9,
                           fluidRow(
-                            column(width = 12,
                                    plotlyOutput("giftCRMPlot"),
                                    plotlyOutput("giftYearPlot"),
-                            )
-                          ),
-                          br(),br(),
-                          fluidRow(
-                            column(width = 12,
                                    plotlyOutput("giftMonthPlot"),
                                    plotlyOutput("giftDOWPlot"),
-                            )
                           )
                 )
               )
@@ -149,6 +143,7 @@ ui <- dashboardPage(
                   ),
                   br(),br(),
                   fluidRow(
+                    h4("Donor Portfolio Table",style="text-align: center;"),
                     DT::dataTableOutput("rfmTable")
                   )
                 )
@@ -200,7 +195,6 @@ ui <- dashboardPage(
     )
   )
 )
-
  
       
 
@@ -211,11 +205,19 @@ server <- function(input, output,session) {
   
   ##### =====Donor Overview==== #####
   
- 
+  gift_df <- reactive({
+    df <- gift %>%
+      mutate(Year =  as.integer(as.numeric(lubridate::year(GIFT_DATE))),
+             Month = lubridate::month(GIFT_DATE, label = TRUE),
+             DOW = lubridate::wday(GIFT_DATE, label=TRUE)) %>%
+      filter((Year >= input$yearDonationInput[1] & Year <= input$yearDonationInput[2]), 
+             Month %in% input$monthDonationInput)
+    df
+    
+  })
   
   output$giftCRMPlot <- renderPlotly({
-    gift %>%
-      filter(GIFT_DATE >= '2015-01-01') %>%
+    gift_df() %>%
       left_join(crm,by='CONSTITUENT_ID') %>%
       group_by(CRM_INTERACTION_TYPE) %>%
       summarise(Total = mean(AMOUNT)) %>%
@@ -224,19 +226,21 @@ server <- function(input, output,session) {
       ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
-      labs(x ="CRM Interaction Type", y = "Avg. Gift Amount") + coord_flip() +
-      theme(legend.text = element_text(size = 12),
-            legend.title = element_text(size = 12),
-            axis.title = element_text(size = 14),
-            axis.text = element_text(size = 12))
+      labs(x ="CRM Interaction Type", y = "Avg. Gift Amount", title="CRM Interaction & Avg. Gift Amount") + coord_flip() +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10))
   })
   
   gift_df <- reactive({
     df <- gift %>%
-      mutate(Year = lubridate::year(GIFT_DATE),
+      mutate(Year =  as.integer(as.numeric(lubridate::year(GIFT_DATE))),
              Month = lubridate::month(GIFT_DATE, label = TRUE),
-             DOW = lubridate::wday(GIFT_DATE, label=TRUE))
-      
+             DOW = lubridate::wday(GIFT_DATE, label=TRUE)) %>%
+      filter((Year >= input$yearDonationInput[1] & Year <= input$yearDonationInput[2]), 
+              Month %in% input$monthDonationInput)
     df
       
   })
@@ -244,17 +248,18 @@ server <- function(input, output,session) {
   
   output$giftYearPlot <- renderPlotly({
     g <- gift_df() %>%
-      filter((Year >= input$YearInput[1] & Year <= input$YearInput[2]), Month %in% input$monthInput) %>%
     group_by(Year) %>%
       summarise(Total = mean(AMOUNT)) %>%
       select(Year, Total) %>% 
       na.omit() %>%
       ggplot(aes(Year, Total)) + 
-      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
-      labs(x = "Year", y = "Avg. Gift Amount") + 
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      labs(x = "Year", y = "Avg. Gift Amount", title="Avg. Gift Amount by Year") + 
       scale_y_continuous(labels = comma) +
+      scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10),
             axis.text.x = element_text(angle = 0, hjust = 1))
@@ -269,11 +274,12 @@ server <- function(input, output,session) {
       select(Month, Total) %>% 
       na.omit() %>%
       ggplot(aes(Month, Total)) + 
-      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
-      labs(x = "Month", y = "Avg. Gift Amount") + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + 
+      labs(x = "Month", y = "Avg. Gift Amount", title="Avg. Gift Amount by Month") + 
       scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10),
             axis.text.x = element_text(angle = 0, hjust = 1))
@@ -288,11 +294,12 @@ server <- function(input, output,session) {
       select(DOW, Total) %>% 
       na.omit() %>%
       ggplot(aes(DOW, Total)) + 
-      geom_bar(stat = "identity",width = 0.5, fill='black') + theme_minimal() +
-      labs(x = "Day Of Week", y = "Avg. Gift Amount") + 
+      geom_bar(stat = "identity",width = 0.5, fill='black') + 
+      labs(x = "Day Of Week", y = "Avg. Gift Amount", title="Avg. Gift Amount by Day of Week") + 
       scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10),
             axis.text.x = element_text(angle = 0, hjust = 1))
@@ -402,11 +409,11 @@ server <- function(input, output,session) {
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Days", title="Average # of Days since last gift") + coord_flip() +
-      theme(legend.text = element_text(size = 8),
-            plot.title = element_text(size = 10),
-            legend.title = element_text(size = 8),
-            axis.title = element_text(size = 8),
-            axis.text = element_text(size = 8))
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10))
     ggplotly(g)
     
   })
@@ -418,11 +425,11 @@ server <- function(input, output,session) {
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Gifts", title = "Average # of Gifts") + coord_flip() +
-      theme(legend.text = element_text(size = 8),
-            plot.title = element_text(size = 10),
-            legend.title = element_text(size = 8),
-            axis.title = element_text(size = 8),
-            axis.text = element_text(size = 8))
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10))
     ggplotly(g)
     
   })  
@@ -433,11 +440,11 @@ server <- function(input, output,session) {
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Amount", title = "Average Donation Amount") + coord_flip() +
-      theme(legend.text = element_text(size = 8),
-            plot.title = element_text(size = 10),
-            legend.title = element_text(size = 8),
-            axis.title = element_text(size = 8),
-            axis.text = element_text(size = 8))
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10))
     ggplotly(g)
     
     
