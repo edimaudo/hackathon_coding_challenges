@@ -170,14 +170,10 @@ ui <- dashboardPage(
                 sidebarPanel(width = 3,
                              selectInput("predictionSegmentInput", "Portfolios", 
                                          choices = segment_titles, selected = segment_titles[0]),
-                             sliderInput("predictionCRMInput", "# of CRM Interactions", 
-                                         min = 0, max = 100, value = 1), 
-                             sliderInput("predictionCRMInteractionInput", "Unique CRM Interactions", 
-                                         min = 0, max = 5, value = 1), 
-                             sliderInput("predictionGiftInput", "# of Gifts", 
-                                         min = 0, max = 50, value = 1), 
-                             sliderInput("predictionDayInput", "# of Days Since last gift", 
-                                         min = 0, max = 3000, value = 100), 
+                             sliderInput("predictionCRMInteractionInput", "Unique CRM Interactions", min = 0, max = 5, value = 1), 
+                             numberInput("predictionCRMInput", "# of CRM Interactions", value = 1,min = 0, max = 100), 
+                             numberInput("predictionGiftInput", "# of Gifts",value=1,min = 0, max = 50),
+                             numberInput("predictionDayInput", "# of Days Since last gift",value=1300,min=0,max=5000),
                              submitButton("Submit")
                 ),
                 mainPanel(
