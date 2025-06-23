@@ -1,11 +1,9 @@
 #========================================
 # Shiny web app which provides insights 
-# for Apra data science challenge
+# for Apra data science challenge 2025
 #=========================================
 rm(list = ls())
-################
-# Packages 
-################
+################  Packages ################
 # library(ggplot2)
 # library(corrplot)
 # library(tidyverse)
@@ -47,44 +45,21 @@ for (package in packages) {
     library(package, character.only=T)
   }
 }
-################
-# Load Data
-################
+################ Load Data ################
 crm <- read_csv("CRM_interacions_table.csv")
 gift <- read_csv("gift_transactions_table.csv")
 video <- read_csv("video_email_data_table.csv")
 constituent <- read_csv("constituent_profiles_table.csv")
 rfm_segment <- read_excel("rfm_segments_strategy.xlsx")
 rfm_segment_encoding <- read_excel("Portfolio_segment_coding.xlsx")
+# Load ML model
+model_load = readRDS("model.rda")
 
 # Data Information
 segment_titles <- rfm_segment$`Donor Portfolio`
 month_titles <- c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
 
-
-segment_label <- function(df,x) {
-  df1 <- df %>%
-    filter(x==df$Portfolio) %>%
-    select(Encoding)
-  df1
-}
-
-# ML Transformation
-#Label Encoder
-labelEncoder <-function(x){
-  as.numeric(factor(x))-1
-}
-#normalize data
-normalize <- function(x) {
-  return ((x - min(x)) / (max(x) - min(x)))
-}
-
-# Load ML model
-model_load = readRDS("model.rda")
-
-################
-# UI
-################
+################ UI ################
 ui <- dashboardPage(
   dashboardHeader(title = "Apra Challenge 2025",
                   tags$li(a(href = 'https://www.aprahome.org',
@@ -200,9 +175,12 @@ ui <- dashboardPage(
                              numericInput("predictionDayInput", "# of Days Since last gift",value=1300,min=0,max=5000),
                              submitButton("Submit")
                 ),
-                mainPanel(
+                mainPanel(width = 9,
                     fluidRow(
-                      infoBoxOutput("predictionOutput")
+                      column(width = 12,
+                             valueBoxOutput("predictionOutput")
+                             )
+                      
                     )
             )
           )
@@ -572,21 +550,33 @@ server <- function(input, output,session) {
     # Assign column names
     colnames(df) = columns
     
-    df <- rbind(df, c(input$predictionGiftInput,input$predictionDayInput,input$predictionCRMInput,input$predictionCRMInteractionInput,
-                      segment_label(rfm_segment_encoding,input$predictionSegmentInput)))
+    df1 <- rfm_segment_encoding %>%
+      filter(rfm_segment_encoding$Portfolio == input$predictionSegmentInput) %>%
+      select(Encoding)
+    
+    
+    df <- rbind(df, c(input$predictionGiftInput,input$predictionDayInput,input$predictionCRMInput,
+                      input$predictionCRMInteractionInput,df1$Encoding))
     colnames(df) = columns
     final_predictions <- predict(model_load, df)
+    final_predictions <-round(final_predictions,2)
     final_predictions
     
   })
   
-  output$infoBoxOutput <- renderInfoBox({
-    infoBox(
-      "Predicted Donation Amount", donation_df(), icon = icon("credit-card", lib = "glyphicon"),
-      color = "green", fill = TRUE
-    )
-  })
+  output$predictionOutput <- renderValueBox({
+    valueBox(
+      value = tags$p("Next Best Donation", style = "font-size: 24px;"),
+      subtitle = tags$p((donation_df()), style = "font-size: 100%;"),
+    #icon = icon("credit-card", lib = "glyphicon"),
+    color = "green"
+  )
+  
+  
+    })
     
+  
+  
   
 
 }
