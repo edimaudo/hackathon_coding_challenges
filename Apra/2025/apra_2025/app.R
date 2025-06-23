@@ -61,6 +61,14 @@ rfm_segment_encoding <- read_excel("Portfolio_segment_coding.xlsx")
 segment_titles <- rfm_segment$`Donor Portfolio`
 month_titles <- c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
 
+
+segment_label <- function(df,x) {
+  df1 <- df %>%
+    filter(x==df$Portfolio) %>%
+    select(Encoding)
+  df1
+}
+
 # ML Transformation
 #Label Encoder
 labelEncoder <-function(x){
@@ -193,9 +201,9 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(
-                  
-                  
-                    #plotlyOutput("rfmRecencyChart"),
+                    fluidRow(
+                      infoBoxOutput("predictionOutput")
+                    )
             )
           )
       )
@@ -553,8 +561,31 @@ server <- function(input, output,session) {
   })
     
   ##### =====Next Best Donation ==== #####
-  
+  donation_df <- reactive({
     
+    # data frame setup
+    columns = c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")
+    
+    #Create a Empty DataFrame with 0 rows and n columns
+    df = data.frame(matrix(nrow = 0, ncol = length(columns))) 
+    
+    # Assign column names
+    colnames(df) = columns
+    
+    df <- rbind(df, c(input$predictionGiftInput,input$predictionDayInput,input$predictionCRMInput,input$predictionCRMInteractionInput,
+                      segment_label(rfm_segment_encoding,input$predictionSegmentInput)))
+    colnames(df) = columns
+    final_predictions <- predict(model_load, df)
+    final_predictions
+    
+  })
+  
+  output$infoBoxOutput <- renderInfoBox({
+    infoBox(
+      "Predicted Donation Amount", donation_df(), icon = icon("credit-card", lib = "glyphicon"),
+      color = "green", fill = TRUE
+    )
+  })
     
   
 
