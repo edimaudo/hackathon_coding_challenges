@@ -55,11 +55,13 @@ gift <- read_csv("gift_transactions_table.csv")
 video <- read_csv("video_email_data_table.csv")
 constituent <- read_csv("constituent_profiles_table.csv")
 rfm_segment <- read_excel("rfm_segments_strategy.xlsx")
+rfm_segment_encoding <- read_excel("Portfolio_segment_coding.xlsx")
 
 # Data Information
 segment_titles <- rfm_segment$`Donor Portfolio`
 month_titles <- c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
 
+# ML Transformation
 #Label Encoder
 labelEncoder <-function(x){
   as.numeric(factor(x))-1
@@ -69,8 +71,8 @@ normalize <- function(x) {
   return ((x - min(x)) / (max(x) - min(x)))
 }
 
-# Load model
-
+# Load ML model
+model_load = readRDS("model.rda")
 
 ################
 # UI
@@ -313,8 +315,6 @@ server <- function(input, output,session) {
   })
   
   ##### =====Donor Portfolio==== #####
-  
-  
   ##### RFM Calculation #####
   rfm_info  <- reactive({
     rfm_df <- gift %>%
@@ -529,10 +529,6 @@ server <- function(input, output,session) {
      
    })
   
-
-    
-
-  
   output$donationForecastPlot <- renderPlotly({
       #input$go
       Sys.sleep(1.5)
@@ -551,15 +547,13 @@ server <- function(input, output,session) {
      ggplotly(g)
   })
     
-
-  
-  
   output$donationForecastTable <- renderDataTable({
     forecast_df()
     
   })
     
-  #===== Next Best Donation =====#
+  ##### =====Next Best Donation ==== #####
+  
     
     
   
