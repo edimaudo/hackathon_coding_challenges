@@ -195,6 +195,8 @@ ui <- dashboardPage(
 ################  Server ################
 server <- function(input, output,session) {
   
+  
+  
   ##### =====Donor Overview==== #####
   
   gift_df <- reactive({
@@ -298,6 +300,7 @@ server <- function(input, output,session) {
     ggplotly(g)
     
   })
+  
   
   ##### =====Donor Portfolio==== #####
   ##### RFM Calculation #####
