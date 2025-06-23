@@ -106,7 +106,7 @@ ui <- dashboardPage(
       ######### Donor Overview ######### 
       tabItem(tabName = "donation_overview",
               sidebarLayout(
-                sidebarPanel(width = 3,
+                sidebarPanel(width = 2,
                              sliderInput("yearDonationInput","Year", min = 2015, max = 2025, 
                                          value = c(2015,2025), step = 1),
                              selectInput("monthDonationInput", "Month", 
@@ -114,7 +114,7 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(
-                  layout_columns(
+                  layout_column_wrap(
                     plotlyOutput("giftCRMPlot"),
                     plotlyOutput("giftYearPlot"),
                   ),
@@ -143,20 +143,28 @@ ui <- dashboardPage(
                     )
                   ),
                   br(),br(),
-                  fluidRow(
-                    column(width = 12,
+             
+                    layout_column_wrap(width = 1/3,
                            plotlyOutput("rfmRecencyChart"),
                            plotlyOutput("rfmFrequencyChart"),
                            plotlyOutput("rfmMonetaryChart"),
-                    )
                   ),
                   br(),br(),
-                  fluidRow(
-                    h4("Donor Portfolio Description",style="text-align: center;"),
-                    DT::dataTableOutput("rfmDescription"),
-                    h4("Sample Donor Portfolio Table",style="text-align: center;"),
-                    DT::dataTableOutput("rfmTable")
-                  )
+                  #fluidRow(
+                  #  h4("Sample Donor Portfolio Table",style="text-align: center;"),
+                  #  DT::dataTableOutput("rfmTable"),
+                  #  h4("Donor Portfolio Description",style="text-align: center;"),
+                  #  DT::dataTableOutput("rfmDescription"),
+                  #)
+                  tabsetPanel(type = "tabs",
+                              tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
+                                       DT::dataTableOutput("rfmDescription"),
+                              ),
+                              tabPanel(h4("Sample Donor Portfolio Table",style="text-align: center;"), 
+                                       DT::dataTableOutput("rfmTable"),
+                              ),
+                              
+                  )  
                 )
               )
       ),
@@ -413,7 +421,7 @@ server <- function(input, output,session) {
       labs(x ="Segment", y = "Days", title="Average # of Days since last gift") + coord_flip() +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
-            plot.title = element_text(size = 12, hjust = 0.5),
+            plot.title = element_text(size = 10, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
     ggplotly(g)
@@ -429,7 +437,7 @@ server <- function(input, output,session) {
       labs(x ="Segment", y = "Gifts", title = "Average # of Gifts") + coord_flip() +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
-            plot.title = element_text(size = 12, hjust = 0.5),
+            plot.title = element_text(size = 10, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
     ggplotly(g)
@@ -444,7 +452,7 @@ server <- function(input, output,session) {
       labs(x ="Segment", y = "Amount", title = "Average Donation Amount") + coord_flip() +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
-            plot.title = element_text(size = 12, hjust = 0.5),
+            plot.title = element_text(size = 10, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
     ggplotly(g)
