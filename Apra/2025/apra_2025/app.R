@@ -32,10 +32,11 @@ rm(list = ls())
 # library(dplyr)
 # library(treemapify)
 # library(shinycssloader)
+# library(bslib)
 
 packages <- c(
-  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders','DT',
-  'mlbench','caTools','gridExtra','doParallel','grid','reshape2',
+  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders','bslib',
+  'DT','mlbench','caTools','gridExtra','doParallel','grid','reshape2',
   'caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
   'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify'
 )
@@ -52,11 +53,12 @@ crm <- read_csv("CRM_interacions_table.csv")
 gift <- read_csv("gift_transactions_table.csv")
 video <- read_csv("video_email_data_table.csv")
 constituent <- read_csv("constituent_profiles_table.csv")
+rfm_segment <- read_excel("rfm_strategy.xlsx")
 
 # Data Information
-segment_titles <- c("Champions", "Loyal Customers", "Potential Loyalist",
-                    "Recent Ones", "Could be Promising", "Requires Assistance", "Getting Less Frequent",
-                    "At Risk", "Can't Lose Them", "Lost")
+segment_titles <- rfm_segment$`Donor Portfolio` #c("Champions", "Loyal Customers", "Potential Loyalist",
+                  #  "Recent Donors", "Promising DOnors", "Requires Assistance", "Getting Less Frequent",
+                  #  "At Risk", "Can't Lose Them", "Lost")
 month_titles <- c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
 
 #Label Encoder
@@ -87,8 +89,8 @@ ui <- dashboardPage(
       menuItem("Weekly Donation Insights", tabName = "weekly", icon = icon("th")),
       menuItem("Monthly Donation Insights", tabName = "monthly",icon = icon("th")),
       menuItem("Yearly Donation Insights", tabName = "yearly",icon = icon("th")),
-      menuItem("Donation Overiew", tabName = "donations_overview", icon = icon("th")),
-      menuSubItem("Donor Portfolio", tabName = "segment", icon = icon("pencil")),
+      menuItem("Donation Overiew", tabName = "donation_overview", icon = icon("th")),
+      menuSubItem("Donor Portfolio", tabName = "donation_segment", icon = icon("pencil")),
       menuSubItem("Gift Forecasting ", tabName = "donation_forecast",icon = icon("pencil")),
       menuSubItem("Next Best Gift", tabName = "donation_prediction",icon = icon("pencil"))
     )
@@ -101,10 +103,11 @@ ui <- dashboardPage(
       ######### Overview ######### 
       
       ######### Donor Overview ######### 
-      tabItem(tabName = "donations_overview",
+      tabItem(tabName = "donation_overview",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                             sliderInput("yearDonationInput","Year", min = 2015, max = 2025, value = c(2015,2025), step = 1),
+                             sliderInput("yearDonationInput","Year", min = 2015, max = 2025, 
+                                         value = c(2015,2025), step = 1),
                              selectInput("monthDonationInput", "Month", 
                                          choices = month_titles, selected = month_titles, multiple = TRUE),
                              submitButton("Submit")
@@ -121,7 +124,7 @@ ui <- dashboardPage(
                 
       ),
       ######### Donor Portfolio ######### 
-      tabItem(tabName = "segment",
+      tabItem(tabName = "donation_segment",
               sidebarLayout(
                 sidebarPanel(width = 2,
                              selectInput("rfmInput", "Donor Portfolios", 
@@ -146,7 +149,9 @@ ui <- dashboardPage(
                   ),
                   br(),br(),
                   fluidRow(
-                    h4("Donor Portfolio Table",style="text-align: center;"),
+                    h4("Donor Portfolio Description",style="text-align: center;"),
+                    DT::dataTableOutput("rfmDescription"),
+                    h4("Sample Donor Portfolio Table",style="text-align: center;"),
                     DT::dataTableOutput("rfmTable")
                   )
                 )
@@ -174,9 +179,9 @@ ui <- dashboardPage(
                              selectInput("predictionSegmentInput", "Portfolios", 
                                          choices = segment_titles, selected = segment_titles[0]),
                              sliderInput("predictionCRMInteractionInput", "Unique CRM Interactions", min = 0, max = 5, value = 1), 
-                             numberInput("predictionCRMInput", "# of CRM Interactions", value = 1,min = 0, max = 100), 
-                             numberInput("predictionGiftInput", "# of Gifts",value=1,min = 0, max = 50),
-                             numberInput("predictionDayInput", "# of Days Since last gift",value=1300,min=0,max=5000),
+                             numericInput("predictionCRMInput", "# of CRM Interactions", value = 1,min = 0, max = 100), 
+                             numericInput("predictionGiftInput", "# of Gifts",value=1,min = 0, max = 50),
+                             numericInput("predictionDayInput", "# of Days Since last gift",value=1300,min=0,max=5000),
                              submitButton("Submit")
                 ),
                 mainPanel(
@@ -448,13 +453,15 @@ server <- function(input, output,session) {
   rfm_output <- reactive({
       df <- rfm_info() %>%
         filter(segment %in% input$rfmInput) %>%
-        select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
+        select(customer_id,segment,rfm_score,transaction_count,recency_days,amount) %>%
+        top_n(50)
         colnames(df) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
         df
   })
    
   output$rfmTable <- renderDataTable({
     rfm_output()
+      
   })    
   
   ##### =====Donation Forecasting ==== #####
