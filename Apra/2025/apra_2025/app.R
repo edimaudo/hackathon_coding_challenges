@@ -118,6 +118,7 @@ ui <- dashboardPage(
                     plotlyOutput("giftCRMPlot"),
                     plotlyOutput("giftYearPlot"),
                   ),
+                  br(),br(),
                   layout_columns(
                     plotlyOutput("giftMonthPlot"),
                     plotlyOutput("giftDOWPlot"),
@@ -150,12 +151,6 @@ ui <- dashboardPage(
                            plotlyOutput("rfmMonetaryChart"),
                   ),
                   br(),br(),
-                  #fluidRow(
-                  #  h4("Sample Donor Portfolio Table",style="text-align: center;"),
-                  #  DT::dataTableOutput("rfmTable"),
-                  #  h4("Donor Portfolio Description",style="text-align: center;"),
-                  #  DT::dataTableOutput("rfmDescription"),
-                  #)
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmDescription"),
@@ -171,7 +166,7 @@ ui <- dashboardPage(
       ######### Donor Forecasting #########
       tabItem(tabName = "donation_forecast",
               sidebarLayout(
-                sidebarPanel(width = 3,
+                sidebarPanel(width = 2,
                              selectInput("forecastSegmentInput", "Portfolios", 
                                          choices = segment_titles, selected = segment_titles[1], multiple = TRUE),
                              sliderInput("forecastHorizonInput", "Forecast Period (in months)", 
@@ -179,7 +174,9 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(
-                    plotlyOutput("donationForecastPlot") %>% withSpinner()
+                    plotlyOutput("donationForecastPlot") %>% withSpinner(),
+                    h4("Forecasted Donations Table",style="text-align: center;"),
+                    DT::dataTableOutput("donationForecastTable"),
                   )
                 )
       ),
@@ -518,7 +515,7 @@ server <- function(input, output,session) {
    
    # Extracting forecast values
    forecast_df <- reactive({
-     as_data_frame(forecast_arima()) %>%
+     df <- as_data_frame(forecast_arima()) %>%
        rename(
          `Forecasted Donation` = `Point Forecast`
        ) %>%
@@ -528,6 +525,10 @@ server <- function(input, output,session) {
                      length.out = input$forecastHorizonInput)
        ) %>%
        select(Month, `Forecasted Donation`)
+     
+     df$`Forecasted Donation`<-round(df$`Forecasted Donation`,2)
+     df
+     
    })
   
 
@@ -535,12 +536,9 @@ server <- function(input, output,session) {
 
   
   output$donationForecastPlot <- renderPlotly({
-    
       #input$go
       Sys.sleep(1.5)
       #plot(runif(10))
-    
-    
     g <- forecast_df() %>%
       select(Month, `Forecasted Donation`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
@@ -559,8 +557,7 @@ server <- function(input, output,session) {
   
   
   output$donationForecastTable <- renderDataTable({
-    #forecast_df()$`Forecasted Donation` <- format(round(forecast_df()$`Forecasted Donation`, 2), nsmall = 2)
-    #forecast_df()
+    forecast_df()
     
   })
     
