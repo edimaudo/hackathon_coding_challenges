@@ -195,7 +195,7 @@ ui <- dashboardPage(
 ################  Server ################
 server <- function(input, output,session) {
   
-  ##### =====Gift Overview==== #####
+  ##### =====Donor Overview==== #####
   
   gift_df <- reactive({
     df <- gift %>%
@@ -459,7 +459,7 @@ server <- function(input, output,session) {
       
   })    
   
-  ##### =====Donation Forecasting ==== #####
+  ##### =====Donation Forecasting==== #####
   ##### Donation Forecast setup ######
   gifts_df <- reactive ({
     gift %>%
@@ -537,7 +537,7 @@ server <- function(input, output,session) {
     
   })
     
-  ##### =====Next Best Donation ==== #####
+  ##### =====Next Best Donation==== #####
   donation_df <- reactive({
     
     # data frame setup
