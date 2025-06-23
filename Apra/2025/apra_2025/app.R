@@ -57,9 +57,7 @@ constituent <- read_csv("constituent_profiles_table.csv")
 rfm_segment <- read_excel("rfm_segments_strategy.xlsx")
 
 # Data Information
-segment_titles <- rfm_segment$`Donor Portfolio` #c("Champions", "Loyal Customers", "Potential Loyalist",
-                  #  "Recent Donors", "Promising DOnors", "Requires Assistance", "Getting Less Frequent",
-                  #  "At Risk", "Can't Lose Them", "Lost")
+segment_titles <- rfm_segment$`Donor Portfolio`
 month_titles <- c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
 
 #Label Encoder
@@ -329,12 +327,12 @@ server <- function(input, output,session) {
     report <- rfm_table_order(rfm_df, customer_id,GIFT_DATE,AMOUNT, analysis_date)
     
     # numerical thresholds
-    r_low <- c(4, 2, 3, 4, 3, 2, 2, 1, 1, 1)
-    r_high <- c(5, 5, 5, 5, 4, 3, 3, 2, 1, 2)
-    f_low <- c(4, 3, 1, 1, 1, 2, 1, 2, 4, 1)
-    f_high <- c(5, 5, 3, 1, 1, 3, 2, 5, 5, 2)
-    m_low <- c(4, 3, 1, 1, 1, 2, 1, 2, 4, 1)
-    m_high  <- c(5, 5, 3, 1, 1, 3, 2, 5, 5, 2)
+    r_low <-   c(5, 3, 2, 3, 4, 1, 1, 1, 2, 1)
+    r_high <-   c(5, 5, 4, 4, 5, 2, 2, 3, 3, 1)
+    f_low <- c(5, 3, 2, 1, 1, 3, 2, 3, 1, 1)
+    f_high <- c(5, 5, 4, 3, 3, 4, 5, 5, 3, 5)
+    m_low <-  c(5, 2, 2, 3, 1, 4, 4, 3, 1, 1)
+    m_high <-  c(5, 5, 4, 5, 5, 5, 5, 5, 4, 5)
     
     divisions<-rfm_segment(report, segment_titles, r_low, r_high, f_low, f_high, m_low, m_high)
     
