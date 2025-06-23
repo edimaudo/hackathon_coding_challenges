@@ -33,9 +33,10 @@ rm(list = ls())
 # library(treemapify)
 # library(shinycssloader)
 # library(bslib)
+# library(readxl)
 
 packages <- c(
-  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders','bslib',
+  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders','bslib','readxl',
   'DT','mlbench','caTools','gridExtra','doParallel','grid','reshape2',
   'caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
   'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify'
@@ -53,7 +54,7 @@ crm <- read_csv("CRM_interacions_table.csv")
 gift <- read_csv("gift_transactions_table.csv")
 video <- read_csv("video_email_data_table.csv")
 constituent <- read_csv("constituent_profiles_table.csv")
-rfm_segment <- read_excel("rfm_strategy.xlsx")
+rfm_segment <- read_excel("rfm_segments_strategy.xlsx")
 
 # Data Information
 segment_titles <- rfm_segment$`Donor Portfolio` #c("Champions", "Loyal Customers", "Potential Loyalist",
@@ -185,7 +186,7 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(
-                  fluidRow(),
+                  
                   
                     #plotlyOutput("rfmRecencyChart"),
             )
