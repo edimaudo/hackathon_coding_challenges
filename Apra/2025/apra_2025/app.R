@@ -34,9 +34,9 @@ rm(list = ls())
 # library(readxl)
 
 packages <- c(
-  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders','bslib','readxl',
-  'DT','mlbench','caTools','gridExtra','doParallel','grid','reshape2',
-  'caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
+  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders',
+  'bslib','readxl','DT','mlbench','caTools','gridExtra','doParallel','grid',
+  'reshape2','caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
   'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify'
 )
 for (package in packages) {
@@ -96,8 +96,8 @@ ui <- dashboardPage(
                                          choices = month_titles, selected = month_titles, multiple = TRUE),
                              submitButton("Submit")
                 ),
-                mainPanel(
-                  layout_column_wrap(
+                mainPanel(width = 10,
+                  layout_column_wrap(width = 1/2,
                     plotlyOutput("giftCRMPlot"),
                     plotlyOutput("giftYearPlot"),
                   ),
@@ -115,7 +115,8 @@ ui <- dashboardPage(
               sidebarLayout(
                 sidebarPanel(width = 2,
                              selectInput("rfmInput", "Donor Portfolios", 
-                                         choices = segment_titles, selected = segment_titles, multiple = TRUE),
+                                         choices = segment_titles, selected = segment_titles, 
+                                         multiple = TRUE),
                              submitButton("Submit")
                 ),
                 mainPanel(width = 10,
@@ -127,18 +128,26 @@ ui <- dashboardPage(
                     )
                   ),
                   br(),br(),
-             
-                    layout_column_wrap(width = 1/3,
-                           plotlyOutput("rfmRecencyChart"),
-                           plotlyOutput("rfmFrequencyChart"),
-                           plotlyOutput("rfmMonetaryChart"),
+                  tabsetPanel(type = "tabs",
+                              tabPanel(h4("Donor Portfolio Mix",style="text-align: center;"),
+                                       plotOutput('rfmTreemap'),
+                              ),
+                              tabPanel(h4("Recency",style="text-align: center;"),
+                                plotlyOutput("rfmRecencyChart"),
+                              ),
+                              tabPanel(h4("Frequency",style="text-align: center;"),
+                                plotlyOutput("rfmFrequencyChart"),
+                              ),
+                              tabPanel(h4("Monetary",style="text-align: center;"),
+                                plotlyOutput("rfmMonetaryChart")
+                              ),
                   ),
                   br(),br(),
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmDescription"),
                               ),
-                              tabPanel(h4("Sample Donor Portfolio Table",style="text-align: center;"), 
+                              tabPanel(h4("Donor Portfolio",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmTable"),
                               ),
                               
@@ -157,11 +166,16 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(
-                    plotlyOutput("donationForecastPlot") %>% withSpinner(),
-                    h4("Forecasted Donations Table",style="text-align: center;"),
-                    DT::dataTableOutput("donationForecastTable"),
+                  tabsetPanel(type = "tabs",
+                              tabPanel(h4("Forecast Graph",style="text-align: center;"),
+                                       plotlyOutput("donationForecastPlot") %>% withSpinner(),
+                              ),
+                              tabPanel(h4("Forecast Table",style="text-align: center;"),
+                                       DT::dataTableOutput("donationForecastTable") %>% withSpinner(),
+                              ),
                   )
                 )
+              )
       ),
       ######### Donor Prediction ######### 
       tabItem(tabName = "donation_prediction",
@@ -341,7 +355,7 @@ server <- function(input, output,session) {
   output$valueRecency <- renderValueBox({
   
     valueBox(
-      value = tags$p("Avg. # of Days since last gift", style = "font-size: 24px;"),
+      value = tags$p("Avg. # of Days since last gift", style = "font-size: 18px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_recency, fmt = '%.0f')), style = "font-size: 100%;"),
       #icon = icon("calendar"),
       color = "black"
@@ -351,7 +365,7 @@ server <- function(input, output,session) {
   
   output$valueFrequency <- renderValueBox({
     valueBox(
-      value = tags$p("Avg. # of Gifts", style = "font-size: 24px;"),
+      value = tags$p("Avg. # of Gifts", style = "font-size: 18px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_frequency, fmt = '%.0f')), style = "font-size: 100%;"),
       #icon = icon("thumbs-up"),
       color = "black"
@@ -360,7 +374,7 @@ server <- function(input, output,session) {
   
   output$valueMonetary <- renderValueBox({
     valueBox(
-      value = tags$p("Avg. Gift Amount", style = "font-size: 24px;"),
+      value = tags$p("Avg. Gift Amount", style = "font-size: 18px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')), style = "font-size: 100%;"),
       #icon = icon("credit-card"),
       color = "black"
