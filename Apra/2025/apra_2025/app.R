@@ -191,9 +191,8 @@ ui <- dashboardPage(
  
       
 
-################
-# Server
-################
+
+################  Server ################
 server <- function(input, output,session) {
   
   ##### =====Gift Overview==== #####
@@ -575,10 +574,6 @@ server <- function(input, output,session) {
   
     })
     
-  
-  
-  
-
 }
 
 shinyApp(ui, server)
