@@ -113,13 +113,15 @@ ui <- dashboardPage(
                                          choices = month_titles, selected = month_titles, multiple = TRUE),
                              submitButton("Submit")
                 ),
-                mainPanel(width = 9,
-                          fluidRow(
-                                   plotlyOutput("giftCRMPlot"),
-                                   plotlyOutput("giftYearPlot"),
-                                   plotlyOutput("giftMonthPlot"),
-                                   plotlyOutput("giftDOWPlot"),
-                          )
+                mainPanel(
+                  layout_columns(
+                    plotlyOutput("giftCRMPlot"),
+                    plotlyOutput("giftYearPlot"),
+                  ),
+                  layout_columns(
+                    plotlyOutput("giftMonthPlot"),
+                    plotlyOutput("giftDOWPlot"),
+                  )
                 )
               )
                 
