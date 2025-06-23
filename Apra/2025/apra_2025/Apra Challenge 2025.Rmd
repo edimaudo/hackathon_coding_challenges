@@ -852,21 +852,7 @@ reference_date <- ymd('2015-01-01') # Keeping user's specified date
       ) %>%
       select("CONSTITUENT_ID","total_interactions","unique_interaction_types")
       
-    
-    # ## Most common interaction type
-    # crm_type_mode <- crm %>%
-    #   group_by(CONSTITUENT_ID) %>%
-    #   summarise(
-    #     most_common_interaction_type = {
-    #       modes <- names(sort(table(CRM_INTERACTION_TYPE), decreasing = TRUE))[1]
-    #       ifelse(length(modes) > 0, modes, 'Unknown')
-    #     },
-    #     .groups = 'drop'
-    #   )
-    # 
-    # crm_agg <- crm_agg %>%
-    #   left_join(crm_type_mode, by = "CONSTITUENT_ID") %>%
-      
+
 ```
 
 ```{r}
@@ -890,9 +876,7 @@ normalize <- function(x) {
 ```
 
 ```{r}
-division_temp <- divisions %>%
-  group_by(segment,segment_value) %>%
-  select(segment,segment_value)
+
 ```
 
 ```{r}
@@ -903,22 +887,23 @@ df_cts <- crm_rfm %>%
 df_cat <- crm_rfm %>%
   select(CONSTITUENT_ID,segment)
 
-df_cat2 <- df_cat
-
 df_amount <- crm_rfm %>%
   select(CONSTITUENT_ID,amount)
 ```
 
 
 ```{r}
-df_cts <- as.data.frame(lapply(df_cts, normalize))
+df_cts <- as.data.frame(df_cts)
 df_cat <- as.data.frame(lapply(df_cat, labelEncoder))
 ```
 
 
 ```{r}
 df_new <- cbind(df_cts,df_cat,df_amount)
+```
 
+
+```{r}
 df_new$CONSTITUENT_ID <- NULL
 df_new$CONSTITUENT_ID <- NULL
 df_new$CONSTITUENT_ID <- NULL
@@ -1064,9 +1049,13 @@ colnames(df) = columns
 ```
 
 ```{r}
-df <- rbind(df, c(0.0000000000,0.75,0.003154574,0.00,2))
+df <- rbind(df, c(1,1300,1,1,2))
 
 ```
+
+```{r}
+```
+
 
 ```{r}
 colnames(df) = columns
@@ -1075,3 +1064,7 @@ colnames(df) = columns
 ```{r}
 final_predictions <- predict(model_load, df)
 ```
+```{r}
+final_predictions
+```
+
