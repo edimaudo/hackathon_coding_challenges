@@ -451,6 +451,10 @@ server <- function(input, output,session) {
   })
     
   ##### RFM Table ######
+  output$rfmDescription <- renderDataTable({
+    rfm_segment
+  })
+  
   rfm_output <- reactive({
       df <- rfm_info() %>%
         filter(segment %in% input$rfmInput) %>%
@@ -459,7 +463,7 @@ server <- function(input, output,session) {
         colnames(df) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
         df
   })
-   
+  
   output$rfmTable <- renderDataTable({
     rfm_output()
       
