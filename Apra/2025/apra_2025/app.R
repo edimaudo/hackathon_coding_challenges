@@ -29,7 +29,7 @@ rm(list = ls())
 # library(xts)
 # library(dplyr)
 # library(treemapify)
-# library(shinycssloader)
+# library(shinycssloaders)
 # library(bslib)
 # library(readxl)
 
