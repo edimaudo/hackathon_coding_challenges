@@ -465,8 +465,7 @@ server <- function(input, output,session) {
   rfm_output <- reactive({
       df <- rfm_info() %>%
         filter(segment %in% input$rfmInput) %>%
-        select(customer_id,segment,rfm_score,transaction_count,recency_days,amount) %>%
-        top_n(50)
+        select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
         colnames(df) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
         df
   })
@@ -478,17 +477,17 @@ server <- function(input, output,session) {
   
   ##### =====Donation Forecasting==== #####
   ##### Donation Forecast setup ######
-  gifts_df <- reactive ({
-    gift %>%
+  
+  forecast_df  <- reactive ({
+    set.seed(1234)
+    gifts_df <- gift %>%
       filter(GIFT_DATE >= '2015-01-01') %>%
       inner_join(rfm_output(),'CONSTITUENT_ID') %>%
       group_by(CONSTITUENT_ID) %>%
       select(CONSTITUENT_ID,Segment,GIFT_DATE,AMOUNT) %>%
       na.omit()
-  })
-  
-  monthly_donations <- reactive({
-    gifts_df() %>%
+    
+    monthly_donations <- gifts_df %>%
       filter(Segment %in% c(input$forecastSegmentInput)) %>%
       mutate(GIFT_DATE = ymd(GIFT_DATE)) %>%
       # Extract year and month for grouping
@@ -496,40 +495,34 @@ server <- function(input, output,session) {
       group_by(year_month) %>%
       summarise(total_donations = sum(AMOUNT, na.rm = TRUE), .groups = 'drop') %>%
       arrange(year_month)
+    
+    start_year <- lubridate::year(min(monthly_donations$year_month))
+    start_month <- lubridate::month(min(monthly_donations$year_month))
+    
+    donations_ts <- ts(monthly_donations$total_donations,
+                       start = c(start_year, start_month),
+                       frequency = 12)
+    
+    arima_model <- auto.arima(donations_ts)
+    
+    forecast_arima <- forecast(arima_model, h = input$forecastHorizonInput)
+    
+    df <- as_data_frame(forecast_arima) %>%
+      rename(
+        `Forecasted Donation` = `Point Forecast`
+      ) %>%
+      mutate(
+        Month = seq(from = max(monthly_donations$year_month) + months(1),
+                    by = "month",
+                    length.out = input$forecastHorizonInput)
+      ) %>%
+      select(Month, `Forecasted Donation`)
+    
+    df$`Forecasted Donation`<-round(df$`Forecasted Donation`,2)
+    df
+  
   })
-   
-   start_year <- reactive({lubridate::year(min(monthly_donations()$year_month))})
-   start_month <- reactive({lubridate::month(min(monthly_donations()$year_month))})
-   
-   donations_ts <- reactive({
-     ts(monthly_donations()$total_donations,
-        start = c(start_year(), start_month()),
-        frequency = 12)
-   }) 
-   
-  arima_model <- reactive({auto.arima(donations_ts())})
-
-  forecast_arima <- reactive({
-    forecast(arima_model(), h = input$forecastHorizonInput)
-  })
-   
-   # Extracting forecast values
-   forecast_df <- reactive({
-     df <- as_data_frame(forecast_arima()) %>%
-       rename(
-         `Forecasted Donation` = `Point Forecast`
-       ) %>%
-       mutate(
-         Month = seq(from = max(monthly_donations()$year_month) + months(1),
-                     by = "month",
-                     length.out = input$forecastHorizonInput)
-       ) %>%
-       select(Month, `Forecasted Donation`)
-     
-     df$`Forecasted Donation`<-round(df$`Forecasted Donation`,2)
-     df
-     
-   })
+  
   
   output$donationForecastPlot <- renderPlotly({
       #input$go
