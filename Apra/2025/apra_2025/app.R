@@ -70,13 +70,10 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("house")),
-      menuItem("Weekly Donation Insights", tabName = "weekly", icon = icon("th")),
-      menuItem("Monthly Donation Insights", tabName = "monthly",icon = icon("th")),
-      menuItem("Yearly Donation Insights", tabName = "yearly",icon = icon("th")),
       menuItem("Donation Overiew", tabName = "donation_overview", icon = icon("th")),
-      menuSubItem("Donor Portfolio", tabName = "donation_segment", icon = icon("pencil")),
-      menuSubItem("Gift Forecasting ", tabName = "donation_forecast",icon = icon("pencil")),
-      menuSubItem("Next Best Gift", tabName = "donation_prediction",icon = icon("pencil"))
+      menuItem("Donor Portfolio", tabName = "donation_segment", icon = icon("thumbs-up")),
+      menuItem("Gift Forecasting ", tabName = "donation_forecast",icon = icon("credit-card")),
+      menuItem("Next Best Gift", tabName = "donation_prediction",icon = icon("credit-card"))
     )
   ),
   dashboardBody(
