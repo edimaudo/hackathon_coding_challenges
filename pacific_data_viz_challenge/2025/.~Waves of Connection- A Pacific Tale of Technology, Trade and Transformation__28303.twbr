@@ -1044,10 +1044,10 @@
         <calculation class='tableau' formula='If [Calculation_5279415056985976832] = &apos;Exports&apos; then [OBS_VALUE (df!trade)] END' />
       </column>
       <column caption='Trade Balance' datatype='real' name='[Calculation_1991646598627229712]' role='measure' type='quantitative'>
-        <calculation class='tableau' formula='[Calculation_1991646598626848782] - [Calculation_1991646598627061775]' />
+        <calculation class='tableau' formula='IFNULL([Calculation_1991646598626848782],0) - IFNULL([Calculation_1991646598627061775],0)' />
       </column>
       <column caption='Import Dependency Ratio' datatype='real' name='[Calculation_1991646598627459089]' role='measure' type='quantitative'>
-        <calculation class='tableau' formula='// Import Dependency Ratio (%)&#10;([Calculation_1991646598626848782] / [Calculation_1991646598627061775]) * 100' />
+        <calculation class='tableau' formula='// Import Dependency Ratio (%)&#10;(IFNULL([Calculation_1991646598626848782],0) / IFNULL([Calculation_1991646598627061775],1)) * 100' />
       </column>
       <column caption='Trade Flow Calculation' datatype='string' name='[Calculation_5279415056985976832]' role='dimension' type='nominal'>
         <calculation class='tableau' formula='If [Trade flow] = &quot;Imports&quot; or [Trade flow] = &quot;Re-imports&quot; then &quot;Imports&quot;&#10;Else &quot;Exports&quot;&#10;END' />
@@ -1116,6 +1116,7 @@
       <column caption='df_gov' datatype='table' name='[__tableau_internal_object_id__].[df!gov_B11AF212FB2B4AF9B04F80975B82FC7A]' role='measure' type='quantitative' />
       <column caption='df_trade' datatype='table' name='[__tableau_internal_object_id__].[df!trade_32D2B9933A57441781492C43279873C5]' role='measure' type='quantitative' />
       <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='Attribute' name='[attr:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
+      <column-instance column='[Calculation_1991646598627459089]' derivation='Avg' name='[avg:Calculation_1991646598627459089:qk]' pivot='key' type='quantitative' />
       <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='Min' name='[min:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
       <column-instance column='[Calculation_5279415056985976832]' derivation='None' name='[none:Calculation_5279415056985976832:nk]' pivot='key' type='nominal' />
       <column-instance column='[ICT products and services]' derivation='None' name='[none:ICT products and services:nk]' pivot='key' type='nominal' />
@@ -1123,6 +1124,8 @@
       <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
       <column-instance column='[Pacific Island Countries and territories]' derivation='None' name='[none:Pacific Island Countries and territories:nk]' pivot='key' type='nominal' />
       <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='None' name='[none:TIME PERIOD (df!trade) (Years):ok]' pivot='key' type='ordinal' />
+      <column-instance column='[Calculation_1991646598627229712]' derivation='Sum' name='[sum:Calculation_1991646598627229712:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[Calculation_1991646598627459089]' derivation='Sum' name='[sum:Calculation_1991646598627459089:qk]' pivot='key' type='quantitative' />
       <group caption='Action (ICT products and services,Pacific Island Countries and territories (df!trade))' hidden='true' name='[Action (ICT products and services,Pacific Island Countries and territories (df!trade))]' name-style='unqualified' user:auto-column='sheet_link'>
         <groupfilter function='crossjoin'>
           <groupfilter function='level-members' level='[ICT products and services]' />
@@ -2233,6 +2236,17 @@
             </map>
             <map to='#ffbe7d'>
               <bucket>&quot;Kiribati&quot;</bucket>
+            </map>
+          </encoding>
+          <encoding attr='color' field='[:Measure Names]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:Calculation_1991646598627459089:qk]&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627459089:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk]&quot;</bucket>
             </map>
           </encoding>
         </style-rule>
@@ -3872,10 +3886,10 @@
               <calculation class='tableau' formula='If [Calculation_5279415056985976832] = &apos;Exports&apos; then [OBS_VALUE (df!trade)] END' />
             </column>
             <column caption='Trade Balance' datatype='real' name='[Calculation_1991646598627229712]' role='measure' type='quantitative'>
-              <calculation class='tableau' formula='[Calculation_1991646598626848782] - [Calculation_1991646598627061775]' />
+              <calculation class='tableau' formula='IFNULL([Calculation_1991646598626848782],0) - IFNULL([Calculation_1991646598627061775],0)' />
             </column>
             <column caption='Import Dependency Ratio' datatype='real' name='[Calculation_1991646598627459089]' role='measure' type='quantitative'>
-              <calculation class='tableau' formula='// Import Dependency Ratio (%)&#10;([Calculation_1991646598626848782] / [Calculation_1991646598627061775]) * 100' />
+              <calculation class='tableau' formula='// Import Dependency Ratio (%)&#10;(IFNULL([Calculation_1991646598626848782],0) / IFNULL([Calculation_1991646598627061775],1)) * 100' />
             </column>
             <column caption='Trade Flow Calculation' datatype='string' name='[Calculation_5279415056985976832]' role='dimension' type='nominal'>
               <calculation class='tableau' formula='If [Trade flow] = &quot;Imports&quot; or [Trade flow] = &quot;Re-imports&quot; then &quot;Imports&quot;&#10;Else &quot;Exports&quot;&#10;END' />
@@ -3888,12 +3902,12 @@
             </column>
             <column caption='TIME PERIOD (df!trade)' datatype='date' datatype-customized='true' default-format='*YYYY' name='[TIME_PERIOD (df!trade)]' role='dimension' type='ordinal' />
             <column datatype='string' name='[Trade flow]' role='dimension' type='nominal' />
+            <column-instance column='[Calculation_1991646598627459089]' derivation='Avg' name='[avg:Calculation_1991646598627459089:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Calculation_5279415056985976832]' derivation='None' name='[none:Calculation_5279415056985976832:nk]' pivot='key' type='nominal' />
             <column-instance column='[ICT products and services]' derivation='None' name='[none:ICT products and services:nk]' pivot='key' type='nominal' />
             <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
             <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='None' name='[none:TIME PERIOD (df!trade) (Years):qk]' pivot='key' type='quantitative' />
             <column-instance column='[Calculation_1991646598627229712]' derivation='Sum' name='[sum:Calculation_1991646598627229712:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[Calculation_1991646598627459089]' derivation='Sum' name='[sum:Calculation_1991646598627459089:qk]' pivot='key' type='quantitative' />
             <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='Year' name='[yr:TIME PERIOD (df!trade) (Years):ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
           <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]' filter-group='5'>
@@ -3926,9 +3940,10 @@
         </view>
         <style>
           <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]' scope='cols' value='' />
             <format attr='stroke-size' value='0' />
             <format attr='line-visibility' value='off' />
-            <format attr='title' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]' scope='cols' value='' />
+            <encoding attr='space' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:Calculation_1991646598627459089:qk]' field-type='quantitative' fold='true' scope='rows' type='space' />
           </style-rule>
           <style-rule element='cell'>
             <format attr='border-width' value='0' />
@@ -3936,10 +3951,18 @@
           <style-rule element='header'>
             <format attr='border-width' data-class='total' value='0' />
             <format attr='border-style' data-class='total' value='none' />
+            <format attr='color' data-class='subtotal' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='#000000' />
+            <format attr='font-family' data-class='subtotal' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='Helvetica' />
           </style-rule>
           <style-rule element='label'>
             <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]' value='#000000' />
             <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]' value='Helvetica' />
+            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='Helvetica' />
+            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='#000000' />
+            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk]' value='#000000' />
+            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk]' value='Helvetica' />
+            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:Calculation_1991646598627459089:qk]' value='#000000' />
+            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:Calculation_1991646598627459089:qk]' value='Helvetica' />
           </style-rule>
           <style-rule element='pane'>
             <format attr='border-width' data-class='total' value='0' />
@@ -4014,18 +4037,7 @@
             <view>
               <breakdown value='auto' />
             </view>
-            <mark class='Line' />
-            <customized-tooltip>
-              <formatted-text>
-                <run fontcolor='#000000' fontname='Helvetica'>Year:&#9;</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]>]]></run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#000000' fontname='Helvetica'>Trade Flow:&#9;</run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#000000' fontname='Helvetica'>Million (USD):&#9;</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE (df!trade):qk]>]]></run>
-              </formatted-text>
-            </customized-tooltip>
+            <mark class='Bar' />
             <style>
               <style-rule element='trendline'>
                 <format attr='stroke-size' value='0' />
@@ -4033,22 +4045,14 @@
               </style-rule>
             </style>
           </pane>
-          <pane id='4' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627459089:qk]'>
+          <pane id='4' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:Calculation_1991646598627459089:qk]'>
             <view>
               <breakdown value='auto' />
             </view>
             <mark class='Line' />
-            <customized-tooltip>
-              <formatted-text>
-                <run fontcolor='#000000' fontname='Helvetica'>Year:&#9;</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]>]]></run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#000000' fontname='Helvetica'>Trade Flow:&#9;</run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#000000' fontname='Helvetica'>Million (USD):&#9;</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE (df!trade):qk]>]]></run>
-              </formatted-text>
-            </customized-tooltip>
+            <encodings>
+              <color column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[:Measure Names]' />
+            </encodings>
             <style>
               <style-rule element='trendline'>
                 <format attr='stroke-size' value='0' />
@@ -4057,7 +4061,7 @@
             </style>
           </pane>
         </panes>
-        <rows>([federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk] * ([federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk] + [federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627459089:qk]))</rows>
+        <rows>([federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk] + [federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:Calculation_1991646598627459089:qk])</rows>
         <cols>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]</cols>
       </table>
       <simple-id uuid='{33903F2E-E3D6-478D-A74F-C164CD2069FC}' />
@@ -6043,6 +6047,7 @@
         <edge name='right'>
           <strip size='160'>
             <card mode='checkdropdown' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]' show-apply='true' type='filter' values='relevant' />
+            <card pane-specification-id='4' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[:Measure Names]' type='color' />
           </strip>
         </edge>
       </cards>
