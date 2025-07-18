@@ -1058,8 +1058,8 @@
       <column caption='Regional Average Per Year' datatype='real' name='[Calculation_3526881490738491397]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='// Regional Average Per Year&#10;{ FIXED [TIME_PERIOD] : AVG([Calculation_3526881490733637632]) }' />
       </column>
-      <column caption='High Performer Classification' datatype='string' name='[Calculation_3526881490739302406]' role='dimension' type='nominal'>
-        <calculation class='tableau' formula='// High Performer Classification&#10;IF [Calculation_3526881490733637632] &gt;= 0.40 THEN &quot;Digital Leaders&quot;&#10;ELSEIF [Calculation_3526881490733637632] &gt;= 0.30 THEN &quot;Digital Adopters&quot;&#10;ELSEIF [Calculation_3526881490733637632] &gt;= 0.20 THEN &quot;Digital Emerging&quot;&#10;ELSE &quot;Digital Starters&quot;&#10;END' />
+      <column caption='High Performer Classification' datatype='string' name='[Calculation_3526881490739302406]' role='measure' type='nominal'>
+        <calculation class='tableau' formula='// High Performer Classification&#10;IF AVG([Calculation_3526881490733637632]) &gt;= 0.40 THEN &quot;Digital Leaders&quot;&#10;ELSEIF AVG([Calculation_3526881490733637632]) &gt;= 0.30 THEN &quot;Digital Adopters&quot;&#10;ELSEIF AVG([Calculation_3526881490733637632]) &gt;= 0.20 THEN &quot;Digital Emerging&quot;&#10;ELSE &quot;Digital Starters&quot;&#10;END' />
       </column>
       <column caption='Imports Trade Flow Calculations' datatype='string' name='[Calculation_3624623676406611968]' role='dimension' type='nominal'>
         <calculation class='tableau' formula='If [Calculation_5279415056985976832] = &quot;Imports&quot; Then [Calculation_5279415056985976832] END' />
@@ -2469,21 +2469,16 @@
         </relationships>
       </object-graph>
     </datasource>
+    <datasource hasconnection='false' inline='true' name='Parameters' version='18.1'>
+      <aliases enabled='yes' />
+      <column caption='Digital Classifer 2' datatype='real' name='[Digital Classifer 1 (copy)_5025876479549648898]' param-domain-type='any' role='measure' type='quantitative' value='0.4'>
+        <calculation class='tableau' formula='0.4' />
+      </column>
+      <column caption='Digital Classifer 1' datatype='real' name='[Parameter 1]' param-domain-type='any' role='measure' type='quantitative' value='0.4'>
+        <calculation class='tableau' formula='0.4' />
+      </column>
+    </datasource>
   </datasources>
-  <shared-views>
-    <shared-view name='federated.03xni7c1xhk91e1h6gfdv1sblyqu'>
-      <datasources>
-        <datasource caption='technology_connectivity' name='federated.03xni7c1xhk91e1h6gfdv1sblyqu' />
-      </datasources>
-      <datasource-dependencies datasource='federated.03xni7c1xhk91e1h6gfdv1sblyqu'>
-        <column datatype='string' name='[Pacific Island Countries and territories (df!trade)]' role='dimension' type='nominal' />
-        <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
-      </datasource-dependencies>
-      <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]'>
-        <groupfilter function='level-members' level='[none:Pacific Island Countries and territories (df!trade):nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
-      </filter>
-    </shared-view>
-  </shared-views>
   <actions>
     <action caption='Highlight 1 (generated)' name='[Action1_B240F11FFE9D4164B25125F4A5E57D62]'>
       <activation auto-clear='true' type='on-select' />
@@ -2579,7 +2574,6 @@
           <slices>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_6979523923053035520:qk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
           </slices>
@@ -2802,7 +2796,6 @@
           <slices>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Trade flow:nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]</column>
           </slices>
@@ -2915,7 +2908,6 @@
             </column>
             <column datatype='string' name='[ICT products and services]' role='dimension' type='nominal' />
             <column caption='OBS VALUE (df!trade)' datatype='real' name='[OBS_VALUE (df!trade)]' role='measure' type='quantitative' />
-            <column datatype='string' name='[Pacific Island Countries and territories (df!trade)]' role='dimension' type='nominal' />
             <column datatype='date' name='[TIME PERIOD (df!trade) (Years)]' role='dimension' type='quantitative' user:agg-type='Year-Trunc' user:base-field='TIME_PERIOD (df!trade)' user:ui-builder='date-bin-builder'>
               <calculation class='tableau' formula='DATE(DATETRUNC(&apos;year&apos;, [TIME_PERIOD (df!trade)]))' />
             </column>
@@ -2926,7 +2918,6 @@
             <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='Max' name='[max:TIME PERIOD (df!trade) (Years):qk]' pivot='key' type='quantitative' />
             <column-instance column='[Calculation_5279415056985976832]' derivation='None' name='[none:Calculation_5279415056985976832:nk]' pivot='key' type='nominal' />
             <column-instance column='[ICT products and services]' derivation='None' name='[none:ICT products and services:nk]' pivot='key' type='nominal' />
-            <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
             <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='None' name='[none:TIME PERIOD (df!trade) (Years):qk]' pivot='key' type='quantitative' />
             <column-instance column='[Trade flow]' derivation='None' name='[none:Trade flow:nk]' pivot='key' type='nominal' />
             <column-instance column='[OBS_VALUE (df!trade)]' derivation='Sum' name='[sum:OBS_VALUE (df!trade):qk]' pivot='key' type='quantitative' />
@@ -2970,7 +2961,6 @@
           <slices>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Trade flow:nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]</column>
           </slices>
@@ -2981,19 +2971,9 @@
             <format attr='title' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]' scope='cols' value='' />
             <format attr='title' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE (df!trade):qk]' scope='rows' value='Million (USD)' />
           </style-rule>
-          <style-rule element='cell'>
-            <format attr='height' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='43' />
-          </style-rule>
-          <style-rule element='header'>
-            <format attr='width' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='120' />
-          </style-rule>
           <style-rule element='label'>
             <format attr='display' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896626688:ok:7]' value='false' />
             <format attr='display' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896860161:ok:4]' value='false' />
-            <format attr='text-align' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='left' />
-            <format attr='vertical-align' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='center' />
-            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='#000000' />
-            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='Helvetica' />
             <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]' value='#000000' />
             <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE (df!trade):qk]' value='Helvetica' />
             <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE (df!trade):qk]' value='#000000' />
@@ -3167,7 +3147,6 @@
           <slices>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Trade flow:nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]</column>
           </slices>
@@ -3336,7 +3315,6 @@
           <computed-sort column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]' direction='DESC' using='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE (df!trade):qk]' />
           <slices>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]</column>
           </slices>
           <aggregation value='true' />
@@ -3455,7 +3433,6 @@
             </column>
             <column datatype='string' name='[ICT products and services]' role='dimension' type='nominal' />
             <column caption='OBS VALUE (df!trade)' datatype='real' name='[OBS_VALUE (df!trade)]' role='measure' type='quantitative' />
-            <column datatype='string' name='[Pacific Island Countries and territories (df!trade)]' role='dimension' type='nominal' />
             <column datatype='date' name='[TIME PERIOD (df!trade) (Years)]' role='dimension' type='quantitative' user:agg-type='Year-Trunc' user:base-field='TIME_PERIOD (df!trade)' user:ui-builder='date-bin-builder'>
               <calculation class='tableau' formula='DATE(DATETRUNC(&apos;year&apos;, [TIME_PERIOD (df!trade)]))' />
             </column>
@@ -3465,7 +3442,6 @@
             <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='Max' name='[max:TIME PERIOD (df!trade) (Years):qk]' pivot='key' type='quantitative' />
             <column-instance column='[Calculation_5279415056985976832]' derivation='None' name='[none:Calculation_5279415056985976832:nk]' pivot='key' type='nominal' />
             <column-instance column='[ICT products and services]' derivation='None' name='[none:ICT products and services:nk]' pivot='key' type='nominal' />
-            <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
             <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='None' name='[none:TIME PERIOD (df!trade) (Years):qk]' pivot='key' type='quantitative' />
             <column-instance column='[Calculation_1991646598627229712]' derivation='Sum' name='[sum:Calculation_1991646598627229712:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Calculation_630996560896626688]' derivation='User' name='[usr:Calculation_630996560896626688:ok:7]' pivot='key' type='ordinal'>
@@ -3504,7 +3480,6 @@
           </filter>
           <slices>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]</column>
           </slices>
@@ -3515,19 +3490,9 @@
             <format attr='title' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:TIME PERIOD (df!trade) (Years):qk]' scope='cols' value='' />
             <encoding attr='space' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:TIME PERIOD (df!trade) (Years):qk]' field-type='quantitative' major-origin='#2011-01-01#' major-spacing='1.0' major-units='years' scope='cols' type='space' />
           </style-rule>
-          <style-rule element='cell'>
-            <format attr='height' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='40' />
-          </style-rule>
-          <style-rule element='header'>
-            <format attr='width' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='108' />
-            <format attr='text-align' data-class='subtotal' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='left' />
-            <format attr='vertical-align' data-class='subtotal' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='center' />
-          </style-rule>
           <style-rule element='label'>
             <format attr='display' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896626688:ok:7]' value='false' />
             <format attr='display' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896860161:ok:4]' value='false' />
-            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='Helvetica' />
-            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='#000000' />
             <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:TIME PERIOD (df!trade) (Years):qk]' value='#000000' />
             <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:TIME PERIOD (df!trade) (Years):qk]' value='Helvetica' />
             <format attr='text-format' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk]' value='c&quot;$&quot;#,##0,.00K;-&quot;$&quot;#,##0,.00K' />
@@ -3720,7 +3685,6 @@
           </filter>
           <slices>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]</column>
           </slices>
@@ -3781,7 +3745,7 @@
             <label-data column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[max:TIME PERIOD (df!trade) (Years):qk]' />
             <customized-tooltip>
               <formatted-text>
-                <run bold='true' fontcolor='#f98106' fontname='Helvetica' fontsize='12'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]>]]></run>
+                <run bold='true' fontcolor='#000000' fontname='Helvetica' fontsize='12'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]>]]></run>
                 <run>Æ&#10;</run>
                 <run fontcolor='#000000' fontname='Helvetica'>Year:&#9;</run>
                 <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]>]]></run>
@@ -3834,209 +3798,6 @@
       </table>
       <simple-id uuid='{B3B532F5-B532-4AC8-92DB-61D6A66BD0E2}' />
     </worksheet>
-    <worksheet name='Part 2 - ICT Trade Flow by Country (3)'>
-      <layout-options>
-        <title>
-          <formatted-text>
-            <run fontname='Helvetica' fontsize='14'>ICT Trade Balance by Country</run>
-          </formatted-text>
-        </title>
-      </layout-options>
-      <table>
-        <view>
-          <datasources>
-            <datasource caption='technology_connectivity' name='federated.03xni7c1xhk91e1h6gfdv1sblyqu' />
-          </datasources>
-          <datasource-dependencies datasource='federated.03xni7c1xhk91e1h6gfdv1sblyqu'>
-            <column caption='Import Calculation' datatype='real' name='[Calculation_1991646598626848782]' role='measure' type='quantitative'>
-              <calculation class='tableau' formula='If [Calculation_5279415056985976832] = &apos;Imports&apos; then [OBS_VALUE (df!trade)] END' />
-            </column>
-            <column caption='Export Calculation' datatype='real' name='[Calculation_1991646598627061775]' role='measure' type='quantitative'>
-              <calculation class='tableau' formula='If [Calculation_5279415056985976832] = &apos;Exports&apos; then [OBS_VALUE (df!trade)] END' />
-            </column>
-            <column caption='Trade Balance' datatype='real' name='[Calculation_1991646598627229712]' role='measure' type='quantitative'>
-              <calculation class='tableau' formula='IFNULL([Calculation_1991646598626848782],0) - IFNULL([Calculation_1991646598627061775],0)' />
-            </column>
-            <column caption='Trade Flow Calculation' datatype='string' name='[Calculation_5279415056985976832]' role='dimension' type='nominal'>
-              <calculation class='tableau' formula='If [Trade flow] = &quot;Imports&quot; or [Trade flow] = &quot;Re-imports&quot; then &quot;Imports&quot;&#10;Else &quot;Exports&quot;&#10;END' />
-            </column>
-            <column caption='Columns' datatype='real' name='[Calculation_630996560896626688]' role='measure' type='ordinal'>
-              <calculation class='tableau' formula='//Columns&#10;(index()-1)%(round(sqrt(size())))'>
-                <table-calc ordering-type='Rows' />
-              </calculation>
-            </column>
-            <column caption='Rows' datatype='integer' name='[Calculation_630996560896860161]' role='measure' type='ordinal'>
-              <calculation class='tableau' formula='//Rows&#10;int( (index()-1)/(round(sqrt(size()))))'>
-                <table-calc ordering-type='Rows' />
-              </calculation>
-            </column>
-            <column datatype='string' name='[ICT products and services]' role='dimension' type='nominal' />
-            <column caption='OBS VALUE (df!trade)' datatype='real' name='[OBS_VALUE (df!trade)]' role='measure' type='quantitative' />
-            <column datatype='string' name='[Pacific Island Countries and territories (df!trade)]' role='dimension' type='nominal' />
-            <column datatype='date' name='[TIME PERIOD (df!trade) (Years)]' role='dimension' type='quantitative' user:agg-type='Year-Trunc' user:base-field='TIME_PERIOD (df!trade)' user:ui-builder='date-bin-builder'>
-              <calculation class='tableau' formula='DATE(DATETRUNC(&apos;year&apos;, [TIME_PERIOD (df!trade)]))' />
-            </column>
-            <column caption='TIME PERIOD (df!trade)' datatype='date' datatype-customized='true' default-format='*YYYY' name='[TIME_PERIOD (df!trade)]' role='dimension' type='ordinal' />
-            <column datatype='string' name='[Trade flow]' role='dimension' type='nominal' />
-            <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='Attribute' name='[attr:TIME PERIOD (df!trade) (Years):qk]' pivot='key' type='quantitative' />
-            <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='Max' name='[max:TIME PERIOD (df!trade) (Years):qk]' pivot='key' type='quantitative' />
-            <column-instance column='[Calculation_5279415056985976832]' derivation='None' name='[none:Calculation_5279415056985976832:nk]' pivot='key' type='nominal' />
-            <column-instance column='[ICT products and services]' derivation='None' name='[none:ICT products and services:nk]' pivot='key' type='nominal' />
-            <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
-            <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='None' name='[none:TIME PERIOD (df!trade) (Years):qk]' pivot='key' type='quantitative' />
-            <column-instance column='[Calculation_1991646598626848782]' derivation='Sum' name='[sum:Calculation_1991646598626848782:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[Calculation_1991646598627061775]' derivation='Sum' name='[sum:Calculation_1991646598627061775:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[Calculation_1991646598627229712]' derivation='Sum' name='[sum:Calculation_1991646598627229712:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[Calculation_630996560896626688]' derivation='User' name='[usr:Calculation_630996560896626688:ok:6]' pivot='key' type='ordinal'>
-              <table-calc level-address='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[Pacific Island Countries and territories (df!trade)]' ordering-type='Field'>
-                <order field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[Pacific Island Countries and territories (df!trade)]' />
-                <order field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[TIME PERIOD (df!trade) (Years)]' />
-              </table-calc>
-            </column-instance>
-            <column-instance column='[Calculation_630996560896860161]' derivation='User' name='[usr:Calculation_630996560896860161:ok:3]' pivot='key' type='ordinal'>
-              <table-calc level-address='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[Pacific Island Countries and territories (df!trade)]' ordering-type='Field'>
-                <order field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[Pacific Island Countries and territories (df!trade)]' />
-                <order field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[TIME PERIOD (df!trade) (Years)]' />
-              </table-calc>
-            </column-instance>
-            <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='Year' name='[yr:TIME PERIOD (df!trade) (Years):ok]' pivot='key' type='ordinal' />
-          </datasource-dependencies>
-          <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]' filter-group='5'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:Calculation_5279415056985976832:nk]' member='&quot;Exports&quot;' />
-              <groupfilter function='member' level='[none:Calculation_5279415056985976832:nk]' member='&quot;Imports&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]' filter-group='3'>
-            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[none:ICT products and services:nk]' member='&quot;Communication equipment&quot;' />
-              <groupfilter function='member' level='[none:ICT products and services:nk]' member='&quot;Computers and peripheral equipment&quot;' />
-              <groupfilter function='member' level='[none:ICT products and services:nk]' member='&quot;Consumer electronic equipment&quot;' />
-              <groupfilter function='member' level='[none:ICT products and services:nk]' member='&quot;Digitally-deliverable services&quot;' />
-              <groupfilter function='member' level='[none:ICT products and services:nk]' member='&quot;Electronic components&quot;' />
-              <groupfilter function='member' level='[none:ICT products and services:nk]' member='&quot;ICT services&quot;' />
-              <groupfilter function='member' level='[none:ICT products and services:nk]' member='&quot;Miscellaneous ICT products&quot;' />
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]' filter-group='6'>
-            <groupfilter function='level-members' level='[yr:TIME PERIOD (df!trade) (Years):ok]' user:ui-enumeration='all' user:ui-marker='enumerate' />
-          </filter>
-          <slices>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]</column>
-          </slices>
-          <aggregation value='true' />
-        </view>
-        <style>
-          <style-rule element='axis'>
-            <format attr='title' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:TIME PERIOD (df!trade) (Years):qk]' scope='cols' value='' />
-            <encoding attr='space' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:TIME PERIOD (df!trade) (Years):qk]' field-type='quantitative' major-origin='#2011-01-01#' major-spacing='1.0' major-units='years' scope='cols' type='space' />
-          </style-rule>
-          <style-rule element='cell'>
-            <format attr='height' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='40' />
-          </style-rule>
-          <style-rule element='header'>
-            <format attr='width' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='108' />
-            <format attr='text-align' data-class='subtotal' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='left' />
-            <format attr='vertical-align' data-class='subtotal' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='center' />
-          </style-rule>
-          <style-rule element='label'>
-            <format attr='display' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896626688:ok:6]' value='false' />
-            <format attr='display' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896860161:ok:3]' value='false' />
-            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='Helvetica' />
-            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='#000000' />
-            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:TIME PERIOD (df!trade) (Years):qk]' value='#000000' />
-            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:TIME PERIOD (df!trade) (Years):qk]' value='Helvetica' />
-            <format attr='text-format' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598626848782:qk]' value='c&quot;$&quot;#,##0,.00K;-&quot;$&quot;#,##0,.00K' />
-            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk]' value='Helvetica' />
-            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk]' value='#000000' />
-            <format attr='text-format' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk]' value='c&quot;$&quot;#,##0,.00K;-&quot;$&quot;#,##0,.00K' />
-            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627061775:qk]' value='Helvetica' />
-            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627061775:qk]' value='#000000' />
-            <format attr='text-format' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627061775:qk]' value='c&quot;$&quot;#,##0,.00K;-&quot;$&quot;#,##0,.00K' />
-          </style-rule>
-          <style-rule element='table'>
-            <format attr='background-color' value='#d3ebfb' />
-          </style-rule>
-          <style-rule element='worksheet'>
-            <format attr='display-field-labels' scope='cols' value='false' />
-            <format attr='display-field-labels' scope='rows' value='false' />
-          </style-rule>
-        </style>
-        <panes>
-          <pane selection-relaxation-option='selection-relaxation-allow'>
-            <view>
-              <breakdown value='auto' />
-            </view>
-            <mark class='Line' />
-            <mark-sizing mark-sizing-setting='marks-scaling-off' />
-            <encodings>
-              <tooltip column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk]' />
-              <text column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' />
-              <lod column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' />
-              <lod column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk]' />
-              <lod column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598626848782:qk]' />
-              <lod column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627061775:qk]' />
-              <lod column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]' />
-            </encodings>
-            <label-data column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[max:TIME PERIOD (df!trade) (Years):qk]' />
-            <customized-tooltip>
-              <formatted-text>
-                <run bold='true' fontcolor='#f98106' fontname='Helvetica' fontsize='12'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]>]]></run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#000000' fontname='Helvetica'>Year:&#9;</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME PERIOD (df!trade) (Years):qk]>]]></run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#000000' fontname='Helvetica'>Trade Balance (Imports - Exports):	</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk]>]]></run>
-                <run>Æ&#10;</run>
-              </formatted-text>
-            </customized-tooltip>
-            <customized-label>
-              <formatted-text>
-                <run>&lt;</run>
-                <run>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</run>
-                <run>&gt;</run>
-              </formatted-text>
-            </customized-label>
-            <style>
-              <style-rule element='cell'>
-                <format attr='vertical-align' value='bottom' />
-              </style-rule>
-              <style-rule element='datalabel'>
-                <format attr='color-mode' value='user' />
-                <format attr='font-family' value='Helvetica' />
-                <format attr='color' value='#000000' />
-              </style-rule>
-              <style-rule element='mark'>
-                <encoding attr='density-color' palette='orange_10_0' type='interpolated' />
-                <format attr='size' value='2.4640884399414062' />
-                <format attr='mark-labels-line-first' value='false' />
-                <format attr='mark-labels-line-last' value='false' />
-                <format attr='mark-labels-mode' value='most-recent' />
-                <format attr='mark-labels-cull' value='true' />
-                <format attr='mark-labels-range-scope' value='multi-mark' />
-                <format attr='mark-labels-show' value='true' />
-                <format attr='density-kernel-size' value='2.8618783950805664' />
-                <format attr='mark-color' value='#f98106' />
-              </style-rule>
-              <style-rule element='pane'>
-                <format attr='minheight' value='192' />
-                <format attr='maxheight' value='192' />
-                <format attr='minwidth' value='203' />
-                <format attr='maxwidth' value='203' />
-                <format attr='aspect' value='0' />
-              </style-rule>
-            </style>
-          </pane>
-        </panes>
-        <rows>([federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896860161:ok:3] * [federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:Calculation_1991646598627229712:qk])</rows>
-        <cols>([federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896626688:ok:6] * [federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:TIME PERIOD (df!trade) (Years):qk])</cols>
-      </table>
-      <simple-id uuid='{5EF38F64-9592-46EB-9E0B-24213E4C3A62}' />
-    </worksheet>
     <worksheet name='Part 2 - ICT Trade Flow by Year'>
       <layout-options>
         <title>
@@ -4071,7 +3832,6 @@
               <calculation class='tableau' formula='If [Calculation_5279415056985976832] = &quot;Exports&quot; Then [Calculation_5279415056985976832] END' />
             </column>
             <column caption='OBS VALUE (df!trade)' datatype='real' name='[OBS_VALUE (df!trade)]' role='measure' type='quantitative' />
-            <column datatype='string' name='[Pacific Island Countries and territories (df!trade)]' role='dimension' type='nominal' />
             <column datatype='date' name='[TIME PERIOD (df!trade) (Years)]' role='dimension' type='quantitative' user:agg-type='Year-Trunc' user:base-field='TIME_PERIOD (df!trade)' user:ui-builder='date-bin-builder'>
               <calculation class='tableau' formula='DATE(DATETRUNC(&apos;year&apos;, [TIME_PERIOD (df!trade)]))' />
             </column>
@@ -4081,7 +3841,6 @@
             <column-instance column='[Imports Trade Flow Calculations (copy)_3624623676406743041]' derivation='Attribute' name='[attr:Imports Trade Flow Calculations (copy)_3624623676406743041:nk]' pivot='key' type='nominal' />
             <column-instance column='[Calculation_5279415056985976832]' derivation='None' name='[none:Calculation_5279415056985976832:nk]' pivot='key' type='nominal' />
             <column-instance column='[ICT products and services]' derivation='None' name='[none:ICT products and services:nk]' pivot='key' type='nominal' />
-            <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
             <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='None' name='[none:TIME PERIOD (df!trade) (Years):ok]' pivot='key' type='ordinal' />
             <column-instance column='[Calculation_1991646598627229712]' derivation='Sum' name='[sum:Calculation_1991646598627229712:qk]' pivot='key' type='quantitative' />
             <column-instance column='[OBS_VALUE (df!trade)]' derivation='Sum' name='[sum:OBS_VALUE (df!trade):qk]' pivot='key' type='quantitative' />
@@ -4110,7 +3869,6 @@
           </filter>
           <slices>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:ICT products and services:nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Calculation_5279415056985976832:nk]</column>
           </slices>
@@ -4237,7 +3995,6 @@
           <datasource-dependencies datasource='federated.03xni7c1xhk91e1h6gfdv1sblyqu'>
             <column caption='Indicator1' datatype='string' name='[Indicator]' role='dimension' type='nominal' />
             <column caption='Obs Value' datatype='real' name='[OBS_VALUE]' role='measure' type='quantitative' />
-            <column datatype='string' name='[Pacific Island Countries and territories (df!trade)]' role='dimension' type='nominal' />
             <column datatype='date' name='[TIME PERIOD (df!trade) (Years)]' role='dimension' type='quantitative' user:agg-type='Year-Trunc' user:base-field='TIME_PERIOD (df!trade)' user:ui-builder='date-bin-builder'>
               <calculation class='tableau' formula='DATE(DATETRUNC(&apos;year&apos;, [TIME_PERIOD (df!trade)]))' />
             </column>
@@ -4245,7 +4002,6 @@
             <column caption='Time Period' datatype='date' datatype-customized='true' name='[TIME_PERIOD]' role='dimension' type='ordinal' />
             <column-instance column='[OBS_VALUE]' derivation='Avg' name='[avg:OBS_VALUE:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Indicator]' derivation='None' name='[none:Indicator:nk]' pivot='key' type='nominal' />
-            <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
             <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='Year' name='[yr:TIME PERIOD (df!trade) (Years):ok]' pivot='key' type='ordinal' />
             <column-instance column='[TIME_PERIOD]' derivation='Year' name='[yr:TIME_PERIOD:ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
@@ -4285,7 +4041,6 @@
             </groupfilter>
           </filter>
           <slices>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
           </slices>
@@ -4341,7 +4096,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run fontname='Helvetica'>&lt;Sheet Name&gt;</run>
+            <run fontname='Helvetica' fontsize='14'>Government Digital Performance</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -4351,71 +4106,58 @@
             <datasource caption='technology_connectivity' name='federated.03xni7c1xhk91e1h6gfdv1sblyqu' />
           </datasources>
           <datasource-dependencies datasource='federated.03xni7c1xhk91e1h6gfdv1sblyqu'>
+            <column caption='E-Govt Index' datatype='real' name='[Calculation_3526881490733637632]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='If [Indicator] = &quot;E-Government Index&quot; then [OBS_VALUE] END' />
+            </column>
             <column caption='Indicator1' datatype='string' name='[Indicator]' role='dimension' type='nominal' />
             <column caption='Obs Value' datatype='real' name='[OBS_VALUE]' role='measure' type='quantitative' />
             <column datatype='string' name='[Pacific Island Countries and territories (df!trade)]' role='dimension' type='nominal' />
-            <column datatype='date' name='[TIME PERIOD (df!trade) (Years)]' role='dimension' type='quantitative' user:agg-type='Year-Trunc' user:base-field='TIME_PERIOD (df!trade)' user:ui-builder='date-bin-builder'>
-              <calculation class='tableau' formula='DATE(DATETRUNC(&apos;year&apos;, [TIME_PERIOD (df!trade)]))' />
-            </column>
-            <column caption='TIME PERIOD (df!trade)' datatype='date' datatype-customized='true' default-format='*YYYY' name='[TIME_PERIOD (df!trade)]' role='dimension' type='ordinal' />
-            <column caption='Time Period' datatype='date' datatype-customized='true' name='[TIME_PERIOD]' role='dimension' type='ordinal' />
+            <column-instance column='[Calculation_3526881490733637632]' derivation='Avg' name='[avg:Calculation_3526881490733637632:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[OBS_VALUE]' derivation='Avg' name='[avg:OBS_VALUE:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Indicator]' derivation='None' name='[none:Indicator:nk]' pivot='key' type='nominal' />
-            <column-instance column='[OBS_VALUE]' derivation='None' name='[none:OBS_VALUE:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
-            <column-instance column='[TIME_PERIOD]' derivation='None' name='[none:TIME_PERIOD:ok]' pivot='key' type='ordinal' />
-            <column-instance column='[TIME PERIOD (df!trade) (Years)]' derivation='Year' name='[yr:TIME PERIOD (df!trade) (Years):ok]' pivot='key' type='ordinal' />
           </datasource-dependencies>
-          <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]' filter-group='9'>
+          <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]'>
+            <groupfilter function='member' level='[none:Indicator:nk]' member='&quot;E-Government Index&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]'>
             <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2000' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2001' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2002' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2003' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2004' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2005' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2006' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2007' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2008' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2009' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2010' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2011' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2012' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2013' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2014' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2015' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2016' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2017' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2018' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2019' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2020' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2021' />
-              <groupfilter function='member' level='[yr:TIME PERIOD (df!trade) (Years):ok]' member='2022' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Cook Islands&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Fiji&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;French Polynesia&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Guam&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Kiribati&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Marshall Islands&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Micronesia (Federated States of)&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Nauru&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;New Caledonia&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Niue&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Northern Mariana Islands&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Palau&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Papua New Guinea&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Samoa&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Tokelau&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Tonga&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Tuvalu&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Vanuatu&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Wallis and Futuna&quot;' />
             </groupfilter>
           </filter>
           <slices>
+            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
           </slices>
           <aggregation value='true' />
         </view>
         <style>
-          <style-rule element='axis'>
-            <format attr='title' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:OBS_VALUE:qk]' scope='rows' value='' />
-            <format attr='width' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:OBS_VALUE:qk]' value='55' />
-          </style-rule>
-          <style-rule element='cell'>
-            <format attr='width' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME_PERIOD:ok]' value='54' />
-          </style-rule>
-          <style-rule element='header'>
-            <format attr='width' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='56' />
-          </style-rule>
           <style-rule element='label'>
             <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='#000000' />
             <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='Helvetica' />
             <format attr='text-align' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='left' />
             <format attr='vertical-align' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='center' />
-            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:OBS_VALUE:qk]' value='Helvetica' />
-            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME_PERIOD:ok]' value='Helvetica' />
+          </style-rule>
+          <style-rule element='mark'>
+            <encoding attr='size-bar' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:OBS_VALUE:qk]' field-type='quantitative' max-size='1' min-size='0.005' type='centersize' />
           </style-rule>
           <style-rule element='table'>
             <format attr='background-color' value='#d3ebfb' />
@@ -4437,43 +4179,149 @@
             <view>
               <breakdown value='auto' />
             </view>
-            <mark class='Line' />
+            <mark class='Circle' />
             <encodings>
-              <color column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]' />
+              <color column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' />
+              <text column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:OBS_VALUE:qk]' />
             </encodings>
-            <customized-tooltip>
-              <formatted-text>
-                <run fontcolor='#000000' fontname='Helvetica'>Year:&#9;</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME_PERIOD:ok]>]]></run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#000000' fontname='Helvetica'>Pacific Island Countries and Territories:	</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]>]]></run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#000000' fontname='Helvetica'>Index Type:&#9;</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]>]]></run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#000000' fontname='Helvetica'>Index:&#9;</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:OBS_VALUE:qk]>]]></run>
-              </formatted-text>
-            </customized-tooltip>
             <style>
               <style-rule element='mark'>
-                <format attr='mark-color' value='#f28e2b' />
-              </style-rule>
-              <style-rule element='pane'>
-                <format attr='minheight' value='61' />
-                <format attr='maxheight' value='61' />
-                <format attr='minwidth' value='-1' />
-                <format attr='maxwidth' value='-1' />
-                <format attr='aspect' value='0' />
+                <format attr='has-stroke' value='false' />
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-line-first' value='true' />
+                <format attr='mark-labels-line-last' value='true' />
+                <format attr='mark-labels-range-min' value='true' />
+                <format attr='mark-labels-range-max' value='true' />
+                <format attr='mark-labels-mode' value='all' />
+                <format attr='mark-labels-range-scope' value='pane' />
+                <format attr='mark-labels-range-field' value='' />
               </style-rule>
             </style>
           </pane>
         </panes>
-        <rows>([federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk] * [federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:OBS_VALUE:qk])</rows>
-        <cols>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:TIME_PERIOD:ok]</cols>
+        <rows>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:Calculation_3526881490733637632:qk]</rows>
+        <cols>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:Calculation_3526881490733637632:qk]</cols>
       </table>
       <simple-id uuid='{D1D649EE-06B8-43EB-8CE1-AE5E5F929682}' />
+    </worksheet>
+    <worksheet name='Part 3 - E Govt &amp; ONLINE Index BY COUNTRY (2)'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontname='Helvetica' fontsize='14'>Government Digital Performance</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='technology_connectivity' name='federated.03xni7c1xhk91e1h6gfdv1sblyqu' />
+          </datasources>
+          <datasource-dependencies datasource='federated.03xni7c1xhk91e1h6gfdv1sblyqu'>
+            <column caption='E-Govt Index' datatype='real' name='[Calculation_3526881490733637632]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='If [Indicator] = &quot;E-Government Index&quot; then [OBS_VALUE] END' />
+            </column>
+            <column caption='High Performer Classification' datatype='string' name='[Calculation_3526881490739302406]' role='measure' type='nominal'>
+              <calculation class='tableau' formula='// High Performer Classification&#10;IF AVG([Calculation_3526881490733637632]) &gt;= 0.40 THEN &quot;Digital Leaders&quot;&#10;ELSEIF AVG([Calculation_3526881490733637632]) &gt;= 0.30 THEN &quot;Digital Adopters&quot;&#10;ELSEIF AVG([Calculation_3526881490733637632]) &gt;= 0.20 THEN &quot;Digital Emerging&quot;&#10;ELSE &quot;Digital Starters&quot;&#10;END' />
+            </column>
+            <column caption='Indicator1' datatype='string' name='[Indicator]' role='dimension' type='nominal' />
+            <column caption='Obs Value' datatype='real' name='[OBS_VALUE]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Pacific Island Countries and territories (df!trade)]' role='dimension' type='nominal' />
+            <column datatype='string' name='[Pacific Island Countries and territories]' role='dimension' type='nominal' />
+            <column-instance column='[OBS_VALUE]' derivation='Avg' name='[avg:OBS_VALUE:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Indicator]' derivation='None' name='[none:Indicator:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
+            <column-instance column='[Pacific Island Countries and territories]' derivation='None' name='[none:Pacific Island Countries and territories:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Calculation_3526881490739302406]' derivation='User' name='[usr:Calculation_3526881490739302406:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]'>
+            <groupfilter function='member' level='[none:Indicator:nk]' member='&quot;E-Government Index&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Cook Islands&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Fiji&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;French Polynesia&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Guam&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Kiribati&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Marshall Islands&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Micronesia (Federated States of)&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Nauru&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;New Caledonia&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Niue&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Northern Mariana Islands&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Palau&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Papua New Guinea&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Samoa&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Tokelau&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Tonga&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Tuvalu&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Vanuatu&quot;' />
+              <groupfilter function='member' level='[none:Pacific Island Countries and territories (df!trade):nk]' member='&quot;Wallis and Futuna&quot;' />
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]</column>
+            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='label'>
+            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='#000000' />
+            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='Helvetica' />
+            <format attr='text-align' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='left' />
+            <format attr='vertical-align' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='center' />
+          </style-rule>
+          <style-rule element='mark'>
+            <encoding attr='size-bar' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:OBS_VALUE:qk]' field-type='quantitative' max-size='1' min-size='0.005' type='centersize' />
+          </style-rule>
+          <style-rule element='table'>
+            <format attr='background-color' value='#d3ebfb' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='cols' value='false' />
+            <format attr='display-field-labels' scope='rows' value='false' />
+          </style-rule>
+          <style-rule element='quick-filter'>
+            <format attr='title' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='Pacific Island Countries and Territories'>
+              <formatted-text>
+                <run bold='true' fontname='Helvetica'>Pacific Island Countries and Territories</run>
+              </formatted-text>
+            </format>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Square' />
+            <encodings>
+              <color column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:OBS_VALUE:qk]' />
+              <text column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:OBS_VALUE:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='has-stroke' value='false' />
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-line-first' value='true' />
+                <format attr='mark-labels-line-last' value='true' />
+                <format attr='mark-labels-range-min' value='true' />
+                <format attr='mark-labels-range-max' value='true' />
+                <format attr='mark-labels-mode' value='all' />
+                <format attr='mark-labels-range-scope' value='pane' />
+                <format attr='mark-labels-range-field' value='' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>([federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories:nk] / [federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_3526881490739302406:nk])</rows>
+        <cols />
+      </table>
+      <simple-id uuid='{4FBC07C8-7F51-4320-AFF6-C02688E18C11}' />
     </worksheet>
     <worksheet name='Part 3 - E Govt Index'>
       <layout-options>
@@ -4504,7 +4352,6 @@
             </column>
             <column caption='Indicator1' datatype='string' name='[Indicator]' role='dimension' type='nominal' />
             <column caption='Obs Value' datatype='real' name='[OBS_VALUE]' role='measure' type='quantitative' />
-            <column datatype='string' name='[Pacific Island Countries and territories (df!trade)]' role='dimension' type='nominal' />
             <column caption='Negative E-Govt Growth Rate' datatype='real' name='[Positive E-Govt Growth Rate (copy)_3526881490737217540]' role='measure' type='quantitative'>
               <calculation class='tableau' formula='If [Calculation_3526881490733899777] &lt; 0 then [Calculation_3526881490733899777] END'>
                 <table-calc ordering-type='Rows' />
@@ -4516,7 +4363,6 @@
             <column caption='TIME PERIOD (df!trade)' datatype='date' datatype-customized='true' default-format='*YYYY' name='[TIME_PERIOD (df!trade)]' role='dimension' type='ordinal' />
             <column caption='Time Period' datatype='date' datatype-customized='true' name='[TIME_PERIOD]' role='dimension' type='ordinal' />
             <column-instance column='[Calculation_3526881490733637632]' derivation='Avg' name='[avg:Calculation_3526881490733637632:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
             <column-instance column='[Calculation_3526881490733899777]' derivation='User' name='[usr:Calculation_3526881490733899777:qk]' pivot='key' type='quantitative'>
               <table-calc ordering-type='Rows' />
             </column-instance>
@@ -4560,7 +4406,6 @@
             </groupfilter>
           </filter>
           <slices>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_3526881490733899777:qk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME PERIOD (df!trade) (Years):ok]</column>
           </slices>
@@ -4740,10 +4585,14 @@
             <column caption='Obs Value' datatype='real' name='[OBS_VALUE]' role='measure' type='quantitative' />
             <column datatype='string' name='[Pacific Island Countries and territories (df!trade)]' role='dimension' type='nominal' />
             <column caption='Time Period' datatype='date' datatype-customized='true' name='[TIME_PERIOD]' role='dimension' type='ordinal' />
+            <column datatype='date' name='[Time Period GOV]' role='dimension' type='quantitative' user:agg-type='Year-Trunc' user:base-field='TIME_PERIOD' user:ui-builder='date-bin-builder'>
+              <calculation class='tableau' formula='DATE(DATETRUNC(&apos;year&apos;, [TIME_PERIOD]))' />
+            </column>
             <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='Attribute' name='[attr:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
-            <column-instance column='[TIME_PERIOD]' derivation='Attribute' name='[attr:TIME_PERIOD:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[Time Period GOV]' derivation='Attribute' name='[attr:Time Period GOV:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Indicator]' derivation='None' name='[none:Indicator:nk]' pivot='key' type='nominal' />
             <column-instance column='[Pacific Island Countries and territories (df!trade)]' derivation='None' name='[none:Pacific Island Countries and territories (df!trade):nk]' pivot='key' type='nominal' />
+            <column-instance column='[Time Period GOV]' derivation='None' name='[none:Time Period GOV:qk]' pivot='key' type='quantitative' />
             <column-instance column='[OBS_VALUE]' derivation='Sum' name='[sum:OBS_VALUE:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Calculation_630996560896626688]' derivation='User' name='[usr:Calculation_630996560896626688:ok:4]' pivot='key' type='ordinal'>
               <table-calc level-address='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[Pacific Island Countries and territories (df!trade)]' ordering-type='Field'>
@@ -4757,23 +4606,20 @@
                 <order field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[Indicator]' />
               </table-calc>
             </column-instance>
-            <column-instance column='[TIME_PERIOD]' derivation='Year' name='[yr:TIME_PERIOD:ok]' pivot='key' type='ordinal' />
-            <column-instance column='[TIME_PERIOD]' derivation='Year' name='[yr:TIME_PERIOD:qk]' pivot='key' type='quantitative' />
           </datasource-dependencies>
           <filter class='categorical' column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]'>
             <groupfilter function='member' level='[none:Indicator:nk]' member='&quot;E-Government Index&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <slices>
-            <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]</column>
             <column>[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]</column>
           </slices>
           <aggregation value='true' />
         </view>
         <style>
           <style-rule element='axis'>
-            <format attr='height' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME_PERIOD:ok]' value='16' />
             <format attr='title' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE:qk]' scope='rows' value='E-Govt Index' />
-            <encoding attr='space' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME_PERIOD:qk]' field-type='quantitative' major-origin='2002' major-spacing='10' scope='cols' type='space' />
+            <format attr='title' class='0' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Time Period GOV:qk]' scope='cols' value='' />
+            <format attr='height' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Time Period GOV:qk]' value='22' />
           </style-rule>
           <style-rule element='header'>
             <format attr='width' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='64' />
@@ -4785,12 +4631,13 @@
             <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='#000000' />
             <format attr='text-align' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='left' />
             <format attr='vertical-align' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' value='center' />
-            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME_PERIOD:ok]' value='Helvetica' />
-            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME_PERIOD:ok]' value='#000000' />
-            <format attr='text-orientation' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME_PERIOD:ok]' value='0' />
             <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE:qk]' value='Helvetica' />
             <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE:qk]' value='#000000' />
             <format attr='text-format' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE:qk]' value='N' />
+            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]' value='Helvetica' />
+            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]' value='#000000' />
+            <format attr='font-family' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Time Period GOV:qk]' value='Helvetica' />
+            <format attr='color' field='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Time Period GOV:qk]' value='#000000' />
           </style-rule>
           <style-rule element='table'>
             <format attr='background-color' value='#d3ebfb' />
@@ -4809,7 +4656,7 @@
             <encodings>
               <tooltip column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:Pacific Island Countries and territories (df!trade):nk]' />
               <tooltip column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE:qk]' />
-              <tooltip column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:TIME_PERIOD:ok]' />
+              <tooltip column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[attr:Time Period GOV:qk]' />
               <text column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' />
               <lod column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' />
               <lod column='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]' />
@@ -4817,10 +4664,10 @@
             </encodings>
             <customized-tooltip>
               <formatted-text>
-                <run bold='true' fontcolor='#f98106' fontname='Helvetica' fontsize='12'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]>]]></run>
+                <run bold='true' fontcolor='#000000' fontname='Helvetica' fontsize='12'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]>]]></run>
                 <run>Æ&#10;</run>
                 <run fontcolor='#000000' fontname='Helvetica'>Year:&#9;</run>
-                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME_PERIOD:ok]>]]></run>
+                <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Time Period GOV:qk]>]]></run>
                 <run>Æ&#10;</run>
                 <run fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]>:	]]></run>
                 <run bold='true' fontcolor='#000000' fontname='Helvetica'><![CDATA[<[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE:qk]>]]></run>
@@ -4839,8 +4686,8 @@
                 <format attr='mark-color' value='#f98106' />
               </style-rule>
               <style-rule element='pane'>
-                <format attr='minheight' value='43' />
-                <format attr='maxheight' value='43' />
+                <format attr='minheight' value='57' />
+                <format attr='maxheight' value='57' />
                 <format attr='minwidth' value='660' />
                 <format attr='maxwidth' value='660' />
                 <format attr='aspect' value='0' />
@@ -4849,7 +4696,7 @@
           </pane>
         </panes>
         <rows>([federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896860161:ok:8] * [federated.03xni7c1xhk91e1h6gfdv1sblyqu].[sum:OBS_VALUE:qk])</rows>
-        <cols>([federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896626688:ok:4] * [federated.03xni7c1xhk91e1h6gfdv1sblyqu].[yr:TIME_PERIOD:qk])</cols>
+        <cols>([federated.03xni7c1xhk91e1h6gfdv1sblyqu].[usr:Calculation_630996560896626688:ok:4] * [federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Time Period GOV:qk])</cols>
       </table>
       <simple-id uuid='{E681E36D-E64F-4956-B698-DD9DE03BAF79}' />
     </worksheet>
@@ -5000,8 +4847,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='179' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='178' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='187' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='84000' id='186' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
                 <zone h='8000' id='32' type-v2='dashboard-object' w='16556' x='17000' y='889'>
                   <button action='tabdoc:goto-sheet window-id=&quot;{A93B4318-1A91-4196-AFB4-1CAF3F8D19D6}&quot;' button-type='text'>
                     <button-visual-state>
@@ -5345,8 +5192,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1700' minheight='1700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='203' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='202' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='211' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98222' id='210' param='vert' type-v2='layout-flow' w='99112' x='444' y='889'>
                 <zone h='9111' id='32' type-v2='dashboard-object' w='16556' x='17000' y='889'>
                   <button action='tabdoc:goto-sheet window-id=&quot;{A93B4318-1A91-4196-AFB4-1CAF3F8D19D6}&quot;' button-type='text'>
                     <button-visual-state>
@@ -5747,8 +5594,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1750' minheight='1750' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='209' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='208' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='217' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98222' id='216' param='vert' type-v2='layout-flow' w='99112' x='444' y='889'>
                 <zone h='8444' id='32' type-v2='dashboard-object' w='16556' x='17000' y='889'>
                   <button action='tabdoc:goto-sheet window-id=&quot;{A93B4318-1A91-4196-AFB4-1CAF3F8D19D6}&quot;' button-type='text'>
                     <button-visual-state>
@@ -6076,7 +5923,7 @@
                           <format attr='margin' value='4' />
                         </zone-style>
                       </zone>
-                      <zone h='11333' id='198' name='Part 3 - E Govt &amp; ONLINE Index' pane-specification-id='0' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]' type-v2='color' w='15889' x='83667' y='20835'>
+                      <zone h='6889' id='207' name='Part 3 - E Govt Index' pane-specification-id='5' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[:Measure Names]' type-v2='color' w='15889' x='83667' y='20835'>
                         <zone-style>
                           <format attr='border-color' value='#000000' />
                           <format attr='border-style' value='none' />
@@ -6084,7 +5931,7 @@
                           <format attr='margin' value='4' />
                         </zone-style>
                       </zone>
-                      <zone h='6889' id='207' name='Part 3 - E Govt Index' pane-specification-id='5' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[:Measure Names]' type-v2='color' w='15889' x='83667' y='32168'>
+                      <zone h='11333' id='198' name='Part 3 - E Govt &amp; ONLINE Index' pane-specification-id='0' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]' type-v2='color' w='15889' x='83667' y='27724'>
                         <zone-style>
                           <format attr='border-color' value='#000000' />
                           <format attr='border-style' value='none' />
@@ -6101,7 +5948,7 @@
           <zone h='53000' id='76' is-fixed='true' type-v2='layout-basic' w='99112' x='444' y='46111'>
             <zone h='53000' id='69' param='horz' type-v2='layout-flow' w='47445' x='444' y='46111'>
               <zone h='53000' id='109' name='Part 3 - E Govt Index BY COUNTRY' w='47445' x='444' y='46111'>
-                <layout-cache cell-count-w='33' has-max-size-h='true' maxheight='223' minheight='223' non-cell-size-w='50' type-h='scalable' type-w='cell' />
+                <layout-cache has-max-size-h='true' has-max-size-w='true' maxheight='223' maxwidth='2031' minheight='223' minwidth='2031' type-h='scalable' type-w='scalable' />
                 <zone-style>
                   <format attr='border-color' value='#000000' />
                   <format attr='border-style' value='none' />
@@ -6113,7 +5960,7 @@
             <zone h='53000' id='81' is-fixed='true' type-v2='layout-basic' w='51667' x='47889' y='46111'>
               <zone h='53000' id='77' param='horz' type-v2='layout-flow' w='35778' x='47889' y='46111'>
                 <zone h='53000' id='112' name='Part 3 - E Govt &amp; ONLINE Index BY COUNTRY' w='35778' x='47889' y='46111'>
-                  <layout-cache cell-count-w='11' has-max-size-h='true' maxheight='727' minheight='727' non-cell-size-w='112' type-h='scalable' type-w='cell' />
+                  <layout-cache has-max-size-h='true' maxheight='727' minheight='727' minwidth='163' type-h='scalable' type-w='scalable' />
                   <zone-style>
                     <format attr='border-color' value='#000000' />
                     <format attr='border-style' value='none' />
@@ -6158,8 +6005,8 @@
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='1750' minheight='1750' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='213' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='84000' id='212' param='vert' type-v2='layout-flow' w='84000' x='8000' y='8000'>
+            <zone h='100000' id='221' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98222' id='220' param='vert' type-v2='layout-flow' w='99112' x='444' y='889'>
                 <zone h='8444' id='32' type-v2='dashboard-object' w='16556' x='17000' y='889'>
                   <button action='tabdoc:goto-sheet window-id=&quot;{A93B4318-1A91-4196-AFB4-1CAF3F8D19D6}&quot;' button-type='text'>
                     <button-visual-state>
@@ -6247,7 +6094,7 @@
                     <format attr='padding' value='0' />
                   </zone-style>
                 </zone>
-                <zone h='6889' id='207' name='Part 3 - E Govt Index' pane-specification-id='5' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[:Measure Names]' type-v2='color' w='15889' x='83667' y='32168'>
+                <zone h='6889' id='207' name='Part 3 - E Govt Index' pane-specification-id='5' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[:Measure Names]' type-v2='color' w='15889' x='83667' y='20835'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
                     <format attr='border-style' value='none' />
@@ -6266,7 +6113,7 @@
                     <format attr='padding' value='0' />
                   </zone-style>
                 </zone>
-                <zone h='11333' id='198' name='Part 3 - E Govt &amp; ONLINE Index' pane-specification-id='0' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]' type-v2='color' w='15889' x='83667' y='20835'>
+                <zone h='11333' id='198' name='Part 3 - E Govt &amp; ONLINE Index' pane-specification-id='0' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]' type-v2='color' w='15889' x='83667' y='27724'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
                     <format attr='border-style' value='none' />
@@ -6276,7 +6123,7 @@
                   </zone-style>
                 </zone>
                 <zone fixed-size='280' h='53000' id='109' is-fixed='true' name='Part 3 - E Govt Index BY COUNTRY' w='47445' x='444' y='46111'>
-                  <layout-cache cell-count-w='33' has-max-size-h='true' maxheight='223' minheight='223' non-cell-size-w='50' type-h='scalable' type-w='cell' />
+                  <layout-cache has-max-size-h='true' has-max-size-w='true' maxheight='223' maxwidth='2031' minheight='223' minwidth='2031' type-h='scalable' type-w='scalable' />
                   <zone-style>
                     <format attr='border-color' value='#000000' />
                     <format attr='border-style' value='none' />
@@ -6360,7 +6207,7 @@
           <zoom type='entire-view' />
         </viewpoint>
       </viewpoints>
-      <active id='-1' />
+      <active id='152' />
       <simple-id uuid='{5AEAE701-6BA2-4EEA-BBDC-C7CB525B7CD5}' />
     </window>
     <window class='dashboard' name='Part 2' tab-color='#dec77b'>
@@ -6378,7 +6225,7 @@
           <zoom type='entire-view' />
         </viewpoint>
       </viewpoints>
-      <active id='-1' />
+      <active id='165' />
       <simple-id uuid='{29F32665-37D3-4A8E-A17F-F6C181C8A3F6}' />
     </window>
     <window class='dashboard' name='Part 3' tab-color='#6e597f'>
@@ -6396,33 +6243,10 @@
           <zoom type='entire-view' />
         </viewpoint>
       </viewpoints>
-      <active id='-1' />
+      <active id='112' />
       <simple-id uuid='{41DDC444-1F69-4CB6-9F7C-D76E9B08B247}' />
     </window>
-    <window class='worksheet' maximized='true' name='Part 3 - E Govt Index BY COUNTRY' tab-color='#6e597f'>
-      <cards>
-        <edge name='left'>
-          <strip size='160'>
-            <card type='pages' />
-            <card type='filters' />
-            <card type='marks' />
-          </strip>
-        </edge>
-        <edge name='top'>
-          <strip size='2147483647'>
-            <card type='columns' />
-          </strip>
-          <strip size='2147483647'>
-            <card type='rows' />
-          </strip>
-          <strip size='31'>
-            <card type='title' />
-          </strip>
-        </edge>
-      </cards>
-      <simple-id uuid='{3479FE71-7018-4D90-9A8F-E85A5459DE32}' />
-    </window>
-    <window class='worksheet' name='Part 2 - ICT Trade Flow by Country (3)' tab-color='#dec77b'>
+    <window class='worksheet' maximized='true' name='Part 3 - E Govt &amp; ONLINE Index BY COUNTRY' tab-color='#6e597f'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -6444,11 +6268,41 @@
         </edge>
         <edge name='right'>
           <strip size='160'>
-            <card param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' type='highlighter' />
+            <card param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' type='filter' />
+            <card pane-specification-id='0' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' type='color' />
           </strip>
         </edge>
       </cards>
-      <simple-id uuid='{0F78ED6E-C712-4A4B-81CD-F2945BE2B623}' />
+      <simple-id uuid='{8E1D7F17-D824-4CA1-A8F1-487AB3761292}' />
+    </window>
+    <window class='worksheet' name='Part 3 - E Govt &amp; ONLINE Index BY COUNTRY (2)' tab-color='#6e597f'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' type='filter' />
+            <card pane-specification-id='0' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[avg:OBS_VALUE:qk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{F87AB288-6208-497E-8AF0-5DF78B20A080}' />
     </window>
     <window class='worksheet' hidden='true' name='Part 1 - ICT Imports' tab-color='#4f779a'>
       <cards>
@@ -6700,35 +6554,6 @@
       </cards>
       <simple-id uuid='{612E3738-4B89-4B57-8319-CEBD43E2071D}' />
     </window>
-    <window class='worksheet' hidden='true' name='Part 3 - E Govt &amp; ONLINE Index BY COUNTRY' tab-color='#17927d'>
-      <cards>
-        <edge name='left'>
-          <strip size='160'>
-            <card type='pages' />
-            <card type='filters' />
-            <card type='marks' />
-          </strip>
-        </edge>
-        <edge name='top'>
-          <strip size='2147483647'>
-            <card type='columns' />
-          </strip>
-          <strip size='2147483647'>
-            <card type='rows' />
-          </strip>
-          <strip size='31'>
-            <card type='title' />
-          </strip>
-        </edge>
-        <edge name='right'>
-          <strip size='160'>
-            <card param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Pacific Island Countries and territories (df!trade):nk]' type='filter' />
-            <card pane-specification-id='0' param='[federated.03xni7c1xhk91e1h6gfdv1sblyqu].[none:Indicator:nk]' type='color' />
-          </strip>
-        </edge>
-      </cards>
-      <simple-id uuid='{8E1D7F17-D824-4CA1-A8F1-487AB3761292}' />
-    </window>
     <window class='worksheet' hidden='true' name='Part 3 - E Govt Index' tab-color='#17927d'>
       <cards>
         <edge name='left'>
@@ -6758,6 +6583,29 @@
         </edge>
       </cards>
       <simple-id uuid='{9960C412-91E4-43CB-8858-B01DAA083763}' />
+    </window>
+    <window class='worksheet' hidden='true' name='Part 3 - E Govt Index BY COUNTRY' tab-color='#6e597f'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{3479FE71-7018-4D90-9A8F-E85A5459DE32}' />
     </window>
   </windows>
 </workbook>
