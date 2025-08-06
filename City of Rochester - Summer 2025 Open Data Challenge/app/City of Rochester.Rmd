@@ -1,0 +1,35 @@
+---
+title: "City of Rochester"
+author: "Ed"
+date: "2025-08-06"
+output: html_document
+---
+
+```{r}
+
+packages <- c(
+  'ggplot2','tidyverse','plotly','leaflet',
+  'shiny','shinyWidgets','shinydashboard',
+  'xts','forecast','TTR','treemapify',
+  'DT','lubridate','RColorBrewer','scales','stopwords',
+  'tidytext','stringr','wordcloud','wordcloud2','scales','dplyr','rfm',
+  'SnowballC','textmineR','topicmodels','textclean','tm'
+)
+for (package in packages) { 
+  if (!require(package, character.only = T, quietly = T)) {
+    install.packages(package)
+    library(package, character.only = T)
+  }
+}
+```
+
+# Load data
+
+```{r}
+parks <- read_csv("parks_playground.csv.csv")
+tree <- read_csv("trees.csv.csv")
+```
+
+```
+
+```
