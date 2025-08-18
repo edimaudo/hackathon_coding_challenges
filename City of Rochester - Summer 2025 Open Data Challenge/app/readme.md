@@ -9,11 +9,11 @@ The challenge invites you to use our publicly available datasets on Rochester’
 
 ## Judging Criteria
 
-**Accessibility**
+**Accessibility**:
 How user-friendly is this project?
 
-**Use of Data**
+**Use of Data**:
 How effectively and meaningfully does this project leverage open data?
 
-**Creativity**
+**Creativity**:
 How original is this project? Does it demonstrate creative use of storytelling, data visualization, or other presentation techniques?
