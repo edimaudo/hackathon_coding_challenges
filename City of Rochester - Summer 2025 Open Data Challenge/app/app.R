@@ -49,8 +49,9 @@ for (package in packages) {
   }
 }
 ################ Load Data ################
-parks <- read_csv("parks_playground.csv")
+parks <- read_csv("Parks_and_Playgrounds.csv")
 tree <- read_csv("trees.csv")
+tree_address <- read_csv("Trees_address.csv")
 
 
 ui <- dashboardPage(
@@ -63,7 +64,7 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("house"))#,
-      #menuItem("Park Overiew", tabName = "park_overview", icon = icon("th")),
+      #menuItem("Park Overview", tabName = "park_overview", icon = icon("th")),
       #menuItem("Park Insights", tabName = "park_insight", icon = icon("thumbs-up")),
       
     )
