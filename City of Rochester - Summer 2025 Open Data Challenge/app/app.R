@@ -77,7 +77,7 @@ ui <- dashboardPage(
       ######### Overview ######### 
        tabItem(tabName = "park_overview",
 
-                 mainPanel(width = 10,
+                 mainPanel(width = 12,
                            fluidRow(
                              column(width = 12,
                                     valueBoxOutput("speciesValueBox"),
@@ -88,21 +88,24 @@ ui <- dashboardPage(
                            br(),br(),
                           fluidRow(
                             h4("Park Map",style="text-align: center;"),
-                            leafletOutput("parkOverviewMap", width = 'auto',height="600px")
+                            leafletOutput("parkOverviewMap", width = 'auto',height="300px")
                           ), 
                           br(),br(),
-                          fluidRow(
-                            layout_column_wrap(width = 1/2,
+                          tabsetPanel(type = "tabs",
+                                      tabPanel(h4("Top 10 Genus",style="text-align: center;"),
                                                plotlyOutput("genusOverviewPlot"),
-                                               plotlyOutput("speciesOverviewPlot")
-                            )
+                                      ),
+                                      tabPanel(h4("Top 10 Species",style="text-align: center;"),
+                                               plotlyOutput("speciesOverviewPlot"),
+                                      ),
+                                      tabPanel(h4("Top 10 Trees",style="text-align: center;"),
+                                               plotlyOutput("treeNameOverviewPlot"),
+                                      ),
+                                      tabPanel(h4("Top 10 Maintenance Actions",style="text-align: center;"),
+                                               plotlyOutput("maintenanceOverviewPlot")
+                                      ),
                           ),
-                           
-                           br(),br(),
-                           layout_columns(width = 1/2,
-                             plotlyOutput("treeNameOverviewPlot"),
-                             plotlyOutput("maintenanceOverviewPlot")
-                           )
+                          
                  )
                )
       ######### Insights ######### 
@@ -152,7 +155,7 @@ output$genusOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="GENUS", y = "Total", title="Top 10 Genus across all Parks") 
+    labs(x ="GENUS", y = "Total") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -172,7 +175,7 @@ output$speciesOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(SPECIES,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Species", y = "Total", title="Top 10 Species across all Parks") 
+    labs(x ="Species", y = "Total") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -192,7 +195,7 @@ output$treeNameOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(TREE_NAME_VAL,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Tree Name", y = "Total", title="Top 10 Trees across all Parks") 
+    labs(x ="Tree Name", y = "Total") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -212,7 +215,7 @@ output$maintenanceOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(MAINT_VAL,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Maintenance Activities", y = "Total", title="Top 10 Tree Maintenance actions across all Parks") 
+    labs(x ="Maintenance Activities", y = "Total") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
