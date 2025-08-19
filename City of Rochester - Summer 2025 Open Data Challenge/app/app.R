@@ -87,6 +87,7 @@ ui <- dashboardPage(
                            ),
                            br(),br(),
                           fluidRow(
+                            h4("Park Map",style="text-align: center;"),
                             leafletOutput("parkOverviewMap", width = 'auto',height="600px")
                           ), 
                           br(),br(),
@@ -151,7 +152,7 @@ output$genusOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="GENUS", y = "Total") 
+    labs(x ="GENUS", y = "Total", title="Top 10 Genus across all Parks") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -171,7 +172,27 @@ output$speciesOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(SPECIES,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Species", y = "Total") 
+    labs(x ="Species", y = "Total", title="Top 10 Species across all Parks") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+  
+  ggplotly(g)
+  
+  
+})
+
+output$treeNameOverviewPlot <- renderPlotly({
+  g <- tree %>%
+    group_by(TREE_NAME_VAL) %>%
+    summarise(Total = n()) %>%
+    select(TREE_NAME_VAL, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10) %>%
+    ggplot(aes(x = reorder(TREE_NAME_VAL,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="Tree Name", y = "Total", title="Top 10 Trees across all Parks") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
