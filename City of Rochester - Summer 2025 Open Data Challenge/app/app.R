@@ -87,16 +87,16 @@ ui <- dashboardPage(
                            ),
                            br(),br(),
                           fluidRow(
-                            leafletOutput("subwayMap", width = 'auto',height="600px")
+                            leafletOutput("parkOverviewMap", width = 'auto',height="600px")
                           ),   
                            layout_column_wrap(width = 1/2,
-                                              plotlyOutput("giftCRMPlot"),
-                                              plotlyOutput("giftYearPlot"),
+                                              plotlyOutput("genusOveviewPlot"),
+                                              plotlyOutput("speciesOverviewPlot")
                            ),
                            br(),br(),
                            layout_columns(width = 1/2,
-                             plotlyOutput("giftMonthPlot"),
-                             plotlyOutput("giftDOWPlot"),
+                             plotlyOutput("treeNameOverviewPlot"),
+                             plotlyOutput("maintenanceOverviewPlot")
                            )
                  )
                )
@@ -111,8 +111,6 @@ ui <- dashboardPage(
 server <- function(input, output,session) {
   
 ########## Overview #######
-
-
 output$speciesValueBox <- renderValueBox({
     valueBox("Species Type", paste0(length(unique(tree$SPECIES))), icon = icon("list"),color = "aqua")
 }) 
@@ -122,8 +120,24 @@ output$genusValueBox <- renderValueBox({
 }) 
 
 output$treeNameValueBox <- renderValueBox({
-  valueBox("Tree Tyoes", paste0(length(unique(tree$TREE_NAME_VAL))), icon = icon("list"),color = "aqua")
+  valueBox("Tree Types", paste0(length(unique(tree$TREE_NAME_VAL))), icon = icon("list"),color = "aqua")
 }) 
+
+output$parkOverviewMap <- renderLeaflet({
+  
+  parkMap <- leaflet() %>%
+    addTiles() %>% 
+    setView(lng=parks$Longitude[1],
+            lat=parks$Latitude[1],zoom=13) %>%
+    addMarkers(lng=parks$Longitude,
+               lat = parks$Latitude,
+               label = parks$Name,
+               popup = parks$FULLADDR )
+  
+  parkMap
+  
+})
+
 
   
 }
