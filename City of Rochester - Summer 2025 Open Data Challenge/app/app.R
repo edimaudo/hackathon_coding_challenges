@@ -88,11 +88,15 @@ ui <- dashboardPage(
                            br(),br(),
                           fluidRow(
                             leafletOutput("parkOverviewMap", width = 'auto',height="600px")
-                          ),   
-                           layout_column_wrap(width = 1/2,
-                                              plotlyOutput("genusOveviewPlot"),
-                                              plotlyOutput("speciesOverviewPlot")
-                           ),
+                          ), 
+                          br(),br(),
+                          fluidRow(
+                            layout_column_wrap(width = 1/2,
+                                               plotlyOutput("genusOverviewPlot"),
+                                               plotlyOutput("speciesOverviewPlot")
+                            )
+                          ),
+                           
                            br(),br(),
                            layout_columns(width = 1/2,
                              plotlyOutput("treeNameOverviewPlot"),
@@ -138,6 +142,45 @@ output$parkOverviewMap <- renderLeaflet({
   
 })
 
+output$genusOverviewPlot <- renderPlotly({
+  g <- tree %>%
+    group_by(GENUS) %>%
+    summarise(Total = n()) %>%
+    select(GENUS, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10) %>%
+    ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="GENUS", y = "Total") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+  
+  ggplotly(g)
+  
+  
+})
+
+output$speciesOverviewPlot <- renderPlotly({
+  g <- tree %>%
+    group_by(SPECIES) %>%
+    summarise(Total = n()) %>%
+    select(SPECIES, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10) %>%
+    ggplot(aes(x = reorder(SPECIES,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="Species", y = "Total") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+  
+  ggplotly(g)
+  
+  
+})
 
   
 }
