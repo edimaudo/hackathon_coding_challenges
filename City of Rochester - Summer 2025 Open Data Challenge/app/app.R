@@ -203,6 +203,27 @@ output$treeNameOverviewPlot <- renderPlotly({
   
 })
 
+output$maintenanceOverviewPlot <- renderPlotly({
+  g <- tree %>%
+    group_by(MAINT_VAL) %>%
+    summarise(Total = n()) %>%
+    select(MAINT_VAL, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10) %>%
+    ggplot(aes(x = reorder(MAINT_VAL,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="Maintenance Activities", y = "Total", title="Top 10 Tree Maintenance actions across all Parks") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+  
+  ggplotly(g)
+  
+  
+})
+
+
   
 }
 
