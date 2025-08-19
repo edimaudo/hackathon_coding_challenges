@@ -8,28 +8,28 @@ output: html_document
 ```{r}
 
 packages <- c(
-  'ggplot2','tidyverse','plotly','leaflet',
-  'shiny','shinyWidgets','shinydashboard',
-  'xts','forecast','TTR','treemapify',
-  'DT','lubridate','RColorBrewer','scales','stopwords',
-  'tidytext','stringr','wordcloud','wordcloud2','scales','dplyr','rfm',
-  'SnowballC','textmineR','topicmodels','textclean','tm'
+  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders',
+  'bslib','readxl','DT','mlbench','caTools','gridExtra','doParallel','grid',
+  'reshape2','caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
+  'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify','leaflet'
 )
-for (package in packages) { 
-  if (!require(package, character.only = T, quietly = T)) {
+for (package in packages) {
+  if (!require(package, character.only=T, quietly=T)) {
     install.packages(package)
-    library(package, character.only = T)
+    library(package, character.only=T)
   }
 }
+
 ```
 
 # Load data
-
 ```{r}
 parks <- read_csv("Parks_and_Playgrounds.csv")
-tree <- read_csv("trees.csv")
+tree <- read_csv("Trees.csv")
+tree_address <- read_csv("Trees_address.csv")
 ```
 
+# combine trees and 
 ```{r}
 
 ```
