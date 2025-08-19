@@ -63,8 +63,8 @@ ui <- dashboardPage(
                           class = "dropdown")),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("About", tabName = "about", icon = icon("house"))#,
-      #menuItem("Park Overview", tabName = "park_overview", icon = icon("th")),
+      menuItem("About", tabName = "about", icon = icon("house")),
+      menuItem("Park Overview", tabName = "park_overview", icon = icon("th"))#,
       #menuItem("Park Insights", tabName = "park_insight", icon = icon("thumbs-up")),
       
     )
@@ -72,10 +72,10 @@ ui <- dashboardPage(
   dashboardBody(
     tabItems(
       ######### About #########
-      tabItem(tabName = "about",includeMarkdown("about.md"),hr())#, 
+      tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
       
       ######### Park Overview ######### 
-      # tabItem(tabName = "park_overview",
+       tabItem(tabName = "park_overview",
       #         sidebarLayout(
       #           sidebarPanel(width = 2,
       #                        sliderInput("yearDonationInput","Year", min = 2015, max = 2025, 
@@ -84,18 +84,29 @@ ui <- dashboardPage(
       #                                    choices = month_titles, selected = month_titles, multiple = TRUE),
       #                        submitButton("Submit")
       #           ),
-      #           mainPanel(width = 10,
-      #                     layout_column_wrap(width = 1/2,
-      #                                        plotlyOutput("giftCRMPlot"),
-      #                                        plotlyOutput("giftYearPlot"),
-      #                     ),
-      #                     br(),br(),
-      #                     layout_columns(
-      #                       plotlyOutput("giftMonthPlot"),
-      #                       plotlyOutput("giftDOWPlot"),
-      #                     )
-      #           )
-      #         )
+                 mainPanel(width = 10,
+                           fluidRow(
+                             column(width = 12,
+                                    valueBoxOutput("valueRecency"),
+                                    valueBoxOutput("valueFrequency"),
+                                    valueBoxOutput("valueMonetary")
+                             )
+                           ),
+                           br(),br(),
+                          fluidRow(
+                            leafletOutput("subwayMap", width = 'auto',height="600px")
+                          ),   
+                           layout_column_wrap(width = 1/2,
+                                              plotlyOutput("giftCRMPlot"),
+                                              plotlyOutput("giftYearPlot"),
+                           ),
+                           br(),br(),
+                           layout_columns(width = 1/2,
+                             plotlyOutput("giftMonthPlot"),
+                             plotlyOutput("giftDOWPlot"),
+                           )
+                 )
+               )
       #         
       # )
     )
