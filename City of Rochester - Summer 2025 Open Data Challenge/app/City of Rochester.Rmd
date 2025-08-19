@@ -29,7 +29,32 @@ tree <- read_csv("Trees.csv")
 tree_address <- read_csv("Trees_address.csv")
 ```
 
+```{r}
+ g <- tree %>%
+    group_by(GENUS) %>%
+    summarise(Total = n()) %>%
+    select(GENUS, Total) %>% 
+    arrange(desc(Total),by_group = FALSE) %>%
+    top_n(n = 10)
+g
+```
+
 # combine trees and 
 ```{r}
-
+  g <- tree %>%
+    group_by(GENUS) %>%
+    summarise(Total = n()) %>%
+    select(GENUS, Total) %>% 
+    arrange(desc(Total),by_group = FALSE) %>%
+    #ungroup() %>%
+    top_n(n = 10) %>%
+    ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="GENUS", y = "Total") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+  
+  ggplotly(g)
 ```
