@@ -50,7 +50,7 @@ for (package in packages) {
 }
 ################ Load Data ################
 parks <- read_csv("Parks_and_Playgrounds.csv")
-tree <- read_csv("trees.csv")
+tree <- read_csv("Trees.csv")
 tree_address <- read_csv("Trees_address.csv")
 
 
@@ -74,22 +74,15 @@ ui <- dashboardPage(
       ######### About #########
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
       
-      ######### Park Overview ######### 
+      ######### Overview ######### 
        tabItem(tabName = "park_overview",
-      #         sidebarLayout(
-      #           sidebarPanel(width = 2,
-      #                        sliderInput("yearDonationInput","Year", min = 2015, max = 2025, 
-      #                                    value = c(2015,2025), step = 1),
-      #                        selectInput("monthDonationInput", "Month", 
-      #                                    choices = month_titles, selected = month_titles, multiple = TRUE),
-      #                        submitButton("Submit")
-      #           ),
+
                  mainPanel(width = 10,
                            fluidRow(
                              column(width = 12,
-                                    valueBoxOutput("valueRecency"),
-                                    valueBoxOutput("valueFrequency"),
-                                    valueBoxOutput("valueMonetary")
+                                    valueBoxOutput("speciesValueBox"),
+                                    valueBoxOutput("genusValueBox"),
+                                    valueBoxOutput("treeNameValueBox")
                              )
                            ),
                            br(),br(),
@@ -107,8 +100,7 @@ ui <- dashboardPage(
                            )
                  )
                )
-      #         
-      # )
+      ######### Insights ######### 
     )
   ) 
 )
@@ -117,6 +109,22 @@ ui <- dashboardPage(
 
 ################  Server ################
 server <- function(input, output,session) {
+  
+########## Overview #######
+
+
+output$speciesValueBox <- renderValueBox({
+    valueBox("Species Type", paste0(length(unique(tree$SPECIES))), icon = icon("list"),color = "aqua")
+}) 
+
+output$genusValueBox <- renderValueBox({
+  valueBox("Genus Type", paste0(length(unique(tree$GENUS))), icon = icon("list"),color = "aqua")
+}) 
+
+output$treeNameValueBox <- renderValueBox({
+  valueBox("Tree Tyoes", paste0(length(unique(tree$TREE_NAME_VAL))), icon = icon("list"),color = "aqua")
+}) 
+
   
 }
 
