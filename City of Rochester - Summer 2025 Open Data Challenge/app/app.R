@@ -53,6 +53,17 @@ parks <- read_csv("Parks_and_Playgrounds.csv")
 tree <- read_csv("Trees.csv")
 tree_address <- read_csv("Trees_address.csv")
 
+tree_temp <- inner_join(tree, tree_address,by="PARKS_VAL") %>%
+  select(FULLADDR,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL) %>%
+  na.omit() %>%
+  unique()
+
+tree_df <- inner_join(tree_temp,parks,by="FULLADDR",relationship = "many-to-many") %>%
+  select(FULLADDR,NAME,PHONE,AGENCYURL,EMAIL,Longitude,Latitude,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL) %>%
+  na.omit() %>%
+  unique()
+
+parks <- c(sort(unique(tree_df$NAME)))
 
 ui <- dashboardPage(
   dashboardHeader(title = "Open Data Challenge 2025",
@@ -64,8 +75,8 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("house")),
-      menuItem("Park Overview", tabName = "park_overview", icon = icon("th"))#,
-      #menuItem("Park Insights", tabName = "park_insight", icon = icon("thumbs-up")),
+      menuItem("Park Overview", tabName = "park_overview", icon = icon("th")),
+      menuItem("Park Insights", tabName = "park_insight", icon = icon("thumbs-up"))
       
     )
   ),
@@ -87,7 +98,7 @@ ui <- dashboardPage(
                            ),
                            br(),br(),
                           fluidRow(
-                            h4("Park Map",style="text-align: center;"),
+                            h4("City of Rochester Park Map",style="text-align: center;"),
                             leafletOutput("parkOverviewMap", width = 'auto',height="300px")
                           ), 
                           br(),br(),
@@ -107,13 +118,52 @@ ui <- dashboardPage(
                           ),
                           
                  )
-               )
+               ),
       ######### Insights ######### 
-    )
-  ) 
+      tabItem(tabName = "park_insight",
+              sidebarLayout(
+                sidebarPanel(width = 3,
+                             selectInput("parkInput", "Parks", 
+                                         choices = parks, selected = parks[0], multiple = FALSE),
+                             submitButton("Submit")
+                ),
+                mainPanel(width = 12,
+                  fluidRow(
+                    column(width = 12,
+                           valueBoxOutput("speciesInsightBox"),
+                           valueBoxOutput("genusInsighteBox"),
+                           valueBoxOutput("treeNameInsightBox")
+                    )
+                  ),
+                  br(),br(),
+                  fluidRow(
+                    h4("Park Map",style="text-align: center;"),
+                    leafletOutput("parkInsightMap", width = 'auto',height="300px")
+                  ), 
+                  br(),br(),
+                  tabsetPanel(type = "tabs",
+                              tabPanel(h4("Top 10 Genus",style="text-align: center;"),
+                                       plotlyOutput("genusInsightPlot"),
+                              ),
+                              tabPanel(h4("Top 10 Species",style="text-align: center;"),
+                                       plotlyOutput("speciesInsightPlot"),
+                              ),
+                              tabPanel(h4("Top 10 Trees",style="text-align: center;"),
+                                       plotlyOutput("treeNameInsightPlot"),
+                              ),
+                              tabPanel(h4("Top 10 Maintenance Actions",style="text-align: center;"),
+                                       plotlyOutput("maintenanceInsightPlot")
+                              ),
+                  ),
+              
+       
+       )
+     )
+   ) 
+  )
+ )
+
 )
-
-
 
 ################  Server ################
 server <- function(input, output,session) {
