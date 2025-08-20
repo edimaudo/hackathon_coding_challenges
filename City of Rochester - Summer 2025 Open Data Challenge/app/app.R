@@ -1,8 +1,9 @@
 #========================================
 # Shiny web app leveraging City of Rochester Open Data
 #=========================================
-rm(list = ls())
+
 ################  Packages ################
+rm(list = ls())
 library(ggplot2)
 library(corrplot)
 library(tidyverse)
@@ -53,6 +54,7 @@ parks <- read_csv("Parks_and_Playgrounds.csv")
 tree <- read_csv("Trees.csv")
 tree_address <- read_csv("Trees_address.csv")
 
+################ Data Setup ################
 tree_temp <- inner_join(tree, tree_address,by="PARKS_VAL") %>%
   select(FULLADDR,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL) %>%
   na.omit() %>%
@@ -65,6 +67,7 @@ tree_df <- inner_join(tree_temp,parks,by="FULLADDR",relationship = "many-to-many
 
 park_list <- c(sort(unique(tree_df$NAME)))
 
+################ UI ################
 ui <- dashboardPage(
   dashboardHeader(title = "Open Data Challenge 2025",
                   tags$li(a(href = 'https://data.cityofrochester.gov',
@@ -275,6 +278,9 @@ output$maintenanceOverviewPlot <- renderPlotly({
   
   
 })
+
+########## Insights #######
+
 
 
   
