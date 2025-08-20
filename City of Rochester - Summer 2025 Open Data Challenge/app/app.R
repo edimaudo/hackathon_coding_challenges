@@ -63,7 +63,7 @@ tree_df <- inner_join(tree_temp,parks,by="FULLADDR",relationship = "many-to-many
   na.omit() %>%
   unique()
 
-parks <- c(sort(unique(tree_df$NAME)))
+park_list <- c(sort(unique(tree_df$NAME)))
 
 ui <- dashboardPage(
   dashboardHeader(title = "Open Data Challenge 2025",
@@ -122,9 +122,9 @@ ui <- dashboardPage(
       ######### Insights ######### 
       tabItem(tabName = "park_insight",
               sidebarLayout(
-                sidebarPanel(width = 3,
+                sidebarPanel(width = 4,
                              selectInput("parkInput", "Parks", 
-                                         choices = parks, selected = parks[0], multiple = FALSE),
+                                         choices = park_list, selected = park_list[0], multiple = FALSE),
                              submitButton("Submit")
                 ),
                 mainPanel(width = 12,
