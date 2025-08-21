@@ -42,11 +42,32 @@ tree_df <- inner_join(tree_temp,parks,by="FULLADDR",relationship = "many-to-many
 
 
 ```{r}
+## Tree Inventory Over Time (Cumulative Line Plot) 
+tree$new_inv_date <- lubridate::year(as.Date(tree$INV_DATE, format =  "%Y/%m/%d"))
 
+```
+```{r}
+  tree_diameter <- tree %>%
+    summarise(Total = mean(DBH_VAL_update)) %>%
 ```
 
 
 ```{r}
+  g <- tree %>%
+    group_by(new_inv_date) %>%
+    summarise(Total = n()) %>%
+    filter(new_inv_date >= '2008') %>%
+    select(new_inv_date, Total) %>% 
+    ggplot(aes(x =new_inv_date ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') +
+    labs(x ="Inventory Year", y = "Total") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+  
+  ggplotly(g)
+
 ```
 
 ```{r}
@@ -78,5 +99,12 @@ tree_temp2 <- inner_join(tree_temp,parks,by="FULLADDR",relationship = "many-to-m
   unique()
 ```
 ```{r}
+library(stringr)
+tree$DBH_VAL_update <- as.numeric(str_remove_all(tree$DBH_VAL, "[\"']"))
+```
+```{r}
+ 
 
+
+format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)
 ```
