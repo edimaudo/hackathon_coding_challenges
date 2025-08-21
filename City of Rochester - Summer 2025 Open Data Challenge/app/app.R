@@ -230,7 +230,7 @@ output$genusOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="GENUS", y = "Total") 
+    labs(x ="GENUS", y = "Total", title="Top 10 Genus") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -250,7 +250,7 @@ output$speciesOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(SPECIES,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Species", y = "Total") 
+    labs(x ="Species", y = "Total", title="Top 10 Species") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -270,7 +270,7 @@ output$treeNameOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(TREE_NAME_VAL,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Tree Name", y = "Total") 
+    labs(x ="Tree Name", y = "Total", title="Top 10 Trees") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -289,7 +289,7 @@ output$inventoryOverviewPlot <- renderPlotly({
     select(new_inv_date, Total) %>% 
     ggplot(aes(x =new_inv_date ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') +
-    labs(x ="Inventory Year", y = "Total") 
+    labs(x ="Inventory Year", y = "Total", title="Annual Tree Inventory") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -307,7 +307,7 @@ output$maintenanceOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(MAINT_VAL,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Maintenance Activities", y = "Total") 
+    labs(x ="Maintenance Activities", y = "Total", title="Top 10 Maintenance Activities") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
