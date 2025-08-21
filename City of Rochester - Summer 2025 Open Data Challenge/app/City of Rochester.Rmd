@@ -28,6 +28,26 @@ parks <- read_csv("Parks_and_Playgrounds.csv")
 tree <- read_csv("Trees.csv")
 tree_address <- read_csv("Trees_address.csv")
 ```
+```{r}
+tree_temp <- inner_join(tree, tree_address,by="PARKS_VAL") %>%
+  select(FULLADDR,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL) %>%
+  na.omit() %>%
+  unique()
+
+tree_df <- inner_join(tree_temp,parks,by="FULLADDR",relationship = "many-to-many") %>%
+  select(FULLADDR,NAME,PHONE,AGENCYURL,EMAIL,Longitude,Latitude,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL) %>%
+  na.omit() %>%
+  unique()
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+```
 
 ```{r}
  g <- tree %>%
