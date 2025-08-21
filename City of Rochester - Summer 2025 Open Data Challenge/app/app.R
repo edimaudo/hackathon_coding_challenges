@@ -36,11 +36,12 @@ library(htmltools)
 library(markdown)
 library(scales)
 library(leaflet)
+library(stringr)
 
 packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders',
   'bslib','readxl','DT','mlbench','caTools','gridExtra','doParallel','grid',
-  'reshape2','caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
+  'reshape2','caret','tidyr','Matrix','lubridate','plotly','RColorBrewer','stringr',
   'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify','leaflet'
 )
 for (package in packages) {
@@ -55,6 +56,9 @@ tree <- read_csv("Trees.csv")
 tree_address <- read_csv("Trees_address.csv")
 
 ################ Data Setup ################
+tree$new_inv_date <- lubridate::year(as.Date(tree$INV_DATE, format =  "%Y/%m/%d"))
+tree$DBH_VAL_update <- as.numeric(str_remove_all(tree$DBH_VAL, "[\"']"))
+
 tree_temp <- inner_join(tree, tree_address,by="PARKS_VAL") %>%
   select(FULLADDR,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL) %>%
   na.omit() %>%
@@ -97,7 +101,9 @@ ui <- dashboardPage(
                                     valueBoxOutput("parkValueBox"),
                                     valueBoxOutput("speciesValueBox"),
                                     valueBoxOutput("genusValueBox"),
-                                    valueBoxOutput("treeNameValueBox")
+                                    valueBoxOutput("treeNameValueBox"),
+                                    valueBoxOutput("treeSizeValueBox"),
+                                    valueBoxOutput("treeMaintenanceValueBox")
                              )
                            ),
                            br(),br(),
@@ -178,16 +184,27 @@ server <- function(input, output,session) {
   }) 
   
 output$speciesValueBox <- renderValueBox({
-    valueBox("Species Type", paste0(length(unique(tree$SPECIES))), icon = icon("list"),color = "aqua")
+    valueBox("Unique Species Type", paste0(length(unique(tree$SPECIES))), icon = icon("list"),color = "aqua")
 }) 
 
 output$genusValueBox <- renderValueBox({
-  valueBox("Genus Type", paste0(length(unique(tree$GENUS))), icon = icon("list"),color = "aqua")
+  valueBox("Unique Genus Type", paste0(length(unique(tree$GENUS))), icon = icon("list"),color = "aqua")
 }) 
 
 output$treeNameValueBox <- renderValueBox({
-  valueBox("Tree Types", paste0(length(unique(tree$TREE_NAME_VAL))), icon = icon("list"),color = "aqua")
+  valueBox("Unique Tree Types", paste0(length(unique(tree$TREE_NAME_VAL))), icon = icon("list"),color = "aqua")
 }) 
+
+output$treeSizeValueBox <- renderValueBox({
+  valueBox("Average Tree Diameter", paste0(format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
+           icon = icon("list"),color = "aqua")
+})
+
+output$treeMaintenanceValueBox <- renderValueBox({
+  valueBox("Unique Maintenance Actions", paste0(length(unique(tree$MAINT_VAL))), icon = icon("list"),color = "aqua")
+})
+
+
 
 output$parkOverviewMap <- renderLeaflet({
   
