@@ -114,16 +114,20 @@ ui <- dashboardPage(
                           br(),br(),
                           tabsetPanel(type = "tabs",
                                       tabPanel(h4("Tree Characteristics",style="text-align: center;"),
-                                               plotlyOutput("genusOverviewPlot"),
-                                               plotlyOutput("speciesOverviewPlot"),
-                                               plotlyOutput("treeNameOverviewPlot")
+                                               #layout_column_wrap(
+                                                  plotlyOutput("genusOverviewPlot"),
+                                                  plotlyOutput("speciesOverviewPlot"),
+                                               #,
+                                               
+                                               #plotlyOutput("treeNameOverviewPlot")
                                       ),
 
                                       tabPanel(h4("Inventory",style="text-align: center;"),
                                                plotlyOutput("inventoryOverviewPlot")
                                       ),
                                       tabPanel(h4("Maintenance",style="text-align: center;"),
-                                               plotlyOutput("maintenanceOverviewPlot")
+                                               plotlyOutput("maintenanceOverviewPlot"),
+                                               plotlyOutput("maintenanceNSCOverviewPlot")
                                       ),
                           ),
                           
@@ -214,7 +218,7 @@ output$parkOverviewMap <- renderLeaflet({
             lat=parks$Latitude[1],zoom=13) %>%
     addMarkers(lng=parks$Longitude,
                lat = parks$Latitude,
-               label = parks$Name,
+               label = parks$NAME,
                popup = parks$FULLADDR )
   
   parkMap
@@ -234,7 +238,8 @@ output$genusOverviewPlot <- renderPlotly({
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10))
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
   
   ggplotly(g)
   
@@ -254,7 +259,8 @@ output$speciesOverviewPlot <- renderPlotly({
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10))
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
   
   ggplotly(g)
   
@@ -274,7 +280,8 @@ output$treeNameOverviewPlot <- renderPlotly({
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10))
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
   
   ggplotly(g)
   
@@ -293,7 +300,8 @@ output$inventoryOverviewPlot <- renderPlotly({
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10))
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
   
   ggplotly(g)
 })
@@ -311,7 +319,8 @@ output$maintenanceOverviewPlot <- renderPlotly({
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10))
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
   
   ggplotly(g)
   
