@@ -94,6 +94,7 @@ ui <- dashboardPage(
                  mainPanel(width = 12,
                            fluidRow(
                              column(width = 12,
+                                    valueBoxOutput("parkValueBox"),
                                     valueBoxOutput("speciesValueBox"),
                                     valueBoxOutput("genusValueBox"),
                                     valueBoxOutput("treeNameValueBox")
@@ -106,16 +107,16 @@ ui <- dashboardPage(
                           ), 
                           br(),br(),
                           tabsetPanel(type = "tabs",
-                                      tabPanel(h4("Top 10 Genus",style="text-align: center;"),
+                                      tabPanel(h4("Tree Characteristics",style="text-align: center;"),
                                                plotlyOutput("genusOverviewPlot"),
-                                      ),
-                                      tabPanel(h4("Top 10 Species",style="text-align: center;"),
                                                plotlyOutput("speciesOverviewPlot"),
+                                               plotlyOutput("treeNameOverviewPlot")
                                       ),
-                                      tabPanel(h4("Top 10 Trees",style="text-align: center;"),
-                                               plotlyOutput("treeNameOverviewPlot"),
+
+                                      tabPanel(h4("Inventory",style="text-align: center;"),
+                                               plotlyOutput("inventoryOverviewPlot")
                                       ),
-                                      tabPanel(h4("Top 10 Maintenance Actions",style="text-align: center;"),
+                                      tabPanel(h4("Maintenance",style="text-align: center;"),
                                                plotlyOutput("maintenanceOverviewPlot")
                                       ),
                           ),
@@ -172,6 +173,10 @@ ui <- dashboardPage(
 server <- function(input, output,session) {
   
 ########## Overview #######
+  output$parkValueBox <- renderValueBox({
+    valueBox("# of Parks", paste0(length(parks$NAME)), icon = icon("list"),color = "aqua")
+  }) 
+  
 output$speciesValueBox <- renderValueBox({
     valueBox("Species Type", paste0(length(unique(tree$SPECIES))), icon = icon("list"),color = "aqua")
 }) 
@@ -257,6 +262,23 @@ output$treeNameOverviewPlot <- renderPlotly({
   ggplotly(g)
   
   
+})
+
+output$inventoryOverviewPlot <- renderPlotly({
+  g <- tree %>%
+    group_by(new_inv_date) %>%
+    summarise(Total = n()) %>%
+    filter(new_inv_date >= '2008') %>%
+    select(new_inv_date, Total) %>% 
+    ggplot(aes(x =new_inv_date ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') +
+    labs(x ="Inventory Year", y = "Total") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10))
+  
+  ggplotly(g)
 })
 
 output$maintenanceOverviewPlot <- renderPlotly({
