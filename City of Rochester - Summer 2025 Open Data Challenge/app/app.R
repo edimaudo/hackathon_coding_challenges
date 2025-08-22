@@ -329,11 +329,38 @@ output$dbhgenusOverviewPlot <- renderPlotly({
 
 output$dbhAgeProfileOverviewPlot <- renderPlotly({
   
+  tree_df <- tree
+  
+  tree_df <- tree_df %>%
+    mutate(DBH_Category = case_when(
+      DBH_VAL_update < 11  ~ "Young",
+      DBH_VAL_update < 20  ~ "Mature",
+      DBH_VAL_update >= 20 ~ "Old",
+      TRUE ~ NA_character_
+    ))
+  
+  g <- tree_df %>%
+    group_by(DBH_Category) %>%
+    summarise(Total = n()) %>%
+    select(DBH_Category, Total) %>% 
+    arrange(desc(Total)) %>%
+    ggplot(aes(x = reorder(DBH_Category,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="DBH Category", y = "Total", title="DBH Categories") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
+  
+    
+  
+  
 })
 
 output$dbhOverviewHistogramPlot <- renderPlotly({
- 
-  
   g <- tree %>%
     ggplot(aes(x = DBH_VAL_update))  +
     geom_histogram(fill='black') + 
