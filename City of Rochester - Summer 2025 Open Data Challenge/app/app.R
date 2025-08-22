@@ -332,12 +332,11 @@ output$dbhAgeProfileOverviewPlot <- renderPlotly({
 })
 
 output$dbhOverviewHistogramPlot <- renderPlotly({
-  p <- ggplot(data, aes(x=value)) + 
-    geom_histogram()
+ 
   
   g <- tree %>%
     ggplot(aes(x = DBH_VAL_update))  +
-    geom_histogram(fill='black') + #stat = "identity",width = 0.5
+    geom_histogram(fill='black') + 
     labs(x ="DBH", title="DBH Value Histogram") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
