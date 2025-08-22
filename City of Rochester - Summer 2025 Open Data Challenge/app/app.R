@@ -114,20 +114,26 @@ ui <- dashboardPage(
                           br(),br(),
                           tabsetPanel(type = "tabs",
                                       tabPanel(h4("Tree Characteristics",style="text-align: center;"),
-                                               #layout_column_wrap(
+                                               layout_column_wrap(width = 1/2,
                                                   plotlyOutput("genusOverviewPlot"),
-                                                  plotlyOutput("speciesOverviewPlot"),
-                                               #,
+                                                  plotlyOutput("speciesOverviewPlot")
+                                                  
+                                               ),
+                                               layout_column_wrap(width = 1/2,
+                                                 plotlyOutput("dbhgenusOverviewPlot"),
+                                                 plotlyOutput("treeNameOverviewPlot")
+                                               )
                                                
-                                               #plotlyOutput("treeNameOverviewPlot")
                                       ),
 
                                       tabPanel(h4("Inventory",style="text-align: center;"),
                                                plotlyOutput("inventoryOverviewPlot")
                                       ),
                                       tabPanel(h4("Maintenance",style="text-align: center;"),
+                                               layout_column_wrap(width = 1/2,
                                                plotlyOutput("maintenanceOverviewPlot"),
                                                plotlyOutput("maintenanceNSCOverviewPlot")
+                                               )
                                       ),
                           ),
                           
@@ -288,6 +294,34 @@ output$treeNameOverviewPlot <- renderPlotly({
   
 })
 
+
+output$dbhgenusOverviewPlot <- renderPlotly({
+  g_df <- tree %>%
+    group_by(GENUS) %>%
+    summarise(Total = n()) %>%
+    select(GENUS, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10)
+  
+  g <- tree %>%
+    filter(GENUS %in% c(g_df$GENUS)) %>%
+    group_by(GENUS) %>%
+    summarise(Total = mean(DBH_VAL_update)) %>%
+    select(GENUS, Total) %>% 
+    arrange(desc(Total)) %>%
+    ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="GENUS", y = "Total", title="Genus and Avg. DBH Value") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
+  
+})
+
 output$inventoryOverviewPlot <- renderPlotly({
   g <- tree %>%
     group_by(new_inv_date) %>%
@@ -323,9 +357,38 @@ output$maintenanceOverviewPlot <- renderPlotly({
         plot.title = element_text(hjust=0.5))
   
   ggplotly(g)
-  
-  
 })
+  
+output$maintenanceNSCOverviewPlot <- renderPlotly({
+  g_df <- g <- tree %>%
+    group_by(MAINT_VAL) %>%
+    summarise(Total = n()) %>%
+    select(MAINT_VAL, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10)
+  
+  g <- tree %>%
+    filter(MAINT_VAL %in% c(g_df$MAINT_VAL)) %>%
+    group_by(MAINT_VAL,NSC_AREA_VAL) %>%
+    summarise(Total = n()) %>%
+    select(MAINT_VAL, NSC_AREA_VAL,Total) %>% 
+    top_n(n = 10) %>%
+    ggplot(aes(NSC_AREA_VAL,MAINT_VAL, fill= Total)) + 
+    geom_tile() + 
+    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top 10 Maintenance Activities & NSC Heatmap") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5),
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+    
+    ggplotly(g)
+    
+})
+  
+  
+
 
 ########## Insights #######
 
