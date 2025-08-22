@@ -108,3 +108,24 @@ tree$DBH_VAL_update <- as.numeric(str_remove_all(tree$DBH_VAL, "[\"']"))
 
 format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)
 ```
+```{r}
+g_df <- tree %>%
+    group_by(GENUS) %>%
+    summarise(Total = n()) %>%
+    select(GENUS, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10)
+  
+  g <- tree %>%
+    filter(GENUS %in% c(g_df$GENUS)) %>%
+    group_by(GENUS) %>%
+    summarise(Total = mean(DBH_VAL_update)) %>%
+    select(GENUS, Total)
+  
+  g
+```
+
+
+```{r}
+```
+
