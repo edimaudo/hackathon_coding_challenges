@@ -127,5 +127,12 @@ g_df <- tree %>%
 
 
 ```{r}
+ tree_df <- tree_df %>%
+  mutate(DBH_Category = case_when(
+    DBH_VAL_update < 11  ~ "Young",
+    DBH_VAL_update < 20  ~ "Mature",
+    DBH_VAL_update >= 20 ~ "Old",
+    TRUE ~ NA_character_
+  ))
 ```
 
