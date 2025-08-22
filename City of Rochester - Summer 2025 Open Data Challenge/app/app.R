@@ -122,6 +122,10 @@ ui <- dashboardPage(
                                                layout_column_wrap(width = 1/2,
                                                  plotlyOutput("dbhgenusOverviewPlot"),
                                                  plotlyOutput("treeNameOverviewPlot")
+                                               ), 
+                                               layout_column_wrap(width = 1/2,
+                                                  plotlyOutput("dbhAgeProfileOverviewPlot"),
+                                                  plotlyOutput("dbhOverviewHistogramPlot")
                                                )
                                                
                                       ),
@@ -320,6 +324,28 @@ output$dbhgenusOverviewPlot <- renderPlotly({
   
   ggplotly(g)
   
+})
+
+
+output$dbhAgeProfileOverviewPlot <- renderPlotly({
+  
+})
+
+output$dbhOverviewHistogramPlot <- renderPlotly({
+  p <- ggplot(data, aes(x=value)) + 
+    geom_histogram()
+  
+  g <- tree %>%
+    ggplot(aes(x = DBH_VAL_update))  +
+    geom_histogram(fill='black') + #stat = "identity",width = 0.5
+    labs(x ="DBH", title="DBH Value Histogram") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
 })
 
 output$inventoryOverviewPlot <- renderPlotly({
