@@ -38,18 +38,18 @@ library(scales)
 library(leaflet)
 library(stringr)
 
-packages <- c(
-  'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders',
-  'bslib','readxl','DT','mlbench','caTools','gridExtra','doParallel','grid',
-  'reshape2','caret','tidyr','Matrix','lubridate','plotly','RColorBrewer','stringr',
-  'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify','leaflet'
-)
-for (package in packages) {
-  if (!require(package, character.only=T, quietly=T)) {
-    install.packages(package)
-    library(package, character.only=T)
-  }
-}
+# packages <- c(
+#   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders',
+#   'bslib','readxl','DT','mlbench','caTools','gridExtra','doParallel','grid',
+#   'reshape2','caret','tidyr','Matrix','lubridate','plotly','RColorBrewer','stringr',
+#   'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify','leaflet'
+# )
+# for (package in packages) {
+#   if (!require(package, character.only=T, quietly=T)) {
+#     install.packages(package)
+#     library(package, character.only=T)
+#   }
+# }
 ################ Load Data ################
 parks <- read_csv("Parks_and_Playgrounds.csv")
 tree <- read_csv("Trees.csv")
