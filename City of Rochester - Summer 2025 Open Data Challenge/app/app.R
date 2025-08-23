@@ -224,11 +224,11 @@ output$genusValueBox <- renderValueBox({
 }) 
 
 output$treeNameValueBox <- renderValueBox({
-  valueBox(  tags$p("Tree Types", style = "font-size: 80%;"), paste0(length(unique(tree$TREE_NAME_VAL))), icon = icon("list"),color = "aqua")
+  valueBox(  tags$p("Tree Type", style = "font-size: 80%;"), paste0(length(unique(tree$TREE_NAME_VAL))), icon = icon("list"),color = "aqua")
 }) 
 
 output$treeSizeValueBox <- renderValueBox({
-  valueBox(  tags$p("Average Tree Diameter", style = "font-size: 80%;"), paste0(format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
+  valueBox(  tags$p("Average Tree Diameter at Breast Height", style = "font-size: 80%;"), paste0(format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
            icon = icon("list"),color = "aqua")
 })
 
@@ -262,7 +262,7 @@ output$genusOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="GENUS", y = "Total", title="Top 10 Genus") 
+    labs(x ="Genus", y = "Total", title="Top 10 Genus") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -333,7 +333,7 @@ output$dbhgenusOverviewPlot <- renderPlotly({
     arrange(desc(Total)) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="GENUS", y = "Total", title="Genus and Avg. DBH Value") 
+    labs(x ="Genus", y = "Total", title="Genus and Average Diameter at Breast Height") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -364,7 +364,7 @@ output$dbhAgeProfileOverviewPlot <- renderPlotly({
     arrange(desc(Total)) %>%
     ggplot(aes(x = reorder(DBH_Category,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="DBH Category", y = "Total", title="DBH Categories") 
+    labs(x ="Diameter at Breast Height Category", y = "Total", title="Diameter at Breast Height Categories") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -382,7 +382,7 @@ output$dbhOverviewHistogramPlot <- renderPlotly({
   g <- tree %>%
     ggplot(aes(x = DBH_VAL_update))  +
     geom_histogram(fill='black') + 
-    labs(x ="DBH", title="DBH Value Histogram") 
+    labs(x ="Diameter at Breast Height", title="Diameter at Breast Height Histogram") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -445,7 +445,7 @@ output$maintenanceNSCOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(NSC_AREA_VAL,MAINT_VAL, fill= Total)) + 
     geom_tile() + 
-    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top 10 Maintenance Activities & NSC Heatmap") 
+    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top 10 Maintenance Activities & NSC Area Heatmap") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -484,12 +484,12 @@ output$genusInsightValueBox <- renderValueBox({
 }) 
 
 output$treeNameInsightValueBox <- renderValueBox({
-  valueBox(tags$p("Tree Types", style = "font-size: 80%;"), tags$p(paste0(length(unique(tree_info()$TREE_NAME_VAL))), 
+  valueBox(tags$p("Tree Type", style = "font-size: 80%;"), tags$p(paste0(length(unique(tree_info()$TREE_NAME_VAL))), 
                                        style = "font-size: 100%;"), icon = icon("list"),color = "aqua")
 }) 
 
 output$treeSizeInsightValueBox <- renderValueBox({
-  valueBox(tags$p("Average Tre Diameter", style = "font-size: 80%;"), tags$p(paste0(format(round(tree_diameter<- mean(tree_info()$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
+  valueBox(tags$p("Average Tree Diameter at Breast Height", style = "font-size: 80%;"), tags$p(paste0(format(round(tree_diameter<- mean(tree_info()$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
                                            style = "font-size: 100%;"), 
            icon = icon("book"),color = "aqua")
 })
@@ -523,7 +523,7 @@ output$genusInsightPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="GENUS", y = "Total", title="Top 10 Genus") 
+    labs(x ="Genus", y = "Total", title="Top 10 Genus") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -596,7 +596,7 @@ output$dbhgenusInsightPlot <- renderPlotly({
     arrange(desc(Total)) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="GENUS", y = "Total", title="Genus and Avg. DBH Value") 
+    labs(x ="GENUS", y = "Total", title="Genus and Average Diameter at Breast Height") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -627,7 +627,7 @@ output$dbhAgeProfileInsightPlot <- renderPlotly({
     arrange(desc(Total)) %>%
     ggplot(aes(x = reorder(DBH_Category,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="DBH Category", y = "Total", title="DBH Categories") 
+    labs(x ="Diameter at Breast Height Category", y = "Total", title="Diameter at Breast Height Categories") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -645,7 +645,7 @@ output$dbhOverviewHistogramInsightPlot <- renderPlotly({
   g <- tree_info() %>%
     ggplot(aes(x = DBH_VAL_update))  +
     geom_histogram(fill='black') + 
-    labs(x ="DBH", title="DBH Value Histogram") 
+    labs(x ="Diameter at Breast Height", title="Diameter at Breast Height Histogram") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -708,7 +708,7 @@ output$maintenanceNSCInsightPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(NSC_AREA_VAL,MAINT_VAL, fill= Total)) + 
     geom_tile() + 
-    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top 10 Maintenance Activities & NSC Heatmap") 
+    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top 10 Maintenance Activities & NSC Area Heatmap") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
