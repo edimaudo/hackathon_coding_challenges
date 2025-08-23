@@ -489,7 +489,8 @@ output$treeNameInsightValueBox <- renderValueBox({
 }) 
 
 output$treeSizeInsightValueBox <- renderValueBox({
-  valueBox(tags$p("Average Tree Diameter at Breast Height", style = "font-size: 80%;"), tags$p(paste0(format(round(tree_diameter<- mean(tree_info()$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
+  valueBox(tags$p("Average Tree Diameter at Breast Height", style = "font-size: 80%;"), 
+           tags$p(paste0(format(round(tree_diameter<- mean(tree_info()$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
                                            style = "font-size: 100%;"), 
            icon = icon("book"),color = "aqua")
 })
@@ -596,7 +597,7 @@ output$dbhgenusInsightPlot <- renderPlotly({
     arrange(desc(Total)) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="GENUS", y = "Total", title="Genus and Average Diameter at Breast Height") 
+    labs(x ="Genus", y = "Total", title="Genus and Average Diameter at Breast Height") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
