@@ -171,14 +171,31 @@ ui <- dashboardPage(
                   br(),br(),
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Tree Characteristics",style="text-align: center;"),
-                                       plotlyOutput("genusInsightPlot"),
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("genusInsightPlot"),
+                                                          plotlyOutput("speciesInsightPlot")
+                                                          
+                                       ),
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("dbhgenusInsightPlot"),
+                                                          plotlyOutput("treeNameInsightPlot")
+                                       ), 
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("dbhAgeProfileInsightPlot"),
+                                                          plotlyOutput("dbhOverviewHistogramPlot")
+                                       )
+                                       
                               ),
+                              
                               tabPanel(h4("Inventory",style="text-align: center;"),
-                                       plotlyOutput("speciesInsightPlot"),
+                                       plotlyOutput("inventoryInsightPlot")
                               ),
                               tabPanel(h4("Maintenance",style="text-align: center;"),
-                                       plotlyOutput("treeNameInsightPlot"),
-                              )
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("maintenanceInsightPlot"),
+                                                          plotlyOutput("maintenanceNSCInsightPlot")
+                                       )
+                              ),
                   ),
               
        
@@ -413,7 +430,7 @@ output$maintenanceOverviewPlot <- renderPlotly({
 })
   
 output$maintenanceNSCOverviewPlot <- renderPlotly({
-  g_df <- g <- tree %>%
+  g_df <- tree %>%
     group_by(MAINT_VAL) %>%
     summarise(Total = n()) %>%
     select(MAINT_VAL, Total) %>% 
@@ -494,6 +511,48 @@ output$parkInsightMap <- renderLeaflet({
                popup = tree_info()$FULLADDR )
   
   parkMap
+  
+})
+
+output$genusInsightPlot <- renderPlotly({
+  g <- tree_info() %>%
+    group_by(GENUS) %>%
+    summarise(Total = n()) %>%
+    select(GENUS, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10) %>%
+    ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="GENUS", y = "Total", title="Top 10 Genus") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
+  
+  
+})
+
+output$speciesInsightPlot <- renderPlotly({
+  g <- tree_info() %>%
+    group_by(SPECIES) %>%
+    summarise(Total = n()) %>%
+    select(SPECIES, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10) %>%
+    ggplot(aes(x = reorder(SPECIES,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="Species", y = "Total", title="Top 10 Species") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
+  
   
 })
 
