@@ -333,7 +333,7 @@ output$dbhgenusOverviewPlot <- renderPlotly({
     arrange(desc(Total)) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Genus and Average Diameter at Breast Height") 
+    labs(x ="Genus", y = "Total", title="Top 10 Genus and Average Diameter at Breast Height") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
@@ -597,7 +597,7 @@ output$dbhgenusInsightPlot <- renderPlotly({
     arrange(desc(Total)) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Genus and Average Diameter at Breast Height") 
+    labs(x ="Genus", y = "Total", title="Top 10 Genus and Average Diameter at Breast Height") 
   theme(legend.text = element_text(size = 10),
         legend.title = element_text(size = 10),
         axis.title = element_text(size = 12),
