@@ -182,7 +182,7 @@ ui <- dashboardPage(
                                        ), 
                                        layout_column_wrap(width = 1/2,
                                                           plotlyOutput("dbhAgeProfileInsightPlot"),
-                                                          plotlyOutput("dbhOverviewHistogramPlot")
+                                                          plotlyOutput("dbhOverviewHistogramInsightPlot")
                                        )
                                        
                               ),
@@ -555,6 +555,171 @@ output$speciesInsightPlot <- renderPlotly({
   
   
 })
+
+
+
+output$treeNameInsightPlot <- renderPlotly({
+  g <- tree_info() %>%
+    group_by(TREE_NAME_VAL) %>%
+    summarise(Total = n()) %>%
+    select(TREE_NAME_VAL, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10) %>%
+    ggplot(aes(x = reorder(TREE_NAME_VAL,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="Tree Name", y = "Total", title="Top 10 Trees") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
+  
+  
+})
+
+
+output$dbhgenusInsightPlot <- renderPlotly({
+  g_df <- tree_info() %>%
+    group_by(GENUS) %>%
+    summarise(Total = n()) %>%
+    select(GENUS, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10)
+  
+  g <- tree_info() %>%
+    filter(GENUS %in% c(g_df$GENUS)) %>%
+    group_by(GENUS) %>%
+    summarise(Total = mean(DBH_VAL_update)) %>%
+    select(GENUS, Total) %>% 
+    arrange(desc(Total)) %>%
+    ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="GENUS", y = "Total", title="Genus and Avg. DBH Value") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
+  
+})
+
+
+output$dbhAgeProfileInsightPlot <- renderPlotly({
+  
+  tree_df <- tree_info()
+  
+  tree_df <- tree_df %>%
+    mutate(DBH_Category = case_when(
+      DBH_VAL_update < 11  ~ "Young",
+      DBH_VAL_update < 20  ~ "Mature",
+      DBH_VAL_update >= 20 ~ "Old",
+      TRUE ~ NA_character_
+    ))
+  
+  g <- tree_df %>%
+    group_by(DBH_Category) %>%
+    summarise(Total = n()) %>%
+    select(DBH_Category, Total) %>% 
+    arrange(desc(Total)) %>%
+    ggplot(aes(x = reorder(DBH_Category,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="DBH Category", y = "Total", title="DBH Categories") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
+  
+  
+  
+  
+})
+
+output$dbhOverviewHistogramInsightPlot <- renderPlotly({
+  g <- tree_info() %>%
+    ggplot(aes(x = DBH_VAL_update))  +
+    geom_histogram(fill='black') + 
+    labs(x ="DBH", title="DBH Value Histogram") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
+})
+
+output$inventoryInsightPlot <- renderPlotly({
+  g <- tree_info() %>%
+    group_by(new_inv_date) %>%
+    summarise(Total = n()) %>%
+    filter(new_inv_date >= '2008') %>%
+    select(new_inv_date, Total) %>% 
+    ggplot(aes(x =factor(new_inv_date) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') +
+    labs(x ="Inventory Year", y = "Total", title="Annual Tree Inventory") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
+})
+
+output$maintenanceInsightPlot <- renderPlotly({
+  g <- tree_info() %>%
+    group_by(MAINT_VAL) %>%
+    summarise(Total = n()) %>%
+    select(MAINT_VAL, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10) %>%
+    ggplot(aes(x = reorder(MAINT_VAL,Total) ,y = Total))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+    labs(x ="Maintenance Activities", y = "Total", title="Top 10 Maintenance Activities") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5))
+  
+  ggplotly(g)
+})
+
+output$maintenanceNSCInsightPlot <- renderPlotly({
+  g_df <- tree_info() %>%
+    group_by(MAINT_VAL) %>%
+    summarise(Total = n()) %>%
+    select(MAINT_VAL, Total) %>% 
+    arrange(desc(Total)) %>%
+    top_n(n = 10)
+  
+  g <- tree_info() %>%
+    filter(MAINT_VAL %in% c(g_df$MAINT_VAL)) %>%
+    group_by(MAINT_VAL,NSC_AREA_VAL) %>%
+    summarise(Total = n()) %>%
+    select(MAINT_VAL, NSC_AREA_VAL,Total) %>% 
+    top_n(n = 10) %>%
+    ggplot(aes(NSC_AREA_VAL,MAINT_VAL, fill= Total)) + 
+    geom_tile() + 
+    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top 10 Maintenance Activities & NSC Heatmap") 
+  theme(legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(hjust=0.5),
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  
+  ggplotly(g)
+  
+})
+
 
   
 }
