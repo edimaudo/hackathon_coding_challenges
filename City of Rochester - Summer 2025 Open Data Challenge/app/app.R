@@ -482,6 +482,20 @@ output$treeMaintenanceInsightValueBox <- renderValueBox({
                                                 style = "font-size: 100%;"), icon = icon("list"),color = "aqua")
 })
 
+output$parkInsightMap <- renderLeaflet({
+  
+  parkMap <- leaflet() %>%
+    addTiles() %>% 
+    setView(lng=tree_info()$Longitude[1],
+            lat=tree_info()$Latitude[1],zoom=13) %>%
+    addMarkers(lng=tree_info()$Longitude[1],
+               lat = tree_info()$Latitude[1],
+               label = tree_info()$NAME,
+               popup = tree_info()$FULLADDR )
+  
+  parkMap
+  
+})
 
   
 }
