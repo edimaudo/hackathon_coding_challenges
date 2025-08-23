@@ -170,18 +170,15 @@ ui <- dashboardPage(
                   ), 
                   br(),br(),
                   tabsetPanel(type = "tabs",
-                              tabPanel(h4("Top 10 Genus",style="text-align: center;"),
+                              tabPanel(h4("Tree Characteristics",style="text-align: center;"),
                                        plotlyOutput("genusInsightPlot"),
                               ),
-                              tabPanel(h4("Top 10 Species",style="text-align: center;"),
+                              tabPanel(h4("Inventory",style="text-align: center;"),
                                        plotlyOutput("speciesInsightPlot"),
                               ),
-                              tabPanel(h4("Top 10 Trees",style="text-align: center;"),
+                              tabPanel(h4("Maintenance",style="text-align: center;"),
                                        plotlyOutput("treeNameInsightPlot"),
-                              ),
-                              tabPanel(h4("Top 10 Maintenance Actions",style="text-align: center;"),
-                                       plotlyOutput("maintenanceInsightPlot")
-                              ),
+                              )
                   ),
               
        
