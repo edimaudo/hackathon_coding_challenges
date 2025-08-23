@@ -60,12 +60,12 @@ tree$new_inv_date <- lubridate::year(as.Date(tree$INV_DATE, format =  "%Y/%m/%d"
 tree$DBH_VAL_update <- as.numeric(str_remove_all(tree$DBH_VAL, "[\"']"))
 
 tree_temp <- inner_join(tree, tree_address,by="PARKS_VAL") %>%
-  select(FULLADDR,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL) %>%
+  select(FULLADDR,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL,DBH_VAL_update,NSC_AREA_VAL,new_inv_date) %>%
   na.omit() %>%
   unique()
 
 tree_df <- inner_join(tree_temp,parks,by="FULLADDR",relationship = "many-to-many") %>%
-  select(FULLADDR,NAME,PHONE,AGENCYURL,EMAIL,Longitude,Latitude,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL) %>%
+  select(FULLADDR,NAME,PHONE,AGENCYURL,EMAIL,Longitude,Latitude,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL,DBH_VAL_update,NSC_AREA_VAL,new_inv_date) %>%
   na.omit() %>%
   unique()
 
@@ -146,17 +146,21 @@ ui <- dashboardPage(
       ######### Insights ######### 
       tabItem(tabName = "park_insight",
               sidebarLayout(
-                sidebarPanel(width = 4,
+                sidebarPanel(width = 3,
                              selectInput("parkInput", "Parks", 
                                          choices = park_list, selected = park_list[0], multiple = FALSE),
                              submitButton("Submit")
                 ),
-                mainPanel(width = 12,
+                mainPanel(width = 9,
                   fluidRow(
                     column(width = 12,
-                           valueBoxOutput("speciesInsightBox"),
-                           valueBoxOutput("genusInsighteBox"),
-                           valueBoxOutput("treeNameInsightBox")
+                           valueBoxOutput("parkValueInsightValueBox"),
+                           valueBoxOutput("speciesInsightValueBox"),
+                           valueBoxOutput("genusInsightValueBox"),
+                           valueBoxOutput("treeNameInsightValueBox"),
+                           valueBoxOutput("treeSizeInsightValueBox"),
+                           valueBoxOutput("treeMaintenanceInsightValueBox")
+                  
                     )
                   ),
                   br(),br(),
@@ -193,29 +197,29 @@ ui <- dashboardPage(
 server <- function(input, output,session) {
   
 ########## Overview #######
-  output$parkValueBox <- renderValueBox({
-    valueBox("# of Parks", paste0(length(parks$NAME)), icon = icon("list"),color = "aqua")
+output$parkValueBox <- renderValueBox({
+    valueBox(  tags$p("# of Parks", style = "font-size: 80%;"), paste0(length(parks$NAME)), icon = icon("list"),color = "aqua")
   }) 
   
 output$speciesValueBox <- renderValueBox({
-    valueBox("Unique Species Type", paste0(length(unique(tree$SPECIES))), icon = icon("list"),color = "aqua")
+    valueBox(  tags$p("Species Type", style = "font-size: 80%;"), paste0(length(unique(tree$SPECIES))), icon = icon("list"),color = "aqua")
 }) 
 
 output$genusValueBox <- renderValueBox({
-  valueBox("Unique Genus Type", paste0(length(unique(tree$GENUS))), icon = icon("list"),color = "aqua")
+  valueBox(  tags$p("Genus Type", style = "font-size: 80%;"), paste0(length(unique(tree$GENUS))), icon = icon("list"),color = "aqua")
 }) 
 
 output$treeNameValueBox <- renderValueBox({
-  valueBox("Unique Tree Types", paste0(length(unique(tree$TREE_NAME_VAL))), icon = icon("list"),color = "aqua")
+  valueBox(  tags$p("Tree Types", style = "font-size: 80%;"), paste0(length(unique(tree$TREE_NAME_VAL))), icon = icon("list"),color = "aqua")
 }) 
 
 output$treeSizeValueBox <- renderValueBox({
-  valueBox("Average Tree Diameter", paste0(format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
+  valueBox(  tags$p("Average Tree Diameter", style = "font-size: 80%;"), paste0(format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
            icon = icon("list"),color = "aqua")
 })
 
 output$treeMaintenanceValueBox <- renderValueBox({
-  valueBox("Unique Maintenance Actions", paste0(length(unique(tree$MAINT_VAL))), icon = icon("list"),color = "aqua")
+  valueBox(  tags$p("Maintenance Actions", style = "font-size: 80%;"), paste0(length(unique(tree$MAINT_VAL))), icon = icon("list"),color = "aqua")
 })
 
 
@@ -443,7 +447,43 @@ output$maintenanceNSCOverviewPlot <- renderPlotly({
 
 
 ########## Insights #######
+tree_info <- reactive({
+  tree_df %>%
+    filter(NAME == input$parkInput)
+})
 
+output$parkValueInsightValueBox <- renderValueBox({
+  valueBox( tags$p("Park Address", style = "font-size: 80%;"), tags$p(paste0(unique(tree_info()$FULLADDR)), 
+                                  style = "font-size: 100%;"), icon = icon("book"), color = "aqua")
+  
+ 
+}) 
+
+output$speciesInsightValueBox <- renderValueBox({
+  valueBox(tags$p("Species Type", style = "font-size: 80%;"), tags$p(paste0(length(unique(tree_info()$SPECIES))), 
+                                         style = "font-size: 100%;"), icon = icon("list"),color = "aqua")
+}) 
+
+output$genusInsightValueBox <- renderValueBox({
+  valueBox(tags$p("Genus Type", style = "font-size: 80%;"), tags$p(paste0(length(unique(tree_info()$GENUS))), 
+                                       style = "font-size: 100%;"), icon = icon("list"),color = "aqua")
+}) 
+
+output$treeNameInsightValueBox <- renderValueBox({
+  valueBox(tags$p("Tree Types", style = "font-size: 80%;"), tags$p(paste0(length(unique(tree_info()$TREE_NAME_VAL))), 
+                                       style = "font-size: 100%;"), icon = icon("list"),color = "aqua")
+}) 
+
+output$treeSizeInsightValueBox <- renderValueBox({
+  valueBox(tags$p("Average Tre Diameter", style = "font-size: 80%;"), tags$p(paste0(format(round(tree_diameter<- mean(tree_info()$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
+                                           style = "font-size: 100%;"), 
+           icon = icon("book"),color = "aqua")
+})
+
+output$treeMaintenanceInsightValueBox <- renderValueBox({
+  valueBox(tags$p("Maintenance Actions", style = "font-size: 80%;"), tags$p(paste0(length(unique(tree_info()$MAINT_VAL))), 
+                                                style = "font-size: 100%;"), icon = icon("list"),color = "aqua")
+})
 
 
   
