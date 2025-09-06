@@ -82,9 +82,9 @@ ui <- page_navbar(
                 
                 selectizeInput("park_selector_taxonomy", "Filter by Park:", choices = NULL),
                 
-                h3("Taxonomic Hierarchy Explorer"),
-                p("An interactive sunburst chart showing the Order → Family → Genus → Species relationships."),
-                plotlyOutput("sunburst_plot"),
+                h3("Detection Method Analysis"),
+                p("A stacked bar chart showing the proportion of detections by song vs. call for the most frequently detected species."),
+                plotlyOutput("detection_method_plot"),
                 
                 h3("Bird Family Composition"),
                 p("A bar chart showing the proportional representation of bird families."),
@@ -311,54 +311,30 @@ server <- function(input, output, session) {
   })
   
   # --- Story 3 Visualizations ---
-  output$sunburst_plot <- renderPlotly({
+  output$detection_method_plot <- renderPlotly({
     req(filtered_df_taxonomy())
     local_df <- filtered_df_taxonomy()
-    if(all(c("Order", "Family", "Genus", "Species_Code") %in% names(local_df))) {
-      # Create a hierarchical dataframe for the sunburst plot
-      # We explicitly filter out NAs to ensure the hierarchy is built correctly
-      local_df_cleaned <- local_df %>%
-        filter(!is.na(Order), !is.na(Family), !is.na(Genus), !is.na(Species_Code))
+    
+    if (all(c("Detection_Type", "Common_Name") %in% names(local_df))) {
+      # Get the top species by total detections
+      top_species <- local_df %>%
+        count(Common_Name) %>%
+        arrange(desc(n)) %>%
+        slice_head(n = 15) %>%
+        pull(Common_Name)
       
-      taxonomic_df_species <- local_df_cleaned %>%
-        group_by(Order, Family, Genus, Species_Code) %>%
-        summarise(count = n(), .groups = 'drop') %>%
-        mutate(labels = Species_Code,
-               ids = paste(Order, Family, Genus, Species_Code, sep = "-"),
-               parents = paste(Order, Family, Genus, sep = "-"))
+      # Filter the data for only these top species and count detections by type
+      detection_counts <- local_df %>%
+        filter(Common_Name %in% top_species) %>%
+        count(Common_Name, Detection_Type) %>%
+        rename(Detections = n)
       
-      taxonomic_df_genus <- local_df_cleaned %>%
-        group_by(Order, Family, Genus) %>%
-        summarise(count = n(), .groups = 'drop') %>%
-        mutate(labels = Genus,
-               ids = paste(Order, Family, Genus, sep = "-"),
-               parents = paste(Order, Family, sep = "-"))
-      
-      taxonomic_df_family <- local_df_cleaned %>%
-        group_by(Order, Family) %>%
-        summarise(count = n(), .groups = 'drop') %>%
-        mutate(labels = Family,
-               ids = paste(Order, Family, sep = "-"),
-               parents = Order)
-      
-      taxonomic_df_order <- local_df_cleaned %>%
-        group_by(Order) %>%
-        summarise(count = n(), .groups = 'drop') %>%
-        mutate(labels = Order,
-               ids = Order,
-               parents = "")
-      
-      sunburst_data <- bind_rows(taxonomic_df_order, taxonomic_df_family, taxonomic_df_genus, taxonomic_df_species)
-      
-      plot_ly(
-        sunburst_data, 
-        ids = ~ids,
-        labels = ~labels,
-        parents = ~parents,
-        values = ~count,
-        type = "sunburst"
-      ) %>%
-        layout(title = 'Taxonomic Hierarchy of Detected Birds')
+      plot_ly(detection_counts, x = ~Common_Name, y = ~Detections, color = ~Detection_Type, type = 'bar') %>%
+        layout(title = "Detection Methods for Top Species (Song vs. Call)",
+               xaxis = list(title = "Species"),
+               yaxis = list(title = "Number of Detections"),
+               barmode = 'stack',
+               legend = list(title = list(text = "Detection Type")))
     }
   })
   
