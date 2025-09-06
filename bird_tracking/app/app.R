@@ -331,7 +331,7 @@ server <- function(input, output, session) {
       
       plot_ly(detection_counts, x = ~Common_Name, y = ~Detections, color = ~Detection_Type, type = 'bar') %>%
         layout(title = "Detection Methods for Top Species (Song vs. Call)",
-               xaxis = list(title = "Species"),
+               xaxis = list(title = "Species", categoryorder = "total descending"),
                yaxis = list(title = "Number of Detections"),
                barmode = 'stack',
                legend = list(title = list(text = "Detection Type")))
