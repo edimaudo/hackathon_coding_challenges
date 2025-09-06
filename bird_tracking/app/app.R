@@ -9,7 +9,7 @@ library(leaflet) # Add leaflet library
 
 # Define UI for the application
 ui <- page_navbar(
-  title = "Bird Tracking Data Story",
+  title = "Park Bird Tracker",
   theme = bslib::bs_theme(bootswatch = "cerulean"),
   nav_panel("About",
             div(class = "container-lg",
