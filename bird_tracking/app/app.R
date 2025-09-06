@@ -73,7 +73,7 @@ ui <- page_navbar(
                 plotlyOutput("species_range_plot"),
                 
                 h3("Road Noise and Bird Presence"),
-                p("This box plot shows the distribution of road noise levels for each detection distance band, providing a clear visual summary."),
+                p("This bar chart shows the average road noise levels for each detection distance band, providing a clear visual summary."),
                 plotlyOutput("noise_distance_plot")
             )
   ),
@@ -281,11 +281,16 @@ server <- function(input, output, session) {
     req(filtered_df_proximity())
     local_df <- filtered_df_proximity()
     if(all(c("Distance_Band", "Road_Noise") %in% names(local_df))) {
-      plot_ly(local_df, x = ~Distance_Band, y = ~Road_Noise, type = 'box',
+      # Calculate the mean road noise for each distance band
+      avg_noise <- local_df %>% 
+        group_by(Distance_Band) %>% 
+        summarise(Avg_Road_Noise = mean(Road_Noise, na.rm = TRUE))
+      
+      plot_ly(avg_noise, x = ~Distance_Band, y = ~Avg_Road_Noise, type = 'bar',
               color = ~Distance_Band) %>%
-        layout(title = 'Road Noise Distribution by Detection Distance Band',
+        layout(title = 'Average Road Noise by Detection Distance Band',
                xaxis = list(title = 'Detection Distance Band'),
-               yaxis = list(title = 'Road Noise Level (dB)'))
+               yaxis = list(title = 'Average Road Noise Level (dB)'))
     }
   })
   
