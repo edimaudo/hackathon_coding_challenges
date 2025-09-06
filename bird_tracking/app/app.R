@@ -6,11 +6,30 @@ library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(leaflet) # Add leaflet library
+library(tidyr)
 
 # Define UI for the application
 ui <- page_navbar(
   title = "Park Bird Tracker",
   theme = bslib::bs_theme(bootswatch = "cerulean"),
+  # Add custom CSS for improved spacing and centering
+  tags$head(
+    tags$style(HTML("
+      h2 {
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+      }
+      h3 {
+        text-align: center;
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+      }
+      .container-lg {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+    "))
+  ),
   nav_panel("About",
             div(class = "container-lg",
                 h1("About This App"),
@@ -23,7 +42,9 @@ ui <- page_navbar(
                 h2("The May Symphony - Tracking Bird Songs Through the Morning"),
                 p("This part explores the dynamic patterns of bird vocalizations throughout the morning, highlighting how different species create a coordinated 'symphony' at different times. The visualizations show how morning chorus patterns provide insights into species behavior and ecosystem health."),
                 
-                h3("Bird Activity Timeline Dashboard"),
+                selectizeInput("park_selector", "Filter by Park:", choices = NULL, options = list(placeholder = 'All Parks', onInitialize = I('function() { this.setValue(""); }'))),
+                
+                h3("Bird Activity Timeline"),
                 p("An interactive timeline showing bird detection frequency by minute."),
                 plotlyOutput("timeline_plot"),
                 
@@ -31,12 +52,9 @@ ui <- page_navbar(
                 p("A heat map of bird activity by minute across species, highlighting species that sing continuously vs. intermittently."),
                 plotlyOutput("heatmap_plot"),
                 
-                h3("Early vs. Late Morning Chorus Comparison"),
-                p("This visualization compares species richness and bird family composition between the 6:38 AM and 9:15 AM data points."),
-                fluidRow(
-                  column(6, plotlyOutput("early_pie_plot")),
-                  column(6, plotlyOutput("late_pie_plot"))
-                )
+                h3("Cumulative Species Richness Over Time"),
+                p("This visualization shows how the number of unique bird species detected increases over the 10-minute observation period."),
+                plotlyOutput("species_richness_plot")
             )
   ),
   nav_panel("Proximity Patterns",
@@ -90,14 +108,38 @@ server <- function(input, output, session) {
   df$Year <- as.factor(df$Year)
   df$Distance_Band <- factor(df$Distance_Band, levels = c("≤ 50 m", "51-75 m", "> 75 m"))
   
+  # Clean the Minute columns from character to logical
+  for(i in 1:10) {
+    col_name <- paste0("Minute_", i)
+    df[[col_name]] <- as.logical(df[[col_name]])
+  }
+  
+  # Populate the park dropdown with unique park names
+  observe({
+    park_names <- unique(df$Park_Name)
+    updateSelectizeInput(session, "park_selector", choices = sort(park_names))
+  })
+  
+  # Reactive expression for filtered data
+  filtered_df <- reactive({
+    if (is.null(input$park_selector) || input$park_selector == "") {
+      df
+    } else {
+      df %>% filter(Park_Name == input$park_selector)
+    }
+  })
+  
   # --- Story 1 Visualizations ---
   output$timeline_plot <- renderPlotly({
-    minute_cols <- paste0("Minute.", 1:10)
+    req(filtered_df())
+    local_df <- filtered_df()
+    
+    minute_cols <- paste0("Minute_", 1:10)
     minute_data <- lapply(1:10, function(i) {
       col <- minute_cols[i]
-      detections <- sum(df[[col]] == TRUE, na.rm = TRUE)
-      songs <- sum(df[[col]] == TRUE & df$Detection_Type == 'S', na.rm = TRUE)
-      calls <- sum(df[[col]] == TRUE & df$Detection_Type == 'C', na.rm = TRUE)
+      detections <- sum(local_df[[col]] == TRUE, na.rm = TRUE)
+      songs <- sum(local_df[[col]] == TRUE & local_df$Detection_Type == 'S', na.rm = TRUE)
+      calls <- sum(local_df[[col]] == TRUE & local_df$Detection_Type == 'C', na.rm = TRUE)
       data.frame(Minute = i, Detections = detections, Songs = songs, Calls = calls)
     })
     minute_df <- bind_rows(minute_data)
@@ -112,13 +154,16 @@ server <- function(input, output, session) {
   })
   
   output$heatmap_plot <- renderPlotly({
-    top_species <- df %>% 
+    req(filtered_df())
+    local_df <- filtered_df()
+    
+    top_species <- local_df %>% 
       count(Common_Name) %>% 
       arrange(desc(n)) %>% 
       slice_head(n = 15) %>% 
       pull(Common_Name)
     
-    df_top_species <- df %>% filter(Common_Name %in% top_species)
+    df_top_species <- local_df %>% filter(Common_Name %in% top_species)
     
     heatmap_data <- data.frame()
     for(species in top_species) {
@@ -148,26 +193,30 @@ server <- function(input, output, session) {
              yaxis = list(title = "Species", categoryorder = "trace"))
   })
   
-  output$early_pie_plot <- renderPlotly({
-    df$Start_Time_Clean <- format(df$Start_Time, "%H:%M:%S")
-    early_morning_data <- df %>% filter(Start_Time_Clean == "06:38:00")
+  output$species_richness_plot <- renderPlotly({
+    req(filtered_df())
+    local_df <- filtered_df()
     
-    if(nrow(early_morning_data) > 0) {
-      early_family_counts <- early_morning_data %>% count(Family)
-      plot_ly(early_family_counts, labels = ~Family, values = ~n, type = 'pie') %>%
-        layout(title = 'Early Morning (6:38 AM) Bird Family Composition')
-    }
-  })
-  
-  output$late_pie_plot <- renderPlotly({
-    df$Start_Time_Clean <- format(df$Start_Time, "%H:%M:%S")
-    late_morning_data <- df %>% filter(Start_Time_Clean == "09:15:00")
+    # Calculate cumulative species richness over the 10-minute period
+    species_richness <- data.frame(Minute = 1:10, Cumulative_Species = NA)
+    unique_species <- character()
     
-    if(nrow(late_morning_data) > 0) {
-      late_family_counts <- late_morning_data %>% count(Family)
-      plot_ly(late_family_counts, labels = ~Family, values = ~n, type = 'pie') %>%
-        layout(title = 'Late Morning (9:15 AM) Bird Family Composition')
+    for (i in 1:10) {
+      minute_col <- paste0("Minute_", i)
+      new_detections <- local_df %>% filter(.data[[minute_col]] == TRUE)
+      new_species <- unique(new_detections$Common_Name)
+      
+      unique_species <- unique(c(unique_species, new_species))
+      species_richness$Cumulative_Species[i] <- length(unique_species)
     }
+    
+    # Create the line plot
+    plot_ly(species_richness, x = ~Minute, y = ~Cumulative_Species, type = 'scatter', mode = 'lines+markers',
+            hoverinfo = 'text',
+            text = ~paste('Minute:', Minute, '<br>Cumulative Species:', Cumulative_Species)) %>%
+      layout(title = "Cumulative Species Richness Over Time",
+             xaxis = list(title = "Minute of Observation"),
+             yaxis = list(title = "Cumulative Number of Unique Species"))
   })
   
   # --- Story 2 Visualizations ---
