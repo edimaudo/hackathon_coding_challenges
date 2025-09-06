@@ -15,12 +15,10 @@ ui <- page_navbar(
   # Add custom CSS for improved spacing and centering
   tags$head(
     tags$style(HTML("
-      h2 {
-        margin-top: 3rem;
-        margin-bottom: 1rem;
-      }
-      h3 {
+      h1, h2, h3 {
         text-align: center;
+      }
+      h2, h3 {
         margin-top: 3rem;
         margin-bottom: 1rem;
       }
