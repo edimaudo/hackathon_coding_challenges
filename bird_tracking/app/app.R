@@ -40,9 +40,9 @@ ui <- page_navbar(
   nav_panel("The May Symphony",
             div(class = "container-lg",
                 h2("The May Symphony - Tracking Bird Songs Through the Morning"),
-                p("This part explores the dynamic patterns of bird vocalizations throughout the morning, highlighting how different species create a coordinated 'symphony' at different times. The visualizations show how morning chorus patterns provide insights into species behavior and ecosystem health."),
+                p("This explores the dynamic patterns of bird vocalizations throughout the morning, highlighting how different species create a coordinated 'symphony' at different times. The visualizations show how morning chorus patterns provide insights into species behavior and ecosystem health."),
                 
-                selectizeInput("park_selector", "Filter by Park:", choices = NULL, options = list(placeholder = 'All Parks', onInitialize = I('function() { this.setValue(""); }'))),
+                selectizeInput("park_selector", "Filter by Park:", choices = NULL),
                 
                 h3("Bird Activity Timeline"),
                 p("An interactive timeline showing bird detection frequency by minute."),
@@ -62,7 +62,9 @@ ui <- page_navbar(
                 h2("Proximity Patterns - Detecting Birds Across Distances"),
                 p("This story examines how environmental factors and species-specific traits influence the distance at which birds are detected, providing insights into the observation methodology and species' habits."),
                 
-                h3("Distance Proportions Visualizations"),
+                selectizeInput("park_selector_proximity", "Filter by Park:", choices = NULL),
+                
+                h3("Distance Proportions"),
                 p("A stacked bar chart that shows the proportion of detections within each distance band for different species."),
                 plotlyOutput("stacked_bar_plot"),
                 
@@ -71,7 +73,7 @@ ui <- page_navbar(
                 plotlyOutput("species_range_plot"),
                 
                 h3("Road Noise and Bird Presence"),
-                p("This box plot shows the relationship between detection distance and road noise, an important narrative element."),
+                p("This box plot shows the distribution of road noise levels for each detection distance band, providing a clear visual summary."),
                 plotlyOutput("noise_distance_plot")
             )
   ),
@@ -114,25 +116,42 @@ server <- function(input, output, session) {
     df[[col_name]] <- as.logical(df[[col_name]])
   }
   
-  # Populate the park dropdown with unique park names
+  # Populate the park dropdown for the May Symphony tab
   observe({
     park_names <- unique(df$Park_Name)
-    updateSelectizeInput(session, "park_selector", choices = c("All Parks" = "", sort(park_names)))
+    choices_list <- c("All Parks", sort(park_names))
+    updateSelectizeInput(session, "park_selector", choices = choices_list, selected = "All Parks")
   })
   
-  # Reactive expression for filtered data
-  filtered_df <- reactive({
-    if (is.null(input$park_selector) || input$park_selector == "") {
+  # Populate the park dropdown for the Proximity Patterns tab
+  observe({
+    park_names <- unique(df$Park_Name)
+    choices_list <- c("All Parks", sort(park_names))
+    updateSelectizeInput(session, "park_selector_proximity", choices = choices_list, selected = "All Parks")
+  })
+  
+  # Reactive expression for filtered data for May Symphony
+  filtered_df_symphony <- reactive({
+    if (is.null(input$park_selector) || input$park_selector == "All Parks") {
       df
     } else {
       df %>% filter(Park_Name == input$park_selector)
     }
   })
   
+  # Reactive expression for filtered data for Proximity Patterns
+  filtered_df_proximity <- reactive({
+    if (is.null(input$park_selector_proximity) || input$park_selector_proximity == "All Parks") {
+      df
+    } else {
+      df %>% filter(Park_Name == input$park_selector_proximity)
+    }
+  })
+  
   # --- Story 1 Visualizations ---
   output$timeline_plot <- renderPlotly({
-    req(filtered_df())
-    local_df <- filtered_df()
+    req(filtered_df_symphony())
+    local_df <- filtered_df_symphony()
     
     minute_cols <- paste0("Minute_", 1:10)
     minute_data <- lapply(1:10, function(i) {
@@ -154,8 +173,8 @@ server <- function(input, output, session) {
   })
   
   output$heatmap_plot <- renderPlotly({
-    req(filtered_df())
-    local_df <- filtered_df()
+    req(filtered_df_symphony())
+    local_df <- filtered_df_symphony()
     
     top_species <- local_df %>% 
       count(Common_Name) %>% 
@@ -194,8 +213,8 @@ server <- function(input, output, session) {
   })
   
   output$species_richness_plot <- renderPlotly({
-    req(filtered_df())
-    local_df <- filtered_df()
+    req(filtered_df_symphony())
+    local_df <- filtered_df_symphony()
     
     # Calculate cumulative species richness over the 10-minute period
     species_richness <- data.frame(Minute = 1:10, Cumulative_Species = NA)
@@ -221,24 +240,29 @@ server <- function(input, output, session) {
   
   # --- Story 2 Visualizations ---
   output$stacked_bar_plot <- renderPlotly({
-    if(all(c("Distance_Band", "Common_Name") %in% names(df))) {
-      distance_species_counts <- df %>% count(Distance_Band, Common_Name)
+    req(filtered_df_proximity())
+    local_df <- filtered_df_proximity()
+    if(all(c("Distance_Band", "Common_Name") %in% names(local_df))) {
+      distance_species_counts <- local_df %>% count(Distance_Band, Common_Name)
       plot_ly(distance_species_counts, x = ~Common_Name, y = ~n, color = ~Distance_Band, type = 'bar') %>%
-        layout(title = 'Detections by Species and Distance Band',
+        layout(title = 'Distance Proportions',
                xaxis = list(title = 'Species'),
-               yaxis = list(title = 'Number of Detections', barmode = 'stack'),
+               yaxis = list(title = 'Number of Detections'),
+               barmode = 'stack',
                legend = list(title = list(text = "Distance Band")))
     }
   })
   
   output$species_range_plot <- renderPlotly({
-    if(all(c("Distance_Band", "Common_Name") %in% names(df))) {
+    req(filtered_df_proximity())
+    local_df <- filtered_df_proximity()
+    if(all(c("Distance_Band", "Common_Name") %in% names(local_df))) {
       distance_map <- c('≤ 50 m' = 1, '51-75 m' = 2, '> 75 m' = 3)
-      df$Distance_Numerical <- distance_map[df$Distance_Band]
-      avg_distance <- df %>%
+      local_df$Distance_Numerical <- distance_map[local_df$Distance_Band]
+      avg_distance <- local_df %>%
         group_by(Common_Name) %>%
         summarise(Avg_Distance = mean(Distance_Numerical, na.rm = TRUE))
-      species_richness <- df %>%
+      species_richness <- local_df %>%
         group_by(Common_Name) %>%
         summarise(Richness = n())
       scatter_data <- left_join(avg_distance, species_richness, by = "Common_Name")
@@ -254,10 +278,12 @@ server <- function(input, output, session) {
   })
   
   output$noise_distance_plot <- renderPlotly({
-    if(all(c("Distance_Band", "Road_Noise") %in% names(df))) {
-      plot_ly(df, x = ~Distance_Band, y = ~Road_Noise, type = 'box',
+    req(filtered_df_proximity())
+    local_df <- filtered_df_proximity()
+    if(all(c("Distance_Band", "Road_Noise") %in% names(local_df))) {
+      plot_ly(local_df, x = ~Distance_Band, y = ~Road_Noise, type = 'box',
               color = ~Distance_Band) %>%
-        layout(title = 'Road Noise Levels by Detection Distance Band',
+        layout(title = 'Road Noise Distribution by Detection Distance Band',
                xaxis = list(title = 'Detection Distance Band'),
                yaxis = list(title = 'Road Noise Level (dB)'))
     }
