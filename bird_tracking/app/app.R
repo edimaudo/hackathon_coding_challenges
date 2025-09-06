@@ -117,7 +117,7 @@ server <- function(input, output, session) {
   # Populate the park dropdown with unique park names
   observe({
     park_names <- unique(df$Park_Name)
-    updateSelectizeInput(session, "park_selector", choices = sort(park_names))
+    updateSelectizeInput(session, "park_selector", choices = c("All Parks" = "", sort(park_names)))
   })
   
   # Reactive expression for filtered data
