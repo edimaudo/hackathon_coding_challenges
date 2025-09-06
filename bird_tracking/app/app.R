@@ -80,11 +80,13 @@ ui <- page_navbar(
                 h2("Taxonomic Tales - Diversity and Ecological Relationships"),
                 p("This section delves into the taxonomic diversity of the bird community, showcasing the relationships between different bird families and their ecological roles within the national parks."),
                 
+                selectizeInput("park_selector_taxonomy", "Filter by Park:", choices = NULL),
+                
                 h3("Taxonomic Hierarchy Explorer"),
                 p("An interactive sunburst chart showing the Order → Family → Genus → Species relationships."),
                 plotlyOutput("sunburst_plot"),
                 
-                h3("Bird Family Composition Dashboard"),
+                h3("Bird Family Composition"),
                 p("A bar chart showing the proportional representation of bird families."),
                 plotlyOutput("family_abundance_plot"),
                 
@@ -128,6 +130,13 @@ server <- function(input, output, session) {
     updateSelectizeInput(session, "park_selector_proximity", choices = choices_list, selected = "All Parks")
   })
   
+  # Populate the park dropdown for the Taxonomic Tales tab
+  observe({
+    park_names <- unique(df$Park_Name)
+    choices_list <- c("All Parks", sort(park_names))
+    updateSelectizeInput(session, "park_selector_taxonomy", choices = choices_list, selected = "All Parks")
+  })
+  
   # Reactive expression for filtered data for May Symphony
   filtered_df_symphony <- reactive({
     if (is.null(input$park_selector) || input$park_selector == "All Parks") {
@@ -143,6 +152,15 @@ server <- function(input, output, session) {
       df
     } else {
       df %>% filter(Park_Name == input$park_selector_proximity)
+    }
+  })
+  
+  # Reactive expression for filtered data for Taxonomic Tales
+  filtered_df_taxonomy <- reactive({
+    if (is.null(input$park_selector_taxonomy) || input$park_selector_taxonomy == "All Parks") {
+      df
+    } else {
+      df %>% filter(Park_Name == input$park_selector_taxonomy)
     }
   })
   
@@ -294,19 +312,50 @@ server <- function(input, output, session) {
   
   # --- Story 3 Visualizations ---
   output$sunburst_plot <- renderPlotly({
-    if(all(c("Order", "Family", "Genus", "Species_Code") %in% names(df))) {
-      taxonomic_df <- df %>%
+    req(filtered_df_taxonomy())
+    local_df <- filtered_df_taxonomy()
+    if(all(c("Order", "Family", "Genus", "Species_Code") %in% names(local_df))) {
+      # Create a hierarchical dataframe for the sunburst plot
+      # We explicitly filter out NAs to ensure the hierarchy is built correctly
+      local_df_cleaned <- local_df %>%
+        filter(!is.na(Order), !is.na(Family), !is.na(Genus), !is.na(Species_Code))
+      
+      taxonomic_df_species <- local_df_cleaned %>%
         group_by(Order, Family, Genus, Species_Code) %>%
-        count() %>%
-        ungroup() %>%
-        rename(Count = n)
+        summarise(count = n(), .groups = 'drop') %>%
+        mutate(labels = Species_Code,
+               ids = paste(Order, Family, Genus, Species_Code, sep = "-"),
+               parents = paste(Order, Family, Genus, sep = "-"))
+      
+      taxonomic_df_genus <- local_df_cleaned %>%
+        group_by(Order, Family, Genus) %>%
+        summarise(count = n(), .groups = 'drop') %>%
+        mutate(labels = Genus,
+               ids = paste(Order, Family, Genus, sep = "-"),
+               parents = paste(Order, Family, sep = "-"))
+      
+      taxonomic_df_family <- local_df_cleaned %>%
+        group_by(Order, Family) %>%
+        summarise(count = n(), .groups = 'drop') %>%
+        mutate(labels = Family,
+               ids = paste(Order, Family, sep = "-"),
+               parents = Order)
+      
+      taxonomic_df_order <- local_df_cleaned %>%
+        group_by(Order) %>%
+        summarise(count = n(), .groups = 'drop') %>%
+        mutate(labels = Order,
+               ids = Order,
+               parents = "")
+      
+      sunburst_data <- bind_rows(taxonomic_df_order, taxonomic_df_family, taxonomic_df_genus, taxonomic_df_species)
       
       plot_ly(
-        taxonomic_df, 
-        ids = ~Species_Code,
-        labels = ~Species_Code,
-        parents = ~Genus,
-        values = ~Count,
+        sunburst_data, 
+        ids = ~ids,
+        labels = ~labels,
+        parents = ~parents,
+        values = ~count,
         type = "sunburst"
       ) %>%
         layout(title = 'Taxonomic Hierarchy of Detected Birds')
@@ -314,19 +363,26 @@ server <- function(input, output, session) {
   })
   
   output$family_abundance_plot <- renderPlotly({
-    if("Family" %in% names(df)) {
-      family_counts <- df %>% count(Family)
+    req(filtered_df_taxonomy())
+    local_df <- filtered_df_taxonomy()
+    if("Family" %in% names(local_df)) {
+      family_counts <- local_df %>% 
+        count(Family) %>% 
+        arrange(desc(n))
+      
       plot_ly(family_counts, x = ~Family, y = ~n, type = 'bar',
               marker = list(color = toRGB("steelblue"))) %>%
-        layout(title = 'Bird Family Abundance',
-               xaxis = list(title = 'Family'),
+        layout(title = 'Bird Family Composition',
+               xaxis = list(title = 'Family', categoryorder = "array", categoryarray = ~family_counts$Family),
                yaxis = list(title = 'Detections'))
     }
   })
   
   output$hotspot_map_plot <- renderLeaflet({
-    if(all(c("Latitude", "Longitude", "Hemlock_Condition_Score", "Site_Name") %in% names(df))) {
-      site_summary <- df %>%
+    req(filtered_df_taxonomy())
+    local_df <- filtered_df_taxonomy()
+    if(all(c("Latitude", "Longitude", "Hemlock_Condition_Score", "Site_Name") %in% names(local_df))) {
+      site_summary <- local_df %>%
         group_by(Latitude, Longitude, Hemlock_Condition_Score, Site_Name) %>%
         count() %>%
         rename(Total_Detections = n)
