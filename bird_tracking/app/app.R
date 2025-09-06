@@ -30,9 +30,8 @@ ui <- page_navbar(
   ),
   nav_panel("About",
             div(class = "container-lg",
-                h1("About This App"),
-                p("This interactive Shiny application visualizes bird tracking data from the National Park Service (NPS) Ermen Streamside Bird Protocol. It is designed to tell a data-driven story across three main themes: the temporal patterns of the morning chorus, the spatial relationships of bird detections, and the taxonomic diversity of the community."),
-                p("The app is based on a comprehensive data analysis of the NPS_ERMN_StreamsideBirdProtocol.csv file, combining insights from a narrative outline and a visualization script. Each section contains detailed visualizations with accompanying explanations, allowing users to explore the data and understand the key findings.")
+                
+                p("This app visualizes bird tracking data from the National Park Service (NPS) Ermen Streamside Bird Protocol. It tells a story focused across three themes: the temporal patterns of the morning chorus, the spatial relationships of bird detections, and the taxonomic diversity of the community.")
             )
   ),
   nav_panel("The May Symphony",
