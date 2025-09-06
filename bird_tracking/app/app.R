@@ -261,7 +261,7 @@ server <- function(input, output, session) {
       distance_species_counts <- local_df %>% count(Distance_Band, Common_Name)
       plot_ly(distance_species_counts, x = ~Common_Name, y = ~n, color = ~Distance_Band, type = 'bar') %>%
         layout(title = 'Distance Proportions',
-               xaxis = list(title = 'Species'),
+               xaxis = list(title = 'Species', categoryorder = "total descending"),
                yaxis = list(title = 'Number of Detections'),
                barmode = 'stack',
                legend = list(title = list(text = "Distance Band")))
