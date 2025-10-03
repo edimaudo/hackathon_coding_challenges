@@ -52,6 +52,7 @@ video <- read_csv("video_email_data_table.csv")
 constituent <- read_csv("constituent_profiles_table.csv")
 rfm_segment <- read_excel("rfm_segments_strategy.xlsx")
 rfm_segment_encoding <- read_excel("Portfolio_segment_coding.xlsx")
+
 # Load ML model
 model_load = readRDS("model.rda")
 
