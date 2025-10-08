@@ -59,7 +59,7 @@ park_year_max <- max(parks$Year)
 
 ################ UI ################
 ui <- dashboardPage(
-  dashboardHeader(title = "US National Park Visits",
+  dashboardHeader(title = "US National Park Visits"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("house")),
@@ -91,12 +91,11 @@ ui <- dashboardPage(
                             plotlyOutput("giftDOWPlot")
                           )
                 )
-            ),
+            )
           )
         )
       )
     )
-  )
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
