@@ -125,11 +125,11 @@ server <- function(input, output) {
       ggplot(aes(x = reorder(Region,Total) ,y = Total))  +
       geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
       labs(x ="Region", y = "Total", title="Region Visits") + scale_y_continuous(labels = comma)
-    theme(legend.text = element_text(size = 10),
+      theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
           axis.title = element_text(size = 12),
           axis.text = element_text(size = 10),
-          axis.text.x = element_text(angle = 90, hjust = 1),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
           plot.title = element_text(hjust=0.5))
     
     ggplotly(g) 
@@ -145,10 +145,11 @@ server <- function(input, output) {
       ggplot(aes(x = reorder(ParkName,Total) ,y = Total))  +
       geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
       labs(x ="Park", y = "Total", title="Top 10 Park Visits") + scale_y_continuous(labels = comma)
-    theme(legend.text = element_text(size = 10),
+      theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
           axis.title = element_text(size = 12),
           axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
           plot.title = element_text(hjust=0.5))
     
     ggplotly(g) 
