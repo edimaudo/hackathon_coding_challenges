@@ -68,13 +68,13 @@ ui <- dashboardPage(
       ######### Visit Insights ######### 
       tabItem(tabName = "visit_insight",
               sidebarLayout(
-                sidebarPanel(width = 2,
+                sidebarPanel(width = 3,
                              sliderInput("yearVisitInput","Year", min = park_year_min, max = park_year_max, 
                                          value = c(park_year_min,park_year_max), step = 1),
                              submitButton("Submit")
                 ),
-                mainPanel(width = 10,
-                          layout_column_wrap(width = 1/2,
+                mainPanel(width = 9,
+                          layout_column_wrap(width = 1,
                                              plotlyOutput("parkTrendPlot")
                           ),
                           br(),br(),
@@ -99,7 +99,11 @@ server <- function(input, output) {
   })
   
   output$parkTrendPlot <- renderPlotly({
-    g <- ggplot(filtered_df_visit() , aes(Year, Total)) + 
+    g <- filtered_df_visit() %>%
+      group_by(Year) %>%
+      summarise(Total = sum(RecreationVisits)) %>%
+      select(Year, Total) %>% 
+      ggplot(aes(x = Year ,y = Total))  +  #ggplot(aes(Year, Total)) + 
       geom_line(size=1) + theme_minimal() +
       labs(x = "Year", y = "Total") +  scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
@@ -120,7 +124,7 @@ server <- function(input, output) {
       select(Region, Total) %>% 
       ggplot(aes(x = reorder(Region,Total) ,y = Total))  +
       geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-      labs(x ="Region", y = "Total", title="Region Visits") 
+      labs(x ="Region", y = "Total", title="Region Visits") + scale_y_continuous(labels = comma)
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
           axis.title = element_text(size = 12),
@@ -135,9 +139,11 @@ server <- function(input, output) {
       group_by(ParkName) %>%
       summarise(Total = sum(RecreationVisits)) %>%
       select(ParkName, Total) %>% 
+      arrange(desc(Total)) %>%
+      top_n(n = 10) %>%
       ggplot(aes(x = reorder(ParkName,Total) ,y = Total))  +
       geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-      labs(x ="Park", y = "Total", title="Park Visits") 
+      labs(x ="Park", y = "Total", title="Top 10 Park Visits") + scale_y_continuous(labels = comma)
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
           axis.title = element_text(size = 12),
