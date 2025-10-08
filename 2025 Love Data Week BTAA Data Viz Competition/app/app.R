@@ -47,6 +47,7 @@ library(stringr)
 
 ################ Load Data ################
 parks <- read_csv("US-National-Parks_RecreationVisits_1979-2023.csv")
+parks$Year <- as.integer(parks$Year)
 park_year_min <- min(parks$Year)
 park_year_max <- max(parks$Year)
 
@@ -92,10 +93,9 @@ ui <- dashboardPage(
 server <- function(input, output) {
   
   #Visits Insights
-  
   filtered_df_visit <- reactive({
-    df <- parks %>%
-      filter(Year %in% c(input$yearVisitInput[1],input$yearVisitInput[2]))
+    parks %>%
+      filter(Year %in% c(input$yearVisitInput[1]:input$yearVisitInput[2]))
   })
   
   output$parkTrendPlot <- renderPlotly({
@@ -105,12 +105,12 @@ server <- function(input, output) {
       select(Year, Total) %>% 
       ggplot(aes(x = Year ,y = Total))  +  #ggplot(aes(Year, Total)) + 
       geom_line(size=1) + theme_minimal() +
-      labs(x = "Year", y = "Total") +  scale_y_continuous(labels = comma) +
+      labs(x = "", y = "Total") +  scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10),
-            axis.text.x = element_text(angle = 0, hjust = 1))
+            axis.text.x = element_text(angle = 0, hjust = 0.5))
     
     ggplotly(g)
    
@@ -129,6 +129,7 @@ server <- function(input, output) {
           legend.title = element_text(size = 10),
           axis.title = element_text(size = 12),
           axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 90, hjust = 1),
           plot.title = element_text(hjust=0.5))
     
     ggplotly(g) 
