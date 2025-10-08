@@ -64,7 +64,7 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("About", tabName = "about", icon = icon("house")),
       menuItem("Visits Insights", tabName = "visit_insight", icon = icon("th")),
-      menuItem("Visit Forecasting ", tabName = "visit_forecast",icon = icon("thumbs-up")),
+      menuItem("Visit Forecasting ", tabName = "visit_forecast",icon = icon("thumbs-up"))
     )
   ),
   dashboardBody(
@@ -88,7 +88,7 @@ ui <- dashboardPage(
                           br(),br(),
                           layout_columns(
                             plotlyOutput("giftMonthPlot"),
-                            plotlyOutput("giftDOWPlot"),
+                            plotlyOutput("giftDOWPlot")
                           )
                 )
             ),
