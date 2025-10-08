@@ -81,14 +81,13 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(width = 10,
-                          layout_column_wrap(width = 1/2,
-                                             plotlyOutput("giftCRMPlot")
-                                  
+                          layout_column_wrap(
+                                             plotlyOutput("parkTrendPlot")
                           ),
                           br(),br(),
-                          layout_columns(
-                            plotlyOutput("giftMonthPlot"),
-                            plotlyOutput("giftDOWPlot")
+                          layout_columns_wrap(width = 1/2,
+                            plotlyOutput("RegionPlot"),
+                            plotlyOutput("parkPlot")
                           )
                 )
             )
