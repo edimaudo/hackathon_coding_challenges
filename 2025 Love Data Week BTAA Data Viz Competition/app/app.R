@@ -81,12 +81,12 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(width = 10,
-                          layout_column_wrap(
+                          layout_column_wrap(width = 1/2,
                                              plotlyOutput("parkTrendPlot")
                           ),
                           br(),br(),
-                          layout_columns_wrap(width = 1/2,
-                            plotlyOutput("RegionPlot"),
+                          layout_column_wrap(width = 1/2,
+                            plotlyOutput("regionPlot"),
                             plotlyOutput("parkPlot")
                           )
                 )
@@ -95,8 +95,55 @@ ui <- dashboardPage(
         )
       )
     )
-# Define server logic required to draw a histogram
+# Define server logic
 server <- function(input, output) {
+  
+  #Visits Insights
+  
+  filtered_df_visit <- reactive({
+    df <- parks %>%
+      filter(Year %in% c(yearVisitInput[0],yearVisitInput[1]))
+  })
+  
+  output$parkTrendPlot <- renderPlotly({
+   
+     
+  })
+  
+  output$regionPlot <- renderPlotly({
+    g <- filtered_df_visit() %>%
+      group_by(Region) %>%
+      summarise(Total = sum(RecreationVisits)) %>%
+      select(Region, Total) %>% 
+      ggplot(aes(x = reorder(Region,Total) ,y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+      labs(x ="Region", y = "Total", title="Region Visits") 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 12),
+          axis.text = element_text(size = 10),
+          plot.title = element_text(hjust=0.5))
+    
+    ggplotly(g) 
+  })
+  
+  output$parkPlot <- renderPlotly({
+    g <- filtered_df_visit() %>%
+      group_by(ParkName) %>%
+      summarise(Total = sum(RecreationVisits)) %>%
+      select(ParkName, Total) %>% 
+      ggplot(aes(x = reorder(ParkName,Total) ,y = Total))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
+      labs(x ="Park", y = "Total", title="Park Visits") 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          axis.title = element_text(size = 12),
+          axis.text = element_text(size = 10),
+          plot.title = element_text(hjust=0.5))
+    
+    ggplotly(g) 
+    
+  })
 
 
 }
