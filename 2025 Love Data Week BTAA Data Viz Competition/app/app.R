@@ -10,10 +10,7 @@ library(corrplot)
 library(tidyverse)
 library(shiny)
 library(shinydashboard)
-library(mlbench)
 library(caTools)
-library(gridExtra)
-library(doParallel)
 library(grid)
 library(reshape2)
 library(caret)
@@ -24,7 +21,6 @@ library(plotly)
 library(RColorBrewer)
 library(data.table)
 library(scales)
-library(rfm)
 library(forecast)
 library(TTR)
 library(xts)
@@ -32,11 +28,8 @@ library(dplyr)
 library(treemapify)
 library(shinycssloaders)
 library(bslib)
-library(readxl)
 library(htmltools)
 library(markdown)
-library(scales)
-library(leaflet)
 library(stringr)
 
 # packages <- c(
@@ -102,10 +95,20 @@ server <- function(input, output) {
   
   filtered_df_visit <- reactive({
     df <- parks %>%
-      filter(Year %in% c(yearVisitInput[0],yearVisitInput[1]))
+      filter(Year %in% c(input$yearVisitInput[1],input$yearVisitInput[2]))
   })
   
   output$parkTrendPlot <- renderPlotly({
+    g <- ggplot(filtered_df_visit() , aes(Year, Total)) + 
+      geom_line(size=1) + theme_minimal() +
+      labs(x = "Year", y = "Total") +  scale_y_continuous(labels = comma) +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    
+    ggplotly(g)
    
      
   })
