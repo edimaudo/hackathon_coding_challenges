@@ -94,7 +94,7 @@ ui <- dashboardPage(
               sidebarLayout(
                 sidebarPanel(width = 2,
                              selectInput("forecastSegmentInput", "Region", 
-                                         choices = parkNames, selected = parkNames[1], multiple = TRUE),
+                                         choices = parkNames, selected = parkNames[10], multiple = TRUE),
                              sliderInput("forecastHorizonInput", "Forecast Period (in years)", 
                                          min = 1, max = 15, value = 5), 
                              submitButton("Submit")
@@ -209,7 +209,7 @@ filtered_df_visit <- reactive({
     
     forecast_arima <- forecast(arima_model, h = input$forecastHorizonInput)
     
-    # Build tidy forecast data frame
+    # Build forecast
     df <- as_tibble(forecast_arima) %>%
       rename(`Forecasted Visits` = `Point Forecast`) %>%
       mutate(
@@ -219,7 +219,7 @@ filtered_df_visit <- reactive({
       ) %>%
       select(Year, `Forecasted Visits`)
     
-    df$`Forecasted Visits` <- round(df$`Forecasted Visits`, 2)
+    df$`Forecasted Visits` <- round(df$`Forecasted Visits`, 0)
     df
     
   })  
@@ -227,11 +227,13 @@ filtered_df_visit <- reactive({
   
   
 output$visitForecastPlot <- renderPlotly({
-  Sys.sleep(1.5)
+  Sys.sleep(0.5)
   g <- forecast_df() %>%
     select(Year, `Forecasted Visits`) %>%
-    ggplot(aes(x = Year ,y = `Forecasted Donation`))  +
-    geom_bar(stat = "identity",width = 8, fill='black')  +
+    ggplot(aes(x = Year ,y = `Forecasted Visits`))  +
+    geom_bar(stat = "identity",width = 0.8, fill='black')  +
+    scale_x_continuous(breaks = seq(min(forecast_df()$Year), max(forecast_df()$Year), by = 1),
+                       labels = as.integer) +
     labs(x ="Year", y = "Visits", title = "Forecasted Visits") + scale_y_continuous(labels = scales::comma) +
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
