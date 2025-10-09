@@ -52,7 +52,7 @@ parks <- read_csv("US-National-Parks_RecreationVisits_1979-2023.csv")
 parks$Year <- as.integer(parks$Year)
 park_year_min <- min(parks$Year)
 park_year_max <- max(parks$Year)
-region <- c(sort(unique(parks$Region)))
+parkNames <- c(sort(unique(parks$ParkName)))
 
 ################ UI ################
 ui <- dashboardPage(
@@ -94,9 +94,9 @@ ui <- dashboardPage(
               sidebarLayout(
                 sidebarPanel(width = 2,
                              selectInput("forecastSegmentInput", "Region", 
-                                         choices = region, selected = region[1], multiple = TRUE),
-                             sliderInput("forecastHorizonInput", "Forecast Period (in months)", 
-                                         min = 1, max = 24, value = 12), 
+                                         choices = parkNames, selected = parkNames[1], multiple = TRUE),
+                             sliderInput("forecastHorizonInput", "Forecast Period (in years)", 
+                                         min = 1, max = 15, value = 5), 
                              submitButton("Submit")
                 ),
                 mainPanel(
@@ -187,43 +187,38 @@ filtered_df_visit <- reactive({
 ##### Forecast setup ######
   forecast_df  <- reactive ({
     set.seed(1234)
-    gifts_df <- gift %>%
-      filter(GIFT_DATE >= '2015-01-01') %>%
-      inner_join(rfm_output(),'CONSTITUENT_ID') %>%
-      group_by(CONSTITUENT_ID) %>%
-      select(CONSTITUENT_ID,Segment,GIFT_DATE,AMOUNT) %>%
+    visit_df <- parks %>%
+      filter(Year >= '2000') %>%
+      group_by(ParkName) %>%
+      select(ParkName,Year,RecreationVisits) %>%
       na.omit()
     
-    monthly_donations <- gifts_df %>%
-      filter(Segment %in% c(input$forecastSegmentInput)) %>%
-      mutate(GIFT_DATE = ymd(GIFT_DATE)) %>%
-      # Extract year and month for grouping
-      mutate(year_month = floor_date(GIFT_DATE, "month")) %>%
-      group_by(year_month) %>%
-      summarise(total_donations = sum(AMOUNT, na.rm = TRUE), .groups = 'drop') %>%
-      arrange(year_month)
+    yearly_visits <- visit_df %>%
+      filter(ParkName %in% c(input$forecastSegmentInput)) %>%
+      group_by(Year) %>%
+      summarise(total_visits = sum(RecreationVisits, na.rm = TRUE), .groups = 'drop') %>%
+      arrange(Year)
     
-    start_year <- lubridate::year(min(monthly_donations$year_month))
-    start_month <- lubridate::month(min(monthly_donations$year_month))
+    start_year <- lubridate::year(min(yearly_visits$Year))
     
-    donations_ts <- ts(monthly_donations$total_donations,
-                       start = c(start_year, start_month),
-                       frequency = 12)
+    visits_ts <- ts(yearly_visits$total_visits,
+                       start = c(start_year),
+                       frequency = 1)
     
-    arima_model <- auto.arima(donations_ts)
+    arima_model <- auto.arima(visits_ts)
     
     forecast_arima <- forecast(arima_model, h = input$forecastHorizonInput)
     
     df <- as_data_frame(forecast_arima) %>%
       rename(
-        `Forecasted Donation` = `Point Forecast`
+        `Forecasted Visits` = `Point Forecast`
       ) %>%
       mutate(
-        Month = seq(from = max(monthly_donations$year_month) + months(1),
+        Year = seq(from = max(yearly_visits$year_month) + months(1),
                     by = "month",
                     length.out = input$forecastHorizonInput)
       ) %>%
-      select(Month, `Forecasted Donation`)
+      select(Year, `Forecasted Donation`)
     
     df$`Forecasted Donation`<-round(df$`Forecasted Donation`,2)
     df
@@ -233,14 +228,12 @@ filtered_df_visit <- reactive({
   
   
 output$visitForecastPlot <- renderPlotly({
-  #input$go
   Sys.sleep(1.5)
-  #plot(runif(10))
   g <- forecast_df() %>%
-    select(Month, `Forecasted Donation`) %>%
-    ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
+    select(Year, `Forecasted Visits`) %>%
+    ggplot(aes(x = Year ,y = `Forecasted Donation`))  +
     geom_bar(stat = "identity",width = 8, fill='black')  +
-    labs(x ="Date", y = "Gift Amount", title = "Forecasted Donations") + scale_y_continuous(labels = scales::comma) +
+    labs(x ="Year", y = "Visits", title = "Forecasted Visits") + scale_y_continuous(labels = scales::comma) +
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
           plot.title = element_text(size = 12, hjust = 0.5),
