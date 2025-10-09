@@ -209,18 +209,17 @@ filtered_df_visit <- reactive({
     
     forecast_arima <- forecast(arima_model, h = input$forecastHorizonInput)
     
-    df <- as_data_frame(forecast_arima) %>%
-      rename(
-        `Forecasted Visits` = `Point Forecast`
-      ) %>%
+    # Build tidy forecast data frame
+    df <- as_tibble(forecast_arima) %>%
+      rename(`Forecasted Visits` = `Point Forecast`) %>%
       mutate(
-        Year = seq(from = max(yearly_visits$year_month) + months(1),
-                    by = "month",
-                    length.out = input$forecastHorizonInput)
+        Year = seq(from = max(yearly_visits$Year) + 1,
+                   by = 1,
+                   length.out = input$forecastHorizonInput)
       ) %>%
-      select(Year, `Forecasted Donation`)
+      select(Year, `Forecasted Visits`)
     
-    df$`Forecasted Donation`<-round(df$`Forecasted Donation`,2)
+    df$`Forecasted Visits` <- round(df$`Forecasted Visits`, 2)
     df
     
   })  
