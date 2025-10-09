@@ -1,4 +1,6 @@
+#############################
 # US National Park Insights
+#############################
 
 # Clear setting
 rm(list = ls())
@@ -85,7 +87,29 @@ ui <- dashboardPage(
                           )
                 )
             )
-          )
+          ),
+      ######### Park Forecasting #########
+      tabItem(tabName = "visit_forecast",
+              sidebarLayout(
+                sidebarPanel(width = 2,
+                             selectInput("forecastSegmentInput", "Region", 
+                                         choices = region, selected = region[1], multiple = TRUE),
+                             sliderInput("forecastHorizonInput", "Forecast Period (in months)", 
+                                         min = 1, max = 24, value = 12), 
+                             submitButton("Submit")
+                ),
+                mainPanel(
+                  tabsetPanel(type = "tabs",
+                              tabPanel(h4("Forecast Graph",style="text-align: center;"),
+                                       plotlyOutput("visitForecastPlot") %>% withSpinner(),
+                              ),
+                              tabPanel(h4("Forecast Table",style="text-align: center;"),
+                                       DT::dataTableOutput("visitForecastTable") %>% withSpinner(),
+                              ),
+                  )
+                )
+              )
+      ),
         )
       )
     )
