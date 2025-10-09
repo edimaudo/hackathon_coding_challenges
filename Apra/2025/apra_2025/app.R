@@ -523,9 +523,8 @@ server <- function(input, output,session) {
   
   
   output$donationForecastPlot <- renderPlotly({
-      #input$go
+      
       Sys.sleep(1.5)
-      #plot(runif(10))
     g <- forecast_df() %>%
       select(Month, `Forecasted Donation`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
