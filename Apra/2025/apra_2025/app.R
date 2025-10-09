@@ -1,7 +1,7 @@
-#========================================
+################################################
 # Shiny web app which provides insights 
 # for Apra data science challenge 2025
-#=========================================
+################################################
 rm(list = ls())
 ################  Packages ################
 # library(ggplot2)
@@ -81,9 +81,6 @@ ui <- dashboardPage(
     tabItems(
       ######### About #########
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
-      
-      ######### Overview ######### 
-      
       ######### Donor Overview ######### 
       tabItem(tabName = "donation_overview",
               sidebarLayout(
@@ -103,8 +100,21 @@ ui <- dashboardPage(
                   layout_columns(
                     plotlyOutput("giftMonthPlot"),
                     plotlyOutput("giftDOWPlot"),
+                  ), 
+                  tabsetPanel(type = "tabs",
+                              tabPanel(h4("Engagement",style="text-align: center;"),
+                                       #plotOutput('rfmTreemap'),
+                              ),
+                              tabPanel(h4("Giving Level",style="text-align: center;"),
+                                       plotlyOutput("rfmRecencyChart"),
+                              ),
+                              tabPanel(h4("Online Performance",style="text-align: center;"),
+                                       plotlyOutput("rfmRecencyChart"),
+                              ),
+                              tabPanel(h4("Donor Relationship",style="text-align: center;"),
+                                       plotlyOutput("rfmRecencyChart"),
+                              )
                   )
-                )
               )
                 
       ),
@@ -139,15 +149,27 @@ ui <- dashboardPage(
                               tabPanel(h4("Monetary",style="text-align: center;"),
                                 plotlyOutput("rfmMonetaryChart")
                               ),
-                  ),
-                  br(),br(),
-                  tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmDescription"),
                               ),
                               tabPanel(h4("Donor Portfolio",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmTable"),
+                              )
+                  ),
+                  br(),br(),
+                  tabsetPanel(type = "tabs",
+                              tabPanel(h4("Engagement",style="text-align: center;"),
+                                       #plotOutput('rfmTreemap'),
                               ),
+                              tabPanel(h4("Giving Level",style="text-align: center;"),
+                                       #plotlyOutput("rfmRecencyChart"),
+                              ),
+                              tabPanel(h4("Online Performance",style="text-align: center;"),
+                                       #plotlyOutput("rfmRecencyChart"),
+                              ),
+                              tabPanel(h4("Donor Relationship",style="text-align: center;"),
+                                       #plotlyOutput("rfmRecencyChart"),
+                              )
                               
                   )  
                 )
@@ -196,12 +218,11 @@ ui <- dashboardPage(
                     )
             )
           )
-      )
+        )
+       )
+      ) 
+     )    
     )
-  )
-)
- 
-      
 
 
 ################  Server ################
@@ -209,7 +230,7 @@ server <- function(input, output,session) {
   
   
   
-  ##### =====Donor Overview==== #####
+  ################ Donor Overview ################
   
   gift_df <- reactive({
     df <- gift %>%
@@ -314,7 +335,7 @@ server <- function(input, output,session) {
   })
   
   
-  ##### =====Donor Portfolio==== #####
+  ################ Donor Portfolio ################
   ##### RFM Calculation #####
   rfm_info  <- reactive({
     rfm_df <- gift %>%
@@ -338,7 +359,7 @@ server <- function(input, output,session) {
     
   })
   
-  ###### RFM Metrics ######
+  ################ RFM Metrics ################
   value_box_calculations <- reactive({
     rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
@@ -381,7 +402,7 @@ server <- function(input, output,session) {
   
   })
   
-  ##### RFM Charts ####
+  ################ RFM Charts ################
   output$rfmTreemap <- renderPlot({
     division_count <- rfm_info() %>% 
       filter(segment %in% input$rfmInput) %>%
@@ -455,7 +476,7 @@ server <- function(input, output,session) {
     
   })
     
-  ##### RFM Table ######
+  ################ RFM Table ################
   output$rfmDescription <- renderDataTable({
     rfm_segment
   })
@@ -473,7 +494,7 @@ server <- function(input, output,session) {
       
   })    
   
-  ##### =====Donation Forecasting==== #####
+  ################ Donation Forecasting ################
   ##### Donation Forecast setup ######
   
   forecast_df  <- reactive ({
@@ -524,7 +545,7 @@ server <- function(input, output,session) {
   
   output$donationForecastPlot <- renderPlotly({
       
-      Sys.sleep(1.5)
+    Sys.sleep(1.5)
     g <- forecast_df() %>%
       select(Month, `Forecasted Donation`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
@@ -544,7 +565,7 @@ server <- function(input, output,session) {
     
   })
     
-  ##### =====Next Best Donation==== #####
+  ################ Next Best Donation ################
   donation_df <- reactive({
     
     # data frame setup
@@ -576,10 +597,8 @@ server <- function(input, output,session) {
       subtitle = tags$p((donation_df()), style = "font-size: 100%;"),
     #icon = icon("credit-card", lib = "glyphicon"),
     color = "green"
-  )
-  
-  
-    })
+    )
+  })
     
 }
 
