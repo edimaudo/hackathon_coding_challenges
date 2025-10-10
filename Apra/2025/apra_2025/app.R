@@ -96,9 +96,10 @@ ui <- dashboardPage(
 
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
+                                       # to build
                                        plotlyOutput("donorGrowthRatePlot"),
                                        plotlyOutput("donorRetentionRatePlot"),
-                                       plotlyOutput("donorLifetimeValuePlot") #DONOR LIFETIME VALUE
+                                       plotlyOutput("donorLifetimeValuePlot") 
                               ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
                                        layout_column_wrap(width = 1/2,
@@ -122,6 +123,13 @@ ui <- dashboardPage(
                               ),
 
                               tabPanel(h4("Online Performance",style="text-align: center;"),
+                                       # to build
+                                       #plotlyOutput("rfmRecencyChart"),
+                                       #plotlyOutput("rfmRecencyChart"),
+                                       #plotlyOutput("rfmRecencyChart"),
+                                       #plotlyOutput("rfmRecencyChart"),
+                                       #plotlyOutput("rfmRecencyChart"),
+                                       #plotlyOutput("rfmRecencyChart"),
                                        #plotlyOutput("rfmRecencyChart"),
                               ),
 
@@ -250,10 +258,7 @@ gift_df <- reactive({
       filter((Year >= input$yearDonationInput[1] & Year <= input$yearDonationInput[2]), 
              Month %in% input$monthDonationInput)
     df
-    
   })
-
-  
 #======Engagement Level======
   output$giftCRMPlot <- renderPlotly({
     gift_df() %>%
@@ -408,13 +413,6 @@ output$giftYearPlot <- renderPlotly({
     ggplotly(g)
     
   })
-  
-
-  
-  
- 
-  
-  
 ################ Donor Portfolio ################
 #====== RFM Calculation ======
   rfm_info  <- reactive({
@@ -669,7 +667,6 @@ donation_df <- reactive({
     valueBox(
       value = tags$p("Next Best Donation", style = "font-size: 24px;"),
       subtitle = tags$p((donation_df()), style = "font-size: 100%;"),
-    #icon = icon("credit-card", lib = "glyphicon"),
     color = "green"
     )
   })
