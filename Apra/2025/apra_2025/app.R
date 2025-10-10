@@ -259,6 +259,8 @@ gift_df <- reactive({
              Month %in% input$monthDonationInput)
     df
   })
+#====== Donor Relationship ======
+
 #======Engagement Level======
   output$giftCRMPlot <- renderPlotly({
     gift_df() %>%
@@ -413,6 +415,12 @@ output$giftYearPlot <- renderPlotly({
     ggplotly(g)
     
   })
+  
+
+  
+#====== Online Performance ======  
+
+  
 ################ Donor Portfolio ################
 #====== RFM Calculation ======
   rfm_info  <- reactive({
@@ -570,7 +578,16 @@ rfm_output <- reactive({
 output$rfmTable <- renderDataTable({
     rfm_output()
 })    
-  
+
+
+#====== Donor Relationship ======
+
+#====== Engagement Level ======
+
+#====== Giving Level ======
+
+#====== Online Performance ======  
+
 ################ Donation Forecasting ################
 #====== Donation Forecast setup ======
 forecast_df  <- reactive ({
