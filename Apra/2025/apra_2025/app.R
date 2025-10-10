@@ -3,7 +3,7 @@
 # for Apra data science challenge 2025
 ################################################
 rm(list = ls())
- 
+
 ################  Packages ####################
 # library(ggplot2)
 # library(corrplot)
@@ -96,7 +96,9 @@ ui <- dashboardPage(
 
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
-                                       #plotlyOutput("rfmRecencyChart"),
+                                       plotlyOutput("donorGrowthRatePlot"),
+                                       plotlyOutput("donorRetentionRatePlot"),
+                                       plotlyOutput("donorLifetimeValuePlot") #DONOR LIFETIME VALUE
                               ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
                                        layout_column_wrap(width = 1/2,
