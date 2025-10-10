@@ -3,7 +3,8 @@
 # for Apra data science challenge 2025
 ################################################
 rm(list = ls())
-################  Packages ################
+ 
+################  Packages ####################
 # library(ggplot2)
 # library(corrplot)
 # library(tidyverse)
@@ -45,7 +46,7 @@ for (package in packages) {
     library(package, character.only=T)
   }
 }
-################ Load Data ################
+#===== Load Data ========
 crm <- read_csv("CRM_interacions_table.csv")
 gift <- read_csv("gift_transactions_table.csv")
 video <- read_csv("video_email_data_table.csv")
@@ -53,14 +54,14 @@ constituent <- read_csv("constituent_profiles_table.csv")
 rfm_segment <- read_excel("rfm_segments_strategy.xlsx")
 rfm_segment_encoding <- read_excel("Portfolio_segment_coding.xlsx")
 
-# Load ML model
+#===== Load ML model ========
 model_load = readRDS("model.rda")
 
-# Data Information
+#===== Data Information ========
 segment_titles <- rfm_segment$`Donor Portfolio`
 month_titles <- c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
 
-################ UI ################
+################### UI #############################  
 ui <- dashboardPage(
   dashboardHeader(title = "Apra Challenge 2025",
                   tags$li(a(href = 'https://www.aprahome.org',
@@ -236,8 +237,9 @@ ui <- dashboardPage(
 ################  Server ################
 server <- function(input, output,session) {
   
-  
+
 ################ Donor Overview ################
+#====== Gift Data setup ======
 gift_df <- reactive({
     df <- gift %>%
       mutate(Year =  as.integer(as.numeric(lubridate::year(GIFT_DATE))),
@@ -248,7 +250,9 @@ gift_df <- reactive({
     df
     
   })
+
   
+#======Engagement Level======
   output$giftCRMPlot <- renderPlotly({
     gift_df() %>%
       left_join(crm,by='CONSTITUENT_ID') %>%
@@ -267,20 +271,37 @@ gift_df <- reactive({
             axis.text = element_text(size = 10))
   })
   
-  
-  gift_df <- reactive({
-    df <- gift %>%
-      mutate(Year =  as.integer(as.numeric(lubridate::year(GIFT_DATE))),
-             Month = lubridate::month(GIFT_DATE, label = TRUE),
-             DOW = lubridate::wday(GIFT_DATE, label=TRUE)) %>%
+  output$CRMPlot <- renderPlotly({
+    crm_df <- crm %>%
+      mutate(Year =  as.integer(as.numeric(lubridate::year(CRM_INTERACTION_DATE))),
+             Month = lubridate::month(CRM_INTERACTION_DATE, label = TRUE),
+             #DOW = lubridate::wday(CRM_INTERACTION_DATE, label=TRUE)
+      ) %>%
       filter((Year >= input$yearDonationInput[1] & Year <= input$yearDonationInput[2]), 
-              Month %in% input$monthDonationInput)
-    df
-      
+             Month %in% input$monthDonationInput)
+    
+    g <- crm_df %>%
+      group_by(CRM_INTERACTION_TYPE) %>%
+      summarise(Total = n()) %>%
+      mutate(RunningTotal = cumsum(Total),
+             Percent = round((Total / sum(Total)) * 100,2)
+      ) %>%
+      select(CRM_INTERACTION_TYPE, Percent) %>%
+      na.omit() %>%
+      ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Percent) ,y = Percent))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      scale_y_continuous(labels = scales::comma) +
+      labs(x ="CRM Interaction Type", y = "Percent", title="CRM Interaction Outreach Rate") + coord_flip() +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10))
+    
   })
-
   
-  output$giftYearPlot <- renderPlotly({
+#====== Giving Level ======
+output$giftYearPlot <- renderPlotly({
     g <- gift_df() %>%
     group_by(Year) %>%
       summarise(Total = mean(AMOUNT)) %>%
@@ -386,40 +407,14 @@ gift_df <- reactive({
     
   })
   
-  output$CRMPlot <- renderPlotly({
-    crm_df <- crm %>%
-    mutate(Year =  as.integer(as.numeric(lubridate::year(CRM_INTERACTION_DATE))),
-           Month = lubridate::month(CRM_INTERACTION_DATE, label = TRUE),
-           DOW = lubridate::wday(CRM_INTERACTION_DATE, label=TRUE)) %>%
-      filter((Year >= input$yearDonationInput[1] & Year <= input$yearDonationInput[2]), 
-             Month %in% input$monthDonationInput)
-    
-    g <- crm_df %>%
-      group_by(CRM_INTERACTION_TYPE) %>%
-      summarise(Total = n()) %>%
-      mutate(RunningTotal = cumsum(Total),
-             Percent = (Total / sum(Total)) * 100
-             ) %>%
-      select(CRM_INTERACTION_TYPE, Percent) %>%
-      #na.omit() %>%
-      ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Percent) ,y = Percent))  +
-      geom_bar(stat = "identity",width = 0.5, fill='black')  +
-      scale_y_continuous(labels = scales::comma) +
-      labs(x ="CRM Interaction Type", y = "Percent", title="CRM Interaction Outreach Rate") + coord_flip() +
-      theme(legend.text = element_text(size = 10),
-            legend.title = element_text(size = 10),
-            plot.title = element_text(size = 12, hjust = 0.5),
-            axis.title = element_text(size = 10),
-            axis.text = element_text(size = 10))
-      
-  })
+
   
   
  
   
   
 ################ Donor Portfolio ################
-##### RFM Calculation #####
+#====== RFM Calculation ======
   rfm_info  <- reactive({
     rfm_df <- gift %>%
       filter(GIFT_DATE >= '2015-01-01') %>%
@@ -442,7 +437,7 @@ gift_df <- reactive({
     
   })
   
-################ RFM Metrics ################
+#====== RFM Metrics ======
   value_box_calculations <- reactive({
     rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
@@ -485,7 +480,7 @@ gift_df <- reactive({
   
   })
   
-################ RFM Charts ################
+#====== RFM Charts ======
   output$rfmTreemap <- renderPlot({
     division_count <- rfm_info() %>% 
       filter(segment %in% input$rfmInput) %>%
@@ -559,7 +554,7 @@ gift_df <- reactive({
     
   })
     
-################ RFM Table ################
+#====== RFM Table ======
 output$rfmDescription <- renderDataTable({
     rfm_segment
 })
@@ -577,8 +572,7 @@ output$rfmTable <- renderDataTable({
 })    
   
 ################ Donation Forecasting ################
-##### Donation Forecast setup ######
-  
+#====== Donation Forecast setup ======
 forecast_df  <- reactive ({
     #set.seed(1234)
     gifts_df <- gift %>%
@@ -623,11 +617,7 @@ forecast_df  <- reactive ({
     df
   
   })
-  
-  
   output$donationForecastPlot <- renderPlotly({
-      
-    #Sys.sleep(0.5)
     g <- forecast_df() %>%
       select(Month, `Forecasted Donation`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
@@ -653,7 +643,7 @@ donation_df <- reactive({
     # data frame setup
     columns = c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")
     
-    #Create a Empty DataFrame with 0 rows and n columns
+    # Create a Empty DataFrame with 0 rows and n columns
     df = data.frame(matrix(nrow = 0, ncol = length(columns))) 
     
     # Assign column names
