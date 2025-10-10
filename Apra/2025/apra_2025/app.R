@@ -79,9 +79,9 @@ ui <- dashboardPage(
   ),
   dashboardBody(
     tabItems(
-      ######### About #########
+######### About #########
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
-      ######### Donor Overview ######### 
+######### Donor Overview ######### 
       tabItem(tabName = "donation_overview",
               sidebarLayout(
                 sidebarPanel(width = 2,
@@ -98,8 +98,9 @@ ui <- dashboardPage(
                                        #plotlyOutput("rfmRecencyChart"),
                               ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
-                                       layout_column_wrap(width = 1,
-                                                          plotlyOutput("giftCRMPlot")
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("giftCRMPlot"),
+                                                          plotlyOutput("CRMPlot")
                                        )
                                        
                               ),
@@ -125,7 +126,7 @@ ui <- dashboardPage(
               )
           )      
       ),
-      ######### Donor Portfolio ######### 
+######### Donor Portfolio ######### 
       tabItem(tabName = "donation_segment",
               sidebarLayout(
                 sidebarPanel(width = 2,
@@ -183,7 +184,7 @@ ui <- dashboardPage(
                 )
               )
       ),
-      ######### Donor Forecasting #########
+######### Donor Forecasting #########
       tabItem(tabName = "donation_forecast",
               sidebarLayout(
                 sidebarPanel(width = 2,
@@ -205,7 +206,7 @@ ui <- dashboardPage(
                 )
               )
       ),
-      ######### Donor Prediction ######### 
+######### Donor Prediction ######### 
       tabItem(tabName = "donation_prediction",
               sidebarLayout(
                 sidebarPanel(width = 3,
@@ -265,6 +266,7 @@ gift_df <- reactive({
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
   })
+  
   
   gift_df <- reactive({
     df <- gift %>%
@@ -382,6 +384,34 @@ gift_df <- reactive({
             axis.text.x = element_text(angle = 0, hjust = 1))
     ggplotly(g)
     
+  })
+  
+  output$CRMPlot <- renderPlotly({
+    crm_df <- crm %>%
+    mutate(Year =  as.integer(as.numeric(lubridate::year(CRM_INTERACTION_DATE))),
+           Month = lubridate::month(CRM_INTERACTION_DATE, label = TRUE),
+           DOW = lubridate::wday(CRM_INTERACTION_DATE, label=TRUE)) %>%
+      filter((Year >= input$yearDonationInput[1] & Year <= input$yearDonationInput[2]), 
+             Month %in% input$monthDonationInput)
+    
+    g <- crm_df %>%
+      group_by(CRM_INTERACTION_TYPE) %>%
+      summarise(Total = n()) %>%
+      mutate(RunningTotal = cumsum(Total),
+             Percent = (Total / sum(Total)) * 100
+             ) %>%
+      select(CRM_INTERACTION_TYPE, Percent) %>%
+      #na.omit() %>%
+      ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Percent) ,y = Percent))  +
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      scale_y_continuous(labels = scales::comma) +
+      labs(x ="CRM Interaction Type", y = "Percent", title="CRM Interaction Outreach Rate") + coord_flip() +
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10))
+      
   })
   
   
@@ -617,8 +647,8 @@ forecast_df  <- reactive ({
     
   })
     
-  ################ Next Best Donation ################
-  donation_df <- reactive({
+################ Next Best Donation ################
+donation_df <- reactive({
     
     # data frame setup
     columns = c("transaction_count","recency_days","total_interactions","unique_interaction_types","segment")
