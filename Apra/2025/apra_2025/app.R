@@ -622,7 +622,8 @@ forecast_df  <- reactive ({
       select(Month, `Forecasted Donation`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
       geom_bar(stat = "identity",width = 8, fill='black')  +
-      labs(x ="Date", y = "Gift Amount", title = "Forecasted Donations") + scale_y_continuous(labels = scales::comma) +
+      labs(x ="Date", y = "Gift Amount", title = "Forecasted Donations") + 
+      scale_y_continuous(labels = scales::comma) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
