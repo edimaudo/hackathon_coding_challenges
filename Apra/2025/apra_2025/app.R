@@ -94,6 +94,15 @@ ui <- dashboardPage(
                 mainPanel(width = 10,
 
                   tabsetPanel(type = "tabs",
+                              tabPanel(h4("Donor Relationship",style="text-align: center;"),
+                                       #plotlyOutput("rfmRecencyChart"),
+                              ),
+                              tabPanel(h4("Engagement",style="text-align: center;"),
+                                       layout_column_wrap(width = 1,
+                                                          plotlyOutput("giftCRMPlot")
+                                       )
+                                       
+                              ),
                               tabPanel(h4("Giving Level",style="text-align: center;"),
                                        layout_column_wrap(width = 1/2,
                                                           plotlyOutput("giftYearPlot"),
@@ -107,18 +116,11 @@ ui <- dashboardPage(
                                                           plotlyOutput("giftDOWPlot")
                                        )
                               ),
-                              tabPanel(h4("Engagement",style="text-align: center;"),
-                                       layout_column_wrap(width = 1,
-                                                          plotlyOutput("giftCRMPlot")
-                                       )
-                                       
-                              ),
+
                               tabPanel(h4("Online Performance",style="text-align: center;"),
                                        #plotlyOutput("rfmRecencyChart"),
                               ),
-                              tabPanel(h4("Donor Relationship",style="text-align: center;"),
-                                       #plotlyOutput("rfmRecencyChart"),
-                              )
+
                   )
               )
           )      
@@ -163,6 +165,9 @@ ui <- dashboardPage(
                   ),
                   br(),br(),
                   tabsetPanel(type = "tabs",
+                              tabPanel(h4("Donor Relationship",style="text-align: center;"),
+                                       #plotlyOutput("rfmRecencyChart"),
+                              ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
                                        #plotOutput('rfmTreemap'),
                               ),
@@ -171,10 +176,8 @@ ui <- dashboardPage(
                               ),
                               tabPanel(h4("Online Performance",style="text-align: center;"),
                                        #plotlyOutput("rfmRecencyChart"),
-                              ),
-                              tabPanel(h4("Donor Relationship",style="text-align: center;"),
-                                       #plotlyOutput("rfmRecencyChart"),
                               )
+
                               
                   )  
                 )
@@ -234,8 +237,7 @@ server <- function(input, output,session) {
   
   
 ################ Donor Overview ################
-  
-  gift_df <- reactive({
+gift_df <- reactive({
     df <- gift %>%
       mutate(Year =  as.integer(as.numeric(lubridate::year(GIFT_DATE))),
              Month = lubridate::month(GIFT_DATE, label = TRUE),
@@ -319,6 +321,26 @@ server <- function(input, output,session) {
   })
   
   output$giftYearGrowth <- renderPlotly({
+    g <- gift_df() %>%
+      group_by(Year) %>%
+      summarise(AvgGift = mean(AMOUNT, na.rm = TRUE)) %>%
+      arrange(Year) %>%
+      mutate(
+        AvgGiftGrowth = ((AvgGift - lag(AvgGift)) / lag(AvgGift)) * 100,
+        AvgGiftGrowth = replace_na(AvgGiftGrowth, 0)
+      ) %>%
+      ggplot(aes(Year, AvgGiftGrowth)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      labs(x = "Year", y = "Avg. Gift Amount Growth", title="Avg. Gift Amount Growth by Year") + 
+      scale_y_continuous(labels = comma) +
+      scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    ggplotly(g)
     
   })
   
@@ -366,8 +388,8 @@ server <- function(input, output,session) {
  
   
   
-  ################ Donor Portfolio ################
-  ##### RFM Calculation #####
+################ Donor Portfolio ################
+##### RFM Calculation #####
   rfm_info  <- reactive({
     rfm_df <- gift %>%
       filter(GIFT_DATE >= '2015-01-01') %>%
@@ -390,7 +412,7 @@ server <- function(input, output,session) {
     
   })
   
-  ################ RFM Metrics ################
+################ RFM Metrics ################
   value_box_calculations <- reactive({
     rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
@@ -433,7 +455,7 @@ server <- function(input, output,session) {
   
   })
   
-  ################ RFM Charts ################
+################ RFM Charts ################
   output$rfmTreemap <- renderPlot({
     division_count <- rfm_info() %>% 
       filter(segment %in% input$rfmInput) %>%
@@ -507,23 +529,22 @@ server <- function(input, output,session) {
     
   })
     
-  ################ RFM Table ################
-  output$rfmDescription <- renderDataTable({
+################ RFM Table ################
+output$rfmDescription <- renderDataTable({
     rfm_segment
-  })
+})
   
-  rfm_output <- reactive({
+rfm_output <- reactive({
       df <- rfm_info() %>%
         filter(segment %in% input$rfmInput) %>%
         select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
         colnames(df) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
         df
-  })
+})
   
-  output$rfmTable <- renderDataTable({
+output$rfmTable <- renderDataTable({
     rfm_output()
-      
-  })    
+})    
   
   ################ Donation Forecasting ################
   ##### Donation Forecast setup ######
