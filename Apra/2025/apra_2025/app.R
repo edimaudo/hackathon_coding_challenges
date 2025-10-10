@@ -80,9 +80,9 @@ ui <- dashboardPage(
   ),
   dashboardBody(
     tabItems(
-######### About #########
+#====== About ======
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
-######### Donor Overview ######### 
+#====== Donor Overview ======
       tabItem(tabName = "donation_overview",
               sidebarLayout(
                 sidebarPanel(width = 2,
@@ -127,7 +127,7 @@ ui <- dashboardPage(
               )
           )      
       ),
-######### Donor Portfolio ######### 
+#====== Donor Portfolio ======
       tabItem(tabName = "donation_segment",
               sidebarLayout(
                 sidebarPanel(width = 2,
@@ -185,7 +185,7 @@ ui <- dashboardPage(
                 )
               )
       ),
-######### Donor Forecasting #########
+#====== Donor Forecasting ======
       tabItem(tabName = "donation_forecast",
               sidebarLayout(
                 sidebarPanel(width = 2,
@@ -207,7 +207,7 @@ ui <- dashboardPage(
                 )
               )
       ),
-######### Donor Prediction ######### 
+#====== Donor Prediction ======
       tabItem(tabName = "donation_prediction",
               sidebarLayout(
                 sidebarPanel(width = 3,
