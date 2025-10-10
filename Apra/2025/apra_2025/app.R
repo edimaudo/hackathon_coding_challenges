@@ -73,8 +73,8 @@ ui <- dashboardPage(
       menuItem("About", tabName = "about", icon = icon("house")),
       menuItem("Donation Overiew", tabName = "donation_overview", icon = icon("th")),
       menuItem("Donor Portfolio", tabName = "donation_segment", icon = icon("thumbs-up")),
-      menuItem("Gift Forecasting ", tabName = "donation_forecast",icon = icon("credit-card")),
-      menuItem("Next Best Gift", tabName = "donation_prediction",icon = icon("credit-card"))
+      menuItem("Donation Forecasting ", tabName = "donation_forecast",icon = icon("credit-card")),
+      menuItem("Next Best Donation", tabName = "donation_prediction",icon = icon("credit-card"))
     )
   ),
   dashboardBody(
@@ -92,31 +92,36 @@ ui <- dashboardPage(
                              submitButton("Submit")
                 ),
                 mainPanel(width = 10,
-                  layout_column_wrap(width = 1/2,
-                    plotlyOutput("giftCRMPlot"),
-                    plotlyOutput("giftYearPlot"),
-                  ),
-                  br(),br(),
-                  layout_columns(
-                    plotlyOutput("giftMonthPlot"),
-                    plotlyOutput("giftDOWPlot"),
-                  ), 
+
                   tabsetPanel(type = "tabs",
-                              tabPanel(h4("Engagement",style="text-align: center;"),
-                                       #plotOutput('rfmTreemap'),
-                              ),
                               tabPanel(h4("Giving Level",style="text-align: center;"),
-                                       plotlyOutput("rfmRecencyChart"),
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("giftYearPlot"),
+                                                          plotlyOutput("giftYearCountPlot")
+                                       ),
+                                       layout_column_wrap(width = 1,
+                                                          plotlyOutput("giftYearGrowth")
+                                       ),  
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("giftMonthPlot"),
+                                                          plotlyOutput("giftDOWPlot")
+                                       )
+                              ),
+                              tabPanel(h4("Engagement",style="text-align: center;"),
+                                       layout_column_wrap(width = 1,
+                                                          plotlyOutput("giftCRMPlot")
+                                       )
+                                       
                               ),
                               tabPanel(h4("Online Performance",style="text-align: center;"),
-                                       plotlyOutput("rfmRecencyChart"),
+                                       #plotlyOutput("rfmRecencyChart"),
                               ),
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
-                                       plotlyOutput("rfmRecencyChart"),
+                                       #plotlyOutput("rfmRecencyChart"),
                               )
                   )
               )
-                
+          )      
       ),
       ######### Donor Portfolio ######### 
       tabItem(tabName = "donation_segment",
@@ -141,13 +146,13 @@ ui <- dashboardPage(
                                        plotOutput('rfmTreemap'),
                               ),
                               tabPanel(h4("Recency",style="text-align: center;"),
-                                plotlyOutput("rfmRecencyChart"),
+                                       plotlyOutput("rfmRecencyChart"),
                               ),
                               tabPanel(h4("Frequency",style="text-align: center;"),
-                                plotlyOutput("rfmFrequencyChart"),
+                                       plotlyOutput("rfmFrequencyChart"),
                               ),
                               tabPanel(h4("Monetary",style="text-align: center;"),
-                                plotlyOutput("rfmMonetaryChart")
+                                       plotlyOutput("rfmMonetaryChart")
                               ),
                               tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmDescription"),
@@ -213,24 +218,22 @@ ui <- dashboardPage(
                     fluidRow(
                       column(width = 12,
                              valueBoxOutput("predictionOutput")
-                             )
-                      
+                      )
                     )
-            )
+               )
+             )
+           )
           )
-        )
-       )
-      ) 
-     )    
-    )
+         ) 
+        )    
+       
 
 
 ################  Server ################
 server <- function(input, output,session) {
   
   
-  
-  ################ Donor Overview ################
+################ Donor Overview ################
   
   gift_df <- reactive({
     df <- gift %>%
@@ -294,6 +297,31 @@ server <- function(input, output,session) {
     
   })
   
+  output$giftYearCountPlot <- renderPlotly({
+    g <- gift_df() %>%
+      group_by(Year) %>%
+      summarise(Total = n()) %>%
+      select(Year, Total) %>% 
+      na.omit() %>%
+      ggplot(aes(Year, Total)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      labs(x = "Year", y = "Gift Count", title="Gift Count by Year") + 
+      scale_y_continuous(labels = comma) +
+      scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    ggplotly(g)
+    
+  })
+  
+  output$giftYearGrowth <- renderPlotly({
+    
+  })
+  
   output$giftMonthPlot <- renderPlotly({
     g <- gift_df() %>%
       group_by(Month) %>%
@@ -333,6 +361,9 @@ server <- function(input, output,session) {
     ggplotly(g)
     
   })
+  
+  
+ 
   
   
   ################ Donor Portfolio ################
