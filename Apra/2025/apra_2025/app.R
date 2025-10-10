@@ -546,11 +546,11 @@ output$rfmTable <- renderDataTable({
     rfm_output()
 })    
   
-  ################ Donation Forecasting ################
-  ##### Donation Forecast setup ######
+################ Donation Forecasting ################
+##### Donation Forecast setup ######
   
-  forecast_df  <- reactive ({
-    set.seed(1234)
+forecast_df  <- reactive ({
+    #set.seed(1234)
     gifts_df <- gift %>%
       filter(GIFT_DATE >= '2015-01-01') %>%
       inner_join(rfm_output(),'CONSTITUENT_ID') %>%
@@ -558,14 +558,14 @@ output$rfmTable <- renderDataTable({
       select(CONSTITUENT_ID,Segment,GIFT_DATE,AMOUNT) %>%
       na.omit()
     
-    monthly_donations <- gifts_df %>%
-      filter(Segment %in% c(input$forecastSegmentInput)) %>%
-      mutate(GIFT_DATE = ymd(GIFT_DATE)) %>%
-      # Extract year and month for grouping
-      mutate(year_month = floor_date(GIFT_DATE, "month")) %>%
-      group_by(year_month) %>%
-      summarise(total_donations = sum(AMOUNT, na.rm = TRUE), .groups = 'drop') %>%
-      arrange(year_month)
+     monthly_donations <- gifts_df %>%
+    filter(Segment %in% c(input$forecastSegmentInput)) %>%
+    mutate(GIFT_DATE = ymd(GIFT_DATE)) %>%
+    # Extract year and month for grouping
+    mutate(year_month = floor_date(GIFT_DATE, "month")) %>%
+    group_by(year_month) %>%
+    summarise(total_donations = sum(AMOUNT, na.rm = TRUE), .groups = 'drop') %>%
+    arrange(year_month)
     
     start_year <- lubridate::year(min(monthly_donations$year_month))
     start_month <- lubridate::month(min(monthly_donations$year_month))
@@ -597,7 +597,7 @@ output$rfmTable <- renderDataTable({
   
   output$donationForecastPlot <- renderPlotly({
       
-    Sys.sleep(1.5)
+    #Sys.sleep(0.5)
     g <- forecast_df() %>%
       select(Month, `Forecasted Donation`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
