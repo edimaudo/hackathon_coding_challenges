@@ -394,8 +394,11 @@ output$giftYearGrowth <- renderPlotly({
         AvgGiftGrowth = ((AvgGift - lag(AvgGift)) / lag(AvgGift)) * 100,
         AvgGiftGrowth = replace_na(AvgGiftGrowth, 0)
       ) %>%
-      ggplot(aes(Year, AvgGiftGrowth)) + 
-      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      ggplot(aes(Year, AvgGiftGrowth,  text = paste0(
+        "Year: ", Year,
+        "<br>Donor Growth: ", AvgGiftGrowth, "%"
+      ))) + 
+      geom_col(width = 0.5, fill = "black") +
       labs(x = "Year", y = "Avg. Gift Amount Growth", title="Avg. Gift Amount Growth by Year") + 
       scale_y_continuous(labels = comma) +
       scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
@@ -405,7 +408,7 @@ output$giftYearGrowth <- renderPlotly({
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10),
             axis.text.x = element_text(angle = 0, hjust = 1))
-    ggplotly(g)
+    ggplotly(g,tooltip = "text")
     
 })
   
