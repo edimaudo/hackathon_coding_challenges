@@ -97,7 +97,7 @@ ui <- dashboardPage(
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
                                        # to build
-                                       plotlyOutput("donorGrowthRatePlot"),
+                                       plotlyOutput("donorGrowthRatePlot") %>% withSpinner(),
                                        plotlyOutput("donorRetentionRatePlot"),
                                        plotlyOutput("donorLifetimeValuePlot") 
                               ),
@@ -260,6 +260,32 @@ gift_df <- reactive({
     df
   })
 #====== Donor Relationship ======
+output$donorGrowthRatePlot <- renderPlotly({
+  g <- gift_df() %>%
+    group_by(Year) %>%
+    summarise(Unique_Constituents = n_distinct(CONSTITUENT_ID)) %>%
+    arrange(Year) %>%
+    mutate(
+      donorGrowth = ((Unique_Constituents - lag(Unique_Constituents)) / lag(Unique_Constituents)) * 100,
+      donorGrowth = round(replace_na(donorGrowth, 0),1)
+    ) %>%
+    ggplot(aes(Year, donorGrowth)) + 
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      labs(x = "Year", y = "Donor Growth", title="Donor Growth by Year") + 
+      scale_y_continuous(labels = comma) +
+      scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    ggplotly(g)
+  
+  
+})
+output$donorRetentionRatePlot <- renderPlotly({})
+output$donorLifetimeValuePlot <- renderPlotly({})
 
 #======Engagement Level======
 output$giftCRMPlot <- renderPlotly({
@@ -462,7 +488,8 @@ value_box_calculations <- reactive({
 output$valueRecency <- renderValueBox({
     valueBox(
       value = tags$p("Avg. # of Days since last gift", style = "font-size: 18px;"),
-      subtitle = tags$p((sprintf(value_box_calculations()$average_recency, fmt = '%.0f')), style = "font-size: 100%;"),
+      subtitle = tags$p((sprintf(value_box_calculations()$average_recency, fmt = '%.0f')), 
+                        style = "font-size: 100%;"),
       #icon = icon("calendar"),
       color = "black"
     )
@@ -472,7 +499,8 @@ output$valueRecency <- renderValueBox({
 output$valueFrequency <- renderValueBox({
     valueBox(
       value = tags$p("Avg. # of Gifts", style = "font-size: 18px;"),
-      subtitle = tags$p((sprintf(value_box_calculations()$average_frequency, fmt = '%.0f')), style = "font-size: 100%;"),
+      subtitle = tags$p((sprintf(value_box_calculations()$average_frequency, fmt = '%.0f')), 
+                        style = "font-size: 100%;"),
       #icon = icon("thumbs-up"),
       color = "black"
       )
@@ -481,7 +509,8 @@ output$valueFrequency <- renderValueBox({
 output$valueMonetary <- renderValueBox({
     valueBox(
       value = tags$p("Avg. Gift Amount", style = "font-size: 18px;"),
-      subtitle = tags$p((sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')), style = "font-size: 100%;"),
+      subtitle = tags$p((sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')), 
+                        style = "font-size: 100%;"),
       #icon = icon("credit-card"),
       color = "black"
     )
@@ -572,7 +601,8 @@ rfm_output <- reactive({
       df <- rfm_info() %>%
         filter(segment %in% input$rfmInput) %>%
         select(customer_id,segment,rfm_score,transaction_count,recency_days,amount)
-        colnames(df) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts','# of days since last gift', 'Gift Amount')
+        colnames(df) <- c('CONSTITUENT_ID', 'Segment','RFM Score','# of Gifts',
+                          '# of days since last gift', 'Gift Amount')
         df
 })
   
