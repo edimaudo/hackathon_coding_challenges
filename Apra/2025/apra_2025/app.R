@@ -289,6 +289,24 @@ output$donorGrowthRatePlot <- renderPlotly({
   
 })
 
+donor_churn_retention <- reactive ({
+  donor_by_year <- gift_df() %>%
+    group_by(Year) %>%
+    summarise(donors = list(unique(CONSTITUENT_ID)),
+              n_donors = n_distinct(CONSTITUENT_ID)) %>%
+    arrange(Year)
+  
+  donor_rates <- donor_by_year %>%
+    mutate(
+      prev_donors = lag(donors),
+      retained = map2_int(donors, prev_donors, ~ length(intersect(.x, .y))),
+      retention_rate = round((retained / lag(n_donors)) * 100, 1),
+      churn_rate = round(100 - retention_rate, 1)
+    ) %>%
+    replace_na(list(retention_rate = 0, churn_rate = 0)) %>%
+    select(Year, retention_rate, churn_rate)
+})
+
 
 
 # Donor Retention Rate
