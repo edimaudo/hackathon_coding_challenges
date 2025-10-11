@@ -103,7 +103,7 @@ ui <- dashboardPage(
                               ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
                                        layout_column_wrap(width = 1/2,
-                                                          plotlyOutput("giftCRMPlot") %>% withSpinner(size = 3, label = "Loading, please wait...") ,
+                                                          plotlyOutput("giftCRMPlot") %>% withSpinner() ,
                                                           plotlyOutput("CRMPlot") %>% withSpinner()
                                                           
                                        ) 
@@ -263,7 +263,7 @@ gift_df <- reactive({
 #====== Donor Relationship ======
 
 #======Engagement Level======
-  output$giftCRMPlot <- renderPlotly({
+output$giftCRMPlot <- renderPlotly({
     gift_df() %>%
       left_join(crm,by='CONSTITUENT_ID') %>%
       group_by(CRM_INTERACTION_TYPE) %>%
@@ -279,9 +279,9 @@ gift_df <- reactive({
             plot.title = element_text(size = 12, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
-  })
+})
   
-  output$CRMPlot <- renderPlotly({
+output$CRMPlot <- renderPlotly({
     crm_df <- crm %>%
       mutate(Year =  as.integer(as.numeric(lubridate::year(CRM_INTERACTION_DATE))),
              Month = lubridate::month(CRM_INTERACTION_DATE, label = TRUE),
@@ -308,7 +308,7 @@ gift_df <- reactive({
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
     
-  })
+})
   
 #====== Giving Level ======
 output$giftYearPlot <- renderPlotly({
@@ -330,9 +330,9 @@ output$giftYearPlot <- renderPlotly({
             axis.text.x = element_text(angle = 0, hjust = 1))
     ggplotly(g)
     
-  })
+})
   
-  output$giftYearCountPlot <- renderPlotly({
+output$giftYearCountPlot <- renderPlotly({
     g <- gift_df() %>%
       group_by(Year) %>%
       summarise(Total = n()) %>%
@@ -351,9 +351,9 @@ output$giftYearPlot <- renderPlotly({
             axis.text.x = element_text(angle = 0, hjust = 1))
     ggplotly(g)
     
-  })
+})
   
-  output$giftYearGrowth <- renderPlotly({
+output$giftYearGrowth <- renderPlotly({
     g <- gift_df() %>%
       group_by(Year) %>%
       summarise(AvgGift = mean(AMOUNT, na.rm = TRUE)) %>%
@@ -375,9 +375,9 @@ output$giftYearPlot <- renderPlotly({
             axis.text.x = element_text(angle = 0, hjust = 1))
     ggplotly(g)
     
-  })
+})
   
-  output$giftMonthPlot <- renderPlotly({
+output$giftMonthPlot <- renderPlotly({
     g <- gift_df() %>%
       group_by(Month) %>%
       summarise(Total = mean(AMOUNT)) %>%
@@ -395,9 +395,9 @@ output$giftYearPlot <- renderPlotly({
             axis.text.x = element_text(angle = 0, hjust = 1))
     ggplotly(g)
     
-  })
+})
   
-  output$giftDOWPlot <- renderPlotly({
+output$giftDOWPlot <- renderPlotly({
     g <- gift_df() %>%
       group_by(DOW) %>%
       summarise(Total = mean(AMOUNT)) %>%
@@ -415,7 +415,7 @@ output$giftYearPlot <- renderPlotly({
             axis.text.x = element_text(angle = 0, hjust = 1))
     ggplotly(g)
     
-  })
+})
   
 
   
@@ -424,7 +424,7 @@ output$giftYearPlot <- renderPlotly({
   
 ################ Donor Portfolio ################
 #====== RFM Calculation ======
-  rfm_info  <- reactive({
+rfm_info  <- reactive({
     rfm_df <- gift %>%
       filter(GIFT_DATE >= '2015-01-01') %>%
       select(CONSTITUENT_ID,GIFT_DATE,AMOUNT) %>%
@@ -444,10 +444,10 @@ output$giftYearPlot <- renderPlotly({
     
     divisions<-rfm_segment(report, segment_titles, r_low, r_high, f_low, f_high, m_low, m_high)
     
-  })
+})
   
 #====== RFM Metrics ======
-  value_box_calculations <- reactive({
+value_box_calculations <- reactive({
     rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
       summarize(average_recency = mean(recency_days),
@@ -458,8 +458,7 @@ output$giftYearPlot <- renderPlotly({
   })
   
   
-  output$valueRecency <- renderValueBox({
-  
+output$valueRecency <- renderValueBox({
     valueBox(
       value = tags$p("Avg. # of Days since last gift", style = "font-size: 18px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_recency, fmt = '%.0f')), style = "font-size: 100%;"),
@@ -469,7 +468,7 @@ output$giftYearPlot <- renderPlotly({
     
   })
   
-  output$valueFrequency <- renderValueBox({
+output$valueFrequency <- renderValueBox({
     valueBox(
       value = tags$p("Avg. # of Gifts", style = "font-size: 18px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_frequency, fmt = '%.0f')), style = "font-size: 100%;"),
@@ -478,7 +477,7 @@ output$giftYearPlot <- renderPlotly({
       )
   })
   
-  output$valueMonetary <- renderValueBox({
+output$valueMonetary <- renderValueBox({
     valueBox(
       value = tags$p("Avg. Gift Amount", style = "font-size: 18px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')), style = "font-size: 100%;"),
@@ -490,7 +489,7 @@ output$giftYearPlot <- renderPlotly({
   })
   
 #====== RFM Charts ======
-  output$rfmTreemap <- renderPlot({
+output$rfmTreemap <- renderPlot({
     division_count <- rfm_info() %>% 
       filter(segment %in% input$rfmInput) %>%
       count(segment) %>% 
@@ -503,7 +502,7 @@ output$giftYearPlot <- renderPlotly({
     
   })
   
-  rfm_chart <- reactive({
+rfm_chart <- reactive({
     rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
       group_by(segment) %>%
@@ -516,7 +515,7 @@ output$giftYearPlot <- renderPlotly({
   })
 
   
-  output$rfmRecencyChart <- renderPlotly({
+output$rfmRecencyChart <- renderPlotly({
 
     g <- ggplot(rfm_chart(), aes(x = reorder(segment,desc(Recency_avg)) ,y = Recency_avg))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
@@ -532,7 +531,7 @@ output$giftYearPlot <- renderPlotly({
   })
   
   
-  output$rfmFrequencyChart <- renderPlotly({
+output$rfmFrequencyChart <- renderPlotly({
     
     g <- ggplot(rfm_chart(), aes(x = reorder(segment,Frequency_avg) ,y = Frequency_avg))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
@@ -547,7 +546,7 @@ output$giftYearPlot <- renderPlotly({
     
   })  
   
-  output$rfmMonetaryChart <- renderPlotly({
+output$rfmMonetaryChart <- renderPlotly({
     
     g <- ggplot(rfm_chart(), aes(x = reorder(segment,Monetary_avg) ,y = Monetary_avg))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
