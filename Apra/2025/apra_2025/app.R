@@ -97,8 +97,9 @@ ui <- dashboardPage(
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
                                        # to build
-                                       plotlyOutput("donorGrowthRatePlot") ,
+                                       plotlyOutput("donorGrowthRatePlot") %>% withSpinner() ,
                                        plotlyOutput("donorRetentionRatePlot"),
+                                       plotlyOutput("donorChurnRatePlot"),
                                        plotlyOutput("donorLifetimeValuePlot") 
                               ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
@@ -260,6 +261,7 @@ gift_df <- reactive({
     df
   })
 #====== Donor Relationship ======
+# Donor Growth Rate
 output$donorGrowthRatePlot <- renderPlotly({
   g <- gift_df() %>%
     group_by(Year) %>%
@@ -289,10 +291,18 @@ output$donorGrowthRatePlot <- renderPlotly({
   
   
 })
+
+# Donor Rentention Rate
 output$donorRetentionRatePlot <- renderPlotly({})
+
+# Donor Churn Rate
+output$donorChurnRatePlot <- renderPlotly({})
+
+# Donor Lifetime Value
 output$donorLifetimeValuePlot <- renderPlotly({})
 
 #======Engagement Level======
+# Engagement Amount
 output$giftCRMPlot <- renderPlotly({
     gift_df() %>%
       left_join(crm,by='CONSTITUENT_ID') %>%
@@ -311,7 +321,8 @@ output$giftCRMPlot <- renderPlotly({
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
 })
-  
+
+# Engagement Count
 output$CRMPlot <- renderPlotly({
     crm_df <- crm %>%
       mutate(Year =  as.integer(as.numeric(lubridate::year(CRM_INTERACTION_DATE))),
