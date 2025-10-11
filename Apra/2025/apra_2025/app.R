@@ -127,13 +127,13 @@ ui <- dashboardPage(
 
                               tabPanel(h4("Online Performance",style="text-align: center;"),
                                        # to build
-                                       #plotlyOutput("rfmRecencyChart"),
-                                       #plotlyOutput("rfmRecencyChart"),
-                                       #plotlyOutput("rfmRecencyChart"),
-                                       #plotlyOutput("rfmRecencyChart"),
-                                       #plotlyOutput("rfmRecencyChart"),
-                                       #plotlyOutput("rfmRecencyChart"),
-                                       #plotlyOutput("rfmRecencyChart"),
+                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
+                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
+                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
+                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
+                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
+                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
+                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
                               ),
 
                   )
