@@ -160,6 +160,9 @@ ui <- dashboardPage(
                               tabPanel(h4("Donor Portfolio Mix",style="text-align: center;"),
                                        plotOutput('rfmTreemap'),
                               ),
+                              tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
+                                       DT::dataTableOutput("rfmDescription"),
+                              ),
                               tabPanel(h4("Recency",style="text-align: center;"),
                                        plotlyOutput("rfmRecencyChart"),
                               ),
@@ -169,10 +172,7 @@ ui <- dashboardPage(
                               tabPanel(h4("Monetary",style="text-align: center;"),
                                        plotlyOutput("rfmMonetaryChart")
                               ),
-                              tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
-                                       DT::dataTableOutput("rfmDescription"),
-                              ),
-                              tabPanel(h4("Donor Portfolio",style="text-align: center;"), 
+                              tabPanel(h4("Donor Constituent Portfolio",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmTable"),
                               )
                   ),
@@ -579,9 +579,9 @@ rfm_chart <- reactive({
     rfm_info() %>%
       filter(segment %in% input$rfmInput) %>%
       group_by(segment) %>%
-      summarise(Recency_avg = mean(recency_days),
-                Frequency_avg =mean(transaction_count),
-                Monetary_avg = mean(amount)
+      summarise(Recency_avg = round(mean(recency_days),0),
+                Frequency_avg =round(mean(transaction_count),0),
+                Monetary_avg = round(mean(amount),1)
                 ) %>%
       select(segment,Recency_avg,Frequency_avg,Monetary_avg)
     
@@ -655,6 +655,12 @@ output$rfmTable <- renderDataTable({
 
 
 #====== Donor Relationship ======
+
+
+# Donor Growth Rate
+# donor retention rate
+# DONOR CHURN RATE
+# Donor Lifetime value (constituent level and donor group level)
 
 #====== Engagement Level ======
 
