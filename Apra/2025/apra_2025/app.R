@@ -96,7 +96,6 @@ ui <- dashboardPage(
 
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
-                                       # to build
                                        plotlyOutput("donorGrowthRatePlot") %>% withSpinner() ,
                                        plotlyOutput("donorRetentionRatePlot"),
                                        plotlyOutput("donorChurnRatePlot")
@@ -290,11 +289,17 @@ output$donorGrowthRatePlot <- renderPlotly({
   
 })
 
+
+
 # Donor Retention Rate
-output$donorRetentionRatePlot <- renderPlotly({})
+output$donorRetentionRatePlot <- renderPlotly({
+  
+})
 
 # Donor Churn Rate
-output$donorChurnRatePlot <- renderPlotly({})
+output$donorChurnRatePlot <- renderPlotly({
+  
+})
 
 #======Engagement Level======
 # Engagement Amount
@@ -660,8 +665,6 @@ output$rfmTable <- renderDataTable({
 
 
 #====== Donor Relationship ======
-
-
 # Donor Growth Rate
 # donor retention rate
 # DONOR CHURN RATE
