@@ -103,22 +103,23 @@ ui <- dashboardPage(
                               ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
                                        layout_column_wrap(width = 1/2,
-                                                          plotlyOutput("giftCRMPlot"),
-                                                          plotlyOutput("CRMPlot")
-                                       )
+                                                          plotlyOutput("giftCRMPlot") %>% withSpinner(size = 3, label = "Loading, please wait...") ,
+                                                          plotlyOutput("CRMPlot") %>% withSpinner()
+                                                          
+                                       ) 
                                        
-                              ),
+                              ) ,
                               tabPanel(h4("Giving Level",style="text-align: center;"),
                                        layout_column_wrap(width = 1/2,
-                                                          plotlyOutput("giftYearPlot"),
-                                                          plotlyOutput("giftYearCountPlot")
+                                                          plotlyOutput("giftYearPlot") %>% withSpinner(),
+                                                          plotlyOutput("giftYearCountPlot") %>% withSpinner()
                                        ),
                                        layout_column_wrap(width = 1,
-                                                          plotlyOutput("giftYearGrowth")
+                                                          plotlyOutput("giftYearGrowth") %>% withSpinner()
                                        ),  
                                        layout_column_wrap(width = 1/2,
-                                                          plotlyOutput("giftMonthPlot"),
-                                                          plotlyOutput("giftDOWPlot")
+                                                          plotlyOutput("giftMonthPlot") %>% withSpinner(),
+                                                          plotlyOutput("giftDOWPlot") %>% withSpinner()
                                        )
                               ),
 
