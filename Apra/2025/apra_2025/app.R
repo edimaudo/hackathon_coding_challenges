@@ -96,9 +96,13 @@ ui <- dashboardPage(
 
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
-                                       plotlyOutput("donorGrowthRatePlot") %>% withSpinner() ,
-                                       plotlyOutput("donorRetentionRatePlot"),
-                                       plotlyOutput("donorChurnRatePlot")
+                                       layout_column_wrap(width = 1,
+                                                          plotlyOutput("donorGrowthRatePlot") %>% withSpinner()
+                                       ),
+                                       layout_column_wrap(width = 1/2,  
+                                       plotlyOutput("donorRetentionRatePlot") %>% withSpinner(),
+                                       plotlyOutput("donorChurnRatePlot") %>% withSpinner()
+                                       )
                               ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
                                        layout_column_wrap(width = 1/2,
@@ -289,6 +293,7 @@ output$donorGrowthRatePlot <- renderPlotly({
   
 })
 
+# Donor Retention and Churn rate setup
 donor_churn_retention <- reactive ({
   donor_by_year <- gift_df() %>%
     group_by(Year) %>%
@@ -311,12 +316,43 @@ donor_churn_retention <- reactive ({
 
 # Donor Retention Rate
 output$donorRetentionRatePlot <- renderPlotly({
+  g<- ggplot(donor_churn_retention() , aes(Year, retention_rate,group=1,  text = paste0(
+    "Year: ", Year,
+    "<br>Retention Rate: ", retention_rate, "%"
+  ))) + 
+    geom_line() + geom_point() + 
+    #geom_line(stat = "identity",width = 0.5, fill='black')  +
+    labs(x = "Year", y = "Retention Rate", title="Retention Rate by Year") + 
+    scale_y_continuous(labels = comma) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
 })
 
 # Donor Churn Rate
 output$donorChurnRatePlot <- renderPlotly({
-  
+  g<- ggplot(donor_churn_retention() , aes(Year, churn_rate,group=1,  text = paste0(
+    "Year: ", Year,
+    "<br>Churn Rate: ", churn_rate, "%"
+  ))) + 
+    geom_line() + geom_point() + 
+    #geom_line(stat = "identity",width = 0.5, fill='black')  +
+    labs(x = "Year", y = "Churn Rate", title="Churn Rate by Year") + 
+    scale_y_continuous(labels = comma) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text") 
 })
 
 #======Engagement Level======
