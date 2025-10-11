@@ -415,8 +415,11 @@ output$giftMonthPlot <- renderPlotly({
       summarise(Total = round(mean(AMOUNT),1)) %>%
       select(Month, Total) %>% 
       na.omit() %>%
-      ggplot(aes(Month, Total)) + 
-      geom_bar(stat = "identity",width = 0.5, fill='black') + 
+      ggplot(aes(Month, Total,text = paste0(
+        "Month: ", Month,
+        "<br>Amount: ", "$", Total
+      ))) + 
+      geom_col(width = 0.5, fill = "black") +
       labs(x = "Month", y = "Avg. Gift Amount", title="Avg. Gift Amount by Month") + 
       scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
@@ -425,7 +428,7 @@ output$giftMonthPlot <- renderPlotly({
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10),
             axis.text.x = element_text(angle = 0, hjust = 1))
-    ggplotly(g)
+    ggplotly(g,tooltip = "text")
     
 })
   
