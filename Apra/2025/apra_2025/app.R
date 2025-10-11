@@ -97,7 +97,7 @@ ui <- dashboardPage(
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
                                        # to build
-                                       plotlyOutput("donorGrowthRatePlot") %>% withSpinner(),
+                                       plotlyOutput("donorGrowthRatePlot") ,
                                        plotlyOutput("donorRetentionRatePlot"),
                                        plotlyOutput("donorLifetimeValuePlot") 
                               ),
@@ -267,10 +267,15 @@ output$donorGrowthRatePlot <- renderPlotly({
     arrange(Year) %>%
     mutate(
       donorGrowth = ((Unique_Constituents - lag(Unique_Constituents)) / lag(Unique_Constituents)) * 100,
-      donorGrowth = round(replace_na(donorGrowth, 0),1)
+      donorGrowth = round(donorGrowth, 1),
+      donorGrowth = replace_na(donorGrowth, 0)
     ) %>%
-    ggplot(aes(Year, donorGrowth)) + 
-      geom_bar(stat = "identity",width = 0.5, fill='black')  +
+    ggplot(aes(Year, donorGrowth,  text = paste0(
+      "Year: ", Year,
+      "<br>Donor Growth: ", donorGrowth, "%"
+    ))) + 
+    geom_col(width = 0.5, fill = "black") +
+      #geom_bar(stat = "identity",width = 0.5, fill='black')  +
       labs(x = "Year", y = "Donor Growth", title="Donor Growth by Year") + 
       scale_y_continuous(labels = comma) +
       scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
@@ -280,7 +285,7 @@ output$donorGrowthRatePlot <- renderPlotly({
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10),
             axis.text.x = element_text(angle = 0, hjust = 1))
-    ggplotly(g)
+    ggplotly(g, tooltip = "text")
   
   
 })
@@ -310,7 +315,7 @@ output$giftCRMPlot <- renderPlotly({
 output$CRMPlot <- renderPlotly({
     crm_df <- crm %>%
       mutate(Year =  as.integer(as.numeric(lubridate::year(CRM_INTERACTION_DATE))),
-             Month = lubridate::month(CRM_INTERACTION_DATE, label = TRUE),
+             Month = lubridate::month(CRM_INTERACTION_DATE, label = TRUE)
              #DOW = lubridate::wday(CRM_INTERACTION_DATE, label=TRUE)
       ) %>%
       filter((Year >= input$yearDonationInput[1] & Year <= input$yearDonationInput[2]), 
@@ -341,7 +346,7 @@ output$CRMPlot <- renderPlotly({
 output$giftYearPlot <- renderPlotly({
     g <- gift_df() %>%
     group_by(Year) %>%
-      summarise(Total = mean(AMOUNT)) %>%
+      summarise(Total = round(mean(AMOUNT),1)) %>%
       select(Year, Total) %>% 
       na.omit() %>%
       ggplot(aes(Year, Total)) + 
@@ -407,7 +412,7 @@ output$giftYearGrowth <- renderPlotly({
 output$giftMonthPlot <- renderPlotly({
     g <- gift_df() %>%
       group_by(Month) %>%
-      summarise(Total = mean(AMOUNT)) %>%
+      summarise(Total = round(mean(AMOUNT),1)) %>%
       select(Month, Total) %>% 
       na.omit() %>%
       ggplot(aes(Month, Total)) + 
@@ -427,11 +432,14 @@ output$giftMonthPlot <- renderPlotly({
 output$giftDOWPlot <- renderPlotly({
     g <- gift_df() %>%
       group_by(DOW) %>%
-      summarise(Total = mean(AMOUNT)) %>%
+      summarise(Total = round(mean(AMOUNT),1)) %>%
       select(DOW, Total) %>% 
       na.omit() %>%
-      ggplot(aes(DOW, Total)) + 
-      geom_bar(stat = "identity",width = 0.5, fill='black') + 
+      ggplot(aes(DOW, Total,text = paste0(
+        "Day of Week: ", DOW,
+        "<br>Amount: ",  "$", Total
+      ))) + 
+      geom_col(width = 0.5, fill = "black") +
       labs(x = "Day Of Week", y = "Avg. Gift Amount", title="Avg. Gift Amount by Day of Week") + 
       scale_y_continuous(labels = comma) +
       theme(legend.text = element_text(size = 10),
@@ -440,7 +448,7 @@ output$giftDOWPlot <- renderPlotly({
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10),
             axis.text.x = element_text(angle = 0, hjust = 1))
-    ggplotly(g)
+    ggplotly(g,tooltip = "text")
     
 })
   
