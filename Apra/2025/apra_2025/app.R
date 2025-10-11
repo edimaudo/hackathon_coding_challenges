@@ -105,7 +105,6 @@ ui <- dashboardPage(
                                        layout_column_wrap(width = 1/2,
                                                           plotlyOutput("giftCRMPlot") %>% withSpinner() ,
                                                           plotlyOutput("CRMPlot") %>% withSpinner()
-                                                          
                                        ) 
                                        
                               ) ,
@@ -273,7 +272,8 @@ output$giftCRMPlot <- renderPlotly({
       ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
-      labs(x ="CRM Interaction Type", y = "Avg. Gift Amount", title="CRM Interaction & Avg. Gift Amount") + coord_flip() +
+      labs(x ="CRM Interaction Type", y = "Avg. Gift Amount", 
+           title="CRM Interaction & Avg. Gift Amount") + coord_flip() +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
@@ -301,7 +301,8 @@ output$CRMPlot <- renderPlotly({
       ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Percent) ,y = Percent))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
-      labs(x ="CRM Interaction Type", y = "Percent", title="CRM Interaction Outreach Rate") + coord_flip() +
+      labs(x ="CRM Interaction Type", y = "Percent", title="CRM Interaction Outreach Rate") + 
+      coord_flip() +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
