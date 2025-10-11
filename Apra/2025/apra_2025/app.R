@@ -157,22 +157,22 @@ ui <- dashboardPage(
                   br(),br(),
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Portfolio Mix",style="text-align: center;"),
-                                       plotOutput('rfmTreemap'), #plotOutput
+                                       plotOutput('rfmTreemap') %>% withSpinner() , #plotOutput
                               ),
                               tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmDescription"),
                               ),
                               tabPanel(h4("Recency",style="text-align: center;"),
-                                       plotlyOutput("rfmRecencyChart"),
+                                       plotlyOutput("rfmRecencyChart") %>% withSpinner() ,
                               ),
                               tabPanel(h4("Frequency",style="text-align: center;"),
-                                       plotlyOutput("rfmFrequencyChart"),
+                                       plotlyOutput("rfmFrequencyChart") %>% withSpinner() ,
                               ),
                               tabPanel(h4("Monetary",style="text-align: center;"),
-                                       plotlyOutput("rfmMonetaryChart")
+                                       plotlyOutput("rfmMonetaryChart") %>% withSpinner() 
                               ),
                               tabPanel(h4("Donor Constituent Portfolio",style="text-align: center;"), 
-                                       DT::dataTableOutput("rfmTable"),
+                                       DT::dataTableOutput("rfmTable") %>% withSpinner() ,
                               )
                   ),
                   br(),br(),
@@ -588,7 +588,7 @@ output$rfmRecencyChart <- renderPlotly({
     g <- ggplot(rfm_chart(), aes(x = reorder(segment,desc(Recency_avg)) ,y = Recency_avg,
                                  text = paste0(
                                    "Segment: ", segment,
-                                   "<br>Days: ", Recency_avg)))  +
+                                   "<br>Recency (Days): ", Recency_avg)))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Days", title="Average # of Days since last gift") + coord_flip() +
@@ -622,7 +622,11 @@ output$rfmFrequencyChart <- renderPlotly({
   
 output$rfmMonetaryChart <- renderPlotly({
     
-    g <- ggplot(rfm_chart(), aes(x = reorder(segment,Monetary_avg) ,y = Monetary_avg))  +
+    g <- ggplot(rfm_chart(), aes(x = reorder(segment,Monetary_avg) ,y = Monetary_avg,
+                                 text = paste0(
+                                   "Segment: ", segment,
+                                   "<br>Monetary: ", "$", Monetary_avg
+                                 )))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Amount", title = "Average Donation Amount") + coord_flip() +
@@ -631,7 +635,7 @@ output$rfmMonetaryChart <- renderPlotly({
             plot.title = element_text(size = 10, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
-    ggplotly(g)
+    ggplotly(g,tooltip = "text")
     
     
   })
