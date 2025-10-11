@@ -157,7 +157,7 @@ ui <- dashboardPage(
                   br(),br(),
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Portfolio Mix",style="text-align: center;"),
-                                       plotlyOutput('rfmTreemap'), #plotOutput
+                                       plotOutput('rfmTreemap'), #plotOutput
                               ),
                               tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmDescription"),
@@ -557,7 +557,7 @@ output$valueMonetary <- renderValueBox({
   })
   
 #====== RFM Charts ======
-output$rfmTreemap <- renderPlotly({
+output$rfmTreemap <- renderPlot({
     division_count <- rfm_info() %>% 
       filter(segment %in% input$rfmInput) %>%
       count(segment) %>% 
@@ -585,7 +585,10 @@ rfm_chart <- reactive({
   
 output$rfmRecencyChart <- renderPlotly({
 
-    g <- ggplot(rfm_chart(), aes(x = reorder(segment,desc(Recency_avg)) ,y = Recency_avg))  +
+    g <- ggplot(rfm_chart(), aes(x = reorder(segment,desc(Recency_avg)) ,y = Recency_avg,
+                                 text = paste0(
+                                   "Segment: ", segment,
+                                   "<br>Days: ", Recency_avg)))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Days", title="Average # of Days since last gift") + coord_flip() +
@@ -594,14 +597,17 @@ output$rfmRecencyChart <- renderPlotly({
             plot.title = element_text(size = 10, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
-    ggplotly(g)
+    ggplotly(g,tooltip = "text")
     
   })
   
   
 output$rfmFrequencyChart <- renderPlotly({
     
-    g <- ggplot(rfm_chart(), aes(x = reorder(segment,Frequency_avg) ,y = Frequency_avg))  +
+    g <- ggplot(rfm_chart(), aes(x = reorder(segment,Frequency_avg) ,y = Frequency_avg,
+                                 text = paste0(
+                                   "Segment: ", segment,
+                                   "<br>Frequency: ", Frequency_avg)))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Gifts", title = "Average # of Gifts") + coord_flip() +
@@ -610,7 +616,7 @@ output$rfmFrequencyChart <- renderPlotly({
             plot.title = element_text(size = 10, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
-    ggplotly(g)
+    ggplotly(g,tooltip = "text")
     
   })  
   
