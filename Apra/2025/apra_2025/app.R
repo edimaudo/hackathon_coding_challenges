@@ -99,8 +99,7 @@ ui <- dashboardPage(
                                        # to build
                                        plotlyOutput("donorGrowthRatePlot") %>% withSpinner() ,
                                        plotlyOutput("donorRetentionRatePlot"),
-                                       plotlyOutput("donorChurnRatePlot"),
-                                       plotlyOutput("donorLifetimeValuePlot") 
+                                       plotlyOutput("donorChurnRatePlot")
                               ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
                                        layout_column_wrap(width = 1/2,
@@ -158,7 +157,7 @@ ui <- dashboardPage(
                   br(),br(),
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Portfolio Mix",style="text-align: center;"),
-                                       plotOutput('rfmTreemap'),
+                                       plotlyOutput('rfmTreemap'), #plotOutput
                               ),
                               tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmDescription"),
@@ -276,8 +275,7 @@ output$donorGrowthRatePlot <- renderPlotly({
       "Year: ", Year,
       "<br>Donor Growth: ", donorGrowth, "%"
     ))) + 
-    geom_col(width = 0.5, fill = "black") +
-      #geom_bar(stat = "identity",width = 0.5, fill='black')  +
+      geom_bar(stat = "identity",width = 0.5, fill='black')  +
       labs(x = "Year", y = "Donor Growth", title="Donor Growth by Year") + 
       scale_y_continuous(labels = comma) +
       scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
@@ -292,14 +290,11 @@ output$donorGrowthRatePlot <- renderPlotly({
   
 })
 
-# Donor Rentention Rate
+# Donor Retention Rate
 output$donorRetentionRatePlot <- renderPlotly({})
 
 # Donor Churn Rate
 output$donorChurnRatePlot <- renderPlotly({})
-
-# Donor Lifetime Value
-output$donorLifetimeValuePlot <- renderPlotly({})
 
 #======Engagement Level======
 # Engagement Amount
@@ -562,7 +557,7 @@ output$valueMonetary <- renderValueBox({
   })
   
 #====== RFM Charts ======
-output$rfmTreemap <- renderPlot({
+output$rfmTreemap <- renderPlotly({
     division_count <- rfm_info() %>% 
       filter(segment %in% input$rfmInput) %>%
       count(segment) %>% 
