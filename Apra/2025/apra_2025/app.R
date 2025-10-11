@@ -85,14 +85,14 @@ ui <- dashboardPage(
 #====== Donor Overview ======
       tabItem(tabName = "donation_overview",
               sidebarLayout(
-                sidebarPanel(width = 2,
+                sidebarPanel(width = 3,
                              sliderInput("yearDonationInput","Year", min = 2015, max = 2025, 
                                          value = c(2015,2025), step = 1),
                              selectInput("monthDonationInput", "Month", 
                                          choices = month_titles, selected = month_titles, multiple = TRUE),
                              submitButton("Submit")
                 ),
-                mainPanel(width = 10,
+                mainPanel(width = 9,
 
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
@@ -143,13 +143,13 @@ ui <- dashboardPage(
 #====== Donor Portfolio ======
       tabItem(tabName = "donation_segment",
               sidebarLayout(
-                sidebarPanel(width = 2,
+                sidebarPanel(width = 3,
                              selectInput("rfmInput", "Donor Portfolios", 
                                          choices = segment_titles, selected = segment_titles, 
                                          multiple = TRUE),
                              submitButton("Submit")
                 ),
-                mainPanel(width = 10,
+                mainPanel(width = 9,
                   fluidRow(
                     column(width = 12,
                            valueBoxOutput("valueRecency"),
@@ -201,7 +201,7 @@ ui <- dashboardPage(
 #====== Donor Forecasting ======
       tabItem(tabName = "donation_forecast",
               sidebarLayout(
-                sidebarPanel(width = 2,
+                sidebarPanel(width = 3,
                              selectInput("forecastSegmentInput", "Portfolios", 
                                          choices = segment_titles, selected = segment_titles[1], multiple = TRUE),
                              sliderInput("forecastHorizonInput", "Forecast Period (in months)", 
@@ -321,7 +321,6 @@ output$donorRetentionRatePlot <- renderPlotly({
     "<br>Retention Rate: ", retention_rate, "%"
   ))) + 
     geom_line() + geom_point() + 
-    #geom_line(stat = "identity",width = 0.5, fill='black')  +
     labs(x = "Year", y = "Retention Rate", title="Retention Rate by Year") + 
     scale_y_continuous(labels = comma) +
     scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
@@ -342,7 +341,6 @@ output$donorChurnRatePlot <- renderPlotly({
     "<br>Churn Rate: ", churn_rate, "%"
   ))) + 
     geom_line() + geom_point() + 
-    #geom_line(stat = "identity",width = 0.5, fill='black')  +
     labs(x = "Year", y = "Churn Rate", title="Churn Rate by Year") + 
     scale_y_continuous(labels = comma) +
     scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
@@ -543,6 +541,7 @@ output$giftDOWPlot <- renderPlotly({
   
 #====== Online Performance ======  
 
+
   
 ################ Donor Portfolio ################
 #====== RFM Calculation ======
@@ -719,9 +718,9 @@ output$rfmTable <- renderDataTable({
 
 
 #====== Donor Relationship ======
-# Donor Growth Rate
+# donor Growth Rate
 # donor retention rate
-# DONOR CHURN RATE
+# donor CHURN RATE
 # Donor Lifetime value (constituent level and donor group level)
 
 #====== Engagement Level ======
