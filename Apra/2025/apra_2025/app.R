@@ -304,13 +304,17 @@ output$donorLifetimeValuePlot <- renderPlotly({})
 #======Engagement Level======
 # Engagement Amount
 output$giftCRMPlot <- renderPlotly({
-    gift_df() %>%
+    g <- gift_df() %>%
       left_join(crm,by='CONSTITUENT_ID') %>%
       group_by(CRM_INTERACTION_TYPE) %>%
-      summarise(Total = mean(AMOUNT)) %>%
+      summarise(Total = round(mean(AMOUNT),1)) %>%
       select(CRM_INTERACTION_TYPE,Total) %>%
       na.omit() %>%
-      ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total))  +
+      ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total,
+        text = paste0(
+        "CRM Interaction Type: ", CRM_INTERACTION_TYPE,
+        "<br>Amount: ", "$", Total
+      ))) +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="CRM Interaction Type", y = "Avg. Gift Amount", 
@@ -320,6 +324,7 @@ output$giftCRMPlot <- renderPlotly({
             plot.title = element_text(size = 12, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
+    ggplotly(g,tooltip = "text")
 })
 
 # Engagement Count
@@ -340,16 +345,22 @@ output$CRMPlot <- renderPlotly({
       ) %>%
       select(CRM_INTERACTION_TYPE, Percent) %>%
       na.omit() %>%
-      ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Percent) ,y = Percent))  +
+      ggplot(aes(x = reorder(CRM_INTERACTION_TYPE,Percent) ,y = Percent,
+                 text = paste0(
+                   "CRM Interaction Type: ", CRM_INTERACTION_TYPE,
+                   "<br>OutReach Rate: ", Percent, "%"
+                 )))  +
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
-      labs(x ="CRM Interaction Type", y = "Percent", title="CRM Interaction Outreach Rate") + 
+      labs(x ="CRM Interaction Type", y = "OutReach Rate", title="CRM Interaction Outreach Rate") + 
       coord_flip() +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
+    
+    ggplotly(g,tooltip = "text")
     
 })
   
@@ -514,7 +525,7 @@ value_box_calculations <- reactive({
       select(average_recency,average_frequency,average_monetary)
   })
   
-  
+# RFM Recency Value Box
 output$valueRecency <- renderValueBox({
     valueBox(
       value = tags$p("Avg. # of Days since last gift", style = "font-size: 18px;"),
@@ -525,7 +536,8 @@ output$valueRecency <- renderValueBox({
     )
     
   })
-  
+
+# RFM Frequency Value Box  
 output$valueFrequency <- renderValueBox({
     valueBox(
       value = tags$p("Avg. # of Gifts", style = "font-size: 18px;"),
@@ -535,7 +547,8 @@ output$valueFrequency <- renderValueBox({
       color = "black"
       )
   })
-  
+
+# RFM Monetary Value Box 
 output$valueMonetary <- renderValueBox({
     valueBox(
       value = tags$p("Avg. Gift Amount", style = "font-size: 18px;"),
