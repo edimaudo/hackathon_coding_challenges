@@ -714,7 +714,6 @@ output$valueFrequency <- renderValueBox({
       value = tags$p("Avg. # of Gifts", style = "font-size: 18px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_frequency, fmt = '%.0f')), 
                         style = "font-size: 100%;"),
-      #icon = icon("thumbs-up"),
       color = "black"
       )
   })
@@ -725,7 +724,6 @@ output$valueMonetary <- renderValueBox({
       value = tags$p("Avg. Gift Amount", style = "font-size: 18px;"),
       subtitle = tags$p((sprintf(value_box_calculations()$average_monetary, fmt = '%.0f')), 
                         style = "font-size: 100%;"),
-      #icon = icon("credit-card"),
       color = "black"
     )
     
@@ -935,6 +933,7 @@ forecast_df  <- reactive ({
   })
     
 ################ Next Best Donation ################
+# donation prediction setup
 donation_df <- reactive({
     
     # data frame setup
