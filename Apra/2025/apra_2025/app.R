@@ -86,8 +86,8 @@ ui <- dashboardPage(
       tabItem(tabName = "donation_overview",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                             sliderInput("yearDonationInput","Year", min = 2015, max = 2025, 
-                                         value = c(2015,2025), step = 1),
+                             sliderInput("yearDonationInput","Year", min = 2015, max = 2024, 
+                                         value = c(2015,2024), step = 1),
                              selectInput("monthDonationInput", "Month", 
                                          choices = month_titles, selected = month_titles, multiple = TRUE),
                              submitButton("Submit")
@@ -99,13 +99,13 @@ ui <- dashboardPage(
                                        layout_column_wrap(width = 1,
                                                           plotlyOutput("donorGrowthRatePlot") %>% withSpinner()
                                        ),
-                                       layout_column_wrap(width = 1/2,  
-                                       plotlyOutput("donorRetentionRatePlot") %>% withSpinner(),
-                                       plotlyOutput("donorChurnRatePlot") %>% withSpinner()
+                                       layout_column_wrap(width = 1,  
+                                       plotlyOutput("donorRetentionChurnRatePlot") %>% withSpinner(),
+                                       
                                        )
                               ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
-                                       layout_column_wrap(width = 1/2,
+                                       layout_column_wrap(width = 1,
                                                           plotlyOutput("giftCRMPlot") %>% withSpinner() ,
                                                           plotlyOutput("CRMPlot") %>% withSpinner()
                                        ) 
@@ -126,14 +126,13 @@ ui <- dashboardPage(
                               ),
 
                               tabPanel(h4("Online Performance",style="text-align: center;"),
-                                       # to build
-                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
-                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
-                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
-                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
-                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
-                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
-                                       #plotlyOutput("rfmRecencyChart") %>% withSpinner(),
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("videoViewPlot") %>% withSpinner(),
+                                                          plotlyOutput("clickPlot") %>% withSpinner()
+                                       ),
+                                       layout_column_wrap(width = 1,
+                                                          plotlyOutput("bounceUnsubPlot") %>% withSpinner()
+                                                          )
                               ),
 
                   )
@@ -254,7 +253,7 @@ server <- function(input, output,session) {
 ################ Donor Overview ################
 #====== Gift Data setup ======
 gift_df <- reactive({
-    df <- gift %>%
+    df <- gift  %>%
       mutate(Year =  as.integer(as.numeric(lubridate::year(GIFT_DATE))),
              Month = lubridate::month(GIFT_DATE, label = TRUE),
              DOW = lubridate::wday(GIFT_DATE, label=TRUE)) %>%
@@ -282,6 +281,7 @@ output$donorGrowthRatePlot <- renderPlotly({
       labs(x = "Year", y = "Donor Growth", title="Donor Growth by Year") + 
       scale_y_continuous(labels = comma) +
       scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+    theme_minimal(base_size = 12) + 
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
@@ -314,46 +314,51 @@ donor_churn_retention <- reactive ({
 
 
 
-# Donor Retention Rate
-output$donorRetentionRatePlot <- renderPlotly({
-  g<- ggplot(donor_churn_retention() , aes(Year, retention_rate,group=1,  text = paste0(
-    "Year: ", Year,
-    "<br>Retention Rate: ", retention_rate, "%"
-  ))) + 
-    geom_line() + geom_point() + 
-    labs(x = "Year", y = "Retention Rate", title="Retention Rate by Year") + 
-    scale_y_continuous(labels = comma) +
-    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
-    theme(legend.text = element_text(size = 10),
-          legend.title = element_text(size = 10),
-          plot.title = element_text(size = 12, hjust = 0.5),
-          axis.title = element_text(size = 10),
-          axis.text = element_text(size = 10),
-          axis.text.x = element_text(angle = 0, hjust = 1))
+# Donor Retention & Churn Rate
+output$donorRetentionChurnRatePlot <- renderPlotly({
+  g <- donor_churn_retention() %>%
+  ggplot(aes(x = Year)) +
+    # Retention rate line (left axis)
+    geom_line(aes(y = retention_rate, 
+                  text = paste0("Year: ", Year,
+                                "<br>Retention Rate: ", retention_rate, "%")),
+              color = "darkgreen", size = 1.2, group = 1) +
+    geom_point(aes(y = retention_rate), color = "darkgreen", size = 2) +
+    
+    # Churn rate line (right axis)
+    geom_line(aes(y = churn_rate, 
+                  text = paste0("Year: ", Year,
+                                "<br>Churn Rate: ", churn_rate, "%")),
+              color = "red", size = 1.2, group = 1, linetype = "dashed") +
+    geom_point(aes(y = churn_rate), color = "red", size = 2) +
+    
+    # Dual axis setup
+    scale_y_continuous(
+      name = "Retention Rate (%)",
+      sec.axis = sec_axis(~ ., name = "Churn Rate (%)")  # mirror axis
+    ) +
+    
+    labs(
+      title = "Donor Retention vs Churn Rate by Year",
+      x = "Year"
+    ) +
+    
+    scale_x_continuous(labels = scales::number_format(accuracy = 1)) +
+    
+    theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(size = 13, hjust = 0.5),
+      axis.title.y.left = element_text(color = "darkgreen"),
+      axis.title.y.right = element_text(color = "red"),
+      axis.text = element_text(size = 10)
+    )
+  
   ggplotly(g, tooltip = "text")
   
 })
 
-# Donor Churn Rate
-output$donorChurnRatePlot <- renderPlotly({
-  g<- ggplot(donor_churn_retention() , aes(Year, churn_rate,group=1,  text = paste0(
-    "Year: ", Year,
-    "<br>Churn Rate: ", churn_rate, "%"
-  ))) + 
-    geom_line() + geom_point() + 
-    labs(x = "Year", y = "Churn Rate", title="Churn Rate by Year") + 
-    scale_y_continuous(labels = comma) +
-    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
-    theme(legend.text = element_text(size = 10),
-          legend.title = element_text(size = 10),
-          plot.title = element_text(size = 12, hjust = 0.5),
-          axis.title = element_text(size = 10),
-          axis.text = element_text(size = 10),
-          axis.text.x = element_text(angle = 0, hjust = 1))
-  ggplotly(g, tooltip = "text") 
-})
 
-#======Engagement Level======
+#====== Engagement Level======
 # Engagement Amount
 output$giftCRMPlot <- renderPlotly({
     g <- gift_df() %>%
@@ -371,6 +376,7 @@ output$giftCRMPlot <- renderPlotly({
       scale_y_continuous(labels = scales::comma) +
       labs(x ="CRM Interaction Type", y = "Avg. Gift Amount", 
            title="CRM Interaction & Avg. Gift Amount") + coord_flip() +
+      theme_minimal(base_size = 12) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
@@ -405,6 +411,7 @@ output$CRMPlot <- renderPlotly({
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="CRM Interaction Type", y = "OutReach Rate", title="CRM Interaction Outreach Rate") + 
+      theme_minimal(base_size = 12) +
       coord_flip() +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
@@ -417,6 +424,7 @@ output$CRMPlot <- renderPlotly({
 })
   
 #====== Giving Level ======
+# Avg. Gift Amount
 output$giftYearPlot <- renderPlotly({
     g <- gift_df() %>%
     group_by(Year) %>%
@@ -432,6 +440,7 @@ output$giftYearPlot <- renderPlotly({
       labs(x = "Year", y = "Avg. Gift Amount", title="Avg. Gift Amount by Year") + 
       scale_y_continuous(labels = comma) +
       scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+      theme_minimal(base_size = 12) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
@@ -441,7 +450,7 @@ output$giftYearPlot <- renderPlotly({
     ggplotly(g,tooltip = "text")
     
 })
-  
+# Gift Count
 output$giftYearCountPlot <- renderPlotly({
     g <- gift_df() %>%
       group_by(Year) %>%
@@ -453,6 +462,7 @@ output$giftYearCountPlot <- renderPlotly({
       labs(x = "Year", y = "Gift Count", title="Gift Count by Year") + 
       scale_y_continuous(labels = comma) +
       scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+      theme_minimal(base_size = 12) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
@@ -462,7 +472,8 @@ output$giftYearCountPlot <- renderPlotly({
     ggplotly(g,tooltip = "text")
     
 })
-  
+
+# Gift Growth
 output$giftYearGrowth <- renderPlotly({
     g <- gift_df() %>%
       group_by(Year) %>%
@@ -481,6 +492,7 @@ output$giftYearGrowth <- renderPlotly({
       labs(x = "Year", y = "Avg. Gift Amount Growth", title="Avg. Gift Amount Growth by Year") + 
       scale_y_continuous(labels = comma) +
       scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+      theme_minimal(base_size = 12) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
@@ -491,6 +503,7 @@ output$giftYearGrowth <- renderPlotly({
     
 })
   
+# Gift By Month
 output$giftMonthPlot <- renderPlotly({
     g <- gift_df() %>%
       group_by(Month) %>%
@@ -503,7 +516,8 @@ output$giftMonthPlot <- renderPlotly({
       ))) + 
       geom_col(width = 0.5, fill = "black") +
       labs(x = "Month", y = "Avg. Gift Amount", title="Avg. Gift Amount by Month") + 
-      scale_y_continuous(labels = comma) +
+      scale_y_continuous(labels = comma) + 
+      theme_minimal(base_size = 12) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
@@ -513,7 +527,7 @@ output$giftMonthPlot <- renderPlotly({
     ggplotly(g,tooltip = "text")
     
 })
-  
+# Gift by DOW
 output$giftDOWPlot <- renderPlotly({
     g <- gift_df() %>%
       group_by(DOW) %>%
@@ -527,6 +541,7 @@ output$giftDOWPlot <- renderPlotly({
       geom_col(width = 0.5, fill = "black") +
       labs(x = "Day Of Week", y = "Avg. Gift Amount", title="Avg. Gift Amount by Day of Week") + 
       scale_y_continuous(labels = comma) +
+      theme_minimal(base_size = 12) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 12, hjust = 0.5),
@@ -539,7 +554,110 @@ output$giftDOWPlot <- renderPlotly({
   
 
   
-#====== Online Performance ======  
+#====== Online Performance ====== 
+# Online Performance setup
+video_df <- reactive({
+  df <- video %>%
+    mutate(Year =  as.integer(as.numeric(lubridate::year(SENT_DATE))),
+           Month = lubridate::month(SENT_DATE, label = TRUE),
+           DOW = lubridate::wday(SENT_DATE, label=TRUE)) %>%
+    filter((Year >= input$yearDonationInput[1] & Year <= input$yearDonationInput[2]), 
+           Month %in% input$monthDonationInput)
+  df
+})
+
+video_df1 <- reactive({
+  df <- video_df() %>%
+    group_by(Year) %>%
+    summarise(
+      Total_Sent = n(),                            # total messages sent that year
+      Total_Bounced = sum(BOUNCED, na.rm = TRUE),  # total bounces
+      Total_Unsub = sum(UNSUBSCRIBED, na.rm = TRUE), # total unsubscribes
+      Bounce_Rate = round((Total_Bounced / Total_Sent) * 100,2),
+      Unsub_Rate = round((Total_Unsub / Total_Sent) * 100,2),
+      Video_views = round(sum(VIDEO_VIEWS),0),
+      Video_clicks = round(sum(CLICKS),0)
+    )
+})
+
+# Video Views
+output$videoViewPlot <- renderPlotly({
+  g <- video_df1() %>%
+    ggplot(aes(Year, Video_views,  text = paste0(
+      "Year: ", Year,
+      "<br>Video Views: ", Video_views
+    ))) + 
+    geom_bar(stat = "identity",width = 0.5, fill='black')  +
+    labs(x = "Year", y = "Video Views", title="Video Views by Year") + 
+    scale_y_continuous(labels = comma) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+    theme_minimal(base_size = 12)  + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
+})
+# Video Clicks
+output$clickPlot <- renderPlotly({
+  g <- video_df1() %>%
+    ggplot(aes(Year, Video_views,  text = paste0(
+      "Year: ", Year,
+      "<br>Video Clicks: ", Video_clicks
+    ))) + 
+    geom_bar(stat = "identity",width = 0.5, fill='black')  +
+    labs(x = "Year", y = "Video Clicks", title="Video Clicks by Year") + 
+    scale_y_continuous(labels = comma) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+    theme_minimal(base_size = 12) +
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
+})
+
+# Bounce and Unsub Rate
+output$bounceUnsubPlot <- renderPlotly({
+  g <- video_df1() %>%
+  ggplot(aes(x = Year)) +
+    geom_bar(
+      aes(y = Bounce_Rate, 
+          text = paste0("Year: ", Year,
+                        "<br>Bounce Rate: ", Bounce_Rate, "%")),
+      stat = "identity", width = 0.4, fill = "black"
+    ) +
+    geom_line(
+      aes(y = Unsub_Rate, 
+          text = paste0("Year: ", Year,
+                        "<br>Unsubscribe Rate: ", Unsub_Rate, "%")),
+      color = "red", size = 1.2, group = 1
+    ) +
+    geom_point(aes(y = Unsub_Rate), color = "red", size = 2) +
+    scale_y_continuous(
+      name = "Bounce Rate (%)",
+      sec.axis = sec_axis(~ ., name = "Unsubscribe Rate (%)")  # mirror axis for readability
+    ) +
+    labs(
+      title = "Bounce Rate vs Unsubscribe Rate by Year",
+      x = "Year"
+    ) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1)) +
+    theme_minimal(base_size = 12) +
+    theme(
+      axis.title.y.right = element_text(color = "red"),
+      axis.title.y.left = element_text(color = "black"),
+      plot.title = element_text(hjust = 0.5, size = 13),
+      axis.text = element_text(size = 10)
+    )
+  
+  ggplotly(g, tooltip = "text")
+ 
+})
 
 
   
@@ -650,6 +768,7 @@ output$rfmRecencyChart <- renderPlotly({
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Days", title="Average # of Days since last gift") + coord_flip() +
+      theme_minimal(base_size = 12) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 10, hjust = 0.5),
@@ -669,6 +788,7 @@ output$rfmFrequencyChart <- renderPlotly({
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Gifts", title = "Average # of Gifts") + coord_flip() +
+      theme_minimal(base_size = 12) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 10, hjust = 0.5),
@@ -688,6 +808,7 @@ output$rfmMonetaryChart <- renderPlotly({
       geom_bar(stat = "identity",width = 0.5, fill='black')  +
       scale_y_continuous(labels = scales::comma) +
       labs(x ="Segment", y = "Amount", title = "Average Donation Amount") + coord_flip() +
+      theme_minimal(base_size = 12) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
             plot.title = element_text(size = 10, hjust = 0.5),
@@ -717,17 +838,34 @@ output$rfmTable <- renderDataTable({
 })    
 
 
-#====== Donor Relationship ======
+#====== RFM Donor Relationship ======
 # donor Growth Rate
-# donor retention rate
-# donor CHURN RATE
+
+# Donor Retention & Churn Rate
+
 # Donor Lifetime value (constituent level and donor group level)
 
-#====== Engagement Level ======
+#====== RFM Engagement Level ======
+# Engagement Amount
 
-#====== Giving Level ======
+# Engagement Amount
 
-#====== Online Performance ======  
+#====== RFM Giving Level ======
+# Avg. Gift Amount
+
+# Gift Count
+
+# Gift Growth
+
+# Gift by Month
+
+# Gift by DOW
+#====== RFM Online Performance ======  
+#Video Views
+
+# Video Clicks
+
+# Bounce & Unsub Rate
 
 ################ Donation Forecasting ################
 #====== Donation Forecast setup ======
