@@ -33,12 +33,13 @@ rm(list = ls())
 # library(shinycssloaders)
 # library(bslib)
 # library(readxl)
+#library(ggalluvial)
 
 packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders',
   'bslib','readxl','DT','mlbench','caTools','gridExtra','doParallel','grid',
   'reshape2','caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
-  'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify'
+  'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify','ggalluvial'
 )
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
@@ -869,6 +870,7 @@ output$rfmTable <- renderDataTable({
 
 # Bounce & Unsub Rate
 
+# sankey chart for sankey flow started --> 25% --> 50% 75% --> finished video for segments
 ################ Donation Forecasting ################
 #====== Donation Forecast setup ======
 forecast_df  <- reactive ({
