@@ -33,13 +33,13 @@ rm(list = ls())
 # library(shinycssloaders)
 # library(bslib)
 # library(readxl)
-#library(ggalluvial)
-
+# library(ggalluvial)
+# library(ggforce)
 packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders',
   'bslib','readxl','DT','mlbench','caTools','gridExtra','doParallel','grid',
   'reshape2','caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
-  'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify','ggalluvial'
+  'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify','ggalluvial','ggforce'
 )
 for (package in packages) {
   if (!require(package, character.only=T, quietly=T)) {
