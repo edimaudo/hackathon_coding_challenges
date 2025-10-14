@@ -81,6 +81,9 @@ ui <- dashboardPage(
     tabItems(
       #======== About ======== 
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
+      #======== Overview ======== 
+      tabItem(tabName = "overview",
+      ),
       #========  Donor Portfolio ========
       tabItem(tabName = "segment",
               sidebarLayout(
@@ -141,77 +144,66 @@ ui <- dashboardPage(
       ),
       
 #=========Overview =========
-tabItem(tabName = "overview",
-              fluidRow(
-                valueBoxOutput("interactionTypeBox"),
-                valueBoxOutput("interactionSummaryBox"),
-                valueBoxOutput("campaignBox")
-              ),
-              fluidRow(
-                valueBoxOutput("appealBox"),
-                valueBoxOutput("primaryUnitBox"),
-                valueBoxOutput("giftChannelBox")
-              ),
-              fluidRow(
-                valueBoxOutput("paymentTypeBox"),
-                valueBoxOutput("giftDesgnationBox"),
-                valueBoxOutput("giftTypeBox")
-              ),
-              fluidRow(
-                plotlyOutput("interactionOverviewOutput"),
-                plotlyOutput("giftOverviewOutput")
-              )
-              
-      ), 
-      #=========
-      # Interaction
-      #=========
-      tabItem(tabName = "interaction",
-              tabsetPanel(type = "tabs",
-                          tabPanel(h4("Interaction Trends",style="text-align: center;"), 
-                                   plotlyOutput("interactionYearPlot"),
-                                   plotlyOutput("interactionQuarterPlot"), 
-                                   plotlyOutput("interactionMonthPlot"), 
-                                   plotlyOutput("interactionDOWPlot")
-                          ),
-                          tabPanel(h4("Interaction Insights",style="text-align: center;"), 
-                                   plotlyOutput("interactionInsightPlot")),
-                          tabPanel(h4("Interaction Flow",style="text-align: center;"),
-                                   plotlyOutput("interactionFlowPlot"))
-              )
-      ),
-      #=========
-      # Gift
-      #=========
-      tabItem(tabName = "gift",
-              tabsetPanel(type = "tabs",
-                          tabPanel(h4("Gift Trends",style="text-align: center;"),h6(note_info), 
-                                   plotlyOutput("giftYearPlot"),
-                                   plotlyOutput("giftQuarterPlot"), 
-                                   plotlyOutput("giftMonthPlot"), 
-                                   plotlyOutput("giftDOWPlot"),
-                                   plotlyOutput("giftAmtPaymentTypePlot"),
-                                   plotlyOutput("giftAmtGiftChannelPlot"),
-                                   plotlyOutput("giftAmtGiftTypePlot")
-                          ),
-                          tabPanel(h4("Gift Insights",style="text-align: center;"),h6(note_info), 
-                                   plotlyOutput("giftchannelInsightPlot"), 
-                                   plotlyOutput("giftpaymentTypePlot"), 
-                                   plotlyOutput("giftTypePlot")),
-                          tabPanel(h4("Gift Flow",style="text-align: center;"),h6(note_info),
-                                   plotlyOutput("giftFlowPlot"))
-              )      
-      ), 
+# tabItem(tabName = "overview",
+#               fluidRow(
+#                 valueBoxOutput("interactionTypeBox"),
+#                 valueBoxOutput("interactionSummaryBox"),
+#                 valueBoxOutput("campaignBox")
+#               ),
+#               fluidRow(
+#                 valueBoxOutput("appealBox"),
+#                 valueBoxOutput("primaryUnitBox"),
+#                 valueBoxOutput("giftChannelBox")
+#               ),
+#               fluidRow(
+#                 valueBoxOutput("paymentTypeBox"),
+#                 valueBoxOutput("giftDesgnationBox"),
+#                 valueBoxOutput("giftTypeBox")
+#               ),
+#               fluidRow(
+#                 plotlyOutput("interactionOverviewOutput"),
+#                 plotlyOutput("giftOverviewOutput")
+#               )
+#               
+#       ), 
+#========= Interaction =========
+      # tabItem(tabName = "interaction",
+      #         tabsetPanel(type = "tabs",
+      #                     tabPanel(h4("Interaction Trends",style="text-align: center;"), 
+      #                              plotlyOutput("interactionYearPlot"),
+      #                              plotlyOutput("interactionQuarterPlot"), 
+      #                              plotlyOutput("interactionMonthPlot"), 
+      #                              plotlyOutput("interactionDOWPlot")
+      #                     ),
+      #                     tabPanel(h4("Interaction Insights",style="text-align: center;"), 
+      #                              plotlyOutput("interactionInsightPlot")),
+      #                     tabPanel(h4("Interaction Flow",style="text-align: center;"),
+      #                              plotlyOutput("interactionFlowPlot"))
+      #         )
+      # ),
+#========= Gift old =========
+      # tabItem(tabName = "gift",
+      #         tabsetPanel(type = "tabs",
+      #                     tabPanel(h4("Gift Trends",style="text-align: center;"),h6(note_info), 
+      #                              plotlyOutput("giftYearPlot"),
+      #                              plotlyOutput("giftQuarterPlot"), 
+      #                              plotlyOutput("giftMonthPlot"), 
+      #                              plotlyOutput("giftDOWPlot"),
+      #                              plotlyOutput("giftAmtPaymentTypePlot"),
+      #                              plotlyOutput("giftAmtGiftChannelPlot"),
+      #                              plotlyOutput("giftAmtGiftTypePlot")
+      #                     ),
+      #                     tabPanel(h4("Gift Insights",style="text-align: center;"),h6(note_info), 
+      #                              plotlyOutput("giftchannelInsightPlot"), 
+      #                              plotlyOutput("giftpaymentTypePlot"), 
+      #                              plotlyOutput("giftTypePlot")),
+      #                     tabPanel(h4("Gift Flow",style="text-align: center;"),h6(note_info),
+      #                              plotlyOutput("giftFlowPlot"))
+      #         )      
+      # ), 
       #=========
       # Forecasting
       #=========
-      tabItem(tabName = "forecast_overview",h6(note_info),
-              fluidRow(
-                plotlyOutput("giftDailyPlot"),br(),br(),
-                plotlyOutput("giftWeeklyPlot"),br(),br(),
-                plotlyOutput("giftMonthlyPlot")
-              )
-      ),
       tabItem(tabName = "forecast",
               sidebarLayout(
                 sidebarPanel(width = 3,
