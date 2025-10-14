@@ -1,7 +1,6 @@
-#========================================
-# Shiny web app which provides insights 
-# for the 2024 Apra Challenge
-#=========================================
+################################################
+# Shiny web app for 2024 Apra Challenge
+################################################
 rm(list = ls())
 ################ Packages ################
 # library(ggplot2)
@@ -213,67 +212,33 @@ tabItem(tabName = "overview",
                 plotlyOutput("giftMonthlyPlot")
               )
       ),
-      tabItem(tabName = "forecast_analysis",
-              sidebarLayout(
-                sidebarPanel(width = 3,
-                             selectInput("aggregateInput", "Aggregate", 
-                                         choices = aggregate_info, selected = 'daily'),
-                             selectInput("frequencyInput", "Frequency", 
-                                         choices = frequency_info, selected = 7),
-                             radioButtons("differenceInput","Difference",
-                                          choices = difference_info, selected = "No"),
-                             numericInput("differenceNumericInput", "Difference Input", 
-                                          1, min = 1, max = 52, step = 0.5),
-                             radioButtons("logInput","Log",
-                                          choices = log_info, selected = "No"),
-                             submitButton("Submit")
-                ),
-                mainPanel(
-                  h1("Analysis",style="text-align: center;"),h6(note_info),
-                  tabsetPanel(type = "tabs",
-                              tabPanel(
-                                h4("Decomposition",
-                                   style="text-align: center;"),
-                                plotlyOutput("decompositionPlot")),
-                              tabPanel(
-                                h4("Multi seasonal Decomposition",
-                                   style="text-align: center;"),
-                                plotlyOutput("multidecompositionPlot")),
-                              tabPanel(
-                                h4("ACF Plot",style="text-align: center;"), 
-                                plotlyOutput("acfPlot")),
-                              tabPanel(
-                                h4("PACF Plot",style="text-align: center;"), 
-                                plotlyOutput("pacfPlot"))
-                  )
-                )
-              )  
-      ),
       tabItem(tabName = "forecast",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                             selectInput("aggregateInput", "Aggregate",
-                                         choices = aggregate_info, selected = 'daily'),
-                             selectInput("horizonInput", "Horizon",
-                                         choices = horizon_info, selected = 14),
-                             selectInput("frequencyInput", "Frequency",
-                                         choices = frequency_info, selected = 7),
+                             selectInput("forecastSegmentInput", "Portfolios", 
+                                         choices = segment_titles, selected = segment_titles[1], multiple = TRUE),
+                             sliderInput("forecastHorizonInput", "Forecast Period (in months)", 
+                                         min = 1, max = 36, value = 12), 
                              submitButton("Submit")
                 ),
                 mainPanel(
                   h1("Forecasting",style="text-align: center;"),
                   tabsetPanel(type = "tabs",
-                              tabPanel(h4("Forecast Visualization",style="text-align: center;"),
-                                       plotOutput("forecastPlot")),
-                              tabPanel(h4("Forecast Results",style="text-align: center;"),
-                                       DT::dataTableOutput("forecastOutput"))
+                              tabPanel(h4("Donor Portfolio Trend",style="text-align: center;"),
+                                       plotlyOutput("donationSegmentPlot") %>% withSpinner()
+                              ),
+                              tabPanel(h4("Forecast Graph",style="text-align: center;"),
+                                       plotlyOutput("donationForecastPlot") %>% withSpinner(),
+                              ),
+                              tabPanel(h4("Forecast Table",style="text-align: center;"),
+                                       DT::dataTableOutput("donationForecastTable") %>% withSpinner(),
+                              )  
                   )
                 )
               )
-              
-      )
-    )
-  )  
+            )
+          )
+        )  
 )
 ################ Server ################
 server <- function(input, output,session) {
