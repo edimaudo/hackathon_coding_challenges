@@ -1,5 +1,5 @@
 #========================================
-# Shiny web app leveraging City of Rochester Open Data
+# Shiny web app for 2025 City of Rochester Open Data Challenge
 #=========================================
 
 ################  Packages ################
