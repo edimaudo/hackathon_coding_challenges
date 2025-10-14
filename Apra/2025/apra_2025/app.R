@@ -210,6 +210,9 @@ ui <- dashboardPage(
                 ),
                 mainPanel(
                   tabsetPanel(type = "tabs",
+                              tabPanel(h4("Donor Segment Trend",style="text-align: center;"),
+                                       plotlyOutput("donationSegmentPlot") %>% withSpinner(),
+                              ),                              
                               tabPanel(h4("Forecast Graph",style="text-align: center;"),
                                        plotlyOutput("donationForecastPlot") %>% withSpinner(),
                               ),
@@ -839,6 +842,8 @@ rfm_output <- reactive({
 output$rfmTable <- renderDataTable({
     rfm_output()
 })    
+
+#====== RFM Segment Trend Plot ======
 
 
 #====== RFM Donor Relationship ======
