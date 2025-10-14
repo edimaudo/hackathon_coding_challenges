@@ -3,9 +3,37 @@
 # for the 2024 Apra Challenge
 #=========================================
 rm(list = ls())
-#=============
-# Packages 
-#=============
+################ Packages ################
+# library(ggplot2)
+# library(corrplot)
+# library(tidyverse)
+# library(shiny)
+# library(shinydashboard)
+# library(mlbench)
+# library(caTools)
+# library(gridExtra)
+# library(doParallel)
+# library(grid)
+# library(reshape2)
+# library(caret)
+# library(tidyr)
+# library(Matrix)
+# library(lubridate)
+# library(plotly)
+# library(RColorBrewer)
+# library(data.table)
+# library(scales)
+# library(rfm)
+# library(forecast)
+# library(TTR)
+# library(xts)
+# library(dplyr)
+# library(treemapify)
+# library(shinycssloaders)
+# library(bslib)
+# library(readxl)
+# library(ggalluvial)
+# library(ggforce)
 packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
   'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
@@ -18,17 +46,13 @@ for (package in packages) {
     library(package, character.only=T)
   }
 }
-#=============
-# Load Data
-#=============
-constituent <- read_csv("Apra Constituent Data.csv")
+#============= Load Data =============
+#constituent <- read_csv("Apra Constituent Data.csv")
 transaction <- read_csv("Apra Gift Transactions Data.csv")
 interaction <- read_csv("Apra Interactions Data.csv")
-rfm_score <- read_excel("rfm_score.xlsx")
 
-#=============
-# Data munging
-#=============
+
+#============= Data munging =============
 campaign <- sort(unique(na.omit(transaction$CAMPAIGN)))
 appeal <- sort(unique(na.omit(transaction$APPEAL)))
 primary_unit <- sort(unique(na.omit(transaction$PRIMARY_UNIT)))
@@ -37,120 +61,7 @@ gift_type <- sort(unique(na.omit(transaction$GIFT_TYPE)))
 gift_designation <- sort(unique(na.omit(transaction$GIFT_DESIGNATION)))
 gift_channel <- sort(unique(na.omit(transaction$GIFT_CHANNEL)))
 
-#=============
-# Drop downs
-#=============
-aggregate_info <- c("daily",'weekly','monthly')
-horizon_info <- c(1:50) #default 14
-frequency_info <- c(7, 12, 52, 365)
-difference_info <- c("Yes","No")
-log_info <- c("Yes","No")
-model_info <- c('auto-arima','auto-exponential','simple-exponential',
-                'double-exponential','triple-exponential', 'tbat','manual-arima')
-note_info <- "Using only data from 2010 onwards"
-forecast_info <- "Series: forecast data"
-gift_train_df <- as.data.frame(tibble())
-gift_test_df <- as.data.frame(tibble())
-#=============
-# Forecast info
-#=============
-# generating range of dates 
-start_date <- as.Date("2010-01-01") 
-end_date <- as.Date(today()) 
-date_range <- data.frame(seq(start_date, end_date,"days")) 
-gift_data <- data.frame(data=c(1:nrow(date_range)))
-colnames(date_range) <- "GIFT_DATE"
-date_range <- cbind(date_range,gift_data)
-
-# transaction
-transaction_f1 <- transaction %>%
-  filter(GIFT_DATE >= '2010-01-01',GIFT_DATE <= today()) %>%
-  group_by(GIFT_DATE) %>%
-  summarise(Total = sum(GIFT_AMOUNT)) %>%
-  right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
-  replace(is.na(.), 0) %>%
-  select(GIFT_DATE,Total)
-#select(GIFT_DATE,Total)
-
-transaction_f <- transaction_f1 %>%
-  right_join(date_range,by='GIFT_DATE', copy = TRUE) %>%
-  replace(is.na(.), 0) %>%
-  select(GIFT_DATE,Total)
-
-gift_xts <- xts(x = transaction_f$Total, order.by = transaction_f$GIFT_DATE) 
-gift_daily <- apply.daily(gift_xts,mean)
-gift_weekly <- apply.weekly(gift_xts, mean) 
-gift_monthly <- apply.monthly(gift_xts, mean) 
-
-forecast_df <- function (ts_df,aggregateInput,frequencyInput,dataType) {
-  if(aggregateInput == 'daily'){
-    gift_data <- apply.daily(ts_df,mean)
-    gift_end <- floor(0.8*length(gift_data)) 
-    gift_train <- gift_data[1:gift_end,] 
-    gift_test <- gift_data[(gift_end+1):length(gift_data),]
-    gift_start <- c(year (start(gift_train)), month(start(gift_train)),
-                    day(start(gift_train)))
-    gift_end <- c(year(end(gift_train)), month(end(gift_train)), 
-                  day(end(gift_train)))
-    gift_train <- ts(as.numeric(gift_train), start = gift_start, 
-                     end = gift_end, frequency = as.numeric(frequencyInput) )
-    gift_start <- c(year (start(gift_test)), month(start(gift_test)),
-                    day(start(gift_test)))
-    gift_end <- c(year(end(gift_test)), month(end(gift_test)), 
-                  day(end(gift_test)))
-    gift_test <- ts(as.numeric(gift_test), start = gift_start, 
-                    end = gift_end, frequency = as.numeric(frequencyInput))
-  } else if(aggregateInput == 'weekly'){
-    gift_data <- apply.weekly(ts_df, mean) 
-    gift_end <- floor(0.8*length(gift_data)) 
-    gift_train <- gift_data[1:gift_end,] 
-    gift_test <- gift_data[(gift_end+1):length(gift_data),]
-    gift_start <- c(year (start(gift_train)), month(start(gift_train)),
-                    week(start(gift_train)))
-    gift_end <- c(year(end(gift_train)), month(end(gift_train)), 
-                  week(end(gift_train)))
-    gift_train <- ts(as.numeric(gift_train), start = gift_start, 
-                     end = gift_end, frequency = as.numeric(frequencyInput) )
-    gift_start <- c(year (start(gift_test)), month(start(gift_test)),
-                    week(start(gift_test)))
-    gift_end <- c(year(end(gift_test)), month(end(gift_test)), 
-                  week(end(gift_test)))
-    gift_test <- ts(as.numeric(gift_test), start = gift_start, 
-                    end = gift_end, frequency = as.numeric(frequencyInput))
-  } else {
-    gift_data <- apply.monthly(ts_df, mean) 
-    gift_end <- floor(0.8*length(gift_data)) 
-    gift_train <- gift_data[1:gift_end,] 
-    gift_test <- gift_data[(gift_end+1):length(gift_data),]
-    gift_start <- c(year (start(gift_train)), month(start(gift_train)))
-    gift_end <- c(year(end(gift_train)), month(end(gift_train)))
-    gift_train <- ts(as.numeric(gift_train), start = gift_start, 
-                     end = gift_end, frequency = as.numeric(frequencyInput) )
-    gift_start <- c(year (start(gift_test)), month(start(gift_test)))
-    gift_end <- c(year(end(gift_test)), month(end(gift_test)))
-    gift_test <- ts(as.numeric(gift_test), start = gift_start, 
-                    end = gift_end, frequency = as.numeric(frequencyInput))
-  }
-  
-  if (dataType == "train") {
-    output <- gift_train
-  } else {
-    output <- gift_test
-  }
-  output
-  
-}
-
-numeric_update <- function(df){
-  rownames(df) <- c()
-  is.num <- sapply(df, is.numeric)
-  df[is.num] <- lapply(df[is.num], round, 0)           
-  return (df)
-}
-
-################
-# UI
-################
+################ UI ################
 ui <- dashboardPage(
   dashboardHeader(title = "Apra Data Science Challenge",
                   tags$li(a(href = 'https://www.aprahome.org',
@@ -160,52 +71,77 @@ ui <- dashboardPage(
                           class = "dropdown")),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("About", tabName = "about", icon = icon("th")),
-      menuItem("Overview", tabName = "overview", icon = icon("th")),
-      menuSubItem("Interaction", tabName = "interaction"),
-      menuSubItem("Gifts", tabName = "gift"),
-      menuItem("Customer Segmentation", tabName = "segment", icon = icon("list")),
-      menuItem("Gift Forecasting Overview", tabName = "forecast_overview", icon = icon("list")),
-      menuSubItem("Gift Forecasting Analysis", tabName = "forecast_analysis"),
-      menuSubItem("Gift Forecasting", tabName = "forecast")
+      menuItem("About", tabName = "about", icon = icon("home")),
+      menuItem(" Donor Overview", tabName = "overview", icon = icon("thumbs-up")),
+      menuItem("Donor Portfolio", tabName = "segment", icon = icon("th")),
+      menuSubItem("Donation Forecasting", tabName = "forecast",icon = icon("credit-card"))
     )
   ),
   dashboardBody(
     tabItems(
-      #======== 
-      # About
-      #======== 
+      #======== About ======== 
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
-      #========  
-      # Segmentation
-      #========
+      #========  Donor Portfolio ========
       tabItem(tabName = "segment",
               sidebarLayout(
                 sidebarPanel(width = 3,
-                             selectInput("campaignInput", "Campaign", 
-                                         choices = campaign, selected = campaign, multiple = TRUE),
-                             selectInput("primaryUnitInput", "Primary Unit", 
-                                         choices = primary_unit, selected = primary_unit,multiple = TRUE),
-                             selectInput("giftTypeInput", "Gift Type", 
-                                         choices = gift_type, selected = gift_type,multiple = TRUE),
-                             selectInput("giftChannelInput", "Gift Channel", 
-                                         choices = gift_channel, selected = gift_channel,multiple = TRUE),
-                             selectInput("paymentTypeInput", "Payment Type", 
-                                         choices = payment_type, selected = payment_type,multiple = TRUE),
+                             selectInput("rfmInput", "Donor Portfolios", 
+                                         choices = segment_titles, selected = segment_titles, 
+                                         multiple = TRUE),
                              submitButton("Submit")
                 ),
-                mainPanel(
-                  fluidRow(
-                    DT::dataTableOutput("rfmTable")
-                  )
+                mainPanel(width = 9,
+                          fluidRow(
+                            column(width = 12,
+                                   valueBoxOutput("valueRecency"),
+                                   valueBoxOutput("valueFrequency"),
+                                   valueBoxOutput("valueMonetary"),
+                            )
+                          ),
+                          br(),br(),
+                          tabsetPanel(type = "tabs",
+                                      tabPanel(h4("Donor Portfolio Mix",style="text-align: center;"),
+                                               plotOutput('rfmTreemap') %>% withSpinner() , #plotOutput
+                                      ),
+                                      tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
+                                               DT::dataTableOutput("rfmDescription"),
+                                      ),
+                                      tabPanel(h4("Recency",style="text-align: center;"),
+                                               plotlyOutput("rfmRecencyChart") %>% withSpinner() ,
+                                      ),
+                                      tabPanel(h4("Frequency",style="text-align: center;"),
+                                               plotlyOutput("rfmFrequencyChart") %>% withSpinner() ,
+                                      ),
+                                      tabPanel(h4("Monetary",style="text-align: center;"),
+                                               plotlyOutput("rfmMonetaryChart") %>% withSpinner() 
+                                      ),
+                                      tabPanel(h4("Donor Constituent Portfolio",style="text-align: center;"), 
+                                               DT::dataTableOutput("rfmTable") %>% withSpinner() ,
+                                      )
+                          ),
+                          br(),br(),
+                          tabsetPanel(type = "tabs",
+                                      tabPanel(h4("Donor Relationship",style="text-align: center;"),
+                                               #plotlyOutput("rfmRecencyChart"),
+                                      ),
+                                      tabPanel(h4("Engagement",style="text-align: center;"),
+                                               #plotOutput('rfmTreemap'),
+                                      ),
+                                      tabPanel(h4("Giving Level",style="text-align: center;"),
+                                               #plotlyOutput("rfmRecencyChart"),
+                                      ),
+                                      tabPanel(h4("Online Performance",style="text-align: center;"),
+                                               #plotlyOutput("rfmRecencyChart"),
+                                      )
+                                      
+                                      
+                          )  
                 )
               )
       ),
       
-      #=========
-      # Overview
-      #=========
-      tabItem(tabName = "overview",
+#=========Overview =========
+tabItem(tabName = "overview",
               fluidRow(
                 valueBoxOutput("interactionTypeBox"),
                 valueBoxOutput("interactionSummaryBox"),
@@ -343,14 +279,10 @@ ui <- dashboardPage(
     )
   )  
 )
-################
-# Server
-################
+################ Server ################
 server <- function(input, output,session) {
   
-  #=============
-  # Data 
-  #============= 
+#============= Data Setup ============= 
   interaction_df <- reactive({
     interaction %>%
       mutate(Year = lubridate::year(INTERACTION_DATE),
@@ -369,53 +301,12 @@ server <- function(input, output,session) {
              DOW = lubridate::wday(GIFT_DATE, label=TRUE))
   })
   
-  forecast_analysis_df <- reactive({
-    gift_daily <- apply.daily(gift_xts,mean)
-    gift_weekly <- apply.weekly(gift_xts, mean) 
-    gift_monthly <- apply.monthly(gift_xts, mean) 
-    
-    if (input$aggregateInput == 'daily'){
-      gift_end <- floor(1*length(gift_daily)) 
-      gift_data <- gift_daily[1:gift_end,] 
-      gift_start <- c(year (start(gift_data)), month(start(gift_data)),
-                      day(start(gift_data)))
-      gift_end <- c(year(end(gift_data)), month(end(gift_data)), 
-                    day(end(gift_data)))
-      gift_data <- ts(as.numeric(gift_data), start = gift_start, 
-                      end = gift_end, frequency = as.numeric(input$frequencyInput))             
-    } else if(input$aggregateInput == 'weekly'){
-      gift_end <- floor(1*length(gift_weekly)) 
-      gift_data <- gift_weekly[1:gift_end,] 
-      gift_start <- c(year (start(gift_data)), month(start(gift_data)),
-                      week(start(gift_data)))
-      gift_end <- c(year(end(gift_data)), month(end(gift_data)), 
-                    week(end(gift_data)))
-      gift_data <- ts(as.numeric(gift_data), start = gift_start, 
-                      end = gift_end, frequency = as.numeric(input$frequencyInput))         
-    } else if(input$aggregateInput == 'monthly') {
-      gift_end <- floor(1*length(gift_monthly)) 
-      gift_data <- gift_monthly[1:gift_end,] 
-      gift_start <- c(year (start(gift_data)), month(start(gift_data)))
-      gift_end <- c(year(end(gift_data)), month(end(gift_data)))
-      gift_data <- ts(as.numeric(gift_data), start = gift_start, 
-                      end = gift_end, frequency = as.numeric(input$frequencyInput))               
-    }
-    
-    if (input$differenceInput == "Yes"){
-      gift_data <- diff(gift_data, differences = as.numeric(input$differenceNumericInput)) 
-    }
-    
-    gift_data
-    
-  })
   
   
   
   
   
-  #=============
-  # Overview
-  #=============
+  #============= Donation Overview =============
   output$interactionTypeBox <- renderValueBox({
     valueBox("Interaction Type", paste0(length(unique(interaction_df()$INTERACTION_TYPE))), icon = icon("list"),color = "aqua")
   })  
@@ -457,9 +348,7 @@ server <- function(input, output,session) {
   })
   
   
-  #=============
-  # Interaction Data plots
-  #=============
+  #============= Interaction =============
   output$interactionOverviewOutput <- renderPlotly({
     
     g <- interaction_df() %>%
@@ -612,9 +501,8 @@ server <- function(input, output,session) {
              font = list(size = 14),
              margin = list(t = 40, l = 10, r = 10, b = 10))
   })
-  #=============
-  # Gift Data Plots
-  #=============
+
+#============= Gift Insights =============
   output$giftOverviewOutput <- renderPlotly({
     
     g <- transaction_df() %>%
@@ -855,266 +743,17 @@ server <- function(input, output,session) {
   
   
   
-  #=============
-  # RFM
-  #=============
-  output$rfmTable <- renderDataTable({
+#============= RFM =============
+
     
-    rfm_data <- transaction %>%
-      filter(CAMPAIGN %in% input$campaignInput,
-             PRIMARY_UNIT %in% input$primaryUnitInput,
-             PAYMENT_TYPE %in%  input$paymentTypeInput,
-             GIFT_TYPE %in%  input$giftTypeInput,
-             GIFT_CHANNEL %in% input$giftChannelInput
-      ) %>%
-      na.omit()
-    
-    rfm_data_orders <- rfm_data %>%
-      mutate("customer_id" = CONTACT_ID, "order_date" = GIFT_DATE, "revenue" = GIFT_AMOUNT) %>%
-      select(customer_id, order_date, revenue) %>%
-      distinct()
-    
-    analysis_date <- lubridate::as_date(min(interaction$INTERACTION_DATE))
-    rfm_result <- rfm_table_order(rfm_data_orders, customer_id, order_date, revenue, analysis_date)
-    
-    df_rfm_segment <-  right_join(rfm_score,rfm_segment(rfm_result),by="rfm_score") %>%
-      select(customer_id, rfm_segment,rfm_score, transaction_count, recency_days, amount)
-    
-  })  
   
-  #==================
-  # Forecasting
-  #==================
+#================== Forecasting ==================
   
-  # Forecast overview
-  output$giftDailyPlot <- renderPlotly({
-    gift_daily <- apply.daily(gift_xts,mean)
+# Forecast overview
+
     
-    g <- autoplot(gift_daily) +   
-      scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount",
-                                                        title = "Daily Gift Chart") + 
-      theme(plot.title = element_text(hjust=0.5))
-    ggplotly(g)
-  })
-  output$giftWeeklyPlot <- renderPlotly({
-    gift_weekly <- apply.weekly(gift_xts, mean) 
-    g <- autoplot(gift_weekly) +   
-      scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount",
-                                                        title = "Weekly Gift Chart") +
-      theme(plot.title = element_text(hjust=0.5))
-    ggplotly(g)
-  })
-  output$giftMonthlyPlot <- renderPlotly({
-    gift_monthly <- apply.monthly(gift_xts, mean)
-    g <- autoplot(gift_monthly) +   
-      scale_y_continuous(labels = scales::comma) + labs(x ="Gift Date", y = "Gift Amount",
-                                                        title = "Monthly Gift Chart") + 
-      theme(plot.title = element_text(hjust=0.5))
-    ggplotly(g)
-  })
-  
-  # Forecast analysis
-  output$decompositionPlot <- renderPlotly({
-    p <- forecast_analysis_df() %>%
-      decompose() %>%
-      autoplot() + scale_y_continuous(labels = scales::comma) + 
-      theme(plot.title = element_text(hjust=0.5))
-    ggplotly(p)
-  })
-  output$multidecompositionPlot <- renderPlotly({
-    p <- forecast_analysis_df() %>%
-      mstl() %>%
-      autoplot()  + scale_y_continuous(labels = scales::comma)
-    ggplotly(p)
-  })
-  
-  output$acfPlot <- renderPlotly({
-    
-    if (input$logInput == "No"){
-      ggAcf(forecast_analysis_df()) + labs(title=forecast_info) + 
-        theme(plot.title = element_text(hjust=0.5))
-    } else {
-      ggAcf(log(forecast_analysis_df())) + labs(title=forecast_info) + 
-        theme(plot.title = element_text(hjust=0.5))
-    }
-    
-  })
-  output$pacfPlot <- renderPlot({
-    if (input$logInput == "No"){
-      ggPacf(forecast_analysis_df()) + labs(title=forecast_info) + 
-        theme(plot.title = element_text(hjust=0.5))
-    } else {
-      ggPacf(log(forecast_analysis_df())) + labs(title=forecast_info) + 
-        theme(plot.title = element_text(hjust=0.5))
-    }
-  })
   
   
-  # Forecast visualization
-  output$forecastPlot <- renderPlot({
-    
-    # set forecast horizon
-    forecast.horizon <- as.numeric(input$horizonInput)
-    train <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"train")
-    
-    # models
-    auto_exp_model <- train %>% ets %>% forecast(h=forecast.horizon)
-    auto_arima_model <- train %>% auto.arima() %>% forecast(h=forecast.horizon)
-    simple_exp_model <- train %>% HoltWinters(beta=FALSE, gamma=FALSE) %>% 
-      forecast(h=forecast.horizon)
-    double_exp_model <- train %>% HoltWinters(beta = TRUE, gamma=FALSE) %>% 
-      forecast(h=forecast.horizon)
-    triple_exp_model <- train %>% HoltWinters(beta = TRUE, gamma = TRUE) %>% 
-      forecast(h=forecast.horizon)
-    tbat_model <- train %>% tbats %>% forecast(h=forecast.horizon)
-    
-    autoplot(train) +
-      autolayer(auto_arima_model,series="auto arima", alpha=0.2) +
-      autolayer(auto_exp_model, series = "auto exponential", alpha=0.2) +
-      autolayer(simple_exp_model, series= "simple exponential", alpha=0.5) +
-      autolayer(double_exp_model, series = "double exponential", alpha=0.25) +
-      autolayer(triple_exp_model, series = "triple exponential", alpha=0.25) +
-      autolayer(tbat_model, series = "tbat", alpha=0.7) + 
-      guides(colour = guide_legend("Models")) + scale_y_continuous(labels = scales::comma) + 
-      labs(x ="Gift Date", y = "Gift Amount", title = "Gift Amt. Forecast") + 
-      theme(plot.title = element_text(hjust=0.5))
-    
-    
-  })
-  
-  # Forecast results
-  output$forecastOutput <- DT::renderDataTable({
-    
-    forecast.horizon <- as.numeric(input$horizonInput)
-    
-    train <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"train")
-    test <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"test")
-    
-    # models
-    gift_train_auto_exp_forecast <- ets(train) %>% 
-      forecast(h=forecast.horizon)    
-    
-    gift_train_auto_arima_forecast <- auto.arima(train) %>% 
-      forecast(h=forecast.horizon)             
-    
-    gift_train_simple_exp_forecast <- HoltWinters(train,
-                                                  beta=FALSE, 
-                                                  gamma=FALSE) %>% 
-      forecast(h=forecast.horizon)             
-    
-    gift_train_double_exp_forecast <- HoltWinters(train,
-                                                  beta=TRUE, 
-                                                  gamma=FALSE) %>% 
-      forecast(h=forecast.horizon)  
-    
-    gift_train_triple_exp_forecast <- HoltWinters(train,
-                                                  beta=TRUE, 
-                                                  gamma=TRUE) %>% 
-      forecast(h=forecast.horizon)  
-    
-    gift_train_tbat_forecast <-  tbats(train) %>% forecast(h=forecast.horizon)
-    
-    
-    
-    # forecast output
-    auto_exp_forecast <- as.data.frame(gift_train_auto_exp_forecast$mean)
-    auto_arima_forecast <- as.data.frame(gift_train_auto_arima_forecast$mean)
-    simple_exp_forecast <- as.data.frame(gift_train_simple_exp_forecast$mean)
-    double_exp_forecast <- as.data.frame(gift_train_double_exp_forecast$mean)
-    triple_exp_forecast <- as.data.frame(gift_train_triple_exp_forecast$mean)
-    tbat_forecast <- as.data.frame(gift_train_tbat_forecast$mean)
-    
-    auto_exp_forecast <- numeric_update(auto_exp_forecast)
-    auto_arima_forecast <- numeric_update(auto_arima_forecast)
-    simple_exp_forecast <- numeric_update(simple_exp_forecast)
-    double_exp_forecast <- numeric_update(double_exp_forecast)
-    triple_exp_forecast <- numeric_update(triple_exp_forecast)
-    tbat_forecast <- numeric_update(tbat_forecast)
-    
-    models <- c("auto-exponential","auto-arima","simple-exponential","double-exponential",
-                "triple-exponential","tbat")
-    
-    outputInfo <- cbind(auto_exp_forecast,auto_arima_forecast,
-                        simple_exp_forecast,double_exp_forecast,
-                        triple_exp_forecast,tbat_forecast)
-    
-    colnames(outputInfo) <- models 
-    
-    
-    DT::datatable(outputInfo, options = list(scrollX = TRUE))
-    
-  })
-  
-  # Forecast accuracy
-  output$accuracyOutput <- DT::renderDataTable({
-    forecast.horizon <- as.numeric(input$horizonInput)
-    
-    train <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"train")
-    test <- forecast_df(gift_xts,input$aggregateInput,input$frequencyInput,"test")
-    # models
-    gift_train_auto_exp_forecast <- ets(train) %>% 
-      forecast(h=forecast.horizon)    
-    
-    gift_train_auto_arima_forecast <- auto.arima(train) %>% 
-      forecast(h=forecast.horizon)             
-    
-    gift_train_simple_exp_forecast <- HoltWinters(train,
-                                                  beta=FALSE, 
-                                                  gamma=FALSE) %>% 
-      forecast(h=forecast.horizon)             
-    
-    gift_train_double_exp_forecast <- HoltWinters(train,
-                                                  beta=TRUE, 
-                                                  gamma=FALSE) %>% 
-      forecast(h=forecast.horizon)  
-    
-    gift_train_triple_exp_forecast <- HoltWinters(train,
-                                                  beta=TRUE, 
-                                                  gamma=TRUE) %>% 
-      forecast(h=forecast.horizon)  
-    
-    gift_train_tbat_forecast <-  tbats(train) %>% forecast(h=forecast.horizon)
-    
-    auto_exp_accuracy <- as.data.frame(accuracy( gift_train_auto_exp_forecast ,test))
-    auto_arima_accuracy <- as.data.frame(accuracy(gift_train_auto_arima_forecast ,test))
-    simple_exp_accuracy <- as.data.frame(accuracy(gift_train_simple_exp_forecast ,test))
-    double_exp_accuracy <- as.data.frame(accuracy(gift_train_double_exp_forecast ,test))
-    triple_exp_accuracy <- as.data.frame(accuracy(gift_train_triple_exp_forecast ,test))
-    tbat_accuracy <- as.data.frame(accuracy(gift_train_tbat_forecast ,test))
-    
-    auto_exp_accuracy <- numeric_update(auto_exp_accuracy)
-    auto_arima_accuracy <- numeric_update(auto_arima_accuracy)
-    simple_exp_accuracy <- numeric_update(simple_exp_accuracy)
-    double_exp_accuracy <- numeric_update(double_exp_accuracy)
-    triple_exp_accuracy <- numeric_update(triple_exp_accuracy)
-    tbat_accuracy <- numeric_update(tbat_accuracy)
-    
-    models<- c("auto-exponential","auto-exponential",
-               "auto-arima","auto-arima",
-               "simple-exponential","simple-exponential",
-               "double-exponential","double-exponential",
-               "triple-exponential","triple-exponential",
-               "tbat","tbat")
-    
-    data<- c("Training set", 'Test set',
-             "Training set", 'Test set',
-             "Training set", 'Test set',
-             "Training set", 'Test set',
-             "Training set", 'Test set',
-             "Training set", 'Test set')
-    
-    outputInfo <- rbind(auto_exp_accuracy,auto_arima_accuracy,
-                        simple_exp_accuracy,double_exp_accuracy,
-                        triple_exp_accuracy,tbat_accuracy)           
-    
-    
-    outputInfo <- cbind(models, data, outputInfo)
-    
-    DT::datatable(outputInfo, options = list(scrollX = TRUE))
-  })
-  
-  # Forecast Prediction
-  output$predictionOutput <- DT::renderDataTable({})
   
 }             
 
