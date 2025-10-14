@@ -60,12 +60,14 @@ tree$new_inv_date <- lubridate::year(as.Date(tree$INV_DATE, format =  "%Y/%m/%d"
 tree$DBH_VAL_update <- as.numeric(str_remove_all(tree$DBH_VAL, "[\"']"))
 
 tree_temp <- inner_join(tree, tree_address,by="PARKS_VAL") %>%
-  select(FULLADDR,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL,DBH_VAL_update,NSC_AREA_VAL,new_inv_date) %>%
+  select(FULLADDR,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL,
+         DBH_VAL_update,NSC_AREA_VAL,new_inv_date) %>%
   na.omit() %>%
   unique()
 
 tree_df <- inner_join(tree_temp,parks,by="FULLADDR",relationship = "many-to-many") %>%
-  select(FULLADDR,NAME,PHONE,AGENCYURL,EMAIL,Longitude,Latitude,GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL,DBH_VAL_update,NSC_AREA_VAL,new_inv_date) %>%
+  select(FULLADDR,NAME,PHONE,AGENCYURL,EMAIL,Longitude,Latitude,
+         GENUS,SPECIES,TREE_NAME_VAL,THEME_VAL,MAINT_VAL,AREA_VAL,DBH_VAL_update,NSC_AREA_VAL,new_inv_date) %>%
   na.omit() %>%
   unique()
 
@@ -212,28 +214,34 @@ server <- function(input, output,session) {
   
 ########## Overview #######
 output$parkValueBox <- renderValueBox({
-    valueBox(  tags$p("# of Parks", style = "font-size: 80%;"), paste0(length(parks$NAME)), icon = icon("list"),color = "aqua")
+    valueBox(  tags$p("# of Parks", style = "font-size: 80%;"), paste0(length(parks$NAME)), 
+               icon = icon("list"),color = "aqua")
   }) 
   
 output$speciesValueBox <- renderValueBox({
-    valueBox(  tags$p("Species Type", style = "font-size: 80%;"), paste0(length(unique(tree$SPECIES))), icon = icon("list"),color = "aqua")
+    valueBox(  tags$p("Species Type", style = "font-size: 80%;"), paste0(length(unique(tree$SPECIES))), 
+               icon = icon("list"),color = "aqua")
 }) 
 
 output$genusValueBox <- renderValueBox({
-  valueBox(  tags$p("Genus Type", style = "font-size: 80%;"), paste0(length(unique(tree$GENUS))), icon = icon("list"),color = "aqua")
+  valueBox(  tags$p("Genus Type", style = "font-size: 80%;"), paste0(length(unique(tree$GENUS))), 
+             icon = icon("list"),color = "aqua")
 }) 
 
 output$treeNameValueBox <- renderValueBox({
-  valueBox(  tags$p("Tree Type", style = "font-size: 80%;"), paste0(length(unique(tree$TREE_NAME_VAL))), icon = icon("list"),color = "aqua")
+  valueBox(  tags$p("Tree Type", style = "font-size: 80%;"), paste0(length(unique(tree$TREE_NAME_VAL))), 
+             icon = icon("list"),color = "aqua")
 }) 
 
 output$treeSizeValueBox <- renderValueBox({
-  valueBox(  tags$p("Average Tree Diameter at Breast Height", style = "font-size: 80%;"), paste0(format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
+  valueBox(  tags$p("Average Tree Diameter at Breast Height", style = "font-size: 80%;"), 
+             paste0(format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
            icon = icon("list"),color = "aqua")
 })
 
 output$treeMaintenanceValueBox <- renderValueBox({
-  valueBox(  tags$p("Maintenance Actions", style = "font-size: 80%;"), paste0(length(unique(tree$MAINT_VAL))), icon = icon("list"),color = "aqua")
+  valueBox(  tags$p("Maintenance Actions", style = "font-size: 80%;"), 
+             paste0(length(unique(tree$MAINT_VAL))), icon = icon("list"),color = "aqua")
 })
 
 
@@ -248,7 +256,6 @@ output$parkOverviewMap <- renderLeaflet({
                lat = parks$Latitude,
                label = parks$NAME,
                popup = parks$FULLADDR )
-  
   parkMap
   
 })
