@@ -37,7 +37,7 @@ rm(list = ls())
 packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','DT','readxl',
   'mlbench','caTools','gridExtra','doParallel','grid','forecast','reshape2',
-  'caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
+  'caret','tidyr','Matrix','lubridate','plotly','RColorBrewer','bslib','shinycssloaders',
   'data.table','scales','rfm','forecast','TTR','xts','dplyr'
 )
 for (package in packages) {
@@ -60,6 +60,7 @@ payment_type <- sort(unique(na.omit(transaction$PAYMENT_TYPE)))
 gift_type <- sort(unique(na.omit(transaction$GIFT_TYPE)))
 gift_designation <- sort(unique(na.omit(transaction$GIFT_DESIGNATION)))
 gift_channel <- sort(unique(na.omit(transaction$GIFT_CHANNEL)))
+note_info <- "Using only data from 2010 onwards"
 
 ################ UI ################
 ui <- dashboardPage(
@@ -265,13 +266,8 @@ tabItem(tabName = "overview",
                               tabPanel(h4("Forecast Visualization",style="text-align: center;"),
                                        plotOutput("forecastPlot")),
                               tabPanel(h4("Forecast Results",style="text-align: center;"),
-                                       DT::dataTableOutput("forecastOutput")),
-                              tabPanel(h4("Forecast Metrics",style="text-align: center;"),
-                                       DT::dataTableOutput("accuracyOutput"))#,
-                              #tabPanel(h4("Forecast Prediction",style="text-align: center;"),
-                              #         DT::dataTableOutput("predictionOutput"))
+                                       DT::dataTableOutput("forecastOutput"))
                   )
-                  
                 )
               )
               
