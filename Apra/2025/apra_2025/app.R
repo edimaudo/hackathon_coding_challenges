@@ -35,10 +35,11 @@ rm(list = ls())
 # library(readxl)
 # library(ggalluvial)
 # library(ggforce)
+# library(purrr)
 packages <- c(
   'ggplot2', 'corrplot','tidyverse','shiny','shinydashboard','shinycssloaders',
   'bslib','readxl','DT','mlbench','caTools','gridExtra','doParallel','grid',
-  'reshape2','caret','tidyr','Matrix','lubridate','plotly','RColorBrewer',
+  'reshape2','caret','tidyr','Matrix','lubridate','plotly','RColorBrewer','purrr',
   'data.table','scales','rfm','forecast','TTR','xts','dplyr', 'treemapify','ggalluvial','ggforce'
 )
 for (package in packages) {
