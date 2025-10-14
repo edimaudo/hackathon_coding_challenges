@@ -1,6 +1,6 @@
 #========================================
 # Shiny web app which provides insights 
-# for a fundraising project
+# for the 2024 Apra Challenge
 #=========================================
 rm(list = ls())
 #=============
