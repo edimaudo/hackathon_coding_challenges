@@ -291,7 +291,7 @@ output$speciesOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Species", y = "Total", title="Top Species") 
+    labs(x ="Species", y = "Total", title="Top Species") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -316,7 +316,7 @@ output$treeNameOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Tree Name", y = "Total", title="Top Trees") 
+    labs(x ="Tree Name", y = "Total", title="Top Trees") +
     theme_minimal(base_size = 12) + 
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
@@ -349,7 +349,7 @@ output$dbhgenusOverviewPlot <- renderPlotly({
       "<br>Average Breast Height Diameter: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Top Genus & Avg. Breast Height Diameter") 
+    labs(x ="Genus", y = "Total", title="Top Genus & Avg. Breast Height Diameter") +
     theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -382,7 +382,7 @@ output$dbhAgeProfileOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Breast Height Diameter Category", y = "Total", title="Breast Height Diameter Category") 
+    labs(x ="Breast Height Diameter Category", y = "Total", title="Breast Height Diameter Category") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -404,7 +404,7 @@ output$dbhOverviewHistogramPlot <- renderPlotly({
       "<br>Count: ", after_stat(count)
     )))  +
     geom_histogram(fill='black') + 
-    labs(x ="Breast Height Diameter", y = "Total", title="Breast Height Diameter Histogram") 
+    labs(x ="Breast Height Diameter", y = "Total", title="Breast Height Diameter Histogram") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -426,7 +426,7 @@ output$inventoryOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') +
-    labs(x ="Inventory Year", y = "Total", title="Annual Tree Inventory") 
+    labs(x ="Inventory Year", y = "Total", title="Annual Tree Inventory") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -449,7 +449,7 @@ output$maintenanceOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Maintenance Activities", y = "Total", title="Top Maintenance Activities") 
+    labs(x ="Maintenance Activities", y = "Total", title="Top Maintenance Activities") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -480,7 +480,7 @@ output$maintenanceNSCOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     ))) + 
     geom_tile() + 
-    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top Maintenance Activities & NSC Area Heatmap") 
+    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top Maintenance Activities & NSC Area Heatmap") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -563,7 +563,7 @@ output$genusInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Top Genus") 
+    labs(x ="Genus", y = "Total", title="Top Genus") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -588,7 +588,7 @@ output$speciesInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Species", y = "Total", title="Top Species") 
+    labs(x ="Species", y = "Total", title="Top Species") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -615,7 +615,7 @@ output$treeNameInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Tree Name", y = "Total", title="Top Trees") 
+    labs(x ="Tree Name", y = "Total", title="Top Trees") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -649,7 +649,7 @@ output$dbhgenusInsightPlot <- renderPlotly({
       "<br>Average Breast Height Diameter: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Top Genus & Avg. Breast Height Diameter") 
+    labs(x ="Genus", y = "Total", title="Top Genus & Avg. Breast Height Diameter") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -684,7 +684,7 @@ output$dbhAgeProfileInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Breast Height Diameter Category", y = "Total", title="Breast Height Diameter Categories") 
+    labs(x ="Breast Height Diameter Category", y = "Total", title="Breast Height Diameter Categories") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -706,7 +706,7 @@ output$dbhOverviewHistogramInsightPlot <- renderPlotly({
       "<br>Count: ", after_stat(count)
     )))  +
     geom_histogram(fill='black') + 
-    labs(x ="Breast Height Diameter", title="Breast Height Diameter Histogram") 
+    labs(x ="Breast Height Diameter", title="Breast Height Diameter Histogram") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -728,7 +728,7 @@ output$inventoryInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') +
-    labs(x ="Inventory Year", y = "Total", title="Annual Tree Inventory") 
+    labs(x ="Inventory Year", y = "Total", title="Annual Tree Inventory") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -751,7 +751,7 @@ output$maintenanceInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Maintenance Activities", y = "Total", title="Top Maintenance Activities") 
+    labs(x ="Maintenance Activities", y = "Total", title="Top Maintenance Activities") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -782,7 +782,7 @@ output$maintenanceNSCInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     ))) + 
     geom_tile() + 
-    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top Maintenance Activities & NSC Area Heatmap") 
+    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top Maintenance Activities & NSC Area Heatmap") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
