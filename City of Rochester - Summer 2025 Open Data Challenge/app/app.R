@@ -2,9 +2,9 @@
 # Shiny web app for 
 # 2025 City of Rochester Open Data Challenge
 ################################
-
-################  Packages ################
 rm(list = ls())
+################  Packages ################
+
 library(ggplot2)
 library(corrplot)
 library(tidyverse)
@@ -109,9 +109,10 @@ ui <- dashboardPage(
                                     valueBoxOutput("treeMaintenanceValueBox")
                              )
                            ),
-                           br(),br(),
+                           br(),
+                           br(),
                           fluidRow(
-                            h4("City of Rochester Park Map",style="text-align: center;"),
+                           # h4("City of Rochester Park Map",style="text-align: center; font-weight: bold;font-size: 30px;"),
                             leafletOutput("parkOverviewMap", width = 'auto',height="300px")
                           ), 
                           br(),br(),
@@ -235,7 +236,7 @@ output$treeNameValueBox <- renderValueBox({
 }) 
 
 output$treeSizeValueBox <- renderValueBox({
-  valueBox(  tags$p("Avg. Tree Height Tree Diameter", style = "font-size: 35%;"), 
+  valueBox(  tags$p("Avg. Tree Diameter", style = "font-size: 80%;"), 
              paste0(format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
            icon = icon("list"),color = "aqua")
 })
