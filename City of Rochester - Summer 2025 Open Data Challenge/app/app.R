@@ -349,7 +349,7 @@ output$dbhgenusOverviewPlot <- renderPlotly({
       "<br>Average Breast Height Diameter: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Genus & Avg. Breast Height Diameter") 
+    labs(x ="Genus", y = "Total", title="Top Genus & Avg. Breast Height Diameter") 
     theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -449,7 +449,7 @@ output$maintenanceOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Maintenance Activities", y = "Total", title="Top 10 Maintenance Activities") 
+    labs(x ="Maintenance Activities", y = "Total", title="Top Maintenance Activities") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -649,7 +649,7 @@ output$dbhgenusInsightPlot <- renderPlotly({
       "<br>Average Breast Height Diameter: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Genus & Avg. Breast Height Diameter") 
+    labs(x ="Genus", y = "Total", title="Top Genus & Avg. Breast Height Diameter") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
