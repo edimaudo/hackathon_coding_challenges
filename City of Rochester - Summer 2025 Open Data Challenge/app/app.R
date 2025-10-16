@@ -112,8 +112,11 @@ ui <- dashboardPage(
                            br(),
                            br(),
                           fluidRow(
-                           # h4("City of Rochester Park Map",style="text-align: center; font-weight: bold;font-size: 30px;"),
-                            leafletOutput("parkOverviewMap", width = 'auto',height="300px")
+                            column(width = 12,
+                                   # h4("City of Rochester Park Map",style="text-align: center; font-weight: bold;font-size: 30px;"),
+                                   leafletOutput("parkOverviewMap", width = 'auto',height="300px")
+                            )
+                           
                           ), 
                           br(),br(),
                           tabsetPanel(type = "tabs",
