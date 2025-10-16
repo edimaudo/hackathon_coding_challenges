@@ -78,7 +78,7 @@ park_list <- c(sort(unique(tree_df$NAME)))
 ui <- dashboardPage(
   dashboardHeader(title = "Open Data Challenge 2025",
                   tags$li(a(href = 'https://data.cityofrochester.gov',
-                            img(src = 'https://www.arcgis.com/sharing/rest/content/items/273dc226904e43f0a83baecf54a31397/resources/logo.png?v=1754582471296',
+                  img(src = 'https://www.arcgis.com/sharing/rest/content/items/273dc226904e43f0a83baecf54a31397/resources/logo.png?v=1754582471296',
                                 title = "Home", height = "30px"),
                             style = "padding-top:10px; padding-bottom:10px;"),
                           class = "dropdown")),
@@ -272,16 +272,21 @@ output$genusOverviewPlot <- renderPlotly({
     select(GENUS, Total) %>% 
     arrange(desc(Total)) %>%
     top_n(n = 10) %>%
-    ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
+    ggplot(aes(x = reorder(GENUS,Total) ,y = Total, text = paste0(
+      "GENUS: ", GENUS,
+      "<br>Genus Count: ", Total
+    )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Top 10 Genus") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
+    labs(x ="Genus", y = "Count", title="Top 10 Genus") +
+    theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
-  ggplotly(g)
   
   
 })
