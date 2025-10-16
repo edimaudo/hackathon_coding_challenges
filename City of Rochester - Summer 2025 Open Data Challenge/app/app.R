@@ -109,27 +109,21 @@ ui <- dashboardPage(
                                     valueBoxOutput("treeMaintenanceValueBox")
                              )
                            ),
-                           br(),
-                           br(),
-                          fluidRow(
-                            column(width = 12,
-                                   h4("City of Rochester Park Map",style="text-align: center; font-weight: bold;font-size: 30px;"),
-                                   leafletOutput("parkOverviewMap", width = 'auto',height="300px")
-                            )
-                           
-                          ), 
                           br(),br(),
                           tabsetPanel(type = "tabs",
+                                      tabPanel(h4("City of Rochester Park Map",style="text-align: center;"),
+                                               leafletOutput("parkOverviewMap", width = 'auto',height="300px")
+                                      ),
                                       tabPanel(h4("Tree Characteristics",style="text-align: center;"),
                                                layout_column_wrap(width = 1/2,
                                                   plotlyOutput("genusOverviewPlot") %>% withSpinner(),
                                                   plotlyOutput("speciesOverviewPlot") %>% withSpinner()
                                                   
-                                               ),
+                                               ),br(),
                                                layout_column_wrap(width = 1/2,
                                                  plotlyOutput("dbhgenusOverviewPlot") %>% withSpinner(),
                                                  plotlyOutput("treeNameOverviewPlot") %>% withSpinner()
-                                               ), 
+                                               ), br(),
                                                layout_column_wrap(width = 1/2,
                                                   plotlyOutput("dbhAgeProfileOverviewPlot") %>% withSpinner(),
                                                   plotlyOutput("dbhOverviewHistogramPlot") %>% withSpinner()
@@ -218,6 +212,7 @@ ui <- dashboardPage(
 server <- function(input, output,session) {
   
 ########## Overview #######
+#==== Overview Value Boxes =======#
 output$parkValueBox <- renderValueBox({
     valueBox(  tags$p("# of Parks", style = "font-size: 80%;"), paste0(length(parks$NAME)), 
                icon = icon("list"),color = "aqua")
@@ -250,7 +245,7 @@ output$treeMaintenanceValueBox <- renderValueBox({
 })
 
 
-
+#==== Overview Tabs =======#
 output$parkOverviewMap <- renderLeaflet({
   
   parkMap <- leaflet() %>%
@@ -260,7 +255,7 @@ output$parkOverviewMap <- renderLeaflet({
     addMarkers(lng=parks$Longitude,
                lat = parks$Latitude,
                label = parks$NAME,
-               popup = parks$FULLADDR )
+               popup = parks$FULLADDR)
   parkMap
   
 })
@@ -323,16 +318,20 @@ output$treeNameOverviewPlot <- renderPlotly({
     select(TREE_NAME_VAL, Total) %>% 
     arrange(desc(Total)) %>%
     top_n(n = 10) %>%
-    ggplot(aes(x = reorder(TREE_NAME_VAL,Total) ,y = Total))  +
+    ggplot(aes(x = reorder(TREE_NAME_VAL,Total) ,y = Total,text = paste0(
+      "Tree Name: ", TREE_NAME_VAL,
+      "<br>Count: ", Total
+    )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Tree Name", y = "Total", title="Top 10 Trees") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+    labs(x ="Tree Name", y = "Count", title="Top 10 Trees") 
+    theme_minimal(base_size = 12) + 
+      theme(legend.text = element_text(size = 10),
+            legend.title = element_text(size = 10),
+            plot.title = element_text(size = 12, hjust = 0.5),
+            axis.title = element_text(size = 10),
+            axis.text = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 1))
+    ggplotly(g, tooltip = "text")
   
   
 })
@@ -349,19 +348,23 @@ output$dbhgenusOverviewPlot <- renderPlotly({
   g <- tree %>%
     filter(GENUS %in% c(g_df$GENUS)) %>%
     group_by(GENUS) %>%
-    summarise(Total = mean(DBH_VAL_update)) %>%
+    summarise(Total = round(mean(DBH_VAL_update)),2) %>%
     select(GENUS, Total) %>% 
     arrange(desc(Total)) %>%
-    ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
+    ggplot(aes(x = reorder(GENUS,Total) ,y = Total,text = paste0(
+      "GENUS: ", GENUS,
+      "<br>Average Diameter Breast Height: ", Total
+    )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Top 10 Genus and Average Diameter at Breast Height") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+    labs(x ="Genus", y = "Total", title="Top 10 Genus vs. Average Diameter Breast Height") 
+    theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
 })
 
