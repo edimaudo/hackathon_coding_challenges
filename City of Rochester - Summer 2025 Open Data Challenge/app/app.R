@@ -496,6 +496,7 @@ output$maintenanceNSCOverviewPlot <- renderPlotly({
 
 
 ########## Insights #######
+#======== Insight Value Box ========
 tree_info <- reactive({
   tree_df %>%
     filter(NAME == input$parkInput)
@@ -557,16 +558,20 @@ output$genusInsightPlot <- renderPlotly({
     select(GENUS, Total) %>% 
     arrange(desc(Total)) %>%
     top_n(n = 10) %>%
-    ggplot(aes(x = reorder(GENUS,Total) ,y = Total))  +
+    ggplot(aes(x = reorder(GENUS,Total) ,y = Total,text = paste0(
+      "GENUS: ", GENUS,
+      "<br>Count: ", Total
+    )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
     labs(x ="Genus", y = "Total", title="Top 10 Genus") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+  theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
   
 })
@@ -578,16 +583,20 @@ output$speciesInsightPlot <- renderPlotly({
     select(SPECIES, Total) %>% 
     arrange(desc(Total)) %>%
     top_n(n = 10) %>%
-    ggplot(aes(x = reorder(SPECIES,Total) ,y = Total))  +
+    ggplot(aes(x = reorder(SPECIES,Total) ,y = Total,text = paste0(
+      "Species: ", SPECIES,
+      "<br>Count: ", Total
+    )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
     labs(x ="Species", y = "Total", title="Top 10 Species") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+  theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
   
 })
@@ -601,16 +610,22 @@ output$treeNameInsightPlot <- renderPlotly({
     select(TREE_NAME_VAL, Total) %>% 
     arrange(desc(Total)) %>%
     top_n(n = 10) %>%
-    ggplot(aes(x = reorder(TREE_NAME_VAL,Total) ,y = Total))  +
+    ggplot(aes(x = reorder(TREE_NAME_VAL,Total) ,y = Total),
+           text = paste0(
+             "Tree Name: ", TREE_NAME_VAL,
+             "<br>Count: ", Total
+           ))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
     labs(x ="Tree Name", y = "Total", title="Top 10 Trees") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
+  theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
-  ggplotly(g)
   
   
 })
