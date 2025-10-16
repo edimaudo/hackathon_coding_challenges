@@ -113,7 +113,7 @@ ui <- dashboardPage(
                            br(),
                           fluidRow(
                             column(width = 12,
-                                   # h4("City of Rochester Park Map",style="text-align: center; font-weight: bold;font-size: 30px;"),
+                                   h4("City of Rochester Park Map",style="text-align: center; font-weight: bold;font-size: 30px;"),
                                    leafletOutput("parkOverviewMap", width = 'auto',height="300px")
                             )
                            
