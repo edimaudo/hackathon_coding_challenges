@@ -238,7 +238,7 @@ output$treeMaintenanceValueBox <- renderValueBox({
 })
 
 
-#==== Overview Tabs =======#
+#========= Overview Tabs =======
 output$parkOverviewMap <- renderLeaflet({
   
   parkMap <- leaflet() %>%
@@ -646,10 +646,10 @@ output$dbhgenusInsightPlot <- renderPlotly({
     arrange(desc(Total)) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total,text = paste0(
       "Tree Name: ", GENUS,
-      "<br>Average reast Height Diameter: ", Total
+      "<br>Average Breast Height Diameter: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Top 10 Genus vs Average Breast Height Diameter") 
+    labs(x ="Genus", y = "Total", title="Genus & Avg. Breast Height Diameter") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -701,12 +701,12 @@ output$dbhAgeProfileInsightPlot <- renderPlotly({
 
 output$dbhOverviewHistogramInsightPlot <- renderPlotly({
   g <- tree_info() %>%
-    ggplot(aes(x = DBH_VAL_update,ext = paste0(
+    ggplot(aes(x = DBH_VAL_update,text = paste0(
       "Breast Height Diameter: ", round(after_stat(x),2),
       "<br>Count: ", after_stat(count)
     )))  +
     geom_histogram(fill='black') + 
-    labs(x ="Diameter at Breast Height", title="Diameter at Breast Height Histogram") 
+    labs(x ="Breast Height Diameter", title="Breast Height Diameter Histogram") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
