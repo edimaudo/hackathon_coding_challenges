@@ -265,7 +265,7 @@ output$genusOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Top 10 Genus") +
+    labs(x ="Genus", y = "Total", title="Top Genus") +
     theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -291,7 +291,7 @@ output$speciesOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Species", y = "Total", title="Top 10 Species") 
+    labs(x ="Species", y = "Total", title="Top Species") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -316,7 +316,7 @@ output$treeNameOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Tree Name", y = "Total", title="Top 10 Trees") 
+    labs(x ="Tree Name", y = "Total", title="Top Trees") 
     theme_minimal(base_size = 12) + 
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
@@ -346,10 +346,10 @@ output$dbhgenusOverviewPlot <- renderPlotly({
     arrange(desc(Total)) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total,text = paste0(
       "GENUS: ", GENUS,
-      "<br>Average Diameter Breast Height: ", Total
+      "<br>Average Breast Height Diameter: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Top 10 Genus vs. Average Diameter Breast Height") 
+    labs(x ="Genus", y = "Total", title="Genus & Avg. Breast Height Diameter") 
     theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -480,7 +480,7 @@ output$maintenanceNSCOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     ))) + 
     geom_tile() + 
-    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top 10 Maintenance Activities & NSC Area Heatmap") 
+    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top Maintenance Activities & NSC Area Heatmap") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -563,7 +563,7 @@ output$genusInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Top 10 Genus") 
+    labs(x ="Genus", y = "Total", title="Top Genus") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -588,7 +588,7 @@ output$speciesInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Species", y = "Total", title="Top 10 Species") 
+    labs(x ="Species", y = "Total", title="Top Species") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -615,7 +615,7 @@ output$treeNameInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Tree Name", y = "Total", title="Top 10 Trees") 
+    labs(x ="Tree Name", y = "Total", title="Top Trees") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -751,7 +751,7 @@ output$maintenanceInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Maintenance Activities", y = "Total", title="Top 10 Maintenance Activities") 
+    labs(x ="Maintenance Activities", y = "Total", title="Top Maintenance Activities") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -782,7 +782,7 @@ output$maintenanceNSCInsightPlot <- renderPlotly({
       "<br>Count: ", Total
     ))) + 
     geom_tile() + 
-    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top 10 Maintenance Activities & NSC Area Heatmap") 
+    labs(x = "NSC Area", y ="Maintenance Activities", title=" Top Maintenance Activities & NSC Area Heatmap") 
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
