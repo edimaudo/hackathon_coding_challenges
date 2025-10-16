@@ -701,16 +701,20 @@ output$dbhAgeProfileInsightPlot <- renderPlotly({
 
 output$dbhOverviewHistogramInsightPlot <- renderPlotly({
   g <- tree_info() %>%
-    ggplot(aes(x = DBH_VAL_update))  +
+    ggplot(aes(x = DBH_VAL_update,ext = paste0(
+      "Breast Height Diameter: ", round(after_stat(x),2),
+      "<br>Count: ", after_stat(count)
+    )))  +
     geom_histogram(fill='black') + 
     labs(x ="Diameter at Breast Height", title="Diameter at Breast Height Histogram") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+  theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
 })
 
 output$inventoryInsightPlot <- renderPlotly({
