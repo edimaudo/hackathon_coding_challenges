@@ -274,7 +274,7 @@ output$genusOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total, text = paste0(
       "GENUS: ", GENUS,
-      "<br>Genus Count: ", Total
+      "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
     labs(x ="Genus", y = "Count", title="Top 10 Genus") +
@@ -300,7 +300,7 @@ output$speciesOverviewPlot <- renderPlotly({
     top_n(n = 10) %>%
     ggplot(aes(x = reorder(SPECIES,Total) ,y = Total,text = paste0(
       "Species: ", SPECIES,
-      "<br>Species Count: ", Total
+      "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
     labs(x ="Species", y = "Count", title="Top 10 Species") 
