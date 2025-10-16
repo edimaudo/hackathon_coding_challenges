@@ -428,16 +428,20 @@ output$inventoryOverviewPlot <- renderPlotly({
     summarise(Total = n()) %>%
     filter(new_inv_date >= '2008') %>%
     select(new_inv_date, Total) %>% 
-    ggplot(aes(x =new_inv_date ,y = Total))  +
+    ggplot(aes(x =new_inv_date ,y = Total,text = paste0(
+      "Inventory Year: ", new_inv_date,
+      "<br>Count: ", Total
+    )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') +
     labs(x ="Inventory Year", y = "Total", title="Annual Tree Inventory") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+  theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
 })
 
 output$maintenanceOverviewPlot <- renderPlotly({
