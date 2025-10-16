@@ -205,7 +205,7 @@ ui <- dashboardPage(
 server <- function(input, output,session) {
   
 ########## Overview #######
-#==== Overview Value Boxes =======#
+#==== Overview Value Boxes =======
 output$parkValueBox <- renderValueBox({
     valueBox(  tags$p("# of Parks", style = "font-size: 80%;"), paste0(length(parks$NAME)), 
                icon = icon("list"),color = "aqua")
@@ -265,7 +265,7 @@ output$genusOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Total", title="Top Genus") +
+    labs(x ="Genus", y = "Total", title="Top Genus") + 
     theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -706,7 +706,7 @@ output$dbhOverviewHistogramInsightPlot <- renderPlotly({
       "<br>Count: ", after_stat(count)
     )))  +
     geom_histogram(fill='black') + 
-    labs(x ="Breast Height Diameter", title="Breast Height Diameter Histogram") +
+    labs(x ="Breast Height Diameter", y= "Total", title="Breast Height Diameter Histogram") +
   theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
