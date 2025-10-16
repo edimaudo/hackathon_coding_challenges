@@ -298,16 +298,20 @@ output$speciesOverviewPlot <- renderPlotly({
     select(SPECIES, Total) %>% 
     arrange(desc(Total)) %>%
     top_n(n = 10) %>%
-    ggplot(aes(x = reorder(SPECIES,Total) ,y = Total))  +
+    ggplot(aes(x = reorder(SPECIES,Total) ,y = Total,text = paste0(
+      "Species: ", SPECIES,
+      "<br>Species Count: ", Total
+    )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Species", y = "Total", title="Top 10 Species") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+    labs(x ="Species", y = "Count", title="Top 10 Species") 
+    theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
   
 })
