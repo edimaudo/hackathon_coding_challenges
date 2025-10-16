@@ -1,6 +1,7 @@
-#========================================
-# Shiny web app for 2025 City of Rochester Open Data Challenge
-#=========================================
+################################
+# Shiny web app for 
+# 2025 City of Rochester Open Data Challenge
+################################
 
 ################  Packages ################
 rm(list = ls())
@@ -234,7 +235,7 @@ output$treeNameValueBox <- renderValueBox({
 }) 
 
 output$treeSizeValueBox <- renderValueBox({
-  valueBox(  tags$p("Average Tree Diameter at Breast Height", style = "font-size: 80%;"), 
+  valueBox(  tags$p("Avg. Tree Height Tree Diameter", style = "font-size: 35%;"), 
              paste0(format(round(tree_diameter<- mean(tree$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
            icon = icon("list"),color = "aqua")
 })
