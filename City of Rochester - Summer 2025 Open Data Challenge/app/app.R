@@ -122,28 +122,28 @@ ui <- dashboardPage(
                           tabsetPanel(type = "tabs",
                                       tabPanel(h4("Tree Characteristics",style="text-align: center;"),
                                                layout_column_wrap(width = 1/2,
-                                                  plotlyOutput("genusOverviewPlot"),
-                                                  plotlyOutput("speciesOverviewPlot")
+                                                  plotlyOutput("genusOverviewPlot") %>% withSpinner(),
+                                                  plotlyOutput("speciesOverviewPlot") %>% withSpinner()
                                                   
                                                ),
                                                layout_column_wrap(width = 1/2,
-                                                 plotlyOutput("dbhgenusOverviewPlot"),
-                                                 plotlyOutput("treeNameOverviewPlot")
+                                                 plotlyOutput("dbhgenusOverviewPlot") %>% withSpinner(),
+                                                 plotlyOutput("treeNameOverviewPlot") %>% withSpinner()
                                                ), 
                                                layout_column_wrap(width = 1/2,
-                                                  plotlyOutput("dbhAgeProfileOverviewPlot"),
-                                                  plotlyOutput("dbhOverviewHistogramPlot")
+                                                  plotlyOutput("dbhAgeProfileOverviewPlot") %>% withSpinner(),
+                                                  plotlyOutput("dbhOverviewHistogramPlot") %>% withSpinner()
                                                )
                                                
                                       ),
 
                                       tabPanel(h4("Inventory",style="text-align: center;"),
-                                               plotlyOutput("inventoryOverviewPlot")
+                                               plotlyOutput("inventoryOverviewPlot") %>% withSpinner()
                                       ),
                                       tabPanel(h4("Maintenance",style="text-align: center;"),
                                                layout_column_wrap(width = 1/2,
-                                               plotlyOutput("maintenanceOverviewPlot"),
-                                               plotlyOutput("maintenanceNSCOverviewPlot")
+                                               plotlyOutput("maintenanceOverviewPlot") %>% withSpinner(),
+                                               plotlyOutput("maintenanceNSCOverviewPlot") %>% withSpinner()
                                                )
                                       ),
                           ),
