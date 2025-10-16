@@ -142,12 +142,12 @@ ui <- dashboardPage(
       ######### Insights ######### 
       tabItem(tabName = "park_insight",
               sidebarLayout(
-                sidebarPanel(width = 3,
+                sidebarPanel(width = 2,
                              selectInput("parkInput", "Parks", 
                                          choices = park_list, selected = park_list[0], multiple = FALSE),
                              submitButton("Submit")
                 ),
-                mainPanel(width = 9,
+                mainPanel(width = 10,
                   fluidRow(
                     column(width = 12,
                            valueBoxOutput("parkValueInsightValueBox"),
@@ -519,19 +519,19 @@ output$genusInsightValueBox <- renderValueBox({
 }) 
 
 output$treeNameInsightValueBox <- renderValueBox({
-  valueBox(tags$p("Tree Type", style = "font-size: 80%;"), tags$p(paste0(length(unique(tree_info()$TREE_NAME_VAL))), 
+  valueBox(tags$p("Tree Types", style = "font-size: 80%;"), tags$p(paste0(length(unique(tree_info()$TREE_NAME_VAL))), 
                                        style = "font-size: 100%;"), icon = icon("list"),color = "aqua")
 }) 
 
 output$treeSizeInsightValueBox <- renderValueBox({
-  valueBox(tags$p("Avg. Breast Height Diameter", style = "font-size: 80%;"), 
+  valueBox(tags$p("Breast Height Diameter", style = "font-size: 70%;"), 
            tags$p(paste0(format(round(tree_diameter<- mean(tree_info()$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
                                            style = "font-size: 100%;"), 
            icon = icon("book"),color = "aqua")
 })
 
 output$treeMaintenanceInsightValueBox <- renderValueBox({
-  valueBox(tags$p("Maintenance Actions", style = "font-size: 80%;"), tags$p(paste0(length(unique(tree_info()$MAINT_VAL))), 
+  valueBox(tags$p("Maintenance Actions", style = "font-size: 70%;"), tags$p(paste0(length(unique(tree_info()$MAINT_VAL))), 
                                                 style = "font-size: 100%;"), icon = icon("list"),color = "aqua")
 })
 
