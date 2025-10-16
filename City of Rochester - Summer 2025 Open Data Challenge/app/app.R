@@ -371,9 +371,7 @@ output$dbhgenusOverviewPlot <- renderPlotly({
 
 output$dbhAgeProfileOverviewPlot <- renderPlotly({
   
-  tree_df <- tree
-  
-  tree_df <- tree_df %>%
+  tree_df <- tree %>%
     mutate(DBH_Category = case_when(
       DBH_VAL_update < 11  ~ "Young",
       DBH_VAL_update < 20  ~ "Mature",
