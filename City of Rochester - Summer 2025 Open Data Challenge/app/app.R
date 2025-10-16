@@ -641,7 +641,7 @@ output$dbhgenusInsightPlot <- renderPlotly({
   g <- tree_info() %>%
     filter(GENUS %in% c(g_df$GENUS)) %>%
     group_by(GENUS) %>%
-    summarise(Total = mean(DBH_VAL_update)) %>%
+    summarise(Total = round(mean(DBH_VAL_update)),2) %>%
     select(GENUS, Total) %>% 
     arrange(desc(Total)) %>%
     ggplot(aes(x = reorder(GENUS,Total) ,y = Total,text = paste0(
@@ -679,16 +679,20 @@ output$dbhAgeProfileInsightPlot <- renderPlotly({
     summarise(Total = n()) %>%
     select(DBH_Category, Total) %>% 
     arrange(desc(Total)) %>%
-    ggplot(aes(x = reorder(DBH_Category,Total) ,y = Total))  +
+    ggplot(aes(x = reorder(DBH_Category,Total) ,y = Total,text = paste0(
+      "Breast Height Diameter Category: ", DBH_Category,
+      "<br>Count: ", Total
+    )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Diameter at Breast Height Category", y = "Total", title="Diameter at Breast Height Categories") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+    labs(x ="Breast Height Diameter Category", y = "Total", title="Breast Height Diameter Categories") 
+  theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
   
   
