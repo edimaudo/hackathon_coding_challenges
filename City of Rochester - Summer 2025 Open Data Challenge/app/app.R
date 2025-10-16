@@ -299,7 +299,7 @@ output$speciesOverviewPlot <- renderPlotly({
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
     labs(x ="Species", y = "Total", title="Top 10 Species") 
-    theme_minimal(base_size = 12) + 
+  theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
           plot.title = element_text(size = 12, hjust = 0.5),
@@ -406,16 +406,20 @@ output$dbhAgeProfileOverviewPlot <- renderPlotly({
 
 output$dbhOverviewHistogramPlot <- renderPlotly({
   g <- tree %>%
-    ggplot(aes(x = DBH_VAL_update))  +
+    ggplot(aes(x = DBH_VAL_update,text = paste0(
+      "Breast Height Diameter: ", round(after_stat(x),2),
+      "<br>Count: ", after_stat(count)
+    )))  +
     geom_histogram(fill='black') + 
-    labs(x ="Diameter at Breast Height", title="Diameter at Breast Height Histogram") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+    labs(x ="Breast Height Diameter", y = "Total", title="Breast Height Diameter Histogram") 
+  theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
 })
 
 output$inventoryOverviewPlot <- renderPlotly({
