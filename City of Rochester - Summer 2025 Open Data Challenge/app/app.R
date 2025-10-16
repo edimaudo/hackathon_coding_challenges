@@ -4,7 +4,6 @@
 ################################
 rm(list = ls())
 ################  Packages ################
-
 library(ggplot2)
 library(corrplot)
 library(tidyverse)
@@ -94,10 +93,8 @@ ui <- dashboardPage(
     tabItems(
       ######### About #########
       tabItem(tabName = "about",includeMarkdown("about.md"),hr()), 
-      
       ######### Overview ######### 
        tabItem(tabName = "park_overview",
-
                  mainPanel(width = 12,
                            fluidRow(
                              column(width = 12,
@@ -128,9 +125,7 @@ ui <- dashboardPage(
                                                   plotlyOutput("dbhAgeProfileOverviewPlot") %>% withSpinner(),
                                                   plotlyOutput("dbhOverviewHistogramPlot") %>% withSpinner()
                                                )
-                                               
                                       ),
-
                                       tabPanel(h4("Inventory",style="text-align: center;"),
                                                plotlyOutput("inventoryOverviewPlot") %>% withSpinner()
                                       ),
@@ -165,12 +160,10 @@ ui <- dashboardPage(
                     )
                   ),
                   br(),br(),
-                  fluidRow(
-                    h4("Park Map",style="text-align: center;"),
-                    leafletOutput("parkInsightMap", width = 'auto',height="300px")
-                  ), 
-                  br(),br(),
                   tabsetPanel(type = "tabs",
+                              tabPanel(h4("Park Map",style="text-align: center;"),
+                                       leafletOutput("parkInsightMap", width = 'auto',height="300px")
+                              ),
                               tabPanel(h4("Tree Characteristics",style="text-align: center;"),
                                        layout_column_wrap(width = 1/2,
                                                           plotlyOutput("genusInsightPlot"),
@@ -531,7 +524,7 @@ output$treeNameInsightValueBox <- renderValueBox({
 }) 
 
 output$treeSizeInsightValueBox <- renderValueBox({
-  valueBox(tags$p("Average Tree Diameter at Breast Height", style = "font-size: 80%;"), 
+  valueBox(tags$p("Avg. Breast Height Diameter", style = "font-size: 80%;"), 
            tags$p(paste0(format(round(tree_diameter<- mean(tree_info()$DBH_VAL_update, na.rm = TRUE), 2), nsmall = 2)), 
                                            style = "font-size: 100%;"), 
            icon = icon("book"),color = "aqua")
