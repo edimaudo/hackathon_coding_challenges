@@ -723,16 +723,20 @@ output$inventoryInsightPlot <- renderPlotly({
     summarise(Total = n()) %>%
     filter(new_inv_date >= '2008') %>%
     select(new_inv_date, Total) %>% 
-    ggplot(aes(x =factor(new_inv_date) ,y = Total))  +
+    ggplot(aes(x =factor(new_inv_date) ,y = Total,text = paste0(
+      "Inventory Year: ", new_inv_date,
+      "<br>Count: ", Total
+    )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') +
     labs(x ="Inventory Year", y = "Total", title="Annual Tree Inventory") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+  theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
 })
 
 output$maintenanceInsightPlot <- renderPlotly({
@@ -742,16 +746,20 @@ output$maintenanceInsightPlot <- renderPlotly({
     select(MAINT_VAL, Total) %>% 
     arrange(desc(Total)) %>%
     top_n(n = 10) %>%
-    ggplot(aes(x = reorder(MAINT_VAL,Total) ,y = Total))  +
+    ggplot(aes(x = reorder(MAINT_VAL,Total) ,y = Total,text = paste0(
+      "Maintenance Activities: ", MAINT_VAL,
+      "<br>Count: ", Total
+    )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
     labs(x ="Maintenance Activities", y = "Total", title="Top 10 Maintenance Activities") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5))
-  
-  ggplotly(g)
+  theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
 })
 
 output$maintenanceNSCInsightPlot <- renderPlotly({
@@ -768,17 +776,21 @@ output$maintenanceNSCInsightPlot <- renderPlotly({
     summarise(Total = n()) %>%
     select(MAINT_VAL, NSC_AREA_VAL,Total) %>% 
     top_n(n = 10) %>%
-    ggplot(aes(NSC_AREA_VAL,MAINT_VAL, fill= Total)) + 
+    ggplot(aes(NSC_AREA_VAL,MAINT_VAL, fill= Total,text = paste0(
+      "Maintenance Activities: ", MAINT_VAL,
+      "<br>NSC Area: ", NSC_AREA_VAL,
+      "<br>Count: ", Total
+    ))) + 
     geom_tile() + 
     labs(x = "NSC Area", y ="Maintenance Activities", title=" Top 10 Maintenance Activities & NSC Area Heatmap") 
-  theme(legend.text = element_text(size = 10),
-        legend.title = element_text(size = 10),
-        axis.title = element_text(size = 12),
-        axis.text = element_text(size = 10),
-        plot.title = element_text(hjust=0.5),
-        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-  
-  ggplotly(g)
+  theme_minimal(base_size = 12) + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
 })
 
