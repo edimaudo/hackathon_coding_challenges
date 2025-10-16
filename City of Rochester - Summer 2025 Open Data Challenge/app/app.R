@@ -272,7 +272,7 @@ output$genusOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Genus", y = "Count", title="Top 10 Genus") +
+    labs(x ="Genus", y = "Total", title="Top 10 Genus") +
     theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -298,7 +298,7 @@ output$speciesOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Species", y = "Count", title="Top 10 Species") 
+    labs(x ="Species", y = "Total", title="Top 10 Species") 
     theme_minimal(base_size = 12) + 
     theme(legend.text = element_text(size = 10),
           legend.title = element_text(size = 10),
@@ -323,7 +323,7 @@ output$treeNameOverviewPlot <- renderPlotly({
       "<br>Count: ", Total
     )))  +
     geom_bar(stat = "identity",width = 0.5, fill='black') + coord_flip() +
-    labs(x ="Tree Name", y = "Count", title="Top 10 Trees") 
+    labs(x ="Tree Name", y = "Total", title="Top 10 Trees") 
     theme_minimal(base_size = 12) + 
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
