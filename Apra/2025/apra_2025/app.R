@@ -182,16 +182,42 @@ ui <- dashboardPage(
                   br(),br(),
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
-                                       #plotlyOutput("rfmRecencyChart"),
+                                       layout_column_wrap(width = 1,
+                                                          plotlyOutput("donorSegmentGrowthRatePlot") %>% withSpinner()
+                                       ),
+                                       layout_column_wrap(width = 1,  
+                                                          plotlyOutput("donorSegmentRetentionChurnRatePlot") %>% withSpinner(),
+                                                          
+                                       )
                               ),
                               tabPanel(h4("Engagement",style="text-align: center;"),
-                                       #plotOutput('rfmTreemap'),
+                                       layout_column_wrap(width = 1,
+                                                          plotlyOutput("giftCRMSegmentPlot") %>% withSpinner() ,
+                                                          plotlyOutput("CRMSegmentPlot") %>% withSpinner()
+                                       ) 
                               ),
                               tabPanel(h4("Giving Level",style="text-align: center;"),
-                                       #plotlyOutput("rfmRecencyChart"),
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("giftYearSegmentPlot") %>% withSpinner(),
+                                                          plotlyOutput("giftYearCountSegmentPlot") %>% withSpinner()
+                                       ),
+                                       layout_column_wrap(width = 1,
+                                                          plotlyOutput("giftYearGrowthSegmentPlot") %>% withSpinner()
+                                       ),  
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("giftMonthSegmentPlot") %>% withSpinner(),
+                                                          plotlyOutput("giftDOWSegmentPlot") %>% withSpinner()
+                                       )
                               ),
                               tabPanel(h4("Online Performance",style="text-align: center;"),
-                                       #plotlyOutput("rfmRecencyChart"),
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("videoViewSegmentPlot") %>% withSpinner(),
+                                                          plotlyOutput("clickSegmentPlot") %>% withSpinner()
+                                       ),
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("bounceUnsubSegmentPlot") %>% withSpinner(),
+                                                          plotlyOutput("videFlowSegmentPlot") %>% withSpinner()
+                                       )
                               )
 
                               
@@ -845,7 +871,9 @@ output$rfmTable <- renderDataTable({
 })    
 
 #====== RFM Segment Trend Plot ======
-
+output$donationSegmentPlot <- renderPlotly({
+  
+})
 
 #====== RFM Donor Relationship ======
 # donor Growth Rate
@@ -877,6 +905,7 @@ output$rfmTable <- renderDataTable({
 # Bounce & Unsub Rate
 
 # sankey chart for sankey flow started --> 25% --> 50% 75% --> finished video for segments
+
 ################ Donation Forecasting ################
 #====== Donation Forecast setup ======
 forecast_df  <- reactive ({
