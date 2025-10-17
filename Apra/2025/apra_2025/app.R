@@ -240,12 +240,13 @@ ui <- dashboardPage(
                               tabPanel(h4("Donor Segment Trend",style="text-align: center;"),
                                        plotlyOutput("donationSegmentPlot") %>% withSpinner(),
                               ),                              
-                              tabPanel(h4("Forecast Graph",style="text-align: center;"),
-                                       plotlyOutput("donationForecastPlot") %>% withSpinner(),
-                              ),
-                              tabPanel(h4("Forecast Table",style="text-align: center;"),
-                                       DT::dataTableOutput("donationForecastTable") %>% withSpinner(),
-                              ),
+                              tabPanel(h4("Forecast",style="text-align: center;"),
+                                       layout_column_wrap(width = 1,
+                                                          plotlyOutput("donationForecastPlot") %>% withSpinner(),
+                                                          DT::dataTableOutput("donationForecastTable") %>% withSpinner()
+                                       )
+                              )
+                             
                   )
                 )
               )
@@ -897,6 +898,7 @@ output$donationSegmentPlot <- renderPlotly({
 # Gift by Month
 
 # Gift by DOW
+
 #====== RFM Online Performance ======  
 #Video Views
 
@@ -939,33 +941,36 @@ forecast_df  <- reactive ({
     
     df <- as_data_frame(forecast_arima) %>%
       rename(
-        `Forecasted Donation` = `Point Forecast`
+        `Forecasted Donations` = `Point Forecast`
       ) %>%
       mutate(
         Month = seq(from = max(monthly_donations$year_month) + months(1),
                     by = "month",
                     length.out = input$forecastHorizonInput)
       ) %>%
-      select(Month, `Forecasted Donation`)
+      select(Month, `Forecasted Donations`)
     
-    df$`Forecasted Donation`<-round(df$`Forecasted Donation`,2)
+    df$`Forecasted Donations`<-round(df$`Forecasted Donations`,1)
     df
   
   })
   output$donationForecastPlot <- renderPlotly({
     g <- forecast_df() %>%
-      select(Month, `Forecasted Donation`) %>%
-      ggplot(aes(x = Month ,y = `Forecasted Donation`))  +
+      select(Month, `Forecasted Donations`) %>%
+      ggplot(aes(x = Month ,y = `Forecasted Donations`,text = paste0(
+        "Month: ", Month,
+        "<br>Forecasted Donations: ", "$", `Forecasted Donations`
+      )))  +
       geom_bar(stat = "identity",width = 8, fill='black')  +
       labs(x ="Date", y = "Gift Amount", title = "Forecasted Donations") + 
       scale_y_continuous(labels = scales::comma) +
+      theme_minimal(base_size = 12) +
       theme(legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
-            plot.title = element_text(size = 12, hjust = 0.5),
+            plot.title = element_text(size = 10, hjust = 0.5),
             axis.title = element_text(size = 10),
             axis.text = element_text(size = 10))
-    
-     ggplotly(g)
+    ggplotly(g,tooltip = "text")
   })
     
   output$donationForecastTable <- renderDataTable({
