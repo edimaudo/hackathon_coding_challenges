@@ -871,10 +871,7 @@ output$rfmTable <- renderDataTable({
     rfm_output()
 })    
 
-#====== RFM Segment Trend Plot ======
-output$donationSegmentPlot <- renderPlotly({
-  
-})
+
 
 #====== RFM Donor Relationship ======
 # donor Growth Rate
@@ -909,7 +906,12 @@ output$donationSegmentPlot <- renderPlotly({
 # sankey chart for sankey flow started --> 25% --> 50% 75% --> finished video for segments
 
 ################ Donation Forecasting ################
-#====== Donation Forecast setup ======
+#====== Segment Trend Plot ======
+output$donationSegmentPlot <- renderPlotly({
+  
+})
+
+#====== Donation Segment Forecast setup ======
 forecast_df  <- reactive ({
     #set.seed(1234)
     gifts_df <- gift %>%
@@ -974,6 +976,7 @@ forecast_df  <- reactive ({
   })
     
   output$donationForecastTable <- renderDataTable({
+    
     forecast_df()
     
   })
