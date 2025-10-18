@@ -879,6 +879,7 @@ gifts_segment_df <- reactive({
     na.omit()
   df
 })
+#========= Donor Relationship ========
 # donor Growth Rate
 output$donorSegmentGrowthRatePlot <- renderPlotly({
   g <- gifts_segment_df() %>%
