@@ -906,22 +906,55 @@ output$rfmTable <- renderDataTable({
 # sankey chart for sankey flow started --> 25% --> 50% 75% --> finished video for segments
 
 ################ Donation Forecasting ################
+
+gifts_segment_df <- reactive({
+  df<- gift %>%
+    filter(GIFT_DATE >= '2015-01-01') %>%
+    inner_join(rfm_output(),'CONSTITUENT_ID') %>%
+    group_by(CONSTITUENT_ID) %>%
+    select(CONSTITUENT_ID,Segment,GIFT_DATE,AMOUNT) %>%
+    na.omit()
+  df
+})
+  
+
+
 #====== Segment Trend Plot ======
 output$donationSegmentPlot <- renderPlotly({
+  
+  g <- gifts_segment_df() %>%
+    filter(Segment %in% c(input$forecastSegmentInput)) %>%
+    mutate(
+      Year = lubridate::year(lubridate::ymd(GIFT_DATE))
+    ) %>%
+    group_by(Segment,Year) %>%
+    summarize(Total = round(mean(AMOUNT)),2) %>%
+    select(Segment, Year, Total) %>%
+    ggplot(aes(Year, Total,  text = paste0(
+      "Year: ", Year,
+      "<br>Donor Segment: ", Segment,
+      "<br>Avg. Amount: ", "$" , Total
+    ))) + 
+    geom_bar(stat = "identity",width = 0.5, fill='black')  +
+    labs(x = "Year", y = "Total", title="Donation Amount by Donor Segment") + 
+    scale_y_continuous(labels = comma) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+    theme_minimal(base_size = 12)  + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
 })
 
 #====== Donation Segment Forecast setup ======
 forecast_df  <- reactive ({
     #set.seed(1234)
-    gifts_df <- gift %>%
-      filter(GIFT_DATE >= '2015-01-01') %>%
-      inner_join(rfm_output(),'CONSTITUENT_ID') %>%
-      group_by(CONSTITUENT_ID) %>%
-      select(CONSTITUENT_ID,Segment,GIFT_DATE,AMOUNT) %>%
-      na.omit()
-    
-     monthly_donations <- gifts_df %>%
+
+    monthly_donations <- gifts_segment_df() %>%
     filter(Segment %in% c(input$forecastSegmentInput)) %>%
     mutate(GIFT_DATE = ymd(GIFT_DATE)) %>%
     # Extract year and month for grouping
