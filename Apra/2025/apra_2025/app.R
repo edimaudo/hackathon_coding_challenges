@@ -3,7 +3,6 @@
 # for Apra data science challenge 2025
 ################################################
 rm(list = ls())
-
 ################  Packages ####################
 # library(ggplot2)
 # library(corrplot)
@@ -187,7 +186,7 @@ ui <- dashboardPage(
                                                           plotlyOutput("donorSegmentRetentionChurnRatePlot") %>% withSpinner()
                                        ),
                                        layout_column_wrap(width = 1,  
-                                                          plotlytOutput("donorSegmentLifeTimeValue") %>% withSpinner()
+                                                          plotlyOutput("donorSegmentLifeTimeValue") %>% withSpinner()
                                                           
                                        )
                               ),
@@ -870,6 +869,7 @@ output$rfmTable <- renderDataTable({
     rfm_output()
 })    
 
+#====== RFM Donor Relationship ======
 gifts_segment_df <- reactive({
   df<- gift %>%
     filter(GIFT_DATE >= '2015-01-01') %>%
@@ -879,9 +879,6 @@ gifts_segment_df <- reactive({
     na.omit()
   df
 })
-
-
-#====== RFM Donor Relationship ======
 # donor Growth Rate
 output$donorSegmentGrowthRatePlot <- renderPlotly({
   g <- gifts_segment_df() %>%
@@ -901,7 +898,6 @@ output$donorSegmentGrowthRatePlot <- renderPlotly({
         "Year: ", Year,
         "<br>Donor Growth: ", donorGrowth, "%",
         "<br>Donor Segment(s): ", AllSegments
-        
       )
     )
   
@@ -927,9 +923,7 @@ output$donorSegmentGrowthRatePlot <- renderPlotly({
 output$donorSegmentRetentionChurnRatePlot <- renderPlotly({})
 
 # Donor Lifetime value
-output$donorSegmentLifeTimeValue <- renderPlotly({
-  
-})
+output$donorSegmentLifeTimeValue <- renderPlotly({})
 
 #====== RFM Engagement Level ======
 # Engagement Amount
@@ -1005,10 +999,33 @@ output$CRMSegmentPlot <- renderPlotly({
 
 #====== RFM Giving Level ======
 # Avg. Gift Amount
-output$giftYearSegmentPlot <- renderPlotly({})
+output$giftYearSegmentPlot <- renderPlotly({
+  
+})
 
 # Gift Count
-output$giftYearCountSegmentPlot <- renderPlotly({})
+output$giftYearCountSegmentPlot <- renderPlotly({
+  g <- gifts_segment_df() %>%
+    filter (Segment %in% input$rfmInput) %>%
+    mutate(Year = as.integer(year(GIFT_DATE)))  %>%
+    group_by(Year) %>%
+    summarise(Total = n()) %>%
+    select(Year, Total) %>% 
+    na.omit() %>%
+    ggplot(aes(Year, Total)) + 
+    geom_bar(stat = "identity",width = 0.5, fill='black')  +
+    labs(x = "Year", y = "Gift Count", title="Gift Count by Year") + 
+    scale_y_continuous(labels = comma) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+    theme_minimal(base_size = 12) +
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g,tooltip = "text")
+})
 
 # Gift Growth
 output$giftYearGrowthSegmentPlot <- renderPlotly({})
