@@ -1114,6 +1114,28 @@ output$giftMonthSegmentPlot <- renderPlotly({
 
 # Gift by DOW
 output$giftDOWSegmentPlot <- renderPlotly({
+  g <- gifts_segment_df() %>%
+    filter (Segment %in% input$rfmInput) %>%
+    mutate(DOW = lubridate::wday(GIFT_DATE, label=TRUE)) %>%
+    group_by(DOW) %>%
+    summarise(Total = round(mean(AMOUNT),1)) %>%
+    select(DOW, Total) %>% 
+    na.omit() %>%
+    ggplot(aes(DOW, Total,text = paste0(
+      "Day of Week: ", DOW,
+      "<br>Amount: ",  "$", Total
+    ))) + 
+    geom_col(width = 0.5, fill = "black") +
+    labs(x = "Day Of Week", y = "Avg. Gift Amount", title="Avg. Gift Amount by Day of Week") + 
+    scale_y_continuous(labels = comma) +
+    theme_minimal(base_size = 12) +
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g,tooltip = "text")
   
 })
 
