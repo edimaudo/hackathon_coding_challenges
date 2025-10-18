@@ -925,14 +925,15 @@ output$donationSegmentPlot <- renderPlotly({
   g <- gifts_segment_df() %>%
     filter(Segment %in% c(input$forecastSegmentInput)) %>%
     mutate(
-      Year = lubridate::year(lubridate::ymd(GIFT_DATE))
+      Year = lubridate::year(lubridate::ymd(GIFT_DATE)),
+      AllSegments = paste(input$forecastSegmentInput, collapse = ", ")
     ) %>%
     group_by(Segment,Year) %>%
     summarize(Total = round(mean(AMOUNT)),2) %>%
     select(Segment, Year, Total) %>%
     ggplot(aes(Year, Total,  text = paste0(
       "Year: ", Year,
-      "<br>Donor Segment: ", Segment,
+      "<br>Donor Segment(s): ", AllSegments,
       "<br>Avg. Amount: ", "$" , Total
     ))) + 
     geom_bar(stat = "identity",width = 0.5, fill='black')  +
