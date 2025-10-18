@@ -906,7 +906,6 @@ output$donorSegmentGrowthRatePlot <- renderPlotly({
   
   g$text <- as.character(g$text)
     
-    
   p <-  ggplot(g, aes(Year, donorGrowth,  text=text)) + 
     geom_bar(stat = "identity",width = 0.5, fill='black')  +
     labs(x = "Year", y = "Donor Growth", title="Donor Growth by Year") + 
@@ -929,8 +928,42 @@ output$donorSegmentGrowthRatePlot <- renderPlotly({
 
 #====== RFM Engagement Level ======
 # Engagement Amount
+output$giftCRMSegmentPlot <- renderPlotly({
+  g <- gifts_segment_df() %>%
+    filter (Segment %in% input$rfmInput) %>%
+    left_join(crm,by='CONSTITUENT_ID') %>%
+    group_by(CRM_INTERACTION_TYPE) %>%
+    summarise(Total = round(mean(AMOUNT),1)) %>%
+    mutate(
+      AllSegments = paste(unique(input$rfmInput), collapse = ", "),
+      text = paste0(
+        "CRM Interaction Type: ", CRM_INTERACTION_TYPE,
+        "<br>Amount: ", "$", Total,
+        "<br>Donor Segment(s): ", AllSegments
+       ) 
+      ) %>%
+    na.omit()
+  g$text <- as.character(g$text)
+    p<- ggplot(g, aes(x = reorder(CRM_INTERACTION_TYPE,Total) ,y = Total,
+               text = text)) +
+    geom_bar(stat = "identity",width = 0.5, fill='black')  +
+    scale_y_continuous(labels = scales::comma) +
+    labs(x ="CRM Interaction Type", y = "Avg. Gift Amount", 
+         title="CRM Interaction & Avg. Gift Amount") + coord_flip() +
+    theme_minimal(base_size = 12) +
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10))
+  ggplotly(p,tooltip = "text")
+  
+})
 
-# Engagement Amount
+# Engagement Count
+output$CRMSegmentPlot <- renderPlotly({
+  
+})
 
 #====== RFM Giving Level ======
 # Avg. Gift Amount
