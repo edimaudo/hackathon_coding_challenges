@@ -1010,7 +1010,7 @@ output$CRMSegmentPlot <- renderPlotly({
 # Gift by DOW
 
 #====== RFM Online Performance ======  
-#Video Views
+# Video Views
 
 # Video Clicks
 
@@ -1019,11 +1019,6 @@ output$CRMSegmentPlot <- renderPlotly({
 # sankey chart for sankey flow started --> 25% --> 50% 75% --> finished video for segments
 
 ################ Donation Forecasting ################
-
-
-  
-
-
 #====== Segment Trend Plot ======
 output$donationSegmentPlot <- renderPlotly({
   
@@ -1070,12 +1065,9 @@ output$donationSegmentPlot <- renderPlotly({
 
 #====== Donation Segment Forecast setup ======
 forecast_df  <- reactive ({
-    #set.seed(1234)
-
     monthly_donations <- gifts_segment_df() %>%
     filter(Segment %in% c(input$forecastSegmentInput)) %>%
     mutate(GIFT_DATE = ymd(GIFT_DATE)) %>%
-    # Extract year and month for grouping
     mutate(year_month = floor_date(GIFT_DATE, "month")) %>%
     group_by(year_month) %>%
     summarise(total_donations = sum(AMOUNT, na.rm = TRUE), .groups = 'drop') %>%
@@ -1089,9 +1081,7 @@ forecast_df  <- reactive ({
                        frequency = 12)
     
     arima_model <- auto.arima(donations_ts)
-    
     forecast_arima <- forecast(arima_model, h = input$forecastHorizonInput)
-    
     df <- as_data_frame(forecast_arima) %>%
       rename(
         `Forecasted Donations` = `Point Forecast`
@@ -1126,10 +1116,8 @@ forecast_df  <- reactive ({
     ggplotly(g,tooltip = "text")
   })
     
-  output$donationForecastTable <- renderDataTable({
-    
+output$donationForecastTable <- renderDataTable({
     forecast_df()
-    
   })
     
 ################ Next Best Donation ################
