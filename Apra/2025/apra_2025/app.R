@@ -1086,7 +1086,31 @@ output$giftYearGrowthSegmentPlot <- renderPlotly({
 })
 
 # Gift by Month
-output$giftMonthSegmentPlot <- renderPlotly({})
+output$giftMonthSegmentPlot <- renderPlotly({
+  g <- gifts_segment_df() %>%
+    filter (Segment %in% input$rfmInput) %>%
+    mutate(Month = lubridate::month(GIFT_DATE, label = TRUE))  %>%
+    group_by(Month) %>%
+    summarise(Total = round(mean(AMOUNT),1)) %>%
+    select(Month, Total) %>% 
+    na.omit() %>%
+    ggplot(aes(Month, Total,text = paste0(
+      "Month: ", Month,
+      "<br>Amount: ", "$", Total
+    ))) + 
+    geom_col(width = 0.5, fill = "black") +
+    labs(x = "Month", y = "Avg. Gift Amount", title="Avg. Gift Amount by Month") + 
+    scale_y_continuous(labels = comma) + 
+    theme_minimal(base_size = 12) +
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g,tooltip = "text")
+  
+})
 
 # Gift by DOW
 output$giftDOWSegmentPlot <- renderPlotly({})
