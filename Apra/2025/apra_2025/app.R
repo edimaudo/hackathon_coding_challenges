@@ -1113,7 +1113,9 @@ output$giftMonthSegmentPlot <- renderPlotly({
 })
 
 # Gift by DOW
-output$giftDOWSegmentPlot <- renderPlotly({})
+output$giftDOWSegmentPlot <- renderPlotly({
+  
+})
 
 #====== RFM Online Performance ======  
 # Video Views
