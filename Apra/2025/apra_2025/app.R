@@ -186,7 +186,7 @@ ui <- dashboardPage(
                                                           plotlyOutput("donorSegmentRetentionChurnRatePlot") %>% withSpinner()
                                        ),br(),
                                        layout_column_wrap(width = 1,  
-                                                          plotlyOutput("donorSegmentLifeTimeValue") %>% withSpinner()
+                                      #                    plotlyOutput("donorSegmentLifeTimeValue") %>% withSpinner()
                                                           
                                        )
                               ),
@@ -920,10 +920,12 @@ output$donorSegmentGrowthRatePlot <- renderPlotly({
 })
 
 # Donor Retention & Churn Rate
-output$donorSegmentRetentionChurnRatePlot <- renderPlotly({})
+output$donorSegmentRetentionChurnRatePlot <- renderPlotly({
+  
+})
 
 # Donor Lifetime value
-output$donorSegmentLifeTimeValue <- renderPlotly({})
+# output$donorSegmentLifeTimeValue <- renderPlotly({})
 
 #====== RFM Engagement Level ======
 # Engagement Amount
