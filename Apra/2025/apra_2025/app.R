@@ -1055,7 +1055,35 @@ output$giftYearCountSegmentPlot <- renderPlotly({
 })
 
 # Gift Growth
-output$giftYearGrowthSegmentPlot <- renderPlotly({})
+output$giftYearGrowthSegmentPlot <- renderPlotly({
+  g <- gifts_segment_df() %>%
+    filter (Segment %in% input$rfmInput) %>%
+    mutate(Year = as.integer(year(GIFT_DATE)))  %>%
+    group_by(Year) %>%
+    summarise(AvgGift = mean(AMOUNT, na.rm = TRUE)) %>%
+    arrange(Year) %>%
+    mutate(
+      AvgGiftGrowth = ((AvgGift - lag(AvgGift)) / lag(AvgGift)) * 100,
+      AvgGiftGrowth = round(AvgGiftGrowth, 1),
+      AvgGiftGrowth = replace_na(AvgGiftGrowth, 0)
+    ) %>%
+    ggplot(aes(Year, AvgGiftGrowth,  text = paste0(
+      "Year: ", Year,
+      "<br>Avg. Gift Amount Growth: ", AvgGiftGrowth, "%"
+    ))) + 
+    geom_col(width = 0.5, fill = "black") +
+    labs(x = "Year", y = "Avg. Gift Amount Growth", title="Avg. Gift Amount Growth by Year") + 
+    scale_y_continuous(labels = comma) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+    theme_minimal(base_size = 12) +
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g,tooltip = "text")
+})
 
 # Gift by Month
 output$giftMonthSegmentPlot <- renderPlotly({})
