@@ -160,7 +160,7 @@ ui <- dashboardPage(
                   br(),br(),
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Portfolio Mix",style="text-align: center;"),
-                                       plotOutput('rfmTreemap') %>% withSpinner() , #plotOutput
+                                       plotOutput('rfmTreemap') %>% withSpinner(),
                               ),
                               tabPanel(h4("Donor Portfolio Description",style="text-align: center;"), 
                                        DT::dataTableOutput("rfmDescription"),
@@ -184,7 +184,7 @@ ui <- dashboardPage(
                                        layout_column_wrap(width = 1/2,
                                                           plotlyOutput("donorSegmentGrowthRatePlot") %>% withSpinner(),
                                                           plotlyOutput("donorSegmentRetentionChurnRatePlot") %>% withSpinner()
-                                       ),
+                                       ),br(),
                                        layout_column_wrap(width = 1,  
                                                           plotlyOutput("donorSegmentLifeTimeValue") %>% withSpinner()
                                                           
@@ -200,10 +200,10 @@ ui <- dashboardPage(
                                        layout_column_wrap(width = 1/2,
                                                           plotlyOutput("giftYearSegmentPlot") %>% withSpinner(),
                                                           plotlyOutput("giftYearCountSegmentPlot") %>% withSpinner()
-                                       ),
+                                       ),br(),
                                        layout_column_wrap(width = 1,
                                                           plotlyOutput("giftYearGrowthSegmentPlot") %>% withSpinner()
-                                       ),  
+                                       ),br(),  
                                        layout_column_wrap(width = 1/2,
                                                           plotlyOutput("giftMonthSegmentPlot") %>% withSpinner(),
                                                           plotlyOutput("giftDOWSegmentPlot") %>% withSpinner()
@@ -213,7 +213,7 @@ ui <- dashboardPage(
                                        layout_column_wrap(width = 1/2,
                                                           plotlyOutput("videoViewSegmentPlot") %>% withSpinner(),
                                                           plotlyOutput("clickSegmentPlot") %>% withSpinner()
-                                       ),
+                                       ),br(),
                                        layout_column_wrap(width = 1/2,
                                                           plotlyOutput("bounceUnsubSegmentPlot") %>% withSpinner(),
                                                           plotlyOutput("videFlowSegmentPlot") %>% withSpinner()
