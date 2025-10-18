@@ -898,8 +898,8 @@ output$donorSegmentGrowthRatePlot <- renderPlotly({
       AllSegments = paste(unique(input$rfmInput), collapse = ", "),
       text = paste0(
         "Year: ", Year,
-        "<br>Donor Growth: ", donorGrowth, "%"
-        "<br>Donor Segment(s): ", AllSegments,
+        "<br>Donor Growth: ", donorGrowth, "%",
+        "<br>Donor Segment(s): ", AllSegments
         
       )
     )
