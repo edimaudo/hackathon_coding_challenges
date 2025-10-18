@@ -949,7 +949,7 @@ output$donationSegmentPlot <- renderPlotly({
     labs(
       x = "Year",
       y = "Average Donation Amount",
-      title = "Donation Amount by Donor Segment"
+      title = "Donor Portolio Avg. Donation Amount"
     ) +
     scale_y_continuous(labels = comma) +
     theme_minimal(base_size = 12) +
