@@ -284,8 +284,6 @@ ui <- dashboardPage(
 
 ################  Server ################
 server <- function(input, output,session) {
-  
-
 ################ Donor Overview ################
 #====== Gift Data setup ======
 gift_df <- reactive({
@@ -878,7 +876,7 @@ output$rfmTable <- renderDataTable({
 
 # Donor Retention & Churn Rate
 
-# Donor Lifetime value (constituent level and donor group level)
+# Donor Lifetime value
 
 #====== RFM Engagement Level ======
 # Engagement Amount
