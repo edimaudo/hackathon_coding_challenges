@@ -922,6 +922,64 @@ output$donorSegmentGrowthRatePlot <- renderPlotly({
 # Donor Retention & Churn Rate
 output$donorSegmentRetentionChurnRatePlot <- renderPlotly({
   
+  donor_by_year <- gifts_segment_df() %>%
+    filter (Segment %in% input$rfmInput) %>%
+    mutate(Year = as.integer(year(GIFT_DATE)))  %>%
+    group_by(Year) %>%
+    summarise(donors = list(unique(CONSTITUENT_ID)),
+              n_donors = n_distinct(CONSTITUENT_ID)) %>%
+    arrange(Year)
+  
+  donor_rates <- donor_by_year %>%
+    mutate(
+      prev_donors = lag(donors),
+      retained = map2_int(donors, prev_donors, ~ length(intersect(.x, .y))),
+      retention_rate = round((retained / lag(n_donors)) * 100, 1),
+      churn_rate = round(100 - retention_rate, 1)
+    ) %>%
+    replace_na(list(retention_rate = 0, churn_rate = 0)) %>%
+    select(Year, retention_rate, churn_rate)
+  
+  g <- donor_rates %>%
+    ggplot(aes(x = Year)) +
+    # Retention rate line (left axis)
+    geom_line(aes(y = retention_rate, 
+                  text = paste0("Year: ", Year,
+                                "<br>Retention Rate: ", retention_rate, "%")),
+              color = "darkgreen", size = 1.2, group = 1) +
+    geom_point(aes(y = retention_rate), color = "darkgreen", size = 2) +
+    
+    # Churn rate line (right axis)
+    geom_line(aes(y = churn_rate, 
+                  text = paste0("Year: ", Year,
+                                "<br>Churn Rate: ", churn_rate, "%")),
+              color = "red", size = 1.2, group = 1, linetype = "dashed") +
+    geom_point(aes(y = churn_rate), color = "red", size = 2) +
+    
+    # Dual axis setup
+    scale_y_continuous(
+      name = "Retention Rate (%)",
+      sec.axis = sec_axis(~ ., name = "Churn Rate (%)")  # mirror axis
+    ) +
+    
+    labs(
+      title = "Donor Retention vs Churn Rate by Year",
+      x = "Year"
+    ) +
+    
+    scale_x_continuous(labels = scales::number_format(accuracy = 1)) +
+    
+    theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(size = 13, hjust = 0.5),
+      axis.title.y.left = element_text(color = "darkgreen"),
+      axis.title.y.right = element_text(color = "red"),
+      axis.text = element_text(size = 10)
+    )
+  
+  ggplotly(g, tooltip = "text")
+  
+  
 })
 
 # Donor Lifetime value
