@@ -182,11 +182,12 @@ ui <- dashboardPage(
                   br(),br(),
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Relationship",style="text-align: center;"),
-                                       layout_column_wrap(width = 1,
-                                                          plotlyOutput("donorSegmentGrowthRatePlot") %>% withSpinner()
+                                       layout_column_wrap(width = 1/2,
+                                                          plotlyOutput("donorSegmentGrowthRatePlot") %>% withSpinner(),
+                                                          plotlyOutput("donorSegmentRetentionChurnRatePlot") %>% withSpinner()
                                        ),
                                        layout_column_wrap(width = 1,  
-                                                          plotlyOutput("donorSegmentRetentionChurnRatePlot") %>% withSpinner(),
+                                                          plotlytOutput("donorSegmentLifeTimeValue") %>% withSpinner()
                                                           
                                        )
                               ),
@@ -923,8 +924,12 @@ output$donorSegmentGrowthRatePlot <- renderPlotly({
 })
 
 # Donor Retention & Churn Rate
+output$donorSegmentRetentionChurnRatePlot <- renderPlotly({})
 
 # Donor Lifetime value
+output$donorSegmentLifeTimeValue <- renderPlotly({
+  
+})
 
 #====== RFM Engagement Level ======
 # Engagement Amount
@@ -1000,23 +1005,33 @@ output$CRMSegmentPlot <- renderPlotly({
 
 #====== RFM Giving Level ======
 # Avg. Gift Amount
+output$giftYearSegmentPlot <- renderPlotly({})
 
 # Gift Count
+output$giftYearCountSegmentPlot <- renderPlotly({})
 
 # Gift Growth
+output$giftYearGrowthSegmentPlot <- renderPlotly({})
 
 # Gift by Month
+output$giftMonthSegmentPlot <- renderPlotly({})
 
 # Gift by DOW
+output$giftDOWSegmentPlot <- renderPlotly({})
 
 #====== RFM Online Performance ======  
 # Video Views
-
+output$videoViewSegmentPlot <- renderPlotly({
+  
+})
 # Video Clicks
+output$clickSegmentPlot <- renderPlotly({})
 
 # Bounce & Unsub Rate
+output$bounceUnsubSegmentPlot <- renderPlotly({})
 
 # sankey chart for sankey flow started --> 25% --> 50% 75% --> finished video for segments
+output$videFlowSegmentPlot <- renderPlotly({})
 
 ################ Donation Forecasting ################
 #====== Segment Trend Plot ======
@@ -1097,7 +1112,7 @@ forecast_df  <- reactive ({
     df
   
   })
-  output$donationForecastPlot <- renderPlotly({
+output$donationForecastPlot <- renderPlotly({
     g <- forecast_df() %>%
       select(Month, `Forecasted Donations`) %>%
       ggplot(aes(x = Month ,y = `Forecasted Donations`,text = paste0(
