@@ -235,12 +235,12 @@ ui <- dashboardPage(
                                          min = 1, max = 24, value = 12), 
                              submitButton("Submit")
                 ),
-                mainPanel(
+                mainPanel(width = 9,
                   tabsetPanel(type = "tabs",
                               tabPanel(h4("Donor Segment Trend",style="text-align: center;"),
                                        plotlyOutput("donationSegmentPlot") %>% withSpinner(),
                               ),                              
-                              tabPanel(h4("Forecast",style="text-align: center;"),
+                              tabPanel(h4("Donor Segment Forecast",style="text-align: center;"),
                                        layout_column_wrap(width = 1,
                                                           plotlyOutput("donationForecastPlot") %>% withSpinner(),
                                                           DT::dataTableOutput("donationForecastTable") %>% withSpinner()
@@ -923,31 +923,44 @@ gifts_segment_df <- reactive({
 output$donationSegmentPlot <- renderPlotly({
   
   g <- gifts_segment_df() %>%
-    filter(Segment %in% c(input$forecastSegmentInput)) %>%
+    filter(Segment %in% input$forecastSegmentInput) %>%
+    mutate(Year = year(ymd(GIFT_DATE))) %>%
+    group_by(Segment, Year) %>%
+    summarize(Total = round(mean(AMOUNT, na.rm = TRUE), 2), .groups = "drop") %>%
+    # <-- only now, after summarizing and ungrouping, create AllSegments
     mutate(
-      Year = lubridate::year(lubridate::ymd(GIFT_DATE)),
-      AllSegments = paste(input$forecastSegmentInput, collapse = ", ")
+      AllSegments = paste(unique(Segment), collapse = ", ")
     ) %>%
-    group_by(Segment,Year) %>%
-    summarize(Total = round(mean(AMOUNT)),2) %>%
-    select(Segment, Year, Total) %>%
-    ggplot(aes(Year, Total,  text = paste0(
-      "Year: ", Year,
-      "<br>Donor Segment(s): ", AllSegments,
-      "<br>Avg. Amount: ", "$" , Total
-    ))) + 
-    geom_bar(stat = "identity",width = 0.5, fill='black')  +
-    labs(x = "Year", y = "Total", title="Donation Amount by Donor Segment") + 
+    mutate(
+      Year = as.character(Year),
+      Segment = as.character(Segment),
+      text = paste0(
+        "Year: ", Year,
+        "<br>Donor Segment(s): ", AllSegments,
+        "<br>Avg. Donation Amount: $", formatC(Total, format = "f", digits = 2, big.mark = ",")
+      )
+    )
+  
+  # Make absolutely sure text is character (not factor/list)
+  g$text <- as.character(g$text)
+  
+  p <- ggplot(g, aes(x = Year, y = Total, text = text)) +
+    geom_col(width = 0.5, fill = "black") +
+    labs(
+      x = "Year",
+      y = "Average Donation Amount",
+      title = "Donation Amount by Donor Segment"
+    ) +
     scale_y_continuous(labels = comma) +
-    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
-    theme_minimal(base_size = 12)  + 
-    theme(legend.text = element_text(size = 10),
-          legend.title = element_text(size = 10),
-          plot.title = element_text(size = 12, hjust = 0.5),
-          axis.title = element_text(size = 10),
-          axis.text = element_text(size = 10),
-          axis.text.x = element_text(angle = 0, hjust = 1))
-  ggplotly(g, tooltip = "text")
+    theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(size = 12, hjust = 0.5),
+      axis.title = element_text(size = 10),
+      axis.text = element_text(size = 10),
+      axis.text.x = element_text(angle = 0, hjust = 1)
+    )
+  
+  ggplotly(p, tooltip = "text")
   
 })
 
