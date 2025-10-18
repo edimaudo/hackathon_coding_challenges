@@ -978,10 +978,10 @@ output$CRMSegmentPlot <- renderPlotly({
         "<br>OutReach Rate: ", Percent, "%",
         "<br>Donor Segment(s): ", AllSegments
       ) 
-    )
+    ) %>%
     na.omit()
     g$text <- as.character(g$text)
-    p <- ggplot(p, aes(x = reorder(CRM_INTERACTION_TYPE,Percent) ,y = Percent,
+    p <- ggplot(g, aes(x = reorder(CRM_INTERACTION_TYPE,Percent) ,y = Percent,
                text = text))  +
     geom_bar(stat = "identity",width = 0.5, fill='black')  +
     scale_y_continuous(labels = scales::comma) +
