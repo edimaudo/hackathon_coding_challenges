@@ -885,8 +885,7 @@ gifts_segment_df <- reactive({
 output$donorSegmentGrowthRatePlot <- renderPlotly({
   g <- gifts_segment_df() %>%
     filter (Segment %in% input$rfmInput) %>%
-    mutate(Year = as.integer(as.numeric(lubridate::year(GIFT_DATE))),
-           AllSegments = paste(unique(Segment), collapse = ", ")) %>%
+    mutate(Year = as.integer(year(GIFT_DATE)))  %>%
     group_by(Year) %>%
     summarise(Unique_Constituents = n_distinct(CONSTITUENT_ID)) %>%
     arrange(Year) %>%
@@ -896,20 +895,19 @@ output$donorSegmentGrowthRatePlot <- renderPlotly({
       donorGrowth = replace_na(donorGrowth, 0)
     ) %>%
     mutate(
-      Year = as.character(Year),
-      Segment = as.character(Segment),
+      AllSegments = paste(unique(input$rfmInput), collapse = ", "),
       text = paste0(
         "Year: ", Year,
-        "<br>Donor Segment(s): ", AllSegments,
         "<br>Donor Growth: ", donorGrowth, "%"
+        "<br>Donor Segment(s): ", AllSegments,
+        
       )
     )
   
-  # Make absolutely sure text is character (not factor/list)
   g$text <- as.character(g$text)
     
     
-  p <-  ggplot(g, aes(Year, donorGrowth,  text)) + 
+  p <-  ggplot(g, aes(Year, donorGrowth,  text=text)) + 
     geom_bar(stat = "identity",width = 0.5, fill='black')  +
     labs(x = "Year", y = "Donor Growth", title="Donor Growth by Year") + 
     scale_y_continuous(labels = comma) +
@@ -921,7 +919,7 @@ output$donorSegmentGrowthRatePlot <- renderPlotly({
           axis.title = element_text(size = 10),
           axis.text = element_text(size = 10),
           axis.text.x = element_text(angle = 0, hjust = 1))
-  ggplotly(g, tooltip = "text")
+  ggplotly(p, tooltip = "text")
     
 })
 
