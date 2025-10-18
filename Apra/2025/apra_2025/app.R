@@ -938,7 +938,7 @@ output$giftCRMSegmentPlot <- renderPlotly({
       AllSegments = paste(unique(input$rfmInput), collapse = ", "),
       text = paste0(
         "CRM Interaction Type: ", CRM_INTERACTION_TYPE,
-        "<br>Amount: ", "$", Total,
+        "<br>Avg. Gift Amount: ", "$", Total,
         "<br>Donor Segment(s): ", AllSegments
        ) 
       ) %>%
@@ -962,6 +962,39 @@ output$giftCRMSegmentPlot <- renderPlotly({
 
 # Engagement Count
 output$CRMSegmentPlot <- renderPlotly({
+  
+  g <- gifts_segment_df() %>%
+    filter (Segment %in% input$rfmInput) %>%
+    left_join(crm,by='CONSTITUENT_ID') %>%
+    group_by(CRM_INTERACTION_TYPE) %>%
+    summarise(Total = n()) %>%
+    mutate(RunningTotal = cumsum(Total),
+           Percent = round((Total / sum(Total)) * 100,2)
+    ) %>%
+    mutate(
+      AllSegments = paste(unique(input$rfmInput), collapse = ", "),
+      text = paste0(
+        "CRM Interaction Type: ", CRM_INTERACTION_TYPE,
+        "<br>OutReach Rate: ", Percent, "%",
+        "<br>Donor Segment(s): ", AllSegments
+      ) 
+    )
+    na.omit()
+    g$text <- as.character(g$text)
+    p <- ggplot(p, aes(x = reorder(CRM_INTERACTION_TYPE,Percent) ,y = Percent,
+               text = text))  +
+    geom_bar(stat = "identity",width = 0.5, fill='black')  +
+    scale_y_continuous(labels = scales::comma) +
+    labs(x ="CRM Interaction Type", y = "OutReach Rate", title="CRM Interaction Outreach Rate") + 
+    theme_minimal(base_size = 12) +
+    coord_flip() +
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10))
+  
+  ggplotly(p,tooltip = "text")
   
 })
 
