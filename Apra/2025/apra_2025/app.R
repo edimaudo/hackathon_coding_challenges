@@ -1306,69 +1306,69 @@ output$bounceUnsubSegmentPlot <- renderPlotly({
 
 # sankey chart for sankey flow started --> 25% --> 50% 75% --> finished video for segments
 output$videFlowSegmentPlot <- renderPlotly({
-  stages <- c(
-    "CLICKS",
-    "STARTED_VIDEO",
-    "WATCHED_VIDEO_25_PERCENT",
-    "WATCHED_VIDEO_50_PERCENT",
-    "WATCHED_VIDEO_75_PERCENT",
-    "FINISHED_VIDEO"
-  )
-  
-  # Defensive checks
-  missing_cols <- setdiff(stages, names(video))
-  if (length(missing_cols) > 0) stop("Missing columns in 'video': ", paste(missing_cols, collapse = ", "))
-  
-  # Ensure binary integer columns
-  video <- video %>% mutate(across(all_of(stages), ~ as.integer(.)))
-  
-  # Build links: transitions between adjacent stages
-  links <- map2_dfr(stages[-length(stages)], stages[-1], function(from, to) {
-    tibble(
-      source_label = from,
-      target_label = to,
-      value = sum(video[[from]] == 1 & video[[to]] == 1, na.rm = TRUE)
-    )
-  })
-  
-  # Nodes list (unique stage labels)
-  nodes <- data.frame(name = stages, stringsAsFactors = FALSE)
-  
-  # Map labels to 0-based indices for Plotly
-  links_plotly <- links %>%
-    mutate(
-      source = match(source_label, nodes$name) - 1,
-      target = match(target_label, nodes$name) - 1
-    )
-  
-  # Optional: colors for nodes (same length as stages)
-  node_colors <- c("#4C78A8", "#F58518", "#E45756", "#72B7B2", "#54A24B", "#B279A2")
-  
-  # Build and show sankey
-  fig <- plot_ly(
-    type = "sankey",
-    arrangement = "snap",
-    node = list(
-      label = nodes$name,
-      color = node_colors,
-      pad = 15,
-      thickness = 20
-    ),
-    link = list(
-      source = links_plotly$source,
-      target = links_plotly$target,
-      value = links_plotly$value,
-      label = paste0(links_plotly$source_label, " → ", links_plotly$target_label, ": ", links_plotly$value)
-    )
-  )
-  
-  fig <- fig %>%
-    layout(
-      title = "Video Funnel Sankey (transition counts between adjacent stages)",
-      font = list(size = 12)
-    )
-  
-  fig
+  # stages <- c(
+  #   "CLICKS",
+  #   "STARTED_VIDEO",
+  #   "WATCHED_VIDEO_25_PERCENT",
+  #   "WATCHED_VIDEO_50_PERCENT",
+  #   "WATCHED_VIDEO_75_PERCENT",
+  #   "FINISHED_VIDEO"
+  # )
+  # 
+  # # Defensive checks
+  # missing_cols <- setdiff(stages, names(video))
+  # if (length(missing_cols) > 0) stop("Missing columns in 'video': ", paste(missing_cols, collapse = ", "))
+  # 
+  # # Ensure binary integer columns
+  # video <- video %>% mutate(across(all_of(stages), ~ as.integer(.)))
+  # 
+  # # Build links: transitions between adjacent stages
+  # links <- map2_dfr(stages[-length(stages)], stages[-1], function(from, to) {
+  #   tibble(
+  #     source_label = from,
+  #     target_label = to,
+  #     value = sum(video[[from]] == 1 & video[[to]] == 1, na.rm = TRUE)
+  #   )
+  # })
+  # 
+  # # Nodes list (unique stage labels)
+  # nodes <- data.frame(name = stages, stringsAsFactors = FALSE)
+  # 
+  # # Map labels to 0-based indices for Plotly
+  # links_plotly <- links %>%
+  #   mutate(
+  #     source = match(source_label, nodes$name) - 1,
+  #     target = match(target_label, nodes$name) - 1
+  #   )
+  # 
+  # # Optional: colors for nodes (same length as stages)
+  # node_colors <- c("#4C78A8", "#F58518", "#E45756", "#72B7B2", "#54A24B", "#B279A2")
+  # 
+  # # Build and show sankey
+  # fig <- plot_ly(
+  #   type = "sankey",
+  #   arrangement = "snap",
+  #   node = list(
+  #     label = nodes$name,
+  #     color = node_colors,
+  #     pad = 15,
+  #     thickness = 20
+  #   ),
+  #   link = list(
+  #     source = links_plotly$source,
+  #     target = links_plotly$target,
+  #     value = links_plotly$value,
+  #     label = paste0(links_plotly$source_label, " → ", links_plotly$target_label, ": ", links_plotly$value)
+  #   )
+  # )
+  # 
+  # fig <- fig %>%
+  #   layout(
+  #     title = "Video Funnel Sankey (transition counts between adjacent stages)",
+  #     font = list(size = 12)
+  #   )
+  # 
+  # fig
 })
 
 ################ Donation Forecasting ################
