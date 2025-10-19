@@ -1201,18 +1201,79 @@ output$giftDOWSegmentPlot <- renderPlotly({
 })
 
 #====== RFM Online Performance ======  
+# Video setup
+video_segment_df <- reactive({
+  df<- video %>%
+    filter(SENT_DATE >= '2015-01-01', Segment %in% input$rfmInput) %>%
+    inner_join(rfm_output(),'CONSTITUENT_ID') %>%
+    #group_by(CONSTITUENT_ID) %>%
+    mutate(Year =  as.integer(as.numeric(lubridate::year(SENT_DATE)))) %>%
+    #select(CONSTITUENT_ID,Segment,GIFT_DATE,AMOUNT) %>%
+    na.omit() %>%
+    group_by(Segment,Year) %>%
+    summarise(
+      Total_Sent = n(),                            # total messages sent that year
+      Total_Bounced = sum(BOUNCED, na.rm = TRUE),  # total bounces
+      Total_Unsub = sum(UNSUBSCRIBED, na.rm = TRUE), # total unsubscribes
+      Bounce_Rate = round((Total_Bounced / Total_Sent) * 100,2),
+      Unsub_Rate = round((Total_Unsub / Total_Sent) * 100,2),
+      Video_views = round(sum(VIDEO_VIEWS),0),
+      Video_clicks = round(sum(CLICKS),0)
+    )
+    
+  df
+})
+
+
 # Video Views
 output$videoViewSegmentPlot <- renderPlotly({
+  g <- video_segment_df() %>%
+    ggplot(aes(Year, Video_views,  text = paste0(
+      "Year: ", Year,
+      "<br>Video Views: ", Video_views
+    ))) + 
+    geom_bar(stat = "identity",width = 0.5, fill='black')  +
+    labs(x = "Year", y = "Video Views", title="Video Views by Year") + 
+    scale_y_continuous(labels = comma) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+    theme_minimal(base_size = 12)  + 
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
   
 })
 # Video Clicks
-output$clickSegmentPlot <- renderPlotly({})
+output$clickSegmentPlot <- renderPlotly({
+  g <- video_segment_df() %>%
+    ggplot(aes(Year, Video_views,  text = paste0(
+      "Year: ", Year,
+      "<br>Video Clicks: ", Video_clicks
+    ))) + 
+    geom_bar(stat = "identity",width = 0.5, fill='black')  +
+    labs(x = "Year", y = "Video Clicks", title="Video Clicks by Year") + 
+    scale_y_continuous(labels = comma) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1, big.mark = "")) + 
+    theme_minimal(base_size = 12) +
+    theme(legend.text = element_text(size = 10),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size = 12, hjust = 0.5),
+          axis.title = element_text(size = 10),
+          axis.text = element_text(size = 10),
+          axis.text.x = element_text(angle = 0, hjust = 1))
+  ggplotly(g, tooltip = "text")
+})
 
 # Bounce & Unsub Rate
 output$bounceUnsubSegmentPlot <- renderPlotly({})
 
 # sankey chart for sankey flow started --> 25% --> 50% 75% --> finished video for segments
-output$videFlowSegmentPlot <- renderPlotly({})
+output$videFlowSegmentPlot <- renderPlotly({
+  
+})
 
 ################ Donation Forecasting ################
 #====== Segment Trend Plot ======
