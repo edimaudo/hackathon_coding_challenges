@@ -1268,7 +1268,41 @@ output$clickSegmentPlot <- renderPlotly({
 })
 
 # Bounce & Unsub Rate
-output$bounceUnsubSegmentPlot <- renderPlotly({})
+output$bounceUnsubSegmentPlot <- renderPlotly({
+  g <- video_segment_df() %>%
+    ggplot(aes(x = Year)) +
+    geom_bar(
+      aes(y = Bounce_Rate, 
+          text = paste0("Year: ", Year,
+                        "<br>Bounce Rate: ", Bounce_Rate, "%")),
+      stat = "identity", width = 0.4, fill = "black"
+    ) +
+    geom_line(
+      aes(y = Unsub_Rate, 
+          text = paste0("Year: ", Year,
+                        "<br>Unsubscribe Rate: ", Unsub_Rate, "%")),
+      color = "red", size = 1.2, group = 1
+    ) +
+    geom_point(aes(y = Unsub_Rate), color = "red", size = 2) +
+    scale_y_continuous(
+      name = "Bounce Rate (%)",
+      sec.axis = sec_axis(~ ., name = "Unsubscribe Rate (%)")  # mirror axis for readability
+    ) +
+    labs(
+      title = "Bounce Rate vs Unsubscribe Rate by Year",
+      x = "Year"
+    ) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 1)) +
+    theme_minimal(base_size = 12) +
+    theme(
+      axis.title.y.right = element_text(color = "red"),
+      axis.title.y.left = element_text(color = "black"),
+      plot.title = element_text(hjust = 0.5, size = 13),
+      axis.text = element_text(size = 10)
+    )
+  
+  ggplotly(g, tooltip = "text")
+})
 
 # sankey chart for sankey flow started --> 25% --> 50% 75% --> finished video for segments
 output$videFlowSegmentPlot <- renderPlotly({
