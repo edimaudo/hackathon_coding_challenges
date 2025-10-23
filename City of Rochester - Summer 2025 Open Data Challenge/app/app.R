@@ -1,4 +1,14 @@
+##### Feedback
+# - update the mapping the 
+# - can change the color scheme for the different charts
+# - make numbers bigger for valuebox
+# add ability to compare
+# add better chart spacing
+# help icon about the chart
+
 ################################
+
+
 # Shiny web app for 
 # 2025 City of Rochester Open Data Challenge
 ################################
