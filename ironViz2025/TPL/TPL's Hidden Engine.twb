@@ -1099,6 +1099,12 @@
         </metadata-records>
       </connection>
       <aliases enabled='yes' />
+      <column caption='Circulation Index' datatype='real' name='[2012 Circulations Base (copy)_787355879587803155]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='(SUM([Circulation])/SUM([Calculation_787355879586832402])) * 100' />
+      </column>
+      <column caption='2012 Registrations Base' datatype='integer' name='[2012 Circulations Base (copy)_787355879588761620]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='{ FIXED [Branch Name Set]: SUM(IF [Year] = 2012 THEN [Registrations] ELSE 0 END) }' />
+      </column>
       <column caption='2012 Circulations' datatype='integer' name='[2012 Registrations (copy)_787355879581339654]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='SUM(IF [Year (tpl-circulation-annual-by-branc)] = 2012 THEN [Circulation] END)' />
       </column>
@@ -1147,7 +1153,13 @@
           <table-calc ordering-field='[federated.1saw5nl0ddt54k1bzrdfy0bzgft6].[Year (tpl-visits-annual-by-branch)]' ordering-type='Field' />
         </calculation>
       </column>
+      <column caption='2012 Circulations Base' datatype='integer' name='[Calculation_787355879586832402]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='{ FIXED [Branch Name Set]: SUM(IF [Year] = 2012 THEN [Circulation] ELSE 0 END) }' />
+      </column>
       <column caption='Cardholder Type' datatype='string' name='[CardholderType]' role='dimension' type='nominal' />
+      <column caption='Registration Index' datatype='real' name='[Circulation Index (copy)_787355879588966421]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='(SUM([Registrations])/SUM([2012 Circulations Base (copy)_787355879588761620])) * 100' />
+      </column>
       <column caption='Registration YoY Growth' datatype='real' name='[Circulation YoY Growth (copy)_787355879586185233]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='(SUM([Registrations]) - LOOKUP(SUM([Registrations]), -1)) / LOOKUP(SUM([Registrations]), -1)'>
           <table-calc ordering-field='[federated.1saw5nl0ddt54k1bzrdfy0bzgft6].[Year (tpl-card-registrations-annual-b)]' ordering-type='Field' />
