@@ -1108,6 +1108,9 @@
       <column caption='2023 Circulations' datatype='integer' name='[2023 Registrations (copy)_787355879581339655]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='SUM(IF [Year (tpl-circulation-annual-by-branc)] = 2023 THEN [Circulation] END)' />
       </column>
+      <column caption='2012 Total Activity' datatype='integer' name='[2023 Total Activity (copy)_787355879583776779]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[2023 Visits (copy)_787355879576862721] + [2012 Registrations (copy)_787355879581339654] + [2012 Visits (copy)_787355879579512835]' />
+      </column>
       <column caption='2012 Visits' datatype='integer' name='[2023 Visits (copy)_787355879576862721]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='SUM(IF [Year (tpl-visits-annual-by-branch)] = 2012 THEN [Visits] END)' />
       </column>
@@ -1118,16 +1121,38 @@
       <column caption='Branch Code1' datatype='string' name='[Branch Code]' role='dimension' type='nominal' />
       <column caption='Branch Code' datatype='string' name='[BranchCode]' role='dimension' type='nominal' />
       <column caption='Branch Name' datatype='string' name='[BranchName]' role='dimension' type='nominal' />
-      <column caption='User Density Score' datatype='real' name='[Calculation_6925832539715387392]' role='measure' type='quantitative'>
-        <calculation class='tableau' formula='AVG([Visits]/[SquareFootage])' />
-      </column>
       <column caption='2023 Visits' datatype='integer' name='[Calculation_787355879576756224]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='SUM(IF [Year (tpl-visits-annual-by-branch)] = 2023 THEN [Visits] END)' />
       </column>
       <column caption='Visits Growth' datatype='real' name='[Calculation_787355879576977410]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='([Calculation_787355879576756224] - [2023 Visits (copy)_787355879576862721]) / [2023 Visits (copy)_787355879576862721]' />
       </column>
+      <column caption='2023 Total Activity' datatype='integer' name='[Calculation_787355879583322121]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Calculation_787355879576756224] + [2023 Registrations (copy)_787355879581339655] + [2023 Visits (copy)_787355879579512836]' />
+      </column>
+      <column caption='2023 User Density Score' datatype='real' name='[Calculation_787355879583604746]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Calculation_787355879583322121]/AVG([SquareFootage])' />
+      </column>
+      <column caption='2012 User Density Score' datatype='real' name='[Calculation_787355879583928332]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[2023 Total Activity (copy)_787355879583776779]/AVG([SquareFootage])' />
+      </column>
+      <column caption='User Density Score Growth' datatype='real' name='[Calculation_787355879584075789]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='([Calculation_787355879583604746] - [Calculation_787355879583928332]) / [Calculation_787355879583928332]' />
+      </column>
+      <column caption='Digital Acess Reliance Index' datatype='real' name='[Calculation_787355879584546830]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='SUM([Sessions])/SUM([Visits])' />
+      </column>
+      <column caption='Visit YoY Growth' datatype='real' name='[Calculation_787355879585599503]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='(SUM([Visits]) - LOOKUP(SUM([Visits]), -1)) / LOOKUP(SUM([Visits]), -1)'>
+          <table-calc ordering-field='[federated.1saw5nl0ddt54k1bzrdfy0bzgft6].[Year (tpl-visits-annual-by-branch)]' ordering-type='Field' />
+        </calculation>
+      </column>
       <column caption='Cardholder Type' datatype='string' name='[CardholderType]' role='dimension' type='nominal' />
+      <column caption='Registration YoY Growth' datatype='real' name='[Circulation YoY Growth (copy)_787355879586185233]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='(SUM([Registrations]) - LOOKUP(SUM([Registrations]), -1)) / LOOKUP(SUM([Registrations]), -1)'>
+          <table-calc ordering-field='[federated.1saw5nl0ddt54k1bzrdfy0bzgft6].[Year (tpl-card-registrations-annual-b)]' ordering-type='Field' />
+        </calculation>
+      </column>
       <column caption='Kids Stop' datatype='integer' name='[KidsStop]' role='measure' type='quantitative' />
       <column aggregation='Avg' datatype='real' name='[Lat]' role='measure' semantic-role='[Geographical].[Latitude]' type='quantitative' />
       <column caption='Leading Reading' datatype='integer' name='[LeadingReading]' role='measure' type='quantitative' />
@@ -1146,6 +1171,11 @@
       <column caption='Square Footage' datatype='integer' name='[SquareFootage]' role='measure' type='quantitative' />
       <column caption='Tplnia' datatype='integer' name='[TPLNIA]' role='measure' type='quantitative' />
       <column caption='Teen Council' datatype='integer' name='[TeenCouncil]' role='measure' type='quantitative' />
+      <column caption='Circulation YoY Growth' datatype='real' name='[Visit YoY Growth (copy)_787355879586013200]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='(SUM([Circulation]) - LOOKUP(SUM([Circulation]), -1)) / LOOKUP(SUM([Circulation]), -1)'>
+          <table-calc ordering-field='[federated.1saw5nl0ddt54k1bzrdfy0bzgft6].[Year (tpl-circulation-annual-by-branc)]' ordering-type='Field' />
+        </calculation>
+      </column>
       <column caption='Registration Growth' datatype='real' name='[Visits Growth (copy)_787355879579512837]' role='measure' type='quantitative'>
         <calculation class='tableau' formula='([2023 Visits (copy)_787355879579512836] - [2012 Visits (copy)_787355879579512835]) / [2012 Visits (copy)_787355879579512835]' />
       </column>
@@ -2140,6 +2170,11 @@
         <field-sort-custom-order field='Telephone' />
         <field-sort-custom-order field='SquareFootage' />
         <field-sort-custom-order field='Calculation_6925832539715387392' />
+        <field-sort-custom-order field='Calculation_787355879583322121' />
+        <field-sort-custom-order field='2023 Total Activity (copy)_787355879583776779' />
+        <field-sort-custom-order field='Calculation_787355879583928332' />
+        <field-sort-custom-order field='Calculation_787355879584075789' />
+        <field-sort-custom-order field='Calculation_787355879583604746' />
         <field-sort-custom-order field='PublicParking' />
         <field-sort-custom-order field='KidsStop' />
         <field-sort-custom-order field='LeadingReading' />
@@ -2690,6 +2725,83 @@
       </table>
       <simple-id uuid='{B88505A5-61E9-4290-B2DC-9FC64CC49906}' />
     </worksheet>
+    <worksheet name='User Density Growth KPI'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='TPL_data' name='federated.1saw5nl0ddt54k1bzrdfy0bzgft6' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1saw5nl0ddt54k1bzrdfy0bzgft6'>
+            <column caption='2012 Circulations' datatype='integer' name='[2012 Registrations (copy)_787355879581339654]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='SUM(IF [Year (tpl-circulation-annual-by-branc)] = 2012 THEN [Circulation] END)' />
+            </column>
+            <column caption='2012 Registrations' datatype='integer' name='[2012 Visits (copy)_787355879579512835]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='SUM(IF [Year (tpl-card-registrations-annual-b)] = 2012 THEN [Registrations] END)' />
+            </column>
+            <column caption='2023 Circulations' datatype='integer' name='[2023 Registrations (copy)_787355879581339655]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='SUM(IF [Year (tpl-circulation-annual-by-branc)] = 2023 THEN [Circulation] END)' />
+            </column>
+            <column caption='2012 Total Activity' datatype='integer' name='[2023 Total Activity (copy)_787355879583776779]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[2023 Visits (copy)_787355879576862721] + [2012 Registrations (copy)_787355879581339654] + [2012 Visits (copy)_787355879579512835]' />
+            </column>
+            <column caption='2012 Visits' datatype='integer' name='[2023 Visits (copy)_787355879576862721]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='SUM(IF [Year (tpl-visits-annual-by-branch)] = 2012 THEN [Visits] END)' />
+            </column>
+            <column caption='2023 Registrations' datatype='integer' name='[2023 Visits (copy)_787355879579512836]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='SUM(IF [Year (tpl-card-registrations-annual-b)] = 2023 THEN [Registrations] END)' />
+            </column>
+            <column caption='2023 Visits' datatype='integer' name='[Calculation_787355879576756224]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='SUM(IF [Year (tpl-visits-annual-by-branch)] = 2023 THEN [Visits] END)' />
+            </column>
+            <column caption='2023 Total Activity' datatype='integer' name='[Calculation_787355879583322121]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[Calculation_787355879576756224] + [2023 Registrations (copy)_787355879581339655] + [2023 Visits (copy)_787355879579512836]' />
+            </column>
+            <column caption='2023 User Density Score' datatype='real' name='[Calculation_787355879583604746]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[Calculation_787355879583322121]/AVG([SquareFootage])' />
+            </column>
+            <column caption='2012 User Density Score' datatype='real' name='[Calculation_787355879583928332]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[2023 Total Activity (copy)_787355879583776779]/AVG([SquareFootage])' />
+            </column>
+            <column caption='User Density Score Growth' datatype='real' name='[Calculation_787355879584075789]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='([Calculation_787355879583604746] - [Calculation_787355879583928332]) / [Calculation_787355879583928332]' />
+            </column>
+            <column datatype='integer' name='[Circulation]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[Registrations]' role='measure' type='quantitative' />
+            <column caption='Square Footage' datatype='integer' name='[SquareFootage]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[Visits]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[Year (tpl-card-registrations-annual-b)]' role='dimension' type='quantitative' />
+            <column datatype='integer' name='[Year (tpl-circulation-annual-by-branc)]' role='dimension' type='quantitative' />
+            <column datatype='integer' name='[Year (tpl-visits-annual-by-branch)]' role='dimension' type='quantitative' />
+            <column-instance column='[Calculation_787355879584075789]' derivation='User' name='[usr:Calculation_787355879584075789:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.1saw5nl0ddt54k1bzrdfy0bzgft6].[usr:Calculation_787355879584075789:qk]' value='p0.00%' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.1saw5nl0ddt54k1bzrdfy0bzgft6].[usr:Calculation_787355879584075789:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{493E53CB-2B92-4328-9E2E-55DC8551863A}' />
+    </worksheet>
     <worksheet name='User Density Trend'>
       <table>
         <view>
@@ -2697,14 +2809,8 @@
             <datasource caption='TPL_data' name='federated.1saw5nl0ddt54k1bzrdfy0bzgft6' />
           </datasources>
           <datasource-dependencies datasource='federated.1saw5nl0ddt54k1bzrdfy0bzgft6'>
-            <column caption='User Density Score' datatype='real' name='[Calculation_6925832539715387392]' role='measure' type='quantitative'>
-              <calculation class='tableau' formula='AVG([Visits]/[SquareFootage])' />
-            </column>
-            <column caption='Square Footage' datatype='integer' name='[SquareFootage]' role='measure' type='quantitative' />
-            <column datatype='integer' name='[Visits]' role='measure' type='quantitative' />
             <column datatype='integer' name='[Year (tpl-visits-annual-by-branch)]' role='dimension' type='quantitative' />
             <column-instance column='[Year (tpl-visits-annual-by-branch)]' derivation='None' name='[none:Year (tpl-visits-annual-by-branch):qk]' pivot='key' type='quantitative' />
-            <column-instance column='[Calculation_6925832539715387392]' derivation='User' name='[usr:Calculation_6925832539715387392:qk]' pivot='key' type='quantitative' />
           </datasource-dependencies>
           <aggregation value='true' />
         </view>
@@ -2717,7 +2823,7 @@
             <mark class='Automatic' />
           </pane>
         </panes>
-        <rows>[federated.1saw5nl0ddt54k1bzrdfy0bzgft6].[usr:Calculation_6925832539715387392:qk]</rows>
+        <rows />
         <cols>[federated.1saw5nl0ddt54k1bzrdfy0bzgft6].[none:Year (tpl-visits-annual-by-branch):qk]</cols>
       </table>
       <simple-id uuid='{772871DE-3B4A-4E05-AE10-48EF72FB7DE0}' />
@@ -3107,7 +3213,7 @@
       </cards>
       <simple-id uuid='{BC370E59-0CDA-4A19-88D0-544E26324552}' />
     </window>
-    <window class='worksheet' maximized='true' name='Circulation Growth KPI'>
+    <window class='worksheet' name='Circulation Growth KPI'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -3129,6 +3235,29 @@
         </edge>
       </cards>
       <simple-id uuid='{C5EAE7E5-8099-4F40-9561-227177999CBF}' />
+    </window>
+    <window class='worksheet' maximized='true' name='User Density Growth KPI'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{0C46BA10-5F5F-4224-BDD4-1643912B1630}' />
     </window>
   </windows>
   <thumbnails>
@@ -4473,6 +4602,34 @@
       586dQ9m7+hCl4SWOU6dOIcvzw/oc5jN8+HBk0ftPQms7VA3DMwOhErh06VJkHciePXsic7Hi
       JAeInAr9PkB5CTX/0F0La/ufvhL2vxKqec+fP8+ZT/GXO0q6J3QuS+tghirj+/fvUXrkB5ID
       RE4UDpAoneQAkZMEEDn/BfPQn2ION/KjAAAAAElFTkSuQmCC
+    </thumbnail>
+    <thumbnail height='48' name='User Density Growth KPI' width='128'>
+      iVBORw0KGgoAAAANSUhEUgAAAIAAAAAwCAYAAADZ9HK+AAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAFBElEQVR4nO3bSaiPexzH8ddxzHPmzLMyFVs2FAopG1IyhMLCkJkkNqwQSoYVMpRkY2Fh
+      IwolC5EpM8dcZB7v4va9z33+zp/bvXXlPL/35t95fr/n9/89p+/v852ef8W3b9++SRSWWr96
+      A4lfSzKAgpMMoOAkAyg4yQAKTjKAgpMMoOAkAyg4yQAKTjKAgpMMoOAkAyg4yQAKTjKAgpMM
+      oOAkAyg4yQAKTjKAgpMMoOAkAyg4yQAKTjKAgpMMoODU/tUb+D959eoVeP36NWjbti2orKz8
+      V+t9/foV3L9/H7Rr1w7UrVv3H93/7Nkz8PHjR9C+ffuyc+PnG8+fPwctW7YEFRUVP9xbUKtW
+      9Wc9KUDBqajJvwyKk7Vy5UpkJ7VNmzbg9u3bYMGCBWD48OH/aN1r166BZcuWgU6dOoFbt26B
+      hQsXVrve27dvc/e9f/8e2en88OED2LhxI2jRogV49+6dmTNn4nu12rVrF6hXr17u+qxZs8Di
+      xYtBnz59qn2WGm0Ahw4dAjdu3ACrVq3KjT9+/BhMnToVHDt2DD93CZMnTwaLFi0CgwYNAk+e
+      PAEzZswABw8eBI0aNQJbt24FjRs3BtOnT8+tu3fvXnD9+nWwbt06cOTIEY8ePQJz584FW7Zs
+      AV27dgXjxo0Dx48fB5cvX0ZmjOVILqDg1OggMKS1WbNm1Y43adIE1K7957+hXEAV3Lt3L7du
+      nPwgXMuQIUPA6dOnwciRI8HFixfB8uXLq11/4sSJYOzYsbnrVVVVevXqlbvWs2fP3J7CnRw+
+      fBiZQvyMpAAFp0YrwJgxY8C8efPA5s2bkQVt4fMjwCqXKgXh48PvlqNLly65+UGrVq3AmTNn
+      QPfu3XPjkT7GvJcvX/6130uXLiFTk/Dxffv2BXv27EEWV1y4cAFZ4Dt69Ghk8UeQFKDg/NYK
+      8OnTJ2TpXhApUf369ZGdtDg1UQgKvxmK8DPevHkDGjZs+MN5MR6RezBp0iQwf/58cPPmTWSx
+      w9mzZ5GlmbG/ESNG2LdvHzh//jz4/PkzmDBhQu7ezp07I8so+vXrhyxj2bFjR25PSQEKzm+t
+      AAcOHABHjx7NXQ+ff/fuXWR+b+fOnbl5L168QOY3I29v0KBBtd/XvHlzZCXlcsR4zA8GDBgA
+      du/eDU6cOIGs7jBnzhywfv16ZLFAZWXlXwoQxaZu3bqBtWvXgtmzZ4MNGzaANWvWgN69e4Np
+      06aBhw8fIis7JwUoOL+1AkyZMiX3WUpUwcqNR6k1YoSowA0cOLDa+dHsuXr16g/3deXKFTBq
+      1Khqx+P7SrOAqqoqZIrw94pkZAhR0j137hxo2rQpsjgmVK00rom/o5mUFCCB31wBfkbk6ydP
+      nsT3lbtox8aJLW3HRjQevjii9fDtp06dAkOHDkVWlYscPPxwENlK6QmP1u327dvB+PHjyz7T
+      ly9fwLZt28CmTZty4x06dECW8QwePBiZasV4kBSg4NTobmDk+9EOfvr0KWjdujWyPDyi76gc
+      BpEdxImMjlvECpFbd+zYEVl7ecmSJWDYsGG59aIXsHr1atCjRw9kytG/f3+wYsUKUKdOne+e
+      af/+/ciqhLH3ICqGS5cuRdaJjP5E1CCCpAAFp0YrQCmRn8fpCZ//X18Ju3PnTm690pczSokX
+      Qx48eIDs1bSI6H9EVACjb1GufxEvl0T1MjKeUpICFJxCKUDie5ICFJxkAAXnD6UIt6E2lM8F
+      AAAAAElFTkSuQmCC
     </thumbnail>
     <thumbnail height='384' name='User Density Trend' width='384'>
       iVBORw0KGgoAAAANSUhEUgAAAYAAAAGACAYAAACkx7W/AAAACXBIWXMAAA7DAAAOwwHHb6hk
