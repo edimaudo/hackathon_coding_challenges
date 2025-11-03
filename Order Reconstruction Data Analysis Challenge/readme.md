@@ -43,7 +43,7 @@ The dataset includes N time-history files of vibration data, each containing:
 - A fixed gear ratio of 5.095238095 from tachometer shaft to turbine shaft → nominal turbine speed ≈ 536.27 Hz
 - Bearing geometry factors (cage, ball, inner race, outer race): [0.43, 7.05, 10.78, 8.22], yielding nominal fault-band centers at [231, 3781, 5781, 4408] Hz (based on mean turbine speed).
 
-![Instantaneous shaft speed](image-url "Optional title")
+![Instantaneous shaft speed](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/Order%20Reconstruction%20Data%20Analysis%20Challenge/instantaneous_speed.png)
 
 Files provided are file_1.csv, file_2.csv, …, file_N.csv (in a random, scrambled order).
 
@@ -52,7 +52,7 @@ Channels per file:
 - Tachometer zero-cross timestamps (zct)
 
 Fixed parameters table:
-![Fixed Parameter table](image-url "Optional title")
+![Fixed Parameter table](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/Order%20Reconstruction%20Data%20Analysis%20Challenge/fixed_parameter_table.png)
 
 # Getting Started
 1) Download key files
@@ -73,7 +73,7 @@ Pairwise Order Accuracy will be used as a secondary, tie-breaker metric:
 Pairwise Order Accuracy (higher is better): 
 PairAcc(pi-hat,pi-star) = 1 - Int(pie-hat,pie-star)/(N2), where Inv is the number of discordant pairs
 
-![Pairwise order](image-url "Optional title")
+![Pairwise order](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/Order%20Reconstruction%20Data%20Analysis%20Challenge/pairwise_order.png)
 
 - **Correct format of submission**
  - Provide a .csv file, titled submission.csv, containing a single column with header “prediction” containing an array of N integers – representing the predicted chronological order of the files for the bearing degradation (so that e.g. the first integer in the column represents the predicted position in the true chronological order of file_1.csv).
