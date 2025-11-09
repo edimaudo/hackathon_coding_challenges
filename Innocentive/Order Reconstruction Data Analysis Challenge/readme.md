@@ -43,7 +43,7 @@ The dataset includes N time-history files of vibration data, each containing:
 - A fixed gear ratio of 5.095238095 from tachometer shaft to turbine shaft → nominal turbine speed ≈ 536.27 Hz
 - Bearing geometry factors (cage, ball, inner race, outer race): [0.43, 7.05, 10.78, 8.22], yielding nominal fault-band centers at [231, 3781, 5781, 4408] Hz (based on mean turbine speed).
 
-![Instantaneous shaft speed](https://github.com/edimaudo/hackathon_coding_challenges/blob/master/Order%20Reconstruction%20Data%20Analysis%20Challenge/instantaneous_speed.png)
+![Instantaneous shaft speed](/instantaneous_speed.png)
 
 Files provided are file_1.csv, file_2.csv, …, file_N.csv (in a random, scrambled order).
 
