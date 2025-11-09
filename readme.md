@@ -1,3 +1,3 @@
 ## Hackathon and code challenges
 
-Code for hackathon and code challenges
+Code for hackathons and code challenges
