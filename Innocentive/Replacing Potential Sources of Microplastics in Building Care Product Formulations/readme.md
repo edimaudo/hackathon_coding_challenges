@@ -71,6 +71,17 @@ Solutions that work within current microplastics exemptions (where microplastic 
 
 Solutions with Technology Readiness Levels (TRLs) 2-5 are invited.
 
+## Output
+1) Solution Level - the Technology Readiness Level (TRL) of your solution.
+
+2) Problem & Opportunity - highlight the innovation in your approach to the Problem, its point of difference, and the specific advantages/benefits this brings (up to 500 words).
+3) Solution Overview - detail the features of your solution and how they address the SOLUTION REQUIREMENTS (500 words, there is space to add more in the summary field, and attach supporting data, diagrams, etc.).
+4) Solution Feasibility – Supporting Information and Rationale; to include your proposed substitute's commercial availability (easily bought at bulk at a price not exceeding $25/kg) - if not currently available the rationale for its future supply chain availability; all your rationale will help Diversey evaluate and validate the feasibility of the solution (up to 500 words).
+5) Experience - Expertise, use cases and skills you or your organization have in relation to your proposed solution (up to 500 words).
+6) Solution Risks - any risks you see with your solution and how you would plan for this (up to 500 words).
+Timeline, capability, and costs - describe what you think is required to deliver the solution, estimated time and cost (up to 500 words).
+7( Online References - provide links to any publications, articles or press releases of relevance (up to 500 words).
+
 ## Resources
 - https://www.sciencedirect.com/science/article/abs/pii/S0300944018302297
 - https://www.sciencedirect.com/science/article/pii/S0959652625003531
