@@ -70,3 +70,13 @@ Solutions that work within current microplastics exemptions (where microplastic 
  
 
 Solutions with Technology Readiness Levels (TRLs) 2-5 are invited.
+
+## Resources
+- https://www.sciencedirect.com/science/article/abs/pii/S0300944018302297
+- https://www.sciencedirect.com/science/article/pii/S0959652625003531
+- https://www.sciencedirect.com/science/article/abs/pii/S0959652618312459
+- http://www.scielo.org.co/scielo.php?pid=S0123-30332023000100009&script=sci_arttext&tlng=en
+- https://pubs.acs.org/doi/full/10.1021/acs.chemrev.2c00354
+- https://link.springer.com/article/10.1007/s40725-023-00195-0
+- https://www.mdpi.com/1422-0067/24/6/5472
+- https://www.mdpi.com/2076-3417/14/2/736
