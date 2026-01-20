@@ -12,8 +12,6 @@ This Prize Challenge invites innovators, research teams, and leading organizatio
 
 A winning submission will demonstrate a clear path towards a passive, cost-effective, and permanent solution, and will be evaluated against its practical feasibility.
 
- 
-
 Your IP Rights are protected in this Prize Challenge; U.S. Steel must pay you an award to obtain them.
 
 There is a guaranteed award pool of $15,000 available for proposed solutions that meet or partially meet the must have Solution Requirements. The best solution(s) have the opportunity to win awards from $5,000 to $15,000 for meeting enough of these requirements criteria, with their supporting feasibility and rationale. The Challenge requires a written proposal to be submitted and Awards will be contingent upon the theoretical evaluation of your proposal by U.S. Steel. To receive an Award, Solvers are required to grant non-exclusive license rights to the Intellectual Property (IP) in their proposed solution. Solvers will retain all rights to any proposal not Awarded and there is no assignment.
