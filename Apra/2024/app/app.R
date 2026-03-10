@@ -49,6 +49,7 @@ for (package in packages) {
 #constituent <- read_csv("Apra Constituent Data.csv")
 transaction <- read_csv("Apra Gift Transactions Data.csv")
 interaction <- read_csv("Apra Interactions Data.csv")
+rfm_segment <- read_excel("rfm_segments_strategy.xlsx")
 
 
 #============= Data munging =============
@@ -60,6 +61,7 @@ gift_type <- sort(unique(na.omit(transaction$GIFT_TYPE)))
 gift_designation <- sort(unique(na.omit(transaction$GIFT_DESIGNATION)))
 gift_channel <- sort(unique(na.omit(transaction$GIFT_CHANNEL)))
 note_info <- "Using only data from 2010 onwards"
+segment_titles <- rfm_segment$`Donor Portfolio`
 
 ################ UI ################
 ui <- dashboardPage(
